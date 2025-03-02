@@ -26,7 +26,7 @@ const props = defineProps({
   // 動畫延遲 (1-5)
   delay: {
     type: Number,
-    default: 1,
+    default: 3,
   },
   // 是否在頁面載入時也應用動畫
   animateOnPageLoad: {
