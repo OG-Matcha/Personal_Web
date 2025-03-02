@@ -16,8 +16,13 @@ export default defineNuxtPlugin((nuxtApp) => {
         // 標記為已訪問，以便後續訪問不再顯示完整加載動畫
         localStorage.setItem('hasVisitedBefore', 'true')
       } else {
-        // 不是首次訪問，可以跳過完整動畫
+        // 不是首次訪問，但仍需要頁面動畫
         pageInitialLoaded.value = true
+        
+        // 設置一個短暫延遲，確保 DOM 已經完全渲染
+        setTimeout(() => {
+          applyPageElementAnimations()
+        }, 100)
       }
     })
     

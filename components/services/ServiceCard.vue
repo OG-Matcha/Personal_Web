@@ -56,5 +56,5 @@ const handleImageError = (error) => {
 const {
   public: { baseURL },
 } = useRuntimeConfig()
-const iconPath = computed(() => `/images/icon-${props.icon}`)
+const iconPath = computed(() => `${baseURL}/images/icon-${props.icon}`)
 </script>

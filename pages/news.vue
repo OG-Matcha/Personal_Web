@@ -43,6 +43,12 @@ import SectionTitle from '~/components/common/SectionTitle.vue'
 import NewsCard from '~/components/news/NewsCard.vue'
 import NewsFilter from '~/components/news/NewsFilter.vue'
 import { useNews } from '~/composables/useNews'
+import { useRuntimeConfig } from '#imports'
+
+// 從 runtimeConfig 獲取 baseURL
+const {
+  public: { baseURL },
+} = useRuntimeConfig()
 
 // 狀態
 const newsContent = ref(null)
@@ -78,8 +84,8 @@ const loadNewsContent = async () => {
   error.value = null
 
   try {
-    // 使用 fetch 獲取 Markdown 文件內容
-    const response = await fetch('/content/news.md')
+    // 使用 fetch 獲取 Markdown 文件內容，加上 baseURL 前綴
+    const response = await fetch(`${baseURL}/content/news.md`)
 
     if (!response.ok) {
       throw new Error(`無法加載新聞內容 (${response.status})`)
