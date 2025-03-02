@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 自定義滾動條樣式 */
+@layer base {
+  /* 整體滾動條 */
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  /* 滾動條軌道 */
+  ::-webkit-scrollbar-track {
+    @apply rounded-full bg-[#1A1A1A]/50;
+  }
+
+  /* 滾動條滑塊 */
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-yellow-400/20 transition-colors duration-300 hover:bg-yellow-400/30;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+
+  /* Firefox 滾動條樣式 */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(250, 204, 21, 0.2) rgba(26, 26, 26, 0.5);
+  }
+
+  /* 在深色背景下的滾動條 */
+  .dark-scroll::-webkit-scrollbar-track {
+    @apply bg-[#242424]/50;
+  }
+
+  .dark-scroll::-webkit-scrollbar-thumb {
+    @apply bg-yellow-400/30 hover:bg-yellow-400/40;
+  }
+}
+
+/* 確保滾動行為平滑 */
+@layer utilities {
+  .smooth-scroll {
+    scroll-behavior: smooth;
+  }
+}
