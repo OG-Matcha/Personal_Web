@@ -1,6 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: false },
+  ssr: false,
 
   modules: [
     '@nuxtjs/tailwindcss',
@@ -27,7 +28,7 @@ export default defineNuxtConfig({
 
   app: {
     baseURL: process.env.NUXT_APP_BASE_URL || '/',
-    buildAssetsDir: 'assets',
+    buildAssetsDir: '/static/',
     head: {
       meta: [
         { charset: 'utf-8' },
@@ -54,12 +55,6 @@ export default defineNuxtConfig({
         maxAge: 60 * 60 * 24 * 365, // 1 year
       },
     ],
-  },
-
-  runtimeConfig: {
-    public: {
-      baseURL: process.env.NUXT_APP_BASE_URL || 'http://localhost:3000',
-    },
   },
 
   compatibilityDate: '2025-02-22',
