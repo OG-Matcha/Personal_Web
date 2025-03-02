@@ -85,7 +85,7 @@ const loadNewsContent = async () => {
 
   try {
     // 使用 fetch 獲取 Markdown 文件內容，加上 baseURL 前綴
-    const response = await fetch(`/content/news.md`)
+    const response = await fetch(`/Personal_Web/content/news.md`)
 
     if (!response.ok) {
       throw new Error(`無法加載新聞內容 (${response.status})`)
