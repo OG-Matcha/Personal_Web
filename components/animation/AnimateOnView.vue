@@ -31,7 +31,7 @@ const props = defineProps({
   // 是否在頁面載入時也應用動畫
   animateOnPageLoad: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   // 視口觸發閾值 (0-1)
   threshold: {
@@ -46,6 +46,15 @@ let observer = null
 
 // 設置 IntersectionObserver 監聽元素進入視圖
 onMounted(() => {
+  // 如果設置了頁面加載時動畫，立即應用動畫
+  if (props.animateOnPageLoad) {
+    // 使用短延遲確保 DOM 已更新
+    setTimeout(() => {
+      hasAnimated.value = true
+    }, 100)
+    return
+  }
+
   // 創建觀察器實例
   observer = new IntersectionObserver(
     (entries) => {
