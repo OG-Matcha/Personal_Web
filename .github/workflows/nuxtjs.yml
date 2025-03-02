@@ -26,11 +26,15 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+      # 創建 .nojekyll 文件禁用 Jekyll 處理
+      - name: Create .nojekyll file
+        run: touch .nojekyll
       # Pick your own package manager and build script
       - run: npm install
       - run: npx nuxt build --preset github_pages
         env:
           BASE_URL: 'https://og-matcha.github.io'
+          NUXT_APP_BASE_URL: '/' # 用戶站點使用 '/'，項目站點使用 '/repository-name/'
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
