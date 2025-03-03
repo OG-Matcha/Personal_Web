@@ -1,1 +1,12 @@
+# 允許所有機器人爬取網站
+User-agent: *
+Allow: /
 
+# 不允許爬取特定路徑（如果有需要）
+# Disallow: /private/
+
+# 指定 Sitemap 位置
+Sitemap: https://www.ogmatcha.com/sitemap.xml
+
+# 爬蟲延遲（可選，但對較大的網站有用）
+# Crawl-delay: 10

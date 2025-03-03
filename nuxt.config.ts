@@ -3,10 +3,12 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
   ssr: true,
 
-  modules: [
-    '@nuxtjs/tailwindcss',
-    '@nuxt/image',
-  ],
+  modules: ['@nuxtjs/tailwindcss', '@nuxt/image', '@nuxtjs/sitemap'],
+
+  site: {
+    url: 'https://www.ogmatcha.com',
+    name: 'Portfolio | Ju-Shen Huang - OG_Matcha | Finctory CTO',
+  },
 
   plugins: [
     '~/plugins/animations.client.js',
@@ -35,7 +37,7 @@ export default defineNuxtConfig({
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { name: 'description', content: 'OG_Matcha 的個人網站，展示作品集與專業經歷' },
-        { name: 'keywords', content: '黃鉅燊, Ju-Shen Huang, OG_Matcha, Finctory, 作品集, 網頁開發, 前端開發' },
+        { name: 'keywords', content: '黃鉅燊, Ju-Shen Huang, OG_Matcha, 斐闊, Finctory, 作品集, 網頁開發, 前端開發' },
         { name: 'author', content: 'Ju-Shen Huang (OG_Matcha)' },
         { property: 'og:title', content: 'Portfolio | Ju-Shen Huang - OG_Matcha | Finctory CTO' },
         { property: 'og:description', content: 'OG_Matcha 的個人網站，展示作品集與專業經歷' },
