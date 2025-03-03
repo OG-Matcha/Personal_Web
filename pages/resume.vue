@@ -623,7 +623,7 @@ const updateFilter = (value) => {
 // 下載履歷函數
 const downloadResume = () => {
   // 開啟存放在 public 資料夾的 PDF 檔案
-  window.open('/Personal_Web/content/Ju-Shen Huang CV.pdf', '_blank', 'noopener,noreferrer')
+  window.open('/content/Ju-Shen Huang CV.pdf', '_blank', 'noopener,noreferrer')
 }
 
 // 滾動函數 - 直接實現
