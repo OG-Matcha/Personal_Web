@@ -5,9 +5,11 @@
 
     <!-- 頁面過渡效果 -->
     <PageTransition>
-      <NuxtLayout>
-        <NuxtPage />
-      </NuxtLayout>
+      <div class="page-wrapper">
+        <NuxtLayout>
+          <NuxtPage />
+        </NuxtLayout>
+      </div>
     </PageTransition>
   </div>
 </template>
@@ -181,5 +183,11 @@ body {
 }
 .delay-5 {
   transition-delay: 0.8s;
+}
+
+/* 添加頁面包裝器樣式 */
+.page-wrapper {
+  width: 100%;
+  height: 100%;
 }
 </style>
