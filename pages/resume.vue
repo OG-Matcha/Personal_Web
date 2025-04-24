@@ -631,7 +631,7 @@ const scrollToSection = (sectionId, event) => {
   // 防止默認行為
   if (event) event.preventDefault()
 
-  console.log(`嘗試滾動到元素: #${sectionId}`)
+  //   console.log(`嘗試滾動到元素、: #${sectionId}`)
 
   // 強制更新URL哈希
   window.location.hash = sectionId
@@ -641,7 +641,7 @@ const scrollToSection = (sectionId, event) => {
     // 嘗試使用瀏覽器原生方法定位元素
     const element = document.getElementById(sectionId)
     if (element) {
-      console.log(`找到元素 #${sectionId}，執行滾動`)
+      //   console.log(`找到元素 #${sectionId}，執行滾動`)
 
       try {
         // 計算元素位置
@@ -662,7 +662,7 @@ const scrollToSection = (sectionId, event) => {
 
         // 方法3: 如果jQuery可用，也用它嘗試
         if (window.$ && window.jQuery) {
-          console.log('使用jQuery滾動')
+          //   console.log('使用jQuery滾動')
           window.$('html, body').animate({ scrollTop: top }, 800)
         }
       } catch (error) {
@@ -682,7 +682,7 @@ const scrollToTop = (event) => {
   // 防止默認行為
   if (event) event.preventDefault()
 
-  console.log('嘗試滾動到頂部')
+  //   console.log('嘗試滾動到頂部')
 
   // 清除URL哈希
   if (window.location.hash) {
@@ -699,7 +699,7 @@ const scrollToTop = (event) => {
 
     // 方法2: 如果jQuery可用
     if (window.$ && window.jQuery) {
-      console.log('使用jQuery滾動到頂部')
+      //   console.log('使用jQuery滾動到頂部')
       window.$('html, body').animate({ scrollTop: 0 }, 800)
     }
   } catch (error) {
@@ -720,19 +720,19 @@ onMounted(() => {
   window.addEventListener('scroll', checkScrollPosition)
   checkScrollPosition()
 
-  console.log('頁面掛載完成，檢查初始哈希')
+  //   console.log('頁面掛載完成，檢查初始哈希')
 
   // 檢查哈希並延遲滾動
   const checkAndScrollToHash = () => {
     if (window.location.hash) {
       const sectionId = window.location.hash.substring(1)
-      console.log(`檢測到初始哈希: #${sectionId}，準備滾動`)
+      //   console.log(`檢測到初始哈希: #${sectionId}，準備滾動`)
 
       // 確保使用延遲以等待DOM完全渲染
       setTimeout(() => {
         const element = document.getElementById(sectionId)
         if (element) {
-          console.log(`找到元素 #${sectionId}，執行滾動`)
+          //   console.log(`找到元素 #${sectionId}，執行滾動`)
 
           // 直接使用元素的scrollIntoView方法
           try {
@@ -757,19 +757,19 @@ onMounted(() => {
 
   // 如果jQuery不存在，加載它
   if (typeof window !== 'undefined' && !window.jQuery && !window.$) {
-    console.log('加載jQuery')
+    // console.log('加載jQuery')
     const script = document.createElement('script')
     script.src = 'https://code.jquery.com/jquery-3.6.0.min.js'
     script.integrity = 'sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4='
     script.crossOrigin = 'anonymous'
     script.onload = () => {
-      console.log('jQuery加載完成')
+      //   console.log('jQuery加載完成')
       checkAndScrollToHash()
     }
     document.head.appendChild(script)
   } else {
     // jQuery已存在，直接檢查哈希
-    console.log('jQuery已存在，直接檢查哈希')
+    // console.log('jQuery已存在，直接檢查哈希')
     checkAndScrollToHash()
   }
 
@@ -787,13 +787,13 @@ onBeforeUnmount(() => {
 const handleHashChange = () => {
   if (window.location.hash) {
     const sectionId = window.location.hash.substring(1)
-    console.log(`哈希變化: #${sectionId}`)
+    // console.log(`哈希變化: #${sectionId}`)
 
     // 確保使用非event版本
     setTimeout(() => {
       const element = document.getElementById(sectionId)
       if (element) {
-        console.log(`找到元素 #${sectionId}，執行滾動`)
+        // console.log(`找到元素 #${sectionId}，執行滾動`)
 
         try {
           // 嘗試多種滾動方法
