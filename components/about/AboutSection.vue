@@ -6,20 +6,15 @@
     <!-- 六邊形背景裝飾 -->
     <div class="absolute inset-0 z-0 overflow-hidden opacity-5">
       <div
-        v-for="i in 20"
+        v-for="(hexagon, i) in hexagons"
         :key="i"
-        class="hexagon absolute"
-        :style="{
-          left: `${Math.random() * 100}%`,
-          top: `${Math.random() * 100}%`,
-          transform: `scale(${0.5 + Math.random() * 1.5}) rotate(${Math.random() * 360}deg)`,
-          opacity: 0.1 + Math.random() * 0.4,
-        }"
+        class="hexagon animate-float absolute"
+        :style="hexagon"
       ></div>
     </div>
 
     <div
-      class="relative z-10 overflow-hidden rounded-[24px] bg-[#1A1A1A] p-8 shadow-[inset_0_0_20px_rgba(0,0,0,0.2)] backdrop-blur-sm sm:p-10"
+      class="relative z-10 overflow-hidden rounded-[24px] bg-gradient-to-br from-[#1A1A1A] to-[#2A2A2A] p-8 shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-sm transition-all duration-300 hover:shadow-[0_12px_48px_rgba(0,0,0,0.4)] sm:p-10"
     >
       <!-- 引言區塊 -->
       <div class="mb-8 border-l-4 border-yellow-400 py-2 pl-4">
@@ -30,10 +25,10 @@
 
       <!-- 多重身份展示 -->
       <div class="mb-8 flex flex-wrap items-center">
-        <span class="mr-2 text-lg text-white sm:text-xl">我是</span>
+        <span class="mr-2 text-lg font-medium text-white sm:text-xl">我是</span>
         <type-writer
-          :texts="['Web 開發者', '六邊形戰士']"
-          text-class="text-yellow-400 text-lg sm:text-xl"
+          :texts="['Web 全端開發者', 'AI 應用專家', 'SaaS 創業家', '技術創新者', '六邊形戰士']"
+          text-class="text-gradient bg-gradient-to-r from-yellow-400 via-blue-400 to-purple-400 text-lg font-bold sm:text-xl"
           :speed="80"
           :delete-speed="40"
           :wait-time="1800"
@@ -79,7 +74,7 @@
         <span
           v-for="(tag, index) in techTags"
           :key="index"
-          class="inline-block rounded-full px-3 py-1 text-sm"
+          class="inline-block transform rounded-full px-3 py-1 text-sm transition-all duration-300 hover:scale-105 hover:shadow-lg"
           :class="tagColors[index % tagColors.length]"
         >
           {{ tag }}
@@ -90,14 +85,28 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import SectionTitle from '../common/SectionTitle.vue'
 import TypeWriter from '../common/TypeWriter.vue'
+
+// 六邊形樣式數據
+const hexagons = ref([])
+
+// 在客戶端生成六邊形樣式
+onMounted(() => {
+  hexagons.value = Array.from({ length: 20 }, () => ({
+    left: `${Math.random() * 100}%`,
+    top: `${Math.random() * 100}%`,
+    transform: `scale(${0.5 + Math.random() * 1.5}) rotate(${Math.random() * 360}deg)`,
+    opacity: 0.1 + Math.random() * 0.4,
+    animationDelay: `${Math.random() * 2}s`,
+  }))
+})
 
 // 技術關鍵詞標籤
 const techTags = ['全端開發', '資料科學', '系統設計', 'UI/UX', '人工智慧', '生成式AI', '創新思維']
 
-// 標籤顏色循環
+// 標籤顏色循環（加入 hover 效果）
 const tagColors = [
   'bg-yellow-500/20 text-yellow-300',
   'bg-blue-500/20 text-blue-300',
@@ -138,5 +147,43 @@ const tagColors = [
 .hexagon:after {
   top: 100%;
   border-top: 30px solid #ffffff;
+}
+
+/* 漂浮動畫 */
+@keyframes float {
+  0% {
+    transform: translateY(0) rotate(0);
+  }
+  50% {
+    transform: translateY(-10px) rotate(5deg);
+  }
+  100% {
+    transform: translateY(0) rotate(0);
+  }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* 漸層文字效果 */
+.text-gradient {
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  background-size: 200% auto;
+  animation: gradient 3s linear infinite;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 </style>
