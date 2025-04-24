@@ -8,7 +8,9 @@
       @enter="enter"
       @after-enter="afterEnter"
     >
-      <slot />
+      <div class="page-transition-content">
+        <slot />
+      </div>
     </transition>
   </div>
 </template>
@@ -75,6 +77,11 @@ onMounted(() => {
 <style scoped>
 .page-transition-container {
   position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.page-transition-content {
   width: 100%;
   height: 100%;
 }
