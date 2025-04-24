@@ -26,7 +26,7 @@ import AnimateOnView from '~/components/animation/AnimateOnView.vue'
 useHead({
   title: 'Portfolio | Ju-Shen Huang - OG_Matcha | Finctory CTO',
   meta: [
-    { name: 'description', content: '黃宥瑄的個人網站，展示專業技能、作品集與履歷' },
+    { name: 'description', content: '黃鉅燊的個人網站，展示專業技能、作品集與履歷' },
     {
       name: 'keywords',
       content: '黃鉅燊, Ju-Shen Huang, OG_Matcha, 斐闊, Finctory, 作品集, 網頁開發, 前端開發',
