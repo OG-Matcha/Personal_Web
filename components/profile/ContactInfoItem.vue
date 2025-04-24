@@ -5,7 +5,7 @@
     :href="href"
     target="_blank"
     rel="noopener noreferrer"
-    class="group grid grid-cols-[auto,1fr] items-center gap-2 transition-colors duration-200 hover:text-yellow-400 sm:gap-2.5 md:gap-3"
+    class="group grid grid-cols-[auto,1fr] items-center gap-2 overflow-hidden transition-colors duration-200 hover:text-yellow-400 sm:gap-2.5 md:gap-3"
   >
     <div
       class="relative flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-transform duration-300 group-hover:scale-110 sm:h-8 sm:w-8 md:h-9 md:w-9 lg:h-10 lg:w-10"
@@ -93,7 +93,7 @@
   </a>
   <div
     v-else
-    class="group grid grid-cols-[auto,1fr] items-center gap-2 transition-colors duration-200 hover:text-yellow-400 sm:gap-2.5 md:gap-3"
+    class="group grid grid-cols-[auto,1fr] items-center gap-2 overflow-hidden transition-colors duration-200 hover:text-yellow-400 sm:gap-2.5 md:gap-3"
   >
     <div
       class="relative flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-transform duration-300 group-hover:scale-110 sm:h-8 sm:w-8 md:h-9 md:w-9 lg:h-10 lg:w-10"
