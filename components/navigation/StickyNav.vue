@@ -80,7 +80,7 @@ onMounted(() => {
   handleScroll()
 
   // 記錄實際使用的閾值
-  console.log(`StickyNav mounted, using threshold: ${props.showThreshold}`)
+  //   console.log(`StickyNav mounted, using threshold: ${props.showThreshold}`)
 })
 
 onUnmounted(() => {
