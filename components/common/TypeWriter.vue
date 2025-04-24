@@ -40,51 +40,42 @@ const typeTarget = ref(null)
 let typeInstance = null
 
 onMounted(() => {
-  if (props.texts.length === 0) return
+  if (props.texts.length === 0 || !typeTarget.value) return
 
-  // 創建打字實例
-  typeInstance = new TypeIt(typeTarget.value, {
-    speed: props.speed,
-    waitUntilVisible: true,
-    cursor: true,
-    cursorSpeed: 1000,
-    lifeLike: true,
-  }).go()
-
-  // 添加打字序列
-  function setupTypeSequence() {
-    if (!typeInstance) return
-
-    // 重置實例
-    typeInstance.reset()
-
-    // 為每個文本添加打字/刪除序列
-    props.texts.forEach((text, index) => {
-      // 添加文本
-      typeInstance.type(text)
-
-      // 等待指定時間
-      typeInstance.pause(props.waitTime)
-
-      // 刪除文本 (最後一項除外)
-      if (index < props.texts.length - 1) {
-        typeInstance.delete(null, { speed: props.deleteSpeed })
-      }
+  try {
+    // 創建新的打字實例
+    typeInstance = new TypeIt(typeTarget.value, {
+      speed: props.speed,
+      waitUntilVisible: true,
+      cursor: true,
+      cursorSpeed: 1000,
+      lifeLike: true,
+      loop: true,
+      loopDelay: props.speed,
+      breakLines: false,
+      nextStringDelay: props.waitTime,
+      startDelete: false,
+      strings: props.texts,
     })
 
-    // 完成後重新開始
-    typeInstance.go().flush(setupTypeSequence)
+    // 開始動畫
+    typeInstance.go()
+  } catch (error) {
+    console.warn('TypeWriter initialization error:', error)
   }
-
-  // 初始化序列
-  setupTypeSequence()
 })
 
 onBeforeUnmount(() => {
-  // 組件卸載時，清理實例
-  if (typeInstance) {
-    typeInstance.destroy()
+  if (!typeInstance) return
+
+  try {
+    // 安全地清理實例
+    if (typeTarget.value) {
+      typeTarget.value.innerHTML = ''
+    }
     typeInstance = null
+  } catch (error) {
+    console.warn('TypeWriter cleanup error:', error)
   }
 })
 </script>
