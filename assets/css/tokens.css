@@ -1,0 +1,178 @@
+/* ---------------------------------------------------------------------------
+   Design tokens
+   Palette: cool monochrome + one saturated accent. Deliberately NOT the
+   warm-paper / serif / earth-tone family, which is the single most common
+   AI-generated look and reads as templated on sight.
+   The accent is a fill colour first (dark text on lime), never a glow.
+--------------------------------------------------------------------------- */
+
+:root {
+  /* One theme, dark. There is no toggle.
+     The homepage is a film shot in a near-black room; the light variant made
+     the particle field read as faint grey dust on white and there was no way
+     to fix that without designing a second, different film. A site with two
+     themes where one of them is worse is a site with one theme and a bug. */
+  --bg: #0c0d0f;
+  --surface: #141619;
+  --ink: #edeef0; /* 16.8:1 AAA */
+  --ink-2: #9aa0a8; /* 7.4:1  AA  */
+  --rule: #23262b;
+  --rule-strong: #575d66; /* 3.1:1 non-text UI */
+
+  /* Accent has two roles that must not be swapped:
+     --pop  is a FILL. Text sitting on it is --on-pop (15.1:1).
+     --pop-ink is accent-coloured type, which on this ground is the same hue. */
+  --pop: #c8f250;
+  --pop-ink: #c8f250;
+  --on-pop: #0c0d0f;
+
+  /* ---- type ---- */
+  --font-display: 'Archivo', 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  --font-body: 'IBM Plex Sans', 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'Noto Sans TC', monospace;
+
+  --step--1: clamp(0.8125rem, 0.79rem + 0.11vw, 0.875rem);
+  --step-0: clamp(1rem, 0.97rem + 0.15vw, 1.0625rem);
+  --step-1: clamp(1.125rem, 1.08rem + 0.23vw, 1.25rem);
+  --step-2: clamp(1.375rem, 1.28rem + 0.48vw, 1.75rem);
+  --step-3: clamp(1.75rem, 1.53rem + 1.07vw, 2.5rem);
+  --step-4: clamp(2.5rem, 1.96rem + 2.68vw, 4.25rem);
+  --step-5: clamp(3.25rem, 1.7rem + 7.77vw, 8rem);
+
+  --lh-display-han: 1;
+  --lh-body-han: 1.75;
+  --lh-body-latin: 1.55;
+  --measure-latin: 62ch;
+  --measure-han: 30em;
+
+  /* ---- space / shape ---- */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+  --sp-8: 64px;
+  --sp-9: 96px;
+  --sp-10: 128px;
+  --sp-section: clamp(4rem, 2rem + 9vw, 8rem);
+
+  /* Height of the sticky header. The cinema overlay starts below it, so this
+     has to be a token rather than a number repeated in two components. */
+  --header-h: 4.25rem;
+
+  /* One radius system: everything is sharp except pills. No mixed scales. */
+  --r-0: 0px;
+  --r-1: 3px;
+  --r-full: 9999px;
+
+  /* ---- motion ---- */
+  --ease-entrance: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-1: 140ms;
+  --dur-2: 280ms;
+  --dur-3: 520ms;
+
+  --elev-1: 0 1px 2px rgb(0 0 0 / 0.5), 0 16px 40px -16px rgb(0 0 0 / 0.7);
+}
+
+/* ---------------------------------------------------------------------------
+   Base
+--------------------------------------------------------------------------- */
+
+html {
+  background: var(--bg);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: var(--lh-body-latin);
+  text-autospace: normal;
+  -webkit-font-smoothing: antialiased;
+}
+
+:lang(zh-Hant),
+:lang(zh-TW) {
+  letter-spacing: 0;
+  line-height: var(--lh-body-han);
+  word-break: normal;
+  overflow-wrap: anywhere;
+  line-break: strict;
+}
+
+h1,
+h2,
+h3,
+h4,
+.display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+/* Latin tracking is wrong for 漢字; negative tracking closes the em box. */
+h1:lang(zh-Hant),
+h2:lang(zh-Hant),
+h3:lang(zh-Hant),
+h4:lang(zh-Hant),
+.display:lang(zh-Hant) {
+  letter-spacing: 0;
+  line-height: var(--lh-display-han);
+}
+
+.mono,
+code,
+kbd,
+samp {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+a {
+  color: inherit;
+  text-decoration-color: var(--rule-strong);
+  text-underline-offset: 0.22em;
+  text-decoration-thickness: 1px;
+}
+
+a:hover {
+  text-decoration-color: var(--pop-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--pop-ink);
+  outline-offset: 3px;
+  border-radius: var(--r-1);
+}
+
+::selection {
+  background: var(--pop);
+  color: var(--on-pop);
+}
+
+[id] {
+  scroll-margin-top: 5rem;
+}
+
+.scroll-x {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,14 +1,75 @@
 /** @type {import('tailwindcss').Config} */
+// theme is OVERRIDDEN, not extended, so any leftover utility from an older
+// palette fails the build instead of surviving quietly.
 module.exports = {
   content: [
-    "./components/**/*.{js,vue,ts}",
-    "./layouts/**/*.vue",
-    "./pages/**/*.vue",
-    "./plugins/**/*.{js,ts}",
-    "./app.vue",
+    './components/**/*.{js,vue,ts}',
+    './layouts/**/*.vue',
+    './pages/**/*.vue',
+    './composables/**/*.{js,ts}',
+    './content/**/*.{md,yml,json}',
+    './app.vue',
   ],
+  darkMode: ['class', '[data-theme="dark"]'],
   theme: {
-    extend: {},
+    screens: { sm: '640px', md: '768px', lg: '1024px', xl: '1280px' },
+    colors: {
+      transparent: 'transparent',
+      current: 'currentColor',
+      bg: 'var(--bg)',
+      surface: 'var(--surface)',
+      ink: 'var(--ink)',
+      'ink-2': 'var(--ink-2)',
+      rule: 'var(--rule)',
+      'rule-strong': 'var(--rule-strong)',
+      pop: 'var(--pop)',
+      'pop-ink': 'var(--pop-ink)',
+      'on-pop': 'var(--on-pop)',
+    },
+    fontFamily: {
+      display: 'var(--font-display)',
+      body: 'var(--font-body)',
+      mono: 'var(--font-mono)',
+    },
+    fontSize: {
+      '2xs': ['var(--step--1)', { lineHeight: '1.5' }],
+      base: ['var(--step-0)', { lineHeight: 'var(--lh-body-latin)' }],
+      lg: ['var(--step-1)', { lineHeight: '1.4' }],
+      xl: ['var(--step-2)', { lineHeight: '1.2' }],
+      '2xl': ['var(--step-3)', { lineHeight: '1.08' }],
+      '3xl': ['var(--step-4)', { lineHeight: '1' }],
+      '4xl': ['var(--step-5)', { lineHeight: '0.92' }],
+    },
+    spacing: {
+      0: '0',
+      px: '1px',
+      1: 'var(--sp-1)',
+      2: 'var(--sp-2)',
+      3: 'var(--sp-3)',
+      4: 'var(--sp-4)',
+      5: 'var(--sp-5)',
+      6: 'var(--sp-6)',
+      7: 'var(--sp-7)',
+      8: 'var(--sp-8)',
+      9: 'var(--sp-9)',
+      10: 'var(--sp-10)',
+      section: 'var(--sp-section)',
+    },
+    borderRadius: { none: 'var(--r-0)', sm: 'var(--r-1)', full: 'var(--r-full)' },
+    boxShadow: { raised: 'var(--elev-1)', none: 'none' },
+    transitionTimingFunction: {
+      entrance: 'var(--ease-entrance)',
+      inout: 'var(--ease-inout)',
+    },
+    transitionDuration: { 1: 'var(--dur-1)', 2: 'var(--dur-2)', 3: 'var(--dur-3)' },
+    extend: {
+      maxWidth: {
+        measure: 'var(--measure-latin)',
+        'measure-han': 'var(--measure-han)',
+        page: '84rem',
+      },
+      fontWeight: { normal: '400', medium: '500', semibold: '600', bold: '700', black: '900' },
+    },
   },
   plugins: [],
-} 
+}

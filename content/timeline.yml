@@ -1,0 +1,430 @@
+# -----------------------------------------------------------------------------
+# 部署紀錄 / 年表。逆時序渲染。
+#
+# 唯一硬規則：每一筆都要有 date。沒有 date 的條目不會被渲染 —— 這是刻意的，
+# 因為「沒有日期的成就」讀起來像宣稱，「有日期的成就」讀起來像事實。
+#
+# date 接受 YYYY-MM 或 YYYY（只知道年份時用後者，不要猜月份）。
+# kind: role | education | award | research | publication | grant | honor | product
+# lane: 首頁 3D 的四條平行軌 + 一條基準線，見 docs/CINEMATIC-BRIEF.md 第 4 節
+#   venture  A 創業與產品（斐闊 / 醫數）
+#   research B 研究
+#   contest  C 競賽
+#   practice D 組織與實務
+#   academic E 學業（不是軌，是畫面底部的基準線）
+# strand: venture 軌內的分支 —— finctory | medalink
+# project: 對應 content/work/*.yml 的檔名，案例頁會自動撈到這一筆當佐證
+# evidence: 得獎公告 / repo / DOI 的 URL。null 代表還沒補。
+# -----------------------------------------------------------------------------
+
+- date: 2026-09
+  kind: education
+  lane: academic
+  title: 國立中央大學 資訊管理學系 碩士班 入學
+  detail: 日間，2026-09 至 2028-06
+  upcoming: true
+  evidence: null
+
+- date: 2026-07
+  kind: role
+  lane: venture
+  strand: medalink
+  title: 共同創辦 醫數行銷 MedaLink，任前線部署工程師（FDE）
+  org: 醫數行銷科技有限公司
+  ongoing: true
+  detail: >-
+    負責 AI 系統的設計、整合與部署。以大型語言模型與 Multi-Agent 架構開發診所營運系統：
+    四通路訊息中心、規則化回覆引擎、資源排程與客戶狀態流，從對話引擎到資料庫、
+    從串接到雲端部署一人做完。與斐闊為各自獨立的兩間公司。
+  evidence: https://medalink.ai/
+
+- date: 2026-06
+  kind: education
+  lane: academic
+  title: 國立中央大學 資訊管理學系 學士畢業
+  detail: GPA 4.19 / 4.3；另完成「人工智慧跨域應用」與「商業智慧與分析」兩個學分學程
+  evidence: null
+
+- date: 2026-05
+  kind: award
+  lane: contest
+  title: 雙北程式設計節 城市儀表板大黑客松 - 第三名
+  org: 臺北市政府 · 新北市政府
+  evidence: https://github.com/OG-Matcha/Taipei-City-Dashboard_2026
+  note: 以開源的 Taipei City Dashboard 為基礎延伸
+
+- date: 2026-04
+  kind: product
+  lane: venture
+  strand: finctory
+  title: 財伴 oSave 行動版開發
+  project: osave
+  ongoing: true
+  detail: Flutter + Clean Architecture / BLoC；397 個 Dart 檔、16 個功能模組
+  evidence: null
+
+- date: 2025-09
+  kind: role
+  lane: practice
+  title: 工業技術研究院 產科國際所 - AI Intern（軟體工程師）
+  org: 創新與創投策略組（ISTI）· 新竹縣竹東鎮
+  ongoing: true
+  detail: >-
+    由暑期實習延續。交付五個內部系統，涵蓋前端框架遷移、資料 API、
+    LLM 分析管線與新創情報平台；另產出全組共用的生成式 AI 專案範本，
+    以及憑證掃描、靜態分析與 LLM 紅隊測試（OWASP LLM Top 10）的標準工作流，
+    供其他團隊直接沿用。累計逾 300 次提交。專案細節依規定不對外揭露。
+  evidence: null
+
+- date: 2025-09
+  kind: product
+  lane: venture
+  strand: finctory
+  title: 財伴 oSave 後端開工
+  project: osave
+  detail: Firebase Cloud Functions（Python）；品項分類走記憶體快取 → 本地規則 → 模型三層串接
+  evidence: null
+
+- date: 2025-07
+  kind: role
+  lane: practice
+  title: 工業技術研究院 產科國際所 - 暑期實習（資料科學家）
+  org: 創新與創投策略組（ISTI）
+  period: 2025-07 - 2025-08
+  detail: >-
+    建立並標準化台灣新創生態系資料庫，整合政府補助、創育基地與投資單位來源，
+    應用於產業地圖、象限分析與投資決策；對非技術同仁設計並帶領 AI 實作工作坊，
+    協助其把實際需求轉為 AI 工具。
+
+- date: 2025-06
+  kind: honor
+  lane: academic
+  title: 113 學年度第 2 學期 學業成績優良書卷獎
+  org: 國立中央大學資訊管理學系
+  detail: 學期班級前 5%（2 / 47）
+
+- date: 2025-06
+  kind: honor
+  lane: academic
+  title: 113 學年度第 2 學期 系優秀學生
+  org: 國立中央大學資訊管理學系
+  detail: 每學期全系推派 2 名
+
+- date: 2025-06
+  kind: role
+  lane: venture
+  strand: finctory
+  title: 斐闊有限公司 正式成立
+  org: 斐闊有限公司
+  detail: 2025-06-05 登記成立，因通過教育部 U-Start 創新創業計畫
+  evidence: https://www.finctory.com/
+
+- date: 2025-06
+  kind: product
+  lane: venture
+  strand: finctory
+  title: 淘換算 Taobao Exchange
+  org: 斐闊有限公司
+  detail: Chrome 擴充套件，自動將淘寶人民幣金額換算為新台幣顯示
+  evidence: https://chromewebstore.google.com/detail/neikbgpobachnkgcefcmedgojmedbfmk
+
+- date: 2025-05
+  kind: product
+  lane: venture
+  strand: finctory
+  title: 發票醫生 pivot 為 財伴 oSave
+  project: osave
+  detail: >-
+    發票醫生自動抓得到消費資料，卻答不出「所以我的財務健康嗎」。
+    團隊決定重做架構、財務模型、核心服務與 TA，連同名稱與輸入方式一併更新：
+    從自動抓取改為以會計邏輯手動記帳，換得算得出財務健康指標的結構化資料。
+    2025-05-06 定案，設計與開發改為雙線並進。
+  evidence: null
+
+- date: 2025-03
+  kind: product
+  lane: venture
+  strand: finctory
+  title: 印鏈 PrinterChain
+  org: 斐闊 Finctory
+  period: 2025-03 - 2025-04
+  detail: 列印媒合平台，以智慧媒合串接有列印需求的使用者與有閒置印表機的機主
+  evidence: null
+
+- date: 2025-02
+  kind: award
+  lane: contest
+  title: 第六屆台積電校園黑客松（TSMC IT CareerHack）AI 維運懶人包組 - 第一名
+  org: 台灣積體電路製造股份有限公司
+  detail: 參賽作品 Catalyst —— Multi-Agent 軟體開發自動化平台，從需求分析、產生程式碼到測試部署全流程串接
+  evidence: null
+
+- date: 2025-02
+  kind: award
+  lane: contest
+  title: 第七屆社會企業創業提案競賽 後起之秀組 - 優選
+  org: 社團法人台灣永續典範永續發展協會
+  project: osave
+  note: 訴求 SDGs 1.4 普惠金融與 SDGs 3.4 心理健康
+  evidence: null
+
+- date: 2025-02
+  kind: research
+  lane: research
+  title: 探討生成式 AI 於社交工程之發展應用
+  org: 國立中央大學資訊管理學系
+  advisor: 胡雅涵 教授
+  period: 2024-07 - 2025-02
+  project: phishforge
+  publication: 113 年度國科會大專學生研究計畫
+  evidence: null
+
+- date: 2025-02
+  kind: research
+  lane: research
+  title: 結合股市異常現象指標及生成式 AI 之股票追蹤系統
+  org: 國立中央大學資訊管理學系
+  advisor: 邱信瑜 教授
+  period: 2024-07 - 2025-02
+  publication: 113 年度國科會大專學生研究計畫
+  detail: >-
+    以異常現象指標篩選標的，再由 LLM 產生投資分析報告；
+    前端 Flutter、後端 Firebase，技術指標以 TwStock 與 Pandas-TA 計算。
+  evidence: null
+
+- date: 2025
+  kind: grant
+  lane: venture
+  strand: finctory
+  title: 114 年度 U-Start 創新創業計畫 - 第一階段入選
+  org: 教育部
+  project: osave
+  evidence: null
+
+- date: 2025-09
+  kind: award
+  lane: contest
+  title: 臺東創新創業大賽 - 最佳創新創業大獎
+  org: 臺東縣政府 · 臺東市青年工作協會
+  project: osave
+  detail: 臺東縣政府首度舉辦。全國 90 組報名、8 隊入決賽，斐闊以財伴 oSave 奪最高獎，獎金 6 萬元
+  evidence: https://www.taitung.gov.tw/News_Content.aspx?n=13370&s=142075
+
+- date: 2025
+  kind: award
+  lane: contest
+  title: 臺灣數創大賞 - 銅獎
+  org: 經濟部產業園區管理局
+  project: null
+  note: 以 Finctory 產品「找好康 SurPrice」參賽
+  evidence: null
+
+- date: 2024-12
+  kind: award
+  lane: contest
+  title: 臺北市智慧城市青年舉政徵件提案競賽 - 佳作（第四名）
+  org: 臺北市政府青年局
+  project: osave
+  evidence: null
+
+- date: 2024-12
+  kind: role
+  lane: practice
+  title: 2024 新生知訊網 副執行長（卸任）
+  org: 國立中央大學諮商中心
+  period: 2023-10 - 2024-12
+  detail: >-
+    帶領企劃、程式、設計、影音四組共 30 人，交付新生資訊平台，
+    含像素風校園地圖與 AI 客服；服務 1,000 名以上新生。
+
+- date: 2024-11
+  kind: award
+  lane: contest
+  title: 第 29 屆大專校院資訊應用服務創新競賽 資安應用組 - 第一名
+  org: 數位發展部 · 教育部 · 中華民國資訊管理學會
+  project: phishforge
+  evidence: null
+
+- date: 2024-11
+  kind: award
+  lane: contest
+  title: 第 29 屆大專校院資訊應用服務創新競賽 資訊應用組 IP-06 - 佳作
+  org: 數位發展部 · 教育部 · 中華民國資訊管理學會
+  project: phishforge
+  evidence: null
+
+- date: 2024-11
+  kind: award
+  lane: contest
+  title: 臺灣數創大賞 數位＋組 - 金獎
+  org: 經濟部產業園區管理局 · 臺中軟體園區發展產學訓聯盟 · 東海大學
+  project: osave
+  evidence: null
+
+- date: 2024-11
+  kind: research
+  lane: research
+  title: 運用知識圖譜與大型語言模型分析學習軌跡
+  org: 國立中央大學通識教育中心
+  advisor: 張家凱 教授
+  period: 2024-08 - 2024-10
+  publication: LAK 2025 國際學習分析與知識會議 · Practitioner Chairs
+  project: null
+  detail: >-
+    以 LLM 將教材轉為結構化資料建個人知識圖譜，對照測驗結果找出考試範圍的知識覆蓋漏洞；
+    已於中央大學 Python 程式設計課程實測。
+  evidence: null
+
+- date: 2024-10
+  kind: award
+  lane: contest
+  title: GenAI Stars 生成式 AI 百工百業應用選拔 創意創客組 - 優選
+  org: 國家科學及技術委員會 · 台北市電腦公會
+  project: chedai
+  detail: 參賽作品 Ched.AI —— 自動化財務報表分析與徵信風險評估
+  evidence: https://github.com/OG-Matcha/Credit-Report
+
+- date: 2024-09
+  kind: award
+  lane: contest
+  title: 桃園新創之星 X 創天下競賽 - 入圍決賽（前 10）
+  org: 中原大學 · 桃園市政府青年事務局
+  project: osave
+  evidence: null
+
+- date: 2024-07
+  kind: product
+  lane: venture
+  strand: finctory
+  title: 發票醫生 Invoice Doctor
+  org: 斐闊 Finctory
+  period: 2024-07 - 2026-03
+  detail: >-
+    Flowney 的 MVP。串接財政部電子發票，以 LLM Multi-Agent 架構把發票資料
+    轉為個人化財務建議：自動識別分類、消費分析、智能比價與互動式客服。
+    2025-05 pivot 為財伴 oSave。
+  evidence: null
+
+- date: 2024-06
+  kind: award
+  lane: contest
+  title: 第六屆 Startup 創業競技場 國內組 - 第一名
+  org: 國立臺灣師範大學 · 教育部
+  project: osave
+  evidence: null
+
+- date: 2024-06
+  kind: award
+  lane: contest
+  title: 桃園青創力學生創業競賽 - 佳作
+  org: 龍華科技大學 · 桃園市政府青年事務局
+  project: osave
+  evidence: null
+
+- date: 2024-06
+  kind: honor
+  lane: academic
+  title: 112 學年度第 2 學期 系優秀學生
+  org: 國立中央大學資訊管理學系
+  detail: 每學期全系推派 2 名
+
+- date: 2024-06
+  kind: honor
+  lane: academic
+  title: 112 學年度 管理學院院長獎
+  org: 國立中央大學管理學院
+  detail: 學年班級前 5 名
+
+- date: 2024-05
+  kind: award
+  lane: contest
+  title: 第七屆致青春・創未來全國選拔大賽 科技應用組 - 優等獎
+  org: 致理科技大學
+  project: osave
+  evidence: null
+
+- date: 2024-04
+  kind: role
+  lane: venture
+  strand: finctory
+  title: 共同創辦 斐闊 Finctory，出任技術長
+  org: 斐闊有限公司
+  ongoing: true
+  detail: >-
+    團隊成形、開始做產品（公司於 2025-06-05 正式登記）。負責系統架構、
+    AI 技術選型與工程團隊，導入敏捷開發與快速迭代。帶隊通過五處基地的
+    進駐或培育審核：新北青創三重社會創新基地、115 社會創新實驗中心、
+    桃園市青年事務局安東青創基地、新北青創土城電商基地、新明青創基地。
+  evidence: https://www.finctory.com/
+
+- date: 2024-03
+  kind: product
+  lane: research
+  title: PhishForge 畢業專題開發
+  org: 國立中央大學資訊管理學系
+  period: 2024-03 - 2024-09
+  project: phishforge
+  detail: >-
+    生成式 AI 資安演練平台：自動產出客製化釣魚郵件與仿真網站並部署至雲端，
+    以行為數據評估企業資安意識。
+  evidence: null
+
+- date: 2024-01
+  kind: award
+  lane: contest
+  title: 中央新創擂台賽 - 優選
+  org: 國立中央大學
+  project: osave
+  evidence: null
+
+- date: 2023-10
+  kind: role
+  lane: practice
+  title: 2024 新生知訊網 副執行長（就任）
+  org: 國立中央大學諮商中心
+
+- date: 2023-09
+  kind: role
+  lane: practice
+  title: 共同創辦 United Developer Club，任副召集人
+  org: 國立中央大學教學發展中心
+  detail: 開設「從零開始的 Python 專案」專案導向課程，串連校內分散的資訊社群
+
+- date: 2023-09
+  kind: role
+  lane: practice
+  title: 網路管理工程師
+  org: 國立中央大學學習與教學研究所
+  period: 2023-09 - 2023-12
+  detail: 系所硬體診斷維修使網路故障時間降低 40%；重整 WordPress 站台使載入速度提升 50%
+
+- date: 2023-09
+  kind: award
+  lane: contest
+  title: 金匠獎程式競賽 Python 個人組 - 優獎
+  org: 巨匠電腦 · 神通資科
+  evidence: null
+
+- date: 2023-07
+  kind: role
+  lane: research
+  title: 研究助理
+  org: 國立中央大學（教授研究計畫）
+  period: 2023-07 - 2026-06
+  detail: >-
+    機器學習與深度學習模型訓練、調參與評估；LLM 提示工程與微調；
+    金融科技相關資料處理與論文撰寫。三年。
+
+- date: 2022-10
+  kind: role
+  lane: practice
+  title: SAP S/4HANA & Basis 學生團隊
+  org: 國立中央大學 ERP 中心
+  period: 2022-10 - 2024-02
+  detail: 第一年受訓、第二年轉任暑期特約講師，負責教材準備與授課
+
+- date: 2022-09
+  kind: education
+  lane: academic
+  title: 入學 國立中央大學 資訊管理學系
+  detail: 後續完成「人工智慧跨域應用」與「商業智慧與分析」兩個學分學程

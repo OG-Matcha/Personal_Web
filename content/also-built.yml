@@ -1,0 +1,75 @@
+# -----------------------------------------------------------------------------
+# 也做過。
+#
+# 這些不是次等作品，是「不需要用整頁篇幅講」的作品。舊版網站把 8 個專案做成
+# 8 張等權重的卡片，讀者因此無法判斷哪個重要 —— 全部一樣大，等於全部一樣輕。
+#
+# 密集 mono 清單，一行一個。想升格成完整案例研究時，
+# 在 content/work/ 開一個 .yml，把 tier 設成 promoted 即可。
+# -----------------------------------------------------------------------------
+
+- name: Catalyst
+  thumbnail: /images/catalyst-1.png
+  year: 2025
+  line: Multi-Agent 軟體開發自動化平台；需求分析、產生程式碼、測試部署全流程串接。
+  stack: [Python, AutoGen, LLM Multi-Agent]
+  # 沒有公開 repo 或 demo，但第一名本身就是可驗證的成果，而且在年表裡對得上。
+  repo: null
+  award: 台積電校園黑客松 AI 維運懶人包組 第一名
+
+- name: 淘換算 Taobao Exchange
+  thumbnail: /images/taobao-1.jpg
+  year: 2025
+  line: Chrome 擴充套件，自動把淘寶的人民幣金額換算成新台幣顯示。
+  stack: [TypeScript, Chrome Extension]
+  repo: https://chromewebstore.google.com/detail/neikbgpobachnkgcefcmedgojmedbfmk
+  award: null
+
+- name: Ched.AI
+  thumbnail: /images/chedai-1.png
+  year: 2024
+  line: 金融 AO 徵信助手；本地 LLaMA 3 與 OpenAI 雙軌，向量索引檢索財報。
+  stack: [Python, LLaMA 3, OpenAI API, FAISS, Flask, Gradio]
+  repo: https://github.com/OG-Matcha/Credit-Report
+  award: GenAI Stars 創意創客組 優選
+
+- name: 2024 新生知訊網 ChatBot
+  thumbnail: /images/ncufresh-1.jpg
+  year: 2024
+  line: 中央大學新生入學問答系統，服務 1,000 名以上新生。
+  stack: [Python, Flask, LangChain, OpenAI API, Streamlit]
+  repo: https://github.com/OG-Matcha/NCU_Fresh_Web_ChatBot
+  award: null
+
+- name: Cow of Answer
+  thumbnail: /images/cowofanswer-1.png
+  year: 2024
+  line: 聲音導向的紓壓互動遊戲，網路課程期末專案；完整走過 Nginx／容器化部署。
+  stack: [Nuxt.js, Laravel, PostgreSQL, Redis, Nginx, Docker, Azure]
+  repo: https://github.com/OG-Matcha/Cow-of-Answer
+  award: null
+
+- name: BrainLib
+  thumbnail: /images/brainlib-1.png
+  year: 2024
+  line: 學術交流社群平台，系統分析與設計課程期末專案；唯一一個 Java／Spring 的作品。
+  stack: [Vue.js, Spring, Hibernate, PostgreSQL, Docker]
+  repo: https://github.com/OG-Matcha/BrainLib
+  award: null
+
+- name: Taipei City Dashboard 延伸
+  thumbnail: /images/citydash-1.jpg
+  year: 2026
+  line: 雙北程式設計節黑客松作品，在開源市政儀表板上延伸資料視覺化。
+  stack: [Python, Vue.js]
+  repo: https://github.com/OG-Matcha/Taipei-City-Dashboard_2026
+  award: 第三名
+
+# 舊網站列過但這裡刻意拿掉的：
+#   Finctory 官網 —— 已經在 /work/finctory 裡，不重複列。
+#   UADP、Speech2Text-Pro —— 個人實驗，沒有交付對象也沒有人在用。
+#   印鏈 PrinterChain —— pivot 前的另一條產品線，私有 repo、沒有公開成果。
+#                        年表裡有它；這份清單的門檻是「點得進去或拿得出獎」。
+#
+# Catalyst 之前被拿掉的理由是「無獎項、無公開成果」，那是在對出台積電校園黑客松
+# 第一名之前寫的。四座全國冠軍之一，沒有連結但有出處，所以放回來了。

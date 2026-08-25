@@ -1,0 +1,83 @@
+slug: finctory
+tier: promoted
+order: 3
+
+title: 斐闊 Finctory
+titleEn: Finctory
+role: 共同創辦人 · 技術長
+org: 斐闊有限公司
+orgUrl: https://www.finctory.com/
+period: { start: 2024-04, end: null }
+team: 工程團隊 4 人以下 · 領導團隊 4 人（CEO / CTO / CPO / COO）
+status: 營運中
+cover: null
+thumbnail: null
+screenshots: []
+
+summary: >-
+  我在這裡學會的不是怎麼寫系統，是怎麼讓系統活得比寫它的人久。一個沒有投資人、
+  所有人還在唸書、每個人隨時可以走的組織，技術決策的第一個約束是交接。
+
+problem: >-
+  2024 年四月組隊的時候，我原本以為技術長的工作是把技術做對。後來發現不是——
+  兩年後這是一間登記在案的公司、四條產品線、四個領導職位，
+  而當初那批夥伴幾乎全部換過一輪。
+
+  真正的問題是：一個沒有投資人、所有人都還在唸書、每個人隨時可以走的組織，
+  要怎麼讓技術決策撐得過人員流動？我做的每一個選擇，第一個要通過的檢查
+  不是「這樣寫最好嗎」，是「下一個人接得住嗎」。
+
+decisions:
+  - decision: 技術選型全部收斂到同一套 stack，不讓每個產品各自挑喜歡的工具。
+    rejected: 每條產品線用最適合自己的技術
+    why: >-
+      四條產品線、四個人以下的工程團隊。如果 oSave 用 FastAPI、SurPrice 用 Node、
+      淘換算用別的，那任何一個人離開都會帶走一整條產品線的維護能力。
+      統一 stack 買到的不是效能，是「換人接手」這件事本身。
+    cost: 有些產品用了不是最適合它的工具，PWA 那條尤其明顯。
+    date: 2024-04
+
+  - decision: 產品線擴張，而不是把所有資源壓在旗艦產品上。
+    rejected: 集中火力做 oSave
+    why: >-
+      TODO - 這是外部看得到的事實（從單一產品變成四條線），
+      但只有你知道當時的理由：是市場驗證？是團隊成員各自想做的東西？是補助的要求？
+      請照實寫，這一題投資人一定會問。
+    cost: TODO
+    date: TODO
+
+  - decision: TODO
+    rejected: TODO
+    why: >-
+      TODO - 建議寫「團隊換血」那一段。2024 的競賽夥伴幾乎全換，
+      留下你和 CEO。你當時做了什麼技術上的準備讓交接不會斷？
+    cost: TODO
+    date: TODO
+
+trace: []
+
+results:
+  - metric: 公司化
+    value: 已完成法人登記
+  - metric: 產品線
+    value: 4 條
+    note: 財伴 oSave · 找好康 SurPrice · 淘換算 · 財伴 Podcast
+  - metric: 競賽獎金與補助
+    value: NT$ 100 萬+
+    note: 含教育部 U-Start 與創新創業實戰模擬補助
+  - metric: 進駐基地
+    value: 桃園青創萌芽團隊
+    note: 另進駐雙北與桃園多處青創基地
+  - metric: 營收
+    value: TODO # 有沒有可以公開的數字？沒有的話這一行刪掉，不要留 TODO 上線
+
+retrospect: >-
+  TODO - 兩年下來，關於「學生團隊要不要變成公司」這件事，
+  你會給 2024 年 4 月的自己什麼建議？
+
+stack:
+  client: [Nuxt.js, Vue.js, Tailwind CSS, PWA]
+  edge-api: [FastAPI, Node.js]
+  agents: [LangGraph, LangChain, OpenAI API]
+  data: [PostgreSQL]
+  infra: [Docker, Heroku, GitHub Actions]

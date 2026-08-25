@@ -24,3 +24,9 @@ logs
 !.env.example
 
 .cursorrules
+
+# Playwright MCP scratch output
+.playwright-mcp
+
+# Git Bash crash dumps on Windows
+*.stackdump

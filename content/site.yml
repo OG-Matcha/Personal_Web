@@ -1,0 +1,51 @@
+# -----------------------------------------------------------------------------
+# 全站基本資料。改這裡就會改到報頭、目前狀態與奧付。
+#
+# ⚠️ asOf 是這個網站唯一的防腐機制：每次部署前把它改成當月。
+#    頁面會把它印出來，讀者就知道資料新舊；你也會被迫看一眼有沒有東西過期。
+# -----------------------------------------------------------------------------
+asOf: 2026-08
+
+person:
+  nameZh: 黃鉅燊
+  nameEn: Ju-Shen Huang
+  handle: OG_Matcha
+  role: 技術長 CTO
+  org: 斐闊 Finctory
+  orgUrl: https://www.finctory.com/
+  since: 2024-04
+  location: 桃園, 台灣
+
+# 主標搬到 about.yml —— 它跟導語、三個地方是同一塊，分兩個檔案改會漂移。
+
+# 目前狀態。這一段的存在理由是「讀者 90 秒內要知道你現在在幹嘛、怎麼找你」。
+now:
+  - label: 學位
+    value: 中央大學資訊管理學系學士，2026.06 畢業
+    detail: GPA 4.19 / 4.3；2026.09 直升本系碩士班
+  - label: 公司
+    value: 斐闊 Finctory 共同創辦人暨技術長
+    detail: 四條產品線在跑，工程團隊 4 人以下
+  - label: 公司
+    value: 醫數行銷 MedaLink 共同創辦人暨前線部署工程師
+    detail: 診所營運系統的 AI 設計、整合與部署；與斐闊各自獨立
+  - label: 智庫
+    value: 工研院產科國際所 兼職 AI Intern
+    detail: 創新與創投策略組，2025.09 起
+
+# 開放什麼。每項 12 字內。
+open:
+  - 生成式 AI／Agent 架構顧問
+  - 早期新創技術合作
+  - 講座與工作坊
+
+contact:
+  email: matchaskill@gmail.com
+  github: https://github.com/OG-Matcha
+  linkedin: https://www.linkedin.com/in/ogmatcha/
+  instagram: https://www.instagram.com/og_matcha/
+  cv:
+    href: /content/Ju-Shen Huang CV.pdf
+    # TODO: CV 檔案本身停在 2025-04，更新後把日期改掉
+    updated: 2025-04
+

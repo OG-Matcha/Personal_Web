@@ -1,45 +1,147 @@
+/* Font @font-face sheets live in public/fonts/ and are linked from
+   nuxt.config.ts. They must NOT be imported here: Nuxt inlines page CSS into
+   every prerendered HTML file, and the CJK sheet alone is ~700 kB of
+   unicode-range declarations. */
+@import './tokens.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* 自定義滾動條樣式 */
 @layer base {
-  /* 整體滾動條 */
-  ::-webkit-scrollbar {
-    @apply w-2;
-  }
-
-  /* 滾動條軌道 */
-  ::-webkit-scrollbar-track {
-    @apply rounded-full bg-[#1A1A1A]/50;
-  }
-
-  /* 滾動條滑塊 */
-  ::-webkit-scrollbar-thumb {
-    @apply rounded-full bg-yellow-400/20 transition-colors duration-300 hover:bg-yellow-400/30;
-    border: 2px solid transparent;
-    background-clip: padding-box;
-  }
-
-  /* Firefox 滾動條樣式 */
   * {
     scrollbar-width: thin;
-    scrollbar-color: rgba(250, 204, 21, 0.2) rgba(26, 26, 26, 0.5);
+    scrollbar-color: var(--rule-strong) var(--bg);
   }
 
-  /* 在深色背景下的滾動條 */
-  .dark-scroll::-webkit-scrollbar-track {
-    @apply bg-[#242424]/50;
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
   }
 
-  .dark-scroll::-webkit-scrollbar-thumb {
-    @apply bg-yellow-400/30 hover:bg-yellow-400/40;
+  ::-webkit-scrollbar-track {
+    background: var(--bg);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--rule);
+    border: 3px solid var(--bg);
+    border-radius: 9999px;
   }
 }
 
-/* 確保滾動行為平滑 */
-@layer utilities {
-  .smooth-scroll {
-    scroll-behavior: smooth;
+@layer components {
+  /* Page gutter. One value, everywhere. */
+  .shell {
+    width: 100%;
+    max-width: var(--max-w-page, 84rem);
+    margin-inline: auto;
+    padding-inline: var(--sp-4);
+  }
+
+  @media (min-width: 768px) {
+    .shell {
+      padding-inline: var(--sp-6);
+    }
+  }
+
+  /* Section headings carry no eyebrow label by default: the heading alone says
+     what the section is, and one small uppercase label per section is the most
+     recognisable template rhythm there is. */
+  .section-title {
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    font-weight: 700;
+    line-height: 1.05;
+  }
+
+  .label {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    letter-spacing: 0.04em;
+    color: var(--ink-2);
+  }
+
+  .measure {
+    max-width: var(--measure-latin);
+  }
+
+  .measure:lang(zh-Hant) {
+    max-width: var(--measure-han);
+  }
+
+  /* The only boxed surface in the system. Used where an element genuinely needs
+     to sit above the page (the pinned 3D planes, case-study decision blocks),
+     never as a default wrapper. */
+  .surface-panel {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-1);
+  }
+
+  .chip {
+    display: inline-block;
+    padding: 3px 9px;
+    border: 1px solid var(--rule);
+    border-radius: var(--r-1);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--ink-2);
+    white-space: nowrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-2);
+    min-height: 46px;
+    padding-inline: var(--sp-5);
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--r-1);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    text-decoration: none;
+    /* The film runs behind the copy, so buttons need their own ground to stay
+       hittable and legible over moving particles. */
+    background: color-mix(in srgb, var(--bg) 72%, transparent);
+    backdrop-filter: blur(6px);
+    transition:
+      border-color var(--dur-1),
+      background var(--dur-1),
+      transform var(--dur-1) var(--ease-entrance);
+  }
+
+  .btn:hover {
+    border-color: var(--ink);
+  }
+
+  .btn:active {
+    transform: translateY(1px);
+  }
+
+  .btn--pop {
+    background: var(--pop);
+    border-color: var(--pop);
+    color: var(--on-pop);
+    font-weight: 500;
+    backdrop-filter: none;
+  }
+
+  .btn--pop:hover {
+    border-color: var(--on-pop);
+  }
+
+  /* The current title is the one fact that must not be missed, so it is the
+     only place on the first screen carrying the accent fill. */
+  .role-mark {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: var(--r-1);
+    background: var(--pop);
+    color: var(--on-pop);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    font-weight: 500;
   }
 }

@@ -1,0 +1,109 @@
+# -----------------------------------------------------------------------------
+# 能力斷面。
+#
+# 這份檔案取代了舊網站的三套技能系統（六邊形圖、百分比長條圖、標籤雲），
+# 那三套彼此矛盾，而且用自評百分比當量尺 —— 技術讀者八秒就看得出來。
+#
+# 這裡的量尺不是「熟練度」，是「證據層級」：
+#   shipped-prod         有人在用的東西裡跑著
+#   shipped-competition  出貨過並在競賽/評審面前跑過
+#   research-prototype   研究計畫的原型
+#   studied              學過、練過，還沒交付過
+#
+# 硬規則：evidence 為 null 的節點不會被渲染。這條規則會印在頁面上給讀者看，
+#        所以它同時是資料合約，也是可信度的來源。
+# -----------------------------------------------------------------------------
+
+tiers:
+  - id: shipped-prod
+    label: 生產環境
+    rank: 4
+  - id: shipped-competition
+    label: 競賽出貨
+    rank: 3
+  - id: research-prototype
+    label: 研究原型
+    rank: 2
+  - id: studied
+    label: 學習紀錄
+    rank: 1
+
+nodes:
+  # ---- client ----
+  - { name: Nuxt.js, layer: client, tier: shipped-prod, evidence: 'https://www.finctory.com/' }
+  - { name: Vue.js, layer: client, tier: shipped-prod, evidence: 'https://www.finctory.com/' }
+  - { name: Tailwind CSS, layer: client, tier: shipped-prod, evidence: 'https://www.finctory.com/' }
+  - { name: GSAP, layer: client, tier: shipped-prod, evidence: 'https://github.com/OG-Matcha/Personal_Web' }
+  - { name: React, layer: client, tier: shipped-prod, evidence: '/work/medalink' }
+  - { name: Vite, layer: client, tier: shipped-prod, evidence: '/work/medalink' }
+  - { name: three.js, layer: client, tier: shipped-prod, evidence: 'https://github.com/OG-Matcha/Personal_Web' }
+  # oSave 行動版：397 個 Dart 檔、84,978 行、16 個功能模組。
+  - { name: Flutter, layer: client, tier: shipped-prod, evidence: '/work/osave' }
+  - { name: Dart, layer: client, tier: shipped-prod, evidence: '/work/osave' }
+  - { name: BLoC, layer: client, tier: shipped-prod, evidence: '/work/osave' }
+  - { name: Chrome Extension, layer: client, tier: shipped-prod, evidence: 'https://chromewebstore.google.com/detail/neikbgpobachnkgcefcmedgojmedbfmk' }
+  - { name: Streamlit, layer: client, tier: shipped-competition, evidence: 'https://github.com/OG-Matcha/NCU_Fresh_Web_ChatBot' }
+  - { name: Gradio, layer: client, tier: shipped-competition, evidence: 'https://github.com/OG-Matcha/Credit-Report' }
+
+  # ---- edge & api ----
+  - { name: FastAPI, layer: edge-api, tier: shipped-prod, evidence: '/work/osave' }
+  - { name: Python, layer: edge-api, tier: shipped-prod, evidence: '/work/phishforge' }
+  - { name: Cloudflare Pages Functions, layer: edge-api, tier: shipped-prod, evidence: '/work/medalink' }
+  - { name: Firebase Cloud Functions, layer: edge-api, tier: shipped-prod, evidence: '/work/osave' }
+  - { name: Flask, layer: edge-api, tier: shipped-competition, evidence: 'https://github.com/OG-Matcha/NCU_Fresh_Web_ChatBot' }
+  - { name: Laravel / PHP, layer: edge-api, tier: shipped-competition, evidence: 'https://github.com/OG-Matcha/Cow-of-Answer' }
+  - { name: Spring / Java, layer: edge-api, tier: shipped-competition, evidence: 'https://github.com/OG-Matcha/BrainLib' }
+  - { name: Django, layer: edge-api, tier: studied, evidence: 'https://github.com/OG-Matcha/Django_REST_Framework' }
+
+  # ---- agents ----
+  - { name: LangGraph, layer: agents, tier: shipped-prod, evidence: '/work/osave' }
+  - { name: LangChain, layer: agents, tier: shipped-prod, evidence: '/work/osave' }
+  - { name: OpenAI API, layer: agents, tier: shipped-prod, evidence: '/work/osave' }
+  - { name: Gemini API, layer: agents, tier: shipped-competition, evidence: '/work/phishforge' }
+  - { name: LLaMA 3（本地）, layer: agents, tier: shipped-competition, evidence: 'https://github.com/OG-Matcha/Credit-Report' }
+  - { name: scikit-learn, layer: agents, tier: studied, evidence: 'https://github.com/OG-Matcha/Scikit_Learn_FC' }
+  - { name: TensorFlow, layer: agents, tier: studied, evidence: 'https://github.com/OG-Matcha/Basic-TensorFlow' }
+
+  # 台積電校園黑客松第一名的參賽作品 Catalyst：Multi-Agent 軟體開發自動化。
+  - { name: AutoGen, layer: agents, tier: shipped-competition, evidence: '/#ledger' }
+  # 工研院：全組共用的 LLM 紅隊工作流，對 OWASP LLM Top 10。
+  - { name: LLM 紅隊測試, layer: agents, tier: shipped-prod, evidence: '/#ledger' }
+
+  # ---- data ----
+  - { name: Cloudflare D1, layer: data, tier: shipped-prod, evidence: '/work/medalink' }
+  - { name: Cloudflare R2, layer: data, tier: shipped-prod, evidence: '/work/medalink' }
+  - { name: Cloud Firestore, layer: data, tier: shipped-prod, evidence: '/work/osave' }
+  - { name: Drift, layer: data, tier: shipped-prod, evidence: '/work/osave' }
+  - { name: PostgreSQL, layer: data, tier: shipped-prod, evidence: '/work/osave' }
+  - { name: Redis, layer: data, tier: shipped-competition, evidence: '/work/phishforge' }
+  - { name: FAISS, layer: data, tier: shipped-competition, evidence: 'https://github.com/OG-Matcha/Credit-Report' }
+  - { name: MySQL, layer: data, tier: shipped-competition, evidence: 'https://github.com/OG-Matcha/BrainLib' }
+  # ERP 中心受訓一年，第二年轉任暑期特約講師 —— 年表裡那一條就是佐證。
+  - { name: SAP S/4HANA, layer: data, tier: studied, evidence: '/#ledger' }
+
+  # ---- infra ----
+  - { name: Cloudflare Pages, layer: infra, tier: shipped-prod, evidence: '/work/medalink' }
+  - { name: Cloudflare Workers, layer: infra, tier: shipped-prod, evidence: '/work/medalink' }
+  - { name: Firebase Auth, layer: infra, tier: shipped-prod, evidence: '/work/osave' }
+  - { name: Cloud Messaging, layer: infra, tier: shipped-prod, evidence: '/work/osave' }
+  # 工研院：全組共用的 DevSecOps 工作流，其他團隊直接沿用。
+  - { name: Gitleaks, layer: infra, tier: shipped-prod, evidence: '/#ledger' }
+  - { name: Semgrep, layer: infra, tier: shipped-prod, evidence: '/#ledger' }
+  - { name: Docker, layer: infra, tier: shipped-prod, evidence: '/work/phishforge' }
+  - { name: AWS ECS, layer: infra, tier: shipped-competition, evidence: '/work/phishforge' }
+  - { name: Heroku, layer: infra, tier: shipped-prod, evidence: '/work/osave' }
+  - { name: Azure, layer: infra, tier: shipped-competition, evidence: 'https://github.com/OG-Matcha/Cow-of-Answer' }
+  - { name: Nginx, layer: infra, tier: shipped-competition, evidence: 'https://github.com/OG-Matcha/Cow-of-Answer' }
+  - { name: GitHub Actions, layer: infra, tier: shipped-prod, evidence: 'https://github.com/OG-Matcha/Personal_Web' }
+
+  # ---------------------------------------------------------------------------
+  # 以下在舊網站的技能圖與長條圖裡出現過，但在 8 個專案、17 個獎項、3 個研究裡
+  # 找不到任何交付物。依上面的規則，它們不會被渲染 —— 保留在這裡當紀錄：
+  #   Qt（舊圖評 86% / 3 年，零專案）、MongoDB、GraphQL、Sequelize、
+  #   Seaborn、Canva、Figma、使用者研究、互動設計、原型設計、視覺設計
+  # 若之後真的做出東西，補上 evidence 再放回 nodes 即可。
+  # ---------------------------------------------------------------------------
+
+certifications:
+  - { name: 'PCEP - Certified Entry-Level Python Programmer', org: Python Institute, evidence: '/#ledger' }
+  - { name: 'TOEIC 835 / 990', org: ETS, evidence: '/#ledger' }
