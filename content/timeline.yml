@@ -157,7 +157,8 @@
   title: 第六屆台積電校園黑客松（TSMC IT CareerHack）AI 維運懶人包組 - 第一名
   org: 台灣積體電路製造股份有限公司
   detail: 參賽作品 Catalyst —— Multi-Agent 軟體開發自動化平台，從需求分析、產生程式碼到測試部署全流程串接
-  evidence: null
+  # 中央資管系公告：黃鉅燊、顏嘉緯，D 組第一名
+  evidence: https://im.mgt.ncu.edu.tw/homes/9168/post
 
 - date: 2025-02
   kind: award
@@ -218,7 +219,8 @@
   org: 經濟部產業園區管理局
   project: null
   note: 以 Finctory 產品「找好康 SurPrice」參賽
-  evidence: null
+  # 主辦方得獎名單：數位＋組 銅獎「Finctory」
+  evidence: https://iec2025.thu.edu.tw/2025%E8%87%BA%E7%81%A3%E6%95%B8%E5%89%B5%E5%A4%A7%E8%B3%9E%E5%BE%97%E7%8D%8E%E4%BD%9C%E5%93%81/
 
 - date: 2024-12
   kind: award
@@ -226,7 +228,8 @@
   title: 臺北市智慧城市青年舉政徵件提案競賽 - 佳作（第四名）
   org: 臺北市政府青年局
   project: osave
-  evidence: null
+  # 北市府公告：佳作「Finctory」，作品「發票醫生 invoice doctor」
+  evidence: https://www.gov.taipei/News_Content.aspx?n=F0DDAF49B89E9413&s=E10679C606C53E2E
 
 - date: 2024-12
   kind: role
@@ -260,7 +263,8 @@
   title: 臺灣數創大賞 數位＋組 - 金獎
   org: 經濟部產業園區管理局 · 臺中軟體園區發展產學訓聯盟 · 東海大學
   project: osave
-  evidence: null
+  # 主辦方得獎名單：數位＋組 金獎「懂一點商」——當時的隊名
+  evidence: https://iec2024.thu.edu.tw/2024%E8%87%BA%E7%81%A3%E6%95%B8%E5%89%B5%E5%A4%A7%E8%B3%9E%E5%BE%97%E7%8D%8E%E4%BD%9C%E5%93%81/
 
 - date: 2024-11
   kind: research
@@ -312,7 +316,8 @@
   title: 第六屆 Startup 創業競技場 國內組 - 第一名
   org: 國立臺灣師範大學 · 教育部
   project: osave
-  evidence: null
+  # 師大新聞：國內組第一名「懂一點商」（中央 · 中原 · 師大）
+  evidence: https://pr.ntnu.edu.tw/ntnunews/index.php?mode=data&id=22700
 
 - date: 2024-06
   kind: award
