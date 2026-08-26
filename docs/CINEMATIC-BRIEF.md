@@ -176,5 +176,7 @@ node scripts/check-film.mjs
 這裡大部分真正的問題是用看的才發現的，不是斷言抓到的。
 
 ⚠️ `nuxt generate` 會在 `.nuxt/dist/server/` 留下正式建置的產物，dev server 撿去用會
-整站 500（`#internal/nuxt/paths is not defined`）。跑完 generate 要先 `rm -rf .nuxt`
-再重啟 dev。
+整站 500（`#internal/nuxt/paths is not defined`）。`npm run dev` 的 `predev` 會跑
+`scripts/clean-stale-builddir.mjs` 自動處理掉；它是看 bundle 裡有沒有那個解不開的
+import，不是看檔案在不在——dev 也會寫同一個檔名，用存在與否判斷會每次重啟都砍掉快取。
+直接下 `npx nuxt dev` 會跳過這個 hook，那就還是得自己 `rm -rf .nuxt`。
