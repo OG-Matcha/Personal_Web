@@ -5,12 +5,12 @@ const SITE_URL = 'https://www.ogmatcha.com'
 // Just the name. A tab strip full of open pages shows about 20 characters,
 // and a job title spends all of them saying something the page says better.
 const TITLE = '黃鉅燊 Ju-Shen Huang'
-// Fallback only: every real page sets its own description now. The counts
-// are duplicated from content/site.yml `counts` because this file is loaded
-// outside Vite and cannot import the YAML - if they change there, change
-// them here too.
+// Fallback only - every real page sets its own description now, from the
+// counts useContent() derives from the timeline. This file is loaded outside
+// Vite and cannot import the YAML, so these three numbers are the one copy
+// that has to be kept in step by hand.
 const DESCRIPTION =
-  '黃鉅燊（Ju-Shen Huang / OG_Matcha），斐闊 Finctory 共同創辦人暨技術長、醫數行銷 MedaLink 共同創辦人暨前線部署工程師，中央大學資訊管理學系碩士班。把 LLM 放進會出貨的系統裡：財伴 oSave、PhishForge、診所營運系統，16 項競賽獎項含 5 座全國首獎，3 個國科會研究計畫。'
+  '黃鉅燊（Ju-Shen Huang / OG_Matcha），斐闊 Finctory 共同創辦人暨技術長、醫數行銷 MedaLink 共同創辦人暨前線部署工程師，中央大學資訊管理學系碩士班。把 LLM 放進會出貨的系統裡：財伴 oSave、PhishForge、診所營運系統，15 項競賽獎項含 5 座全國首獎，3 個國科會研究計畫。'
 
 export default defineNuxtConfig({
   devtools: { enabled: false },

@@ -140,9 +140,38 @@ const timeline: TimelineEntry[] = (timelineRaw as TimelineEntry[])
   .filter((e) => e.date) // the hard rule: no date, no render
   .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0))
 
+/**
+ * The numbers the site says about itself out loud, counted from the timeline
+ * rather than remembered.
+ *
+ * Three different figures used to ship - 17 in nuxt.config, 15 on /resume, and
+ * 16 rows in the YAML - and an answer engine that reads two pages of one domain
+ * and gets two answers will hedge or pick wrong. This is exactly the fact a
+ * recruiter-shaped query asks for, so it gets one source.
+ *
+ * Two rules, both deliberate:
+ *  - 入圍 is not winning. Being shortlisted for a final stays on the timeline
+ *    and out of the count; one extra unit is not worth a number that does not
+ *    survive being checked.
+ *  - 首獎, not 冠軍. 金獎 and 最佳創新創業大獎 are the top prize of their
+ *    competition without being called 第一名, and 「冠軍」would overclaim them.
+ */
+const SHORTLISTED = /入圍/
+const TOP_PRIZE = /第一名|冠軍|金獎|最佳創新創業大獎/
+
+const wonAwards = timeline.filter(
+  (e) => e.kind === 'award' && !SHORTLISTED.test(e.title)
+)
+
+const counts = {
+  awards: wonAwards.length,
+  topPrizes: wonAwards.filter((e) => TOP_PRIZE.test(e.title)).length,
+  researchGrants: timeline.filter((e) => e.kind === 'research').length,
+}
+
 export function useContent() {
   return {
-    site: { ...site, asOf: normaliseDate(site.asOf) },
+    site: { ...site, asOf: normaliseDate(site.asOf), counts },
     about,
     timeline,
     skills,
