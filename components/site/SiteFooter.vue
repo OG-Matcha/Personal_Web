@@ -22,12 +22,10 @@ const { site } = useContent()
 // Rendered at build time, so it cannot drift out of date in a static export.
 const year = 2026
 
-const external = { rel: 'me noopener', target: '_blank' }
-
 const links = [
   { label: 'EMAIL', href: `mailto:${site.contact.email}` },
-  { label: 'GITHUB', href: site.contact.github, attrs: external },
-  { label: 'LINKEDIN', href: site.contact.linkedin, attrs: external },
+  { label: 'GITHUB', href: site.contact.github, attrs: linkAttrs(site.contact.github, { me: true }) },
+  { label: 'LINKEDIN', href: site.contact.linkedin, attrs: linkAttrs(site.contact.linkedin, { me: true }) },
 ]
 </script>
 

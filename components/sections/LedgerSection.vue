@@ -36,8 +36,20 @@
             <p v-if="entry.detail" class="measure mt-2 text-2xs">{{ entry.detail }}</p>
           </template>
 
-          <p v-if="entry.project && workSlugs.has(entry.project)" class="mt-2">
-            <NuxtLink :to="`/work/${entry.project}`" class="mono text-2xs">案例研究</NuxtLink>
+          <!-- The two things a row can point at. `evidence` was carried in
+               the YAML from the start and rendered nowhere, so three awards
+               had a public announcement on file that no reader could reach. -->
+          <p v-if="entry.project && workSlugs.has(entry.project) || entry.evidence" class="mt-2 flex flex-wrap gap-x-5 gap-y-1">
+            <NuxtLink
+              v-if="entry.project && workSlugs.has(entry.project)"
+              :to="`/work/${entry.project}`"
+              class="mono text-2xs"
+            >
+              案例研究
+            </NuxtLink>
+            <a v-if="entry.evidence" :href="entry.evidence" v-bind="linkAttrs(entry.evidence)" class="mono text-2xs">
+              公告
+            </a>
           </p>
         </div>
       </li>

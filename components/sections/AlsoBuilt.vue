@@ -8,7 +8,7 @@
         v-for="p in alsoBuilt"
         :key="p.name"
         :href="p.repo || undefined"
-        :rel="p.repo ? 'noopener' : undefined"
+        v-bind="linkAttrs(p.repo)"
         class="tile"
       >
         <div v-if="p.thumbnail" class="tile-media">

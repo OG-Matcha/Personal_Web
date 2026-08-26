@@ -17,7 +17,7 @@
            that does not link to the product is a case study about a product
            nobody can check. -->
       <p v-if="links.length" class="mt-5 flex flex-wrap gap-3">
-        <a v-for="l in links" :key="l.href" class="btn" :href="l.href" rel="noopener">{{ l.label }}</a>
+        <a v-for="l in links" :key="l.href" class="btn" :href="l.href" v-bind="linkAttrs(l.href)">{{ l.label }}</a>
       </p>
     </header>
 
@@ -130,7 +130,8 @@
       <ul class="mt-4 flex flex-wrap gap-3">
         <li v-for="e in evidence" :key="e.date + e.title" class="award-pill">
           <span class="mono tabular-nums text-ink-2">{{ formatDate(e.date) }}</span>
-          <span>{{ e.title }}</span>
+          <a v-if="e.evidence" :href="e.evidence" v-bind="linkAttrs(e.evidence)">{{ e.title }}</a>
+          <span v-else>{{ e.title }}</span>
         </li>
       </ul>
     </section>

@@ -199,7 +199,8 @@
   title: 114 年度 U-Start 創新創業計畫 - 第一階段入選
   org: 教育部
   project: osave
-  evidence: null
+  # 青年署公告的獲補助團隊名單，「創新服務」類、國立中央大學，隊名「斐闊．Finctory」
+  evidence: https://ustart.yda.gov.tw/p/405-1000-2128,c82.php?Lang=zh-tw
 
 - date: 2025-09
   kind: award

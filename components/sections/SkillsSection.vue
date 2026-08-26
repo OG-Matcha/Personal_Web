@@ -25,7 +25,7 @@
             <a
               v-if="isLink(n.evidence)"
               :href="n.evidence"
-              :rel="external(n.evidence)"
+              v-bind="linkAttrs(n.evidence)"
               class="node"
               :data-tier="n.tier"
             >
@@ -74,9 +74,6 @@ function isLink(e) {
   return typeof e === 'string' && e.length > 0
 }
 
-function external(e) {
-  return e.startsWith('http') ? 'noopener' : undefined
-}
 </script>
 
 <style scoped>

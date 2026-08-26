@@ -36,8 +36,8 @@
 
       <div v-if="isLast" class="mt-8 flex flex-wrap gap-3">
         <a class="btn btn--pop" :href="`mailto:${site.contact.email}`">寄信給我</a>
-        <a class="btn" :href="site.contact.github" rel="me noopener">GitHub</a>
-        <a class="btn" :href="site.contact.linkedin" rel="me noopener">LinkedIn</a>
+        <a class="btn" :href="site.contact.github" v-bind="linkAttrs(site.contact.github, { me: true })">GitHub</a>
+        <a class="btn" :href="site.contact.linkedin" v-bind="linkAttrs(site.contact.linkedin, { me: true })">LinkedIn</a>
       </div>
     </div>
   </div>

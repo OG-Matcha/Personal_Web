@@ -16,7 +16,7 @@
 
         <ul class="socials">
           <li v-for="l in socials" :key="l.href">
-            <a :href="l.href" class="social" rel="me noopener">
+            <a :href="l.href" class="social" v-bind="linkAttrs(l.href, { me: true })">
               <component :is="l.icon" :size="16" :stroke-width="1.75" aria-hidden="true" />
               {{ l.label }}
             </a>
@@ -68,7 +68,7 @@
             <span v-if="p.ongoing">現在</span>
           </p>
           <h3 class="mt-2 font-display text-xl">
-            <a v-if="p.url" :href="p.url" rel="noopener" class="org-link">{{ p.org }}</a>
+            <a v-if="p.url" :href="p.url" v-bind="linkAttrs(p.url)" class="org-link">{{ p.org }}</a>
             <span v-else>{{ p.org }}</span>
           </h3>
           <p class="mt-1 text-sm text-ink-2">{{ p.role }}</p>
