@@ -5,7 +5,7 @@
     <div class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
       <component
         :is="p.repo ? 'a' : 'div'"
-        v-for="p in alsoBuilt"
+        v-for="p in ordered"
         :key="p.name"
         :href="p.repo || undefined"
         v-bind="linkAttrs(p.repo)"
@@ -36,7 +36,20 @@
 </template>
 
 <script setup>
+/**
+ * Newest first, same direction the timeline runs.
+ *
+ * The YAML is grouped by how the entries were written rather than by date, so
+ * the 2026 one sat at the bottom under four 2024s. Sorting here rather than
+ * reordering the file keeps display order a display decision - adding an entry
+ * should not mean finding the right line to put it on.
+ *
+ * `sort` mutates, so this copies first; entries sharing a year keep the order
+ * they have in the file, which is the author's.
+ */
 const { alsoBuilt } = useContent()
+
+const ordered = computed(() => [...alsoBuilt].sort((a, b) => (b.year ?? 0) - (a.year ?? 0)))
 </script>
 
 <style scoped>
