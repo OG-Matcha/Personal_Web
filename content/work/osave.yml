@@ -26,10 +26,8 @@ links:
   - label: Google Play
     href: https://play.google.com/store/apps/details?id=com.finctory.osave
 
-# 用 scripts/covers/osave.html 畫的，node scripts/make-covers.mjs osave 產生。
-# 舊的那張是 pivot 前的行銷圖，三支手機裡都是已經不存在的畫面。
-cover: /images/osave-cover.webp
-thumbnail: /images/osave-cover.webp
+cover: /images/osave-1.webp
+thumbnail: /images/osave-1.webp
 # Phone frames, not wide captures - the page lays them out three across
 # instead of two, and reserves the right box so they do not jump on load.
 screenshotShape: phone
