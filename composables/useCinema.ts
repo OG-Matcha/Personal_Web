@@ -55,5 +55,17 @@ export function useCinema() {
     onscreen: useState('cinema:onscreen', () => true),
     /** The knot the cursor is over. Nothing is captioned until there is one. */
     hover: useState<FilmHover | null>('cinema:hover', () => null),
+    /**
+     * True once the first film frame is on screen - or once we know there is
+     * never going to be one, because this reader gets the plain document.
+     * The gate over the page waits on this and on nothing else.
+     */
+    ready: useState('cinema:ready', () => false),
+    /**
+     * How far along that is, 0..1, stepped by real milestones rather than by a
+     * timer. A bar that moves on a clock while the page is stuck is a lie the
+     * reader can feel.
+     */
+    readyStep: useState('cinema:readyStep', () => 0),
   }
 }

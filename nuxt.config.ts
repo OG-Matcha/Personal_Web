@@ -110,6 +110,18 @@ export default defineNuxtConfig({
       noscript: [{ innerHTML: '<link rel="stylesheet" href="/fonts/cjk.css">' }],
       script: [
         {
+          // Runs before first paint. The homepage ships a gate in its SSR
+          // markup that only JavaScript can ever lift, so the gate stays
+          // `display: none` until this proves there is JavaScript here. The
+          // timer is the failsafe for the one case the component cannot cover
+          // itself: hydration never happening, so its own timeout never runs.
+          innerHTML:
+            "var d=document.documentElement;d.classList.add('js');" +
+            "setTimeout(function(){d.classList.add('gate-off');" +
+            "d.classList.remove('gate-locked')},8000)",
+          tagPosition: 'head',
+        },
+        {
           type: 'application/ld+json',
           innerHTML: JSON.stringify({
             '@context': 'https://schema.org',

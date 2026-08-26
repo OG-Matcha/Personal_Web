@@ -28,7 +28,7 @@ import { beatAt, useCinema } from '~/composables/useCinema'
 import { LANES, Z_SPAN, useFilm } from '~/composables/useFilm'
 
 const film = useFilm()
-const { progress, beat, live, onscreen, hover } = useCinema()
+const { progress, beat, live, onscreen, hover, ready, readyStep } = useCinema()
 
 const canvas = ref(null)
 
@@ -66,14 +66,24 @@ function supported() {
 }
 
 onMounted(async () => {
-  if (!supported()) return
+  // Readers who get the plain document must never be held behind a gate that
+  // is waiting for a film they are not going to be shown.
+  if (!supported()) {
+    readyStep.value = 1
+    ready.value = true
+    return
+  }
+
+  readyStep.value = 0.12
 
   const [{ default: Lenis }, { createWorld }] = await Promise.all([
     import('lenis'),
     import('~/gl/world.js'),
   ])
+  readyStep.value = 0.45
 
   world = await createWorld(canvas.value, { film, lanes: LANES, zSpan: Z_SPAN })
+  readyStep.value = 0.8
 
   // Dev-only inspection hook. The film is a single scalar in, one frame out -
   // the only way to check that a mosaic actually assembled is to ask it.
@@ -91,9 +101,18 @@ onMounted(async () => {
     velocity = e.velocity
   })
 
+  // The gate lifts on the first frame that has actually been drawn, not on the
+  // first frame that has been scheduled. Shader compilation happens inside
+  // that first render, and it is the single longest block on this path.
+  let firstFrame = true
   const loop = (time) => {
     lenis.raf(time)
     tick(velocity)
+    if (firstFrame) {
+      firstFrame = false
+      readyStep.value = 1
+      ready.value = true
+    }
     rafId = requestAnimationFrame(loop)
   }
   // Going live turns the beats into fixed overlays and gives their sections

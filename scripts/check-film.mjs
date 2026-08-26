@@ -36,7 +36,30 @@ page.on('pageerror', (e) => errors.push(String(e)))
 page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()) })
 
 await page.goto(URL, { waitUntil: 'domcontentloaded' })
-await page.waitForTimeout(3500)
+
+// The gate holds the page - and blocks scrolling - until the film can run.
+// Every assertion below is about a page that has been entered, so this has to
+// come first, and it doubles as the check that the gate lets go at all.
+const gate = page.locator('.film-gate')
+ok(await gate.isVisible().catch(() => false), 'the gate covers the page on a cold load')
+// The lock goes on at mount, not at first paint - there is a short window
+// while the app hydrates where the gate is up and the page is still
+// scrollable. It is covered, so nothing shows; this waits it out.
+const locked = await page
+  .waitForFunction(() => document.documentElement.classList.contains('gate-locked'), null, {
+    timeout: 8000,
+  })
+  .then(() => true)
+  .catch(() => false)
+ok(locked, 'scrolling is locked behind the gate')
+await gate.waitFor({ state: 'detached', timeout: 12000 }).catch(() => {})
+ok((await gate.count()) === 0, 'the gate lifts once the film is ready')
+ok(
+  !(await page.evaluate(() => document.documentElement.classList.contains('gate-locked'))),
+  'the scroll lock is released with it'
+)
+
+await page.waitForTimeout(2000)
 
 ok(errors.length === 0, `no JS errors (${errors.length})${errors.length ? ': ' + errors.slice(0, 3).join(' | ') : ''}`)
 

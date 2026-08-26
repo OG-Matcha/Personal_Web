@@ -1,5 +1,9 @@
 <template>
   <div>
+    <!-- Held over everything until the film can actually run. Lifts on the
+         first drawn frame, and on a hard cap regardless. -->
+    <FilmGate />
+
     <CinemaStage />
 
     <!-- Five beats, five convergence points in the real timeline. Everything
@@ -39,6 +43,7 @@
 </template>
 
 <script setup>
+import FilmGate from '~/components/cinema/FilmGate.vue'
 import CinemaStage from '~/components/cinema/CinemaStage.vue'
 import BeatSection from '~/components/cinema/BeatSection.vue'
 import BeatEvents from '~/components/cinema/BeatEvents.vue'

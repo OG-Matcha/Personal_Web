@@ -161,6 +161,33 @@ a:hover {
   scroll-margin-top: 5rem;
 }
 
+/* ---- the film gate ------------------------------------------------------
+   The homepage ships its loading cover in the SSR markup, and only JavaScript
+   can ever lift it. So it is not displayed until the inline head script has
+   proved there is JavaScript here to do that. */
+.film-gate {
+  display: none;
+}
+
+html.js .film-gate {
+  display: grid;
+}
+
+/* Set by the inline head script if the app has not lifted the gate on its own
+   within eight seconds. Vue's own timeout lives inside onMounted, so it is no
+   use in the one case that matters: hydration never happening. */
+html.gate-off .film-gate {
+  display: none !important;
+}
+
+/* Set while the film gate is up. Scrolling behind a cover moves the copy
+   without moving the camera, which is exactly the broken-looking state the
+   gate exists to hide. */
+html.gate-locked,
+html.gate-locked body {
+  overflow: hidden;
+}
+
 .scroll-x {
   overflow-x: auto;
   overscroll-behavior-x: contain;
