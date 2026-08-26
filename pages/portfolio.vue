@@ -1,9 +1,14 @@
 <template>
   <div class="pt-8 pb-section">
-    <!-- The page had no h1 at all, so its only subject signal was the title
-         tag. Visually hidden because CaseStudies already carries the visible
-         heading; .sr-only clips, it does not display:none, so it ships. -->
-    <h1 class="sr-only">作品集 · 黃鉅燊 Ju-Shen Huang</h1>
+    <!-- A real header, not a hidden one. This page used to open straight into
+         a component the homepage also renders, which made it read as a
+         fragment of the homepage rather than a destination. It is the index:
+         everything, in one place, with no film in front of it. -->
+    <div class="shell pb-9">
+      <h1 class="font-display text-3xl">作品集</h1>
+      <p class="measure mt-3 text-base text-ink-2">{{ works.length }} 件寫成案例研究，另外 {{ alsoBuilt.length }} 件列在後面。首頁只放案例研究，其餘的都在這一頁。</p>
+    </div>
+
     <CaseStudies />
     <AlsoBuilt />
   </div>
@@ -12,6 +17,8 @@
 <script setup>
 import CaseStudies from '~/components/sections/CaseStudies.vue'
 import AlsoBuilt from '~/components/sections/AlsoBuilt.vue'
+
+const { works, alsoBuilt } = useContent()
 
 // One string, three meta fields. Passing only `description` let the site-wide
 // blurb from nuxt.config win for og: and, by fallback, for the X card - so the

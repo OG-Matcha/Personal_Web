@@ -39,13 +39,10 @@
            point to the case studies; before it existed the only way in was a
            link buried in a timeline row. -->
       <div class="pt-section">
-        <CaseStudies />
+        <CaseStudies more />
       </div>
       <div class="pt-section">
         <SkillsSection />
-      </div>
-      <div class="pt-section">
-        <AlsoBuilt />
       </div>
       <div class="pt-section">
         <LedgerSection heading="完整年表" :fold-years="2" />
@@ -62,7 +59,6 @@ import BeatEvents from '~/components/cinema/BeatEvents.vue'
 import NowSection from '~/components/sections/NowSection.vue'
 import CaseStudies from '~/components/sections/CaseStudies.vue'
 import SkillsSection from '~/components/sections/SkillsSection.vue'
-import AlsoBuilt from '~/components/sections/AlsoBuilt.vue'
 import LedgerSection from '~/components/sections/LedgerSection.vue'
 import { beatSpans, beatWindows } from '~/composables/useFilm'
 

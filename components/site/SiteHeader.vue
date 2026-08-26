@@ -52,13 +52,23 @@ const windows = beatWindows()
  * tab labelled "2025" pointing at a beat id, which read as a stray year in a
  * row of nouns and landed somewhere the reader had no reason to expect.
  */
+/**
+ * Four, and no two of them reach the same content.
+ *
+ * This briefly had six: the four anchors plus 作品集 and 履歷. But /portfolio
+ * renders the same component 作品 scrolls to, so two tabs led to one thing.
+ * 現在 went too - it is the first block after the film, impossible to scroll
+ * past, and a tab for it only competed with the three that are easy to miss.
+ *
+ * 履歷 stays because /resume is not a section of this page: it is the whole
+ * 45-entry record where the homepage folds to the recent two years.
+ * /portfolio is reached from the end of the work section and from the footer,
+ * which is where a reader is when they want more of it.
+ */
 const links = [
   { href: '/#work', label: '作品' },
-  { href: '/#now-section', label: '現在' },
   { href: '/#skills', label: '能力' },
   { href: '/#ledger', label: '年表' },
-  // Real pages, not anchors. They were unreachable from anywhere on the site.
-  { href: '/portfolio/', label: '作品集' },
   { href: '/resume/', label: '履歷' },
 ]
 

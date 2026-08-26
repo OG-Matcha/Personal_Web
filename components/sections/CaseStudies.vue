@@ -60,6 +60,14 @@
         </ul>
       </NuxtLink>
     </div>
+
+    <!-- Only on the homepage, which carries the selection. On /portfolio this
+         would point at the page it is already on. -->
+    <p v-if="more" class="mt-8">
+      <NuxtLink to="/portfolio/" class="more mono text-2xs">
+        其他 {{ alsoBuilt.length }} 件作品 →
+      </NuxtLink>
+    </p>
   </section>
 </template>
 
@@ -73,7 +81,12 @@
  * whole timeline, and notice that one of the ledger rows was a link. This
  * section is the entry point that was missing; /portfolio now renders it too.
  */
-const { works } = useContent()
+const props = defineProps({
+  /** The homepage shows a selection and links out; /portfolio is the index. */
+  more: { type: Boolean, default: false },
+})
+
+const { works, alsoBuilt } = useContent()
 
 const lead = works.find((w) => w.cover) ?? works[0]
 const others = works.filter((w) => w.slug !== lead?.slug)
@@ -91,6 +104,20 @@ function facts(w) {
 </script>
 
 <style scoped>
+.more {
+  display: inline-block;
+  padding: var(--sp-2) var(--sp-4);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--r-full);
+  color: var(--ink-2);
+  text-decoration: none;
+}
+
+.more:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
 .lead {
   display: block;
   text-decoration: none;

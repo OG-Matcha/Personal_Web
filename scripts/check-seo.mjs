@@ -164,6 +164,31 @@ for (const [route, h] of Object.entries(html)) {
   ok(h.includes('href="/resume/"'), `${route} links to /resume/`)
 }
 
+// ---------- no destination duplicates another ----------
+// The header briefly carried six tabs where two pointed at content two other
+// tabs already reached: /portfolio rendered exactly the components the
+// homepage rendered. Crawlability was fixed and the information architecture
+// was broken, and nothing here noticed.
+const navHrefs = [...html['/portfolio/'].matchAll(/<a href="([^"]*)" class="nav-link"/g)].map(
+  (m) => m[1]
+)
+ok(navHrefs.length > 0, `header nav renders (${navHrefs.length} tabs)`)
+ok(
+  new Set(navHrefs).size === navHrefs.length,
+  `no two header tabs share a destination (${navHrefs.join(' ')})`
+)
+
+// `也做過` is the block that made /portfolio a duplicate. Whichever route owns
+// it, exactly one may.
+const owners = Object.entries(html).filter(([, h]) => h.includes('class="tile"'))
+ok(owners.length === 1, `the "也做過" index lives on exactly one route (${owners.map(([r]) => r).join(', ') || 'none'})`)
+
+// And the homepage has to offer a way to it, or it is orphaned again.
+ok(
+  html['/'].includes('href="/portfolio/"'),
+  'the homepage links out to the full index'
+)
+
 // Leaving the site and moving inside it are different actions.
 for (const [route, h] of Object.entries(html)) {
   const anchors = h.match(/<a [^>]*>/g) ?? []
