@@ -157,22 +157,12 @@ const shown = computed(() => opacity.value > 0.02)
   grid-column: 7 / -1;
 }
 
+/* The closing beat gets a centred *column*, not centred type. Setting
+   text-align here ragged both edges of a four-line 漢字 paragraph, which is
+   hard to read and looks nothing like the four beats before it - the column
+   position is the only thing that should change. */
 .beat-inner[data-live='on'][data-side='centre'] .beat-content :deep(.beat-copy) {
   grid-column: 3 / -3;
-  text-align: center;
-}
-
-/* Centring the column must not centre the rows inside it: a dated list with
-   centred titles and left-aligned dates reads as a layout bug. The blocks get
-   centred; their contents stay left. */
-.beat-inner[data-live='on'][data-side='centre'] .beat-content :deep(.lanes),
-.beat-inner[data-live='on'][data-side='centre'] .beat-content :deep(.events) {
-  margin-inline: auto;
-  text-align: left;
-}
-
-.beat-inner[data-live='on'][data-side='centre'] .beat-content :deep(.events) {
-  width: fit-content;
 }
 
 /* No WebGL (phone, reduced motion, no context) - this is then an ordinary
