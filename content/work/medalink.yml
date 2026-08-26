@@ -17,8 +17,10 @@ orgUrl: https://medalink.ai/
 period: { start: 2026-07, end: null } # null = 進行中
 team: 2 人（FDPM 1 / FDE 1）
 status: 生產中
-cover: /images/medalink-1.jpg
-thumbnail: /images/medalink-1.jpg
+# 用 scripts/covers/medalink.html 畫的，node scripts/make-covers.mjs medalink 產生。
+# medalink-1.jpg 現在只被那份設計稿引用，不再直接當封面。
+cover: /images/medalink-cover.webp
+thumbnail: /images/medalink-cover.webp
 screenshots:
   - /images/medalink-2.jpg
   - /images/medalink-3.jpg

@@ -1,0 +1,153 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>MedaLink cover</title>
+<link rel="stylesheet" href="../../public/fonts/latin.css" />
+<link rel="stylesheet" href="../../public/fonts/cjk.css" />
+<style>
+  /* Its own product's look, not oSave's and not this site's: MedaLink is a
+     clinic back office - navy wordmark, white ground, one working blue, and
+     the density of a tool people sit in all day. oSave is a consumer app in
+     soft blue. Two covers that look alike would say they are one product. */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    width: 1600px;
+    height: 900px;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 700px 1fr;
+    align-items: center;
+    gap: 56px;
+    padding: 90px 0 90px 96px;
+    background: #ffffff;
+    font-family: 'IBM Plex Sans', 'Noto Sans TC', sans-serif;
+    color: #111a33;
+  }
+
+  /* Kept off the very top edge: the lead card crops to 21:9 and takes 107px
+     off each end. */
+  .kicker {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 20px;
+    letter-spacing: 0.22em;
+    color: #1d4ed8;
+  }
+
+  h1 {
+    margin-top: 26px;
+    font-family: 'Archivo', 'Noto Sans TC', sans-serif;
+    font-weight: 700;
+    font-size: 88px;
+    line-height: 1.02;
+    letter-spacing: -0.01em;
+    color: #0f1c44;
+  }
+
+  .lede {
+    margin-top: 26px;
+    max-width: 19em;
+    font-size: 26px;
+    line-height: 1.62;
+    color: #48546f;
+  }
+
+  /* Numbers rather than adjectives - it is a two-person system and the whole
+     point of the case is how much of it two people carried. */
+  .stats {
+    display: flex;
+    gap: 46px;
+    margin-top: 52px;
+    padding-top: 30px;
+    border-top: 2px solid #0f1c44;
+  }
+
+  .stat b {
+    display: block;
+    font-family: 'Archivo', sans-serif;
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1;
+    color: #0f1c44;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stat span {
+    display: block;
+    margin-top: 9px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 17px;
+    letter-spacing: 0.06em;
+    color: #6b7691;
+  }
+
+  /* The back office itself, held in a window rather than floated loose: this
+     is a tool, and a tool reads as one when it has a frame. */
+  .window {
+    position: relative;
+    height: 660px;
+    border-radius: 16px 0 0 16px;
+    border: 1px solid #dbe2ee;
+    border-right: 0;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: -34px 40px 90px -46px rgb(15 28 68 / 0.4);
+  }
+
+  .chrome {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    height: 44px;
+    padding-inline: 18px;
+    border-bottom: 1px solid #eaeff7;
+    background: #f7f9fc;
+  }
+
+  .chrome i {
+    width: 11px;
+    height: 11px;
+    border-radius: 999px;
+    background: #d7dfec;
+  }
+
+  .chrome p {
+    margin-left: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 15px;
+    color: #8b96ae;
+  }
+
+  .window img {
+    display: block;
+    width: 1180px;
+    /* Anchored left so the sidebar and the calendar body both stay in, and
+       cropped rather than scaled down into illegibility. */
+    margin-left: 0;
+  }
+</style>
+
+<div>
+  <p class="kicker">MEDALINK / CASE 02</p>
+  <h1>醫數行銷<br />MedaLink</h1>
+  <p class="lede">
+    市面上的 AI 客服只做到自動回訊息。這一套還要算出醫師、診間、儀器同時空得出來的時段。
+  </p>
+
+  <div class="stats">
+    <div class="stat"><b>2</b><span>人，需求到上線</span></div>
+    <div class="stat"><b>173</b><span>條 API 路由</span></div>
+    <div class="stat"><b>63</b><span>個回歸測試</span></div>
+  </div>
+</div>
+
+<div class="window">
+  <div class="chrome">
+    <i></i><i></i><i></i>
+    <p>診所後台 · 行事曆</p>
+  </div>
+  <img src="../../public/images/medalink-1.jpg" alt="" />
+</div>
