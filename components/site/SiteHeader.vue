@@ -14,7 +14,16 @@
         <span class="hud-pct">{{ pct }}%</span>
       </p>
 
-      <nav v-else aria-label="主要導覽" class="ml-auto hidden items-center gap-6 md:flex">
+      <!-- Shown on phones too. It used to be `hidden md:flex`, which left the
+           phone with no way to move around a page that is still fifteen
+           screens long once the film is skipped. Four two-character labels
+           fit next to the wordmark down to 360px; below that the row scrolls
+           rather than wrapping the header onto a second line. -->
+      <nav
+        v-else
+        aria-label="主要導覽"
+        class="scroll-x ml-auto flex items-center gap-4 md:gap-6"
+      >
         <a v-for="l in links" :key="l.href" :href="l.href" class="nav-link">{{ l.label }}</a>
       </nav>
 
@@ -137,6 +146,7 @@ function pad(n) {
 }
 
 .nav-link {
+  white-space: nowrap;
   font-size: var(--step--1);
   color: var(--ink-2);
   text-decoration: none;

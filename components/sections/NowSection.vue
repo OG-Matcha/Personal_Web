@@ -14,7 +14,7 @@
           {{ about.lede }}
         </p>
 
-        <ul class="socials mt-7">
+        <ul class="socials">
           <li v-for="l in socials" :key="l.href">
             <a :href="l.href" class="social" rel="me noopener">
               <component :is="l.icon" :size="16" :stroke-width="1.75" aria-hidden="true" />
@@ -58,7 +58,7 @@
       </figure>
     </div>
 
-    <h2 class="mt-10 font-display text-2xl">{{ about.postsHeading }}</h2>
+    <h2 class="mt-9 font-display text-2xl">{{ about.postsHeading }}</h2>
 
     <ol class="posts mt-6">
       <li v-for="p in about.posts" :key="p.org" class="post">
@@ -114,8 +114,23 @@ const socials = [
   .intro {
     grid-template-columns: minmax(0, 1fr) 15rem;
     gap: var(--sp-8);
-    align-items: start;
+    /* Stretch, not start: the copy column is the shorter of the two, and
+       leaving it at its natural height opened a 60px step between where it
+       ends and where the portrait does - on top of the 128px break before the
+       next heading, that read as a hole rather than as breathing room. */
+    align-items: stretch;
   }
+}
+
+.intro-copy {
+  display: flex;
+  flex-direction: column;
+}
+
+.socials {
+  /* Sits at the foot of the column, so the two columns end together. */
+  margin-top: auto;
+  padding-top: var(--sp-7);
 }
 
 .portrait {

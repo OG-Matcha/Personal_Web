@@ -42,7 +42,7 @@
         <AlsoBuilt />
       </div>
       <div class="pt-section">
-        <LedgerSection heading="完整年表" />
+        <LedgerSection heading="完整年表" :fold-years="2" />
       </div>
     </div>
   </div>

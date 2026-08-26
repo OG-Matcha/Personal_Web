@@ -17,10 +17,10 @@
 
     <div class="layers mt-8">
       <section v-for="l in grouped" :key="l.id" class="layer">
-        <h3 class="mono text-2xs tracking-[0.16em] text-ink-3">
+        <h3 class="layer-label mono text-2xs tracking-[0.16em] text-ink-3">
           {{ l.labelZh }} <span class="text-ink-3/60">{{ l.label }}</span>
         </h3>
-        <ul class="mt-3 flex flex-wrap gap-2">
+        <ul class="layer-nodes flex flex-wrap gap-2">
           <li v-for="n in l.nodes" :key="n.name">
             <a
               v-if="isLink(n.evidence)"
@@ -95,21 +95,40 @@ function external(e) {
   color: var(--ink-2);
 }
 
+/* One row per layer: the label in a fixed column, the chips filling the rest.
+   This was two columns of stacked blocks, which cannot be balanced - five
+   groups of 189/189/189/141/189px split 2:3 any way you like and the shorter
+   column still ends ~140px early, so a third of the right-hand side was
+   empty. Rows have no such problem, they are denser, and the label column
+   gives the section the same vertical rhythm the timeline has. */
 .layers {
   display: grid;
-  gap: var(--sp-6);
-}
-
-@media (min-width: 52rem) {
-  .layers {
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--sp-6) var(--sp-8);
-  }
+  gap: 0;
 }
 
 .layer {
-  padding-top: var(--sp-4);
+  display: grid;
+  gap: var(--sp-2) var(--sp-6);
+  padding-block: var(--sp-4);
   border-top: 1px solid var(--rule);
+}
+
+.layer:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+
+@media (min-width: 46rem) {
+  .layer {
+    /* Wide enough for 基礎設施 Infra, the longest label, on one line. */
+    grid-template-columns: 9.5rem minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+.layer-label {
+  /* Optically aligns the label with the first row of chips, which sit inside
+     their own padding. */
+  padding-top: 5px;
 }
 
 .node {
