@@ -44,10 +44,22 @@ export default defineNuxtConfig({
     // emits a prefetch link for its chunk - which hands every phone a 137 kB
     // download it will never execute. Load it only when the film asks for it.
     'build:manifest': (manifest) => {
-      // Match on the chunk name from manualChunks - the emitted filename is a
-      // bare hash, so it carries no name to test.
+      /*
+       * No <link rel="prefetch"> at all.
+       *
+       * Cloudflare sits in front of this site and answers every prefetch
+       * request with 503 - measured, not guessed: four prefetch links in the
+       * document, four 503s in the network log, and the set changes to match
+       * whenever the emitted chunks change. So the prefetches never warm
+       * anything; they only cost four failed requests and four console errors
+       * on every page load.
+       *
+       * The chunks are still fetched normally on navigation. This was already
+       * being done for the three.js chunk for a different reason (it is 131 kB
+       * that a phone never executes); the reason now applies to all of them.
+       */
       for (const entry of Object.values(manifest)) {
-        if (entry.name === 'three') entry.prefetch = false
+        entry.prefetch = false
       }
     },
   },
