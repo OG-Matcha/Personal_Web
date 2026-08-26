@@ -157,18 +157,26 @@ const socials = [
 }
 
 /* Signal grade, same choice the film makes: scanlines rather than film grain.
-   Two pixels is the smallest pitch that survives a 2x screen without moiring
-   against the sensor noise in the source. */
+   A one-device-pixel line needs two device pixels of pitch, which only exists
+   on a 2x screen. On a 1x one the same rule lands a full CSS pixel of black
+   every other row and the portrait comes back as heavy banding - it reads as
+   a broken image, not as a treatment. So 1x gets no scanlines; the ticks, the
+   accent rule and the grade still carry it. */
 .scan {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: repeating-linear-gradient(
-    to bottom,
-    rgb(0 0 0 / 0.22) 0 1px,
-    transparent 1px 2px
-  );
   transition: opacity var(--dur-3) var(--ease-inout);
+}
+
+@media (min-resolution: 2dppx) {
+  .scan {
+    background: repeating-linear-gradient(
+      to bottom,
+      rgb(0 0 0 / 0.22) 0 1px,
+      transparent 1px 2px
+    );
+  }
 }
 
 /* Registration ticks, on two opposite corners only. Four corners reads as a

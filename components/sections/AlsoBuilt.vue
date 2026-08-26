@@ -19,9 +19,13 @@
         </div>
 
         <div class="tile-body">
-          <div class="flex items-baseline justify-between gap-2">
-            <h3 class="font-display text-lg">{{ p.name }}</h3>
-            <span class="mono text-2xs tabular-nums text-ink-2">{{ p.year }}</span>
+          <!-- The year must never be the thing that gives way. Without
+               shrink-0 a long title squeezed it until "2024" wrapped to
+               "202" / "4", which reads as corrupt data rather than a layout
+               that ran out of room. -->
+          <div class="flex items-baseline justify-between gap-3">
+            <h3 class="min-w-0 font-display text-lg">{{ p.name }}</h3>
+            <span class="mono shrink-0 text-2xs tabular-nums text-ink-2">{{ p.year }}</span>
           </div>
           <p v-if="p.award" class="mt-1 mono text-2xs text-pop-ink">{{ p.award }}</p>
           <p class="mt-2 text-2xs text-ink-2">{{ p.line }}</p>
