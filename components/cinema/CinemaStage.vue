@@ -75,6 +75,10 @@ onMounted(async () => {
   }
 
   readyStep.value = 0.12
+  // Armed before the dynamic imports: a reader who scrolls while three.js is
+  // still loading has taken over, and that is most of the window in which
+  // keepHashInView would otherwise still be correcting.
+  armHashHandoff()
 
   const [{ default: Lenis }, { createWorld }] = await Promise.all([
     import('lenis'),
@@ -121,11 +125,15 @@ onMounted(async () => {
   live.value = true
   await nextTick()
   measureFilm()
+  keepHashInView()
 
   rafId = requestAnimationFrame(loop)
 
   // Late-loading images and font swaps change the document height under us.
-  heightObserver = new ResizeObserver(measureFilm)
+  heightObserver = new ResizeObserver(() => {
+    measureFilm()
+    keepHashInView()
+  })
   heightObserver.observe(document.documentElement)
 
   viewportW.value = window.innerWidth
@@ -186,6 +194,58 @@ function tick(velocity) {
   }
 }
 
+/**
+ * Put the page back on the anchor the URL asked for.
+ *
+ * Arriving at /#ledger from another page is an ordinary document load, so the
+ * browser scrolls to the element and is done. Then this component goes live,
+ * the five beat sections stop being ordinary blocks and get their real scroll
+ * heights, and the document grows by about 4,400px underneath a reader who is
+ * now looking at the film instead of the timeline they clicked.
+ *
+ * So the anchor is re-applied whenever the document is re-measured - but only
+ * until the reader takes over, and only for a moment. Fighting someone who has
+ * started scrolling is worse than landing in the wrong place.
+ */
+const HASH_SETTLE_MS = 2500
+let hashDeadline = 0
+let readerTookOver = false
+let hashHandoff = null
+
+/**
+ * Stop correcting the moment the reader scrolls on purpose.
+ *
+ * `wheel`, `touchstart` and `keydown` are intent; `scroll` is not - `scroll` is
+ * what the correction itself produces, so listening for it would cancel the
+ * first correction with its own effect.
+ */
+function armHashHandoff() {
+  if (hashHandoff || !location.hash) return
+  hashDeadline = performance.now() + HASH_SETTLE_MS
+  hashHandoff = () => {
+    readerTookOver = true
+    window.removeEventListener('wheel', hashHandoff)
+    window.removeEventListener('touchstart', hashHandoff)
+    window.removeEventListener('keydown', hashHandoff)
+  }
+  window.addEventListener('wheel', hashHandoff, { passive: true, once: true })
+  window.addEventListener('touchstart', hashHandoff, { passive: true, once: true })
+  window.addEventListener('keydown', hashHandoff, { once: true })
+}
+
+function keepHashInView() {
+  const id = location.hash.slice(1)
+  if (!id || readerTookOver || performance.now() > hashDeadline) return
+
+  const el = document.getElementById(id)
+  if (!el) return
+  const top = el.getBoundingClientRect().top + window.scrollY
+  if (Math.abs(top - window.scrollY) < 2) return
+  // `auto`, not `smooth`: this corrects a jump that already happened, it is
+  // not a journey.
+  window.scrollTo({ top, behavior: 'auto' })
+}
+
 function measureFilm() {
   const last = document.getElementById('now')
   if (!last) return
@@ -217,6 +277,7 @@ function onVisibility() {
 }
 
 onBeforeUnmount(() => {
+  hashHandoff?.()
   cancelAnimationFrame(rafId)
   clearTimeout(resizeTimer)
   window.removeEventListener('resize', onResize)

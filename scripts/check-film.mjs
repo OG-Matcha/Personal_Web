@@ -218,6 +218,43 @@ ok(phoneText > 1500, `phone still renders the content (${phoneText} chars)`)
 await p2.screenshot({ path: `${OUT}/phone.png`, fullPage: false })
 await phone.close()
 
+// ---------- a hash in the URL has to survive the film measuring itself ----------
+// Arriving at /#ledger from another page is an ordinary document load: the
+// browser scrolls to the element, then this film goes live, the five beat
+// sections get their real scroll heights, and the document grows ~4,400px
+// under a reader who is now looking at the film instead of what they clicked.
+for (const id of ['work', 'skills', 'ledger']) {
+  const hc = await browser.newContext({ viewport: { width: 1440, height: 900 } })
+  const ph = await hc.newPage()
+  await ph.goto(`${URL}#${id}`, { waitUntil: 'domcontentloaded' })
+  await ph.waitForSelector('.film-gate', { state: 'detached', timeout: 20000 }).catch(() => {})
+  await ph.waitForTimeout(3000)
+  const r = await ph.evaluate((i) => {
+    const el = document.getElementById(i)
+    return {
+      y: Math.round(window.scrollY),
+      top: el ? Math.round(el.getBoundingClientRect().top + window.scrollY) : null,
+    }
+  }, id)
+  ok(r.top !== null && Math.abs(r.y - r.top) <= 4, `#${id} lands on target (off by ${r.top === null ? '?' : r.y - r.top}px)`)
+  await hc.close()
+}
+
+// And it must stop correcting the moment the reader scrolls on purpose.
+const hoC = await browser.newContext({ viewport: { width: 1440, height: 900 } })
+const ph2 = await hoC.newPage()
+await ph2.goto(`${URL}#ledger`, { waitUntil: 'domcontentloaded' })
+await ph2.waitForTimeout(400)
+await ph2.mouse.wheel(0, 1200)
+const during = await ph2.evaluate(() => Math.round(window.scrollY))
+await ph2.waitForTimeout(3200)
+const settled = await ph2.evaluate(() => Math.round(window.scrollY))
+ok(
+  Math.abs(settled - during) < 2500,
+  `a reader who scrolls during the correction is left alone (${during} -> ${settled})`
+)
+await hoC.close()
+
 // ---------- reduced motion: no WebGL ----------
 const rm = await browser.newContext({ viewport: { width: 1440, height: 900 }, reducedMotion: 'reduce' })
 const p3 = await rm.newPage()
