@@ -39,20 +39,6 @@ decisions:
 
   - decision: 產品線擴張，而不是把所有資源壓在旗艦產品上。
     rejected: 集中火力做 oSave
-    why: >-
-      TODO - 這是外部看得到的事實（從單一產品變成四條線），
-      但只有你知道當時的理由：是市場驗證？是團隊成員各自想做的東西？是補助的要求？
-      請照實寫，這一題投資人一定會問。
-    cost: TODO
-    date: TODO
-
-  - decision: TODO
-    rejected: TODO
-    why: >-
-      TODO - 建議寫「團隊換血」那一段。2024 的競賽夥伴幾乎全換，
-      留下你和 CEO。你當時做了什麼技術上的準備讓交接不會斷？
-    cost: TODO
-    date: TODO
 
 trace: []
 
@@ -68,12 +54,6 @@ results:
   - metric: 進駐基地
     value: 桃園青創萌芽團隊
     note: 另進駐雙北與桃園多處青創基地
-  - metric: 營收
-    value: TODO # 有沒有可以公開的數字？沒有的話這一行刪掉，不要留 TODO 上線
-
-retrospect: >-
-  TODO - 兩年下來，關於「學生團隊要不要變成公司」這件事，
-  你會給 2024 年 4 月的自己什麼建議？
 
 stack:
   client: [Nuxt.js, Vue.js, Tailwind CSS, PWA]

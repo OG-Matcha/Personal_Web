@@ -8,7 +8,6 @@ role: 後端 · AI 工程
 org: 國立中央大學資訊管理學系（113 年度國科會大專學生研究計畫）
 orgUrl: null
 period: { start: 2024-03, end: 2024-09 }
-team: TODO # 例：4 人
 status: 已結案
 cover: /images/phishforge-1.png
 thumbnail: /images/phishforge-1.png
@@ -54,12 +53,6 @@ decisions:
     cost: 沒辦法做「弱密碼分析」這類延伸報告，而評審確實問過這件事。
     date: 2024-06
 
-  - decision: TODO
-    rejected: TODO
-    why: TODO - 郵件送達率怎麼處理？（SendinBlue SMTP 那段其實是個決策）
-    cost: TODO
-    date: TODO
-
 trace:
   - step: 目標設定
     detail: 輸入受測組織的部門結構與近期情境，不需要真實個資。
@@ -84,12 +77,6 @@ results:
     value: 佳作
   - metric: 國科會大專學生研究計畫
     value: 113 年度通過並結案
-  - metric: 實際演練規模
-    value: TODO # 有沒有真的對哪個組織跑過？幾個人？
-
-retrospect: >-
-  TODO - 這個題目做完之後，你對「AI 產生的攻擊內容應該公開到什麼程度」
-  的看法有沒有改變？這一段寫得好，會是整個網站最有份量的兩句話。
 
 stack:
   client: [Vue.js]
