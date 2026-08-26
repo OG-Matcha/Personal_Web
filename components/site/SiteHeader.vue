@@ -44,7 +44,7 @@ const windows = beatWindows()
  * row of nouns and landed somewhere the reader had no reason to expect.
  */
 const links = [
-  { href: '/#build', label: '作品' },
+  { href: '/#work', label: '作品' },
   { href: '/#now-section', label: '現在' },
   { href: '/#skills', label: '能力' },
   { href: '/#ledger', label: '年表' },

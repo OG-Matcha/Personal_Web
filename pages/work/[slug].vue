@@ -102,7 +102,13 @@
 
     <!-- App screens are 9:19.5, not 16:10. Two of them across a full-width
          grid renders each one taller than the viewport, and the hardcoded
-         1200x750 box reserved the wrong space and jumped on load. -->
+         1200x750 box reserved the wrong space and jumped on load.
+
+         They are cropped to one height rather than left at their natural
+         ones: these frames are as tall as their content, so a row of them
+         ends on three different baselines and reads as a layout bug. The
+         crop takes from the bottom, which is where a screen has the least
+         to say. -->
     <section v-if="work.screenshots?.length" class="shell mt-9">
       <div class="grid gap-5" :class="phoneShots ? 'sm:grid-cols-3' : 'sm:grid-cols-2'">
         <img
@@ -113,7 +119,8 @@
           :width="phoneShots ? 750 : 1200"
           :height="phoneShots ? 1624 : 750"
           loading="lazy"
-          class="w-full self-start rounded-sm border border-rule"
+          class="w-full rounded-sm border border-rule"
+          :class="phoneShots ? 'aspect-[375/812] object-cover object-top' : ''"
         />
       </div>
     </section>

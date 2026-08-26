@@ -29,6 +29,12 @@
     <!-- After the film ends, the record. Ordinary page, ordinary scrolling. -->
     <div class="ledger">
       <NowSection />
+      <!-- Straight after "who was that": what he shipped. This is the entry
+           point to the case studies; before it existed the only way in was a
+           link buried in a timeline row. -->
+      <div class="pt-section">
+        <CaseStudies />
+      </div>
       <div class="pt-section">
         <SkillsSection />
       </div>
@@ -48,6 +54,7 @@ import CinemaStage from '~/components/cinema/CinemaStage.vue'
 import BeatSection from '~/components/cinema/BeatSection.vue'
 import BeatEvents from '~/components/cinema/BeatEvents.vue'
 import NowSection from '~/components/sections/NowSection.vue'
+import CaseStudies from '~/components/sections/CaseStudies.vue'
 import SkillsSection from '~/components/sections/SkillsSection.vue'
 import AlsoBuilt from '~/components/sections/AlsoBuilt.vue'
 import LedgerSection from '~/components/sections/LedgerSection.vue'

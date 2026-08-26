@@ -177,6 +177,17 @@ await page.mouse.move(10, 10)
 // ---------- the ledger: everything after the film ----------
 await page.evaluate(() => document.getElementById('now-section')?.scrollIntoView())
 await page.waitForTimeout(700)
+// The case studies are the only way into /work/* that does not require
+// reading a whole timeline first. Before this section existed the header's
+// 作品 tab pointed at a beat inside the film, so the pages were effectively
+// unreachable - which is a content bug that renders as a working page.
+await page.evaluate(() => document.getElementById('work')?.scrollIntoView())
+await page.waitForTimeout(500)
+const caseLinks = await page
+  .locator('#work a[href^="/work/"]')
+  .evaluateAll((a) => a.map((e) => e.getAttribute('href')))
+ok(caseLinks.length === 4, `case studies linked from the homepage: ${caseLinks.length}`)
+
 const ledger = await page.evaluate(() => ({
   posts: document.querySelectorAll('#now-section .post').length,
   layers: document.querySelectorAll('#skills .layer').length,

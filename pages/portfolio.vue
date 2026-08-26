@@ -1,11 +1,13 @@
 <template>
-  <div class="pt-8">
-    <WorkSection />
+  <div class="pt-8 pb-section">
+    <CaseStudies />
+    <AlsoBuilt />
   </div>
 </template>
 
 <script setup>
-import WorkSection from '~/components/sections/WorkSection.vue'
+import CaseStudies from '~/components/sections/CaseStudies.vue'
+import AlsoBuilt from '~/components/sections/AlsoBuilt.vue'
 
 useSeoMeta({
   title: '作品集 | 黃鉅燊 Ju-Shen Huang',
