@@ -306,8 +306,10 @@ const socials = [
 .cap-meta {
   font-size: var(--step--2);
   letter-spacing: 0.18em;
-  color: var(--ink-3, var(--ink-2));
-  opacity: 0.7;
+  /* --ink-2 at 0.7 opacity computes to #6f747a on this ground, which is
+     4.12:1 - under the 4.5 that body-size text needs. The dimming was
+     decoration; the token on its own is 7.4:1. */
+  color: var(--ink-2);
 }
 
 .socials {
