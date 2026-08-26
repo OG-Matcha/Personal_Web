@@ -175,8 +175,15 @@ node scripts/check-film.mjs
 手機或 prefers-reduced-motion 下 WebGL 仍然啟動。同時把每一幕的畫面存到暫存資料夾——
 這裡大部分真正的問題是用看的才發現的，不是斷言抓到的。
 
-⚠️ `nuxt generate` 會在 `.nuxt/dist/server/` 留下正式建置的產物，dev server 撿去用會
-整站 500（`#internal/nuxt/paths is not defined`）。`npm run dev` 的 `predev` 會跑
-`scripts/clean-stale-builddir.mjs` 自動處理掉；它是看 bundle 裡有沒有那個解不開的
-import，不是看檔案在不在——dev 也會寫同一個檔名，用存在與否判斷會每次重啟都砍掉快取。
-直接下 `npx nuxt dev` 會跳過這個 hook，那就還是得自己 `rm -rf .nuxt`。
+⚠️ dev 與 generate 本來共用 `.nuxt`，所以 dev server 開著的時候跑 generate，正式建置的
+server bundle 會蓋掉它，之後每一個 request 都 500（`#internal/nuxt/paths is not
+defined`），而且 dev server 自己不會發現也不會復原。現在 `npm run generate` 走
+`scripts/generate.mjs`，設 `NUXT_BUILD_DIR=.nuxt-generate`，兩邊不再碰同一批檔案，
+dev 開著也能安全 generate。（env var 寫在包裝腳本裡而不是 npm script，因為
+`VAR=value cmd` 在 cmd.exe 與 PowerShell 都不是合法語法。）
+
+`npm run dev` 的 `predev` 還留著 `scripts/clean-stale-builddir.mjs` 當保險，處理修好
+之前留下的舊狀態，或有人直接下 `npx nuxt generate` 的情況。它是看 bundle 裡有沒有那個
+解不開的 import，不是看檔案在不在——dev 也會寫同一個檔名。
+
+⚠️ 兩個指令都要走 npm script。`npx nuxt generate` 會跳過包裝腳本，直接寫進 `.nuxt`。

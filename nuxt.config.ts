@@ -66,6 +66,18 @@ export default defineNuxtConfig({
     '/news': { redirect: { to: '/#ledger', statusCode: 301 } },
   },
 
+  /**
+   * `nuxt dev` and `nuxt generate` used to share this directory, so a generate
+   * run replaced the dev server's server bundle underneath it and every
+   * request after that died with:
+   *
+   *   Package import specifier "#internal/nuxt/paths" is not defined
+   *
+   * `npm run generate` sets NUXT_BUILD_DIR so the two builds never touch the
+   * same files, and a generate can be run while dev is still up.
+   */
+  buildDir: process.env.NUXT_BUILD_DIR || '.nuxt',
+
   app: {
     baseURL: process.env.NUXT_APP_BASE_URL || '/',
     buildAssetsDir: '/static/',

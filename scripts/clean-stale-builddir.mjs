@@ -1,14 +1,16 @@
 /**
- * `nuxt dev` and `nuxt generate` share one build directory.
+ * A fallback for a `.nuxt` that dev cannot load.
  *
- * A generate run leaves a production server bundle in `.nuxt/dist/server/`,
- * and the next `nuxt dev` picks it up and dies on the first request with:
+ * `npm run generate` now builds into `.nuxt-generate`, so the two commands no
+ * longer share a directory and the collision this guards against should not
+ * happen any more. It still runs before dev because the bad state outlives the
+ * fix: a checkout from before it, or someone reaching for `npx nuxt generate`
+ * directly, both leave a production server bundle in `.nuxt/dist/server/` that
+ * kills the next dev server on its first request with:
  *
  *   Package import specifier "#internal/nuxt/paths" is not defined
  *
- * The fix has always been `rm -rf .nuxt`, which is fine once you know - and
- * the error names neither the cause nor the cure. So this runs before dev and
- * clears the directory when it is holding a build dev cannot load.
+ * The error names neither the cause nor the cure, so this clears it instead.
  *
  * The test is the failing import itself, not the presence of the file: dev
  * writes `dist/server/server.mjs` too, and treating that as the marker threw

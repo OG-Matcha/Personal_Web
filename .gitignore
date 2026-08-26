@@ -30,3 +30,6 @@ logs
 
 # Git Bash crash dumps on Windows
 *.stackdump
+
+# `npm run generate` builds here so it never clobbers the dev server's .nuxt
+.nuxt-generate
