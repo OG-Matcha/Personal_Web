@@ -28,9 +28,13 @@ links:
 
 cover: /images/osave-1.webp
 thumbnail: /images/osave-1.webp
+# Phone frames, not wide captures - the page lays them out three across
+# instead of two, and reserves the right box so they do not jump on load.
+screenshotShape: phone
 screenshots:
-  - /images/osave-2.webp
-  - /images/osave-3.webp
+  - /images/osave-2.webp # 首頁：今日餘額、本周支出、異常支出
+  - /images/osave-3.webp # 月度分析：收支比較、金流走向、支出情況
+  - /images/osave-4.webp # 收支趨勢評分與建議
 # pivot 前的發票醫生。留著是因為 pivot 本身就是這個案例的主線之一。
 formerScreenshots:
   - /images/invoicedoctor-1.jpg

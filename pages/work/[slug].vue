@@ -100,17 +100,20 @@
       </ol>
     </section>
 
+    <!-- App screens are 9:19.5, not 16:10. Two of them across a full-width
+         grid renders each one taller than the viewport, and the hardcoded
+         1200x750 box reserved the wrong space and jumped on load. -->
     <section v-if="work.screenshots?.length" class="shell mt-9">
-      <div class="grid gap-5 sm:grid-cols-2">
+      <div class="grid gap-5" :class="phoneShots ? 'sm:grid-cols-3' : 'sm:grid-cols-2'">
         <img
           v-for="(src, i) in work.screenshots"
           :key="src"
           :src="src"
           :alt="`${work.title} 畫面 ${i + 1}`"
-          width="1200"
-          height="750"
+          :width="phoneShots ? 750 : 1200"
+          :height="phoneShots ? 1624 : 750"
           loading="lazy"
-          class="w-full rounded-sm border border-rule"
+          class="w-full self-start rounded-sm border border-rule"
         />
       </div>
     </section>
@@ -181,6 +184,7 @@ function ok(v) {
  * The decisions are the point of this page. Anyone can list a stack; what
  * separates the cases is which option was rejected and what the choice cost.
  */
+const phoneShots = computed(() => work.screenshotShape === 'phone')
 const links = computed(() => (work.links ?? []).filter((l) => ok(l.href)))
 const decisions = computed(() => (work.decisions ?? []).filter((d) => ok(d.decision)))
 const trace = computed(() => (work.trace ?? []).filter((t) => ok(t.step)))
