@@ -5,8 +5,12 @@ const SITE_URL = 'https://www.ogmatcha.com'
 // Just the name. A tab strip full of open pages shows about 20 characters,
 // and a job title spends all of them saying something the page says better.
 const TITLE = '黃鉅燊 Ju-Shen Huang'
+// Fallback only: every real page sets its own description now. The counts
+// are duplicated from content/site.yml `counts` because this file is loaded
+// outside Vite and cannot import the YAML - if they change there, change
+// them here too.
 const DESCRIPTION =
-  '黃鉅燊（Ju-Shen Huang / OG_Matcha），斐闊 Finctory 共同創辦人暨技術長、醫數行銷 MedaLink 共同創辦人暨前線部署工程師，中央大學資訊管理學系碩士班。把 LLM 放進會出貨的系統裡：財伴 oSave、PhishForge、診所營運系統，17 項競賽獎項含 4 座全國冠軍，3 個國科會研究計畫。'
+  '黃鉅燊（Ju-Shen Huang / OG_Matcha），斐闊 Finctory 共同創辦人暨技術長、醫數行銷 MedaLink 共同創辦人暨前線部署工程師，中央大學資訊管理學系碩士班。把 LLM 放進會出貨的系統裡：財伴 oSave、PhishForge、診所營運系統，16 項競賽獎項含 5 座全國首獎，3 個國科會研究計畫。'
 
 export default defineNuxtConfig({
   devtools: { enabled: false },
@@ -51,6 +55,12 @@ export default defineNuxtConfig({
   site: {
     url: SITE_URL,
     name: TITLE,
+    // The build emits directory indexes (portfolio/index.html), and GitHub
+    // Pages 301s a slashless request to the slashed form. Every canonical and
+    // every sitemap <loc> used to point at the redirect rather than at the
+    // page, so each one cost an extra crawl hop and Search Console filed them
+    // as "Page with redirect".
+    trailingSlash: true,
   },
 
   tailwindcss: {
@@ -99,7 +109,7 @@ export default defineNuxtConfig({
         { property: 'og:title', content: TITLE },
         { property: 'og:description', content: DESCRIPTION },
         { property: 'og:type', content: 'profile' },
-        { property: 'og:url', content: SITE_URL },
+        { property: 'og:url', content: `${SITE_URL}/` },
         { property: 'og:image', content: `${SITE_URL}/images/og-cover.png` },
         { property: 'og:image:width', content: '1200' },
         { property: 'og:image:height', content: '630' },
@@ -133,49 +143,10 @@ export default defineNuxtConfig({
             "d.classList.remove('gate-locked')},8000)",
           tagPosition: 'head',
         },
-        {
-          type: 'application/ld+json',
-          innerHTML: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'Person',
-            name: '黃鉅燊',
-            alternateName: ['Ju-Shen Huang', 'OG_Matcha'],
-            url: SITE_URL,
-            image: `${SITE_URL}/images/my-avatar.jpg`,
-            email: 'mailto:matchaskill@gmail.com',
-            sameAs: [
-              'https://github.com/OG-Matcha',
-              'https://www.linkedin.com/in/ogmatcha/',
-            ],
-            jobTitle: ['共同創辦人暨技術長', '共同創辦人暨前線部署工程師'],
-            // Two companies, kept separate on purpose: they are unrelated
-            // entities and collapsing them into one would misstate both.
-            worksFor: [
-              {
-                '@type': 'Organization',
-                name: '斐闊有限公司 Finctory',
-                url: 'https://www.finctory.com/',
-              },
-              {
-                '@type': 'Organization',
-                name: '醫數行銷科技有限公司 MedaLink',
-                url: 'https://medalink.ai/',
-              },
-            ],
-            alumniOf: {
-              '@type': 'CollegeOrUniversity',
-              name: '國立中央大學',
-              department: '資訊管理學系',
-            },
-            knowsAbout: [
-              '生成式 AI 應用',
-              'LLM Agent 系統',
-              '系統分析與設計',
-              '全端開發',
-              'DevOps',
-            ],
-          }),
-        },
+        // The JSON-LD used to live here as a hand-written literal. It moved
+        // to composables/useJsonLd.ts: this file is loaded by jiti, outside
+        // Vite, so @rollup/plugin-yaml never applied here and every fact in
+        // the block was a hand-copy of content/*.yml that had already drifted.
       ],
     },
   },

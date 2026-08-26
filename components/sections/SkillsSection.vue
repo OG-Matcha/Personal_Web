@@ -28,10 +28,13 @@
               v-bind="linkAttrs(n.evidence)"
               class="node"
               :data-tier="n.tier"
+              :title="labelOf[n.tier]"
             >
-              <span class="dot" />{{ n.name }}
+              <span class="dot" /><span class="sr-only">{{ labelOf[n.tier] }}</span>{{ n.name }}
             </a>
-            <span v-else class="node" :data-tier="n.tier"><span class="dot" />{{ n.name }}</span>
+            <span v-else class="node" :data-tier="n.tier" :title="labelOf[n.tier]">
+              <span class="dot" /><span class="sr-only">{{ labelOf[n.tier] }}</span>{{ n.name }}
+            </span>
           </li>
         </ul>
       </section>
@@ -58,6 +61,14 @@ const LAYERS = [
 const tiers = computed(() => [...skills.tiers].sort((a, b) => b.rank - a.rank))
 
 const rankOf = Object.fromEntries(skills.tiers.map((t) => [t.id, t.rank]))
+
+/**
+ * The section's whole claim is 量尺不是熟練度，是證據層級 - and the tier was
+ * carried only by `data-tier` and the colour of an empty <span class="dot" />.
+ * Extracted as text the list was 51 undifferentiated technology names, and for
+ * a sighted reader it was colour-only, which is a WCAG 1.4.1 failure.
+ */
+const labelOf = Object.fromEntries(skills.tiers.map((t) => [t.id, t.label]))
 
 const grouped = computed(() =>
   LAYERS.map((l) => ({

@@ -215,16 +215,24 @@ onMounted(() => {
 
 function goBack() {
   if (cameFrom.value) router.back()
-  else router.push('/portfolio')
+  else router.push('/portfolio/')
 }
 const evidence = computed(() =>
   timeline.filter((e) => e.project === work.slug && (e.kind === 'award' || e.kind === 'grant'))
 )
 
-/** YAML block scalars keep blank lines; split them back into paragraphs. */
+/**
+ * Split a folded YAML scalar back into paragraphs.
+ *
+ * `>-` folds every ordinary line break to a space and keeps a blank line as
+ * a single newline - so a newline in the value is exactly the author's
+ * paragraph break, and nothing else is. Splitting on a blank-line pattern
+ * needed two newlines and matched none, which is why six two-paragraph
+ * fields across the four case studies have all rendered as one block.
+ */
 function paragraphs(text) {
   return String(text ?? '')
-    .split(/\n\s*\n/)
+    .split(/\n+/)
     .map((p) => p.trim())
     .filter(Boolean)
 }
@@ -234,9 +242,80 @@ useSeoMeta({
   description: work.summary,
   ogTitle: `${work.title} | 黃鉅燊 Ju-Shen Huang`,
   ogDescription: work.summary,
-  ogUrl: `https://www.ogmatcha.com/work/${work.slug}`,
+  ogUrl: `https://www.ogmatcha.com/work/${work.slug}/`,
+  // Globally 'profile', which told every scraper that a product page was a
+  // personal profile.
+  ogType: 'article',
+  twitterTitle: `${work.title} | 黃鉅燊 Ju-Shen Huang`,
+  twitterDescription: work.summary,
 })
-useHead({ link: [{ rel: 'canonical', href: `https://www.ogmatcha.com/work/${work.slug}` }] })
+
+/**
+ * What each case study actually is. Four pages that were structurally
+ * indistinguishable from the homepage: one ld+json apiece and it was the
+ * site-wide Person block, so nothing said the page was about oSave, that oSave
+ * is an app, or that this person made it - while the real store URLs were
+ * sitting in the YAML and rendering as buttons two elements away.
+ */
+const NODE_TYPE = {
+  osave: { '@type': 'SoftwareApplication', applicationCategory: 'FinanceApplication', operatingSystem: 'iOS, Android' },
+  medalink: { '@type': 'SoftwareApplication', applicationCategory: 'BusinessApplication' },
+  phishforge: { '@type': 'CreativeWork', sourceOrganization: { '@id': ID.ncu } },
+  finctory: { '@type': 'Organization', '@id': 'https://www.finctory.com/#org' },
+}
+
+const url = `https://www.ogmatcha.com/work/${work.slug}/`
+
+// Finctory's node reuses the Organization `@id` the Person's worksFor already
+// declares, so the two are one entity across the site rather than two records
+// of the same company. Everything else gets a page-local id.
+const workId = (NODE_TYPE[work.slug] ?? {})['@id'] ?? `${url}#work`
+
+const workNode = computed(() => {
+  const base = NODE_TYPE[work.slug] ?? { '@type': 'CreativeWork' }
+  const install = links.value.map((l) => l.href)
+  return {
+    ...base,
+    name: work.title,
+    ...(work.titleEn ? { alternateName: work.titleEn } : {}),
+    description: work.summary,
+    url,
+    // finctory.yml has `cover: null`; an unguarded spread would emit
+    // "image": null, which is worse than omitting it.
+    ...(work.cover ? { image: `https://www.ogmatcha.com${work.cover}` } : {}),
+    ...(work.period?.start ? { datePublished: String(work.period.start) } : {}),
+    ...(base['@type'] === 'Organization'
+      ? { founder: { '@id': ID.person } }
+      : { creator: { '@id': ID.person } }),
+    ...(install.length && base['@type'] === 'SoftwareApplication'
+      ? { installUrl: install }
+      : {}),
+  }
+})
+
+useHead({
+  link: [{ rel: 'canonical', href: url }],
+  script: [
+    jsonLdScript({
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          ...pageNode({ type: 'WebPage', url, name: work.title }),
+          mainEntity: { '@id': workId },
+        },
+        { '@id': workId, ...workNode.value },
+        {
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: '首頁', item: 'https://www.ogmatcha.com/' },
+            { '@type': 'ListItem', position: 2, name: '作品集', item: 'https://www.ogmatcha.com/portfolio/' },
+            { '@type': 'ListItem', position: 3, name: work.title },
+          ],
+        },
+      ],
+    }),
+  ],
+})
 </script>
 
 <style scoped>

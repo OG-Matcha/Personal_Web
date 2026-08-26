@@ -6,6 +6,19 @@
 # -----------------------------------------------------------------------------
 asOf: 2026-08
 
+# 對外講的數字。每一個都要對得上 content/timeline.yml，不要憑印象寫。
+#   awards        = kind: award 的筆數
+#   topPrizes     = 上述之中標題含 第一名／金獎／最佳創新創業大獎 的筆數
+#   researchGrants = kind: research 的筆數
+#
+# ⚠️ 兩個判斷題留給你：「桃園新創之星 - 入圍決賽（前 10）」現在算在 awards
+#    裡，但入圍不是得獎；金獎與最佳創新創業大獎現在算在 topPrizes 裡。
+#    你的定義若不同，改這裡，履歷頁與首頁的描述會跟著變。
+counts:
+  awards: 16
+  topPrizes: 5
+  researchGrants: 3
+
 person:
   nameZh: 黃鉅燊
   nameEn: Ju-Shen Huang

@@ -14,6 +14,23 @@
           {{ about.lede }}
         </p>
 
+        <!-- The one sentence on the page with a subject in it. Everything else
+             here is first-person with the subject dropped, which is ordinary
+             Chinese and useless the moment it is quoted somewhere else. -->
+        <p v-if="about.intro" class="mt-5 max-w-measure-han text-sm text-ink-3">
+          {{ about.intro }}
+        </p>
+
+        <!-- What he is open to. It was in content/site.yml and rendered
+             nowhere, which is a strange thing to leave out of a page whose
+             whole job is being found. -->
+        <template v-if="site.open?.length">
+          <h3 class="mt-7 font-display text-lg">開放合作</h3>
+          <ul class="mt-3 flex flex-col gap-1">
+            <li v-for="o in site.open" :key="o" class="text-sm text-ink-2">{{ o }}</li>
+          </ul>
+        </template>
+
         <ul class="socials">
           <li v-for="l in socials" :key="l.href">
             <a :href="l.href" class="social" v-bind="linkAttrs(l.href, { me: true })">

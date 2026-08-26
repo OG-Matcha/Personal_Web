@@ -77,6 +77,27 @@ export function kindLabel(kind: TimelineKind): string {
 }
 
 /**
+ * Close the spaces YAML's folded scalars leave inside Chinese sentences.
+ *
+ * `summary: >-` written across three source lines becomes one string with a
+ * literal U+0020 at each fold. In English that is the point; in Chinese the
+ * space lands after 。 or between two Han characters, where the typography has
+ * none - and it ships straight into the meta description, so the search result
+ * reads 「所以我的財務健康嗎」。 財伴改成…
+ *
+ * Two narrow rules, so deliberate Latin spacing survives: 把 LLM 放進 and
+ * 翻成 13 項 both have a Latin character on one side of the space.
+ *
+ * Matching only [ 	] is load-bearing. `\s+` would eat the blank line that
+ * `paragraphs()` splits on and collapse every case study into one block.
+ */
+function closeCjkFolds(s: string): string {
+  return s
+    .replace(/([　-〿！-｠—])[ 	]+/g, '$1')
+    .replace(/([一-鿿])[ 	]+([一-鿿])/g, '$1$2')
+}
+
+/**
  * Strip every TODO before the content leaves the build.
  *
  * The case-study YAMLs use `TODO` as a deliberate placeholder - the rule is
@@ -88,7 +109,8 @@ export function kindLabel(kind: TimelineKind): string {
  */
 function stripTodo<T>(value: T): T {
   if (typeof value === 'string') {
-    return (value.trimStart().startsWith('TODO') ? undefined : value) as T
+    if (value.trimStart().startsWith('TODO')) return undefined as T
+    return closeCjkFolds(value) as T
   }
   if (Array.isArray(value)) {
     return value

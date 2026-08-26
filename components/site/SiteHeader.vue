@@ -57,6 +57,9 @@ const links = [
   { href: '/#now-section', label: '現在' },
   { href: '/#skills', label: '能力' },
   { href: '/#ledger', label: '年表' },
+  // Real pages, not anchors. They were unreachable from anywhere on the site.
+  { href: '/portfolio/', label: '作品集' },
+  { href: '/resume/', label: '履歷' },
 ]
 
 const current = computed(() => {

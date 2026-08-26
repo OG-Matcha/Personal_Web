@@ -1,5 +1,11 @@
 <template>
   <div>
+    <!-- The page shipped with no h1 at all: its first heading was a beat's
+         rhetorical question, so the only machine-readable statement of whose
+         site this is lived in a meta tag. Outside FilmGate on purpose - that
+         component is removed from the DOM once the gate lifts. -->
+    <h1 class="sr-only">{{ about.intro }}</h1>
+
     <!-- Held over everything until the film can actually run. Lifts on the
          first drawn frame, and on a hard cap regardless. -->
     <FilmGate />
@@ -60,12 +66,38 @@ import AlsoBuilt from '~/components/sections/AlsoBuilt.vue'
 import LedgerSection from '~/components/sections/LedgerSection.vue'
 import { beatSpans, beatWindows } from '~/composables/useFilm'
 
+const { about, site } = useContent()
+
 const beats = beatWindows()
 // Scroll distance per beat is derived from the same windows, so the copy and
 // the camera can never disagree about where a beat starts.
 const spans = beatSpans()
 
-useHead({ link: [{ rel: 'canonical', href: 'https://www.ogmatcha.com' }] })
+// The homepage used to fall through to nuxt.config's DESCRIPTION, which meant
+// the award counts lived in a string nobody checks against the timeline.
+const DESC = `${about.intro}把 LLM 放進會出貨的系統裡：財伴 oSave、PhishForge、診所營運系統。${site.counts.awards} 項競賽獎項含 ${site.counts.topPrizes} 座全國首獎，${site.counts.researchGrants} 個國科會研究計畫。`
+
+useSeoMeta({
+  description: DESC,
+  ogDescription: DESC,
+  twitterDescription: DESC,
+})
+useHead({
+  link: [{ rel: 'canonical', href: 'https://www.ogmatcha.com/' }],
+  // Names the person as this page's subject rather than merely a topic of it,
+  // which is the question an answer engine asks first.
+  script: [
+    jsonLdScript(
+      pageNode({
+        type: 'ProfilePage',
+        url: 'https://www.ogmatcha.com/',
+        name: `${site.person.nameZh} ${site.person.nameEn}`,
+        dateModified: site.asOf,
+        primary: true,
+      })
+    ),
+  ],
+})
 </script>
 
 <style scoped>

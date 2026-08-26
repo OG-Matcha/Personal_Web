@@ -8,7 +8,7 @@
     <!-- Lead project runs full width with the largest image on the page. The
          two that follow sit side by side, so the section has rhythm rather
          than three identical rows. -->
-    <NuxtLink v-if="lead" :to="`/work/${lead.slug}`" class="lead group mt-7">
+    <NuxtLink v-if="lead" :to="`/work/${lead.slug}/`" class="lead group mt-7">
       <img
         :src="lead.cover"
         :alt="lead.title"
@@ -32,7 +32,7 @@
     </NuxtLink>
 
     <div class="mt-8 grid gap-7 md:grid-cols-3">
-      <NuxtLink v-for="w in others" :key="w.slug" :to="`/work/${w.slug}`" class="group">
+      <NuxtLink v-for="w in others" :key="w.slug" :to="`/work/${w.slug}/`" class="group">
         <img
           v-if="w.cover"
           :src="w.cover"

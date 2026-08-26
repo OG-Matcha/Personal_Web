@@ -2,8 +2,17 @@
   <section id="ledger" class="shell pb-section">
     <div class="flex flex-wrap items-baseline justify-between gap-4">
       <h2 class="section-title">{{ heading }}</h2>
-      <NuxtLink v-if="limit && timeline.length > limit" to="/resume" class="mono text-2xs">
-        完整年表（{{ timeline.length }} 筆）
+      <!-- Shown whenever this ledger is not the whole record - which is both
+           the `limit` slice and the `foldYears` fold. The old condition tested
+           `limit` only, so the homepage, which folds 24 of 45 rows, offered no
+           way to /resume at all. On /resume itself both props are 0 and this
+           correctly stays hidden. -->
+      <NuxtLink
+        v-if="(limit && timeline.length > limit) || foldYears"
+        to="/resume/"
+        class="mono text-2xs"
+      >
+        全部 {{ timeline.length }} 筆 →
       </NuxtLink>
     </div>
 
@@ -42,7 +51,7 @@
           <p v-if="entry.project && workSlugs.has(entry.project) || entry.evidence" class="mt-2 flex flex-wrap gap-x-5 gap-y-1">
             <NuxtLink
               v-if="entry.project && workSlugs.has(entry.project)"
-              :to="`/work/${entry.project}`"
+              :to="`/work/${entry.project}/`"
               class="mono text-2xs"
             >
               案例研究
