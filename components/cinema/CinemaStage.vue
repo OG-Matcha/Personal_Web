@@ -136,6 +136,19 @@ onMounted(async () => {
   })
   heightObserver.observe(document.documentElement)
 
+  // The observer only fires when the document actually resizes. These two are
+  // the moments it usually does, and the moments after which it will not.
+  document.fonts?.ready.then(() => {
+    measureFilm()
+    keepHashInView()
+  })
+  if (document.readyState !== 'complete') {
+    window.addEventListener('load', () => {
+      measureFilm()
+      keepHashInView()
+    }, { once: true })
+  }
+
   viewportW.value = window.innerWidth
   window.addEventListener('resize', onResize)
   window.addEventListener('pointermove', onPointerMove, { passive: true })
@@ -207,43 +220,83 @@ function tick(velocity) {
  * until the reader takes over, and only for a moment. Fighting someone who has
  * started scrolling is worse than landing in the wrong place.
  */
-const HASH_SETTLE_MS = 2500
+/**
+ * How long to keep re-applying the anchor, counted from the first chance this
+ * component actually has to do it - not from mount.
+ *
+ * Counting from mount was the bug: the window opened before the dynamic import
+ * of three.js, so on any machine where the module fetch, world build and shader
+ * compile took longer than the window, the first correction ran already expired
+ * and did nothing. Locally, with a warm cache, it never did.
+ *
+ * The window is generous because it is not the real safety mechanism - reader
+ * input is. A short window only ever cut off late reflows: fonts and images
+ * settling after the last correction left the page 80px off on a throttled
+ * machine.
+ */
+const HASH_SETTLE_MS = 6000
+/** A wheel this small is a resting finger, not a decision. */
+const HANDOFF_DELTA = 30
+
 let hashDeadline = 0
 let readerTookOver = false
 let hashHandoff = null
+let wheeled = 0
 
 /**
- * Stop correcting the moment the reader scrolls on purpose.
+ * Stop correcting once the reader scrolls on purpose.
  *
- * `wheel`, `touchstart` and `keydown` are intent; `scroll` is not - `scroll` is
- * what the correction itself produces, so listening for it would cancel the
- * first correction with its own effect.
+ * `wheel` and `touchmove` are intent; `scroll` is not - `scroll` is what the
+ * correction itself produces, so listening for it would cancel the first
+ * correction with its own effect.
+ *
+ * Wheel deltas accumulate rather than triggering on the first event: a
+ * trackpad resting under a palm emits a stream of one-pixel deltas, and one of
+ * those used to be enough to abandon the anchor for good.
  */
 function armHashHandoff() {
   if (hashHandoff || !location.hash) return
-  hashDeadline = performance.now() + HASH_SETTLE_MS
-  hashHandoff = () => {
+
+  const takeOver = () => {
     readerTookOver = true
-    window.removeEventListener('wheel', hashHandoff)
-    window.removeEventListener('touchstart', hashHandoff)
-    window.removeEventListener('keydown', hashHandoff)
+    window.removeEventListener('wheel', onWheel)
+    window.removeEventListener('touchmove', takeOver)
+    window.removeEventListener('keydown', takeOver)
   }
-  window.addEventListener('wheel', hashHandoff, { passive: true, once: true })
-  window.addEventListener('touchstart', hashHandoff, { passive: true, once: true })
-  window.addEventListener('keydown', hashHandoff, { once: true })
+  const onWheel = (e) => {
+    wheeled += Math.abs(e.deltaY)
+    if (wheeled > HANDOFF_DELTA) takeOver()
+  }
+
+  hashHandoff = takeOver
+  window.addEventListener('wheel', onWheel, { passive: true })
+  window.addEventListener('touchmove', takeOver, { passive: true, once: true })
+  window.addEventListener('keydown', takeOver, { once: true })
 }
 
 function keepHashInView() {
   const id = location.hash.slice(1)
-  if (!id || readerTookOver || performance.now() > hashDeadline) return
+  if (!id || readerTookOver) return
+
+  // The clock starts here, on the first chance to correct, so a slow module
+  // load cannot spend the whole window before the correction is possible.
+  if (!hashDeadline) hashDeadline = performance.now() + HASH_SETTLE_MS
+  if (performance.now() > hashDeadline) return
 
   const el = document.getElementById(id)
   if (!el) return
-  const top = el.getBoundingClientRect().top + window.scrollY
-  if (Math.abs(top - window.scrollY) < 2) return
-  // `auto`, not `smooth`: this corrects a jump that already happened, it is
-  // not a journey.
-  window.scrollTo({ top, behavior: 'auto' })
+
+  // `scrollIntoView`, not `scrollTo(elementTop)`: the elements carry
+  // `scroll-margin-top: 5rem` so a native hash jump clears the sticky header,
+  // and scrolling to the raw offset instead puts the heading underneath it -
+  // a correction that ends up worse than the jump it is correcting.
+  //
+  // `auto`, not `smooth`: this fixes a jump that already happened, it is not a
+  // journey.
+  const rect = el.getBoundingClientRect()
+  const margin = parseFloat(getComputedStyle(el).scrollMarginTop) || 0
+  if (Math.abs(rect.top - margin) < 2) return
+  el.scrollIntoView({ behavior: 'auto', block: 'start' })
 }
 
 function measureFilm() {

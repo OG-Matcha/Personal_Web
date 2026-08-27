@@ -223,22 +223,53 @@ await phone.close()
 // browser scrolls to the element, then this film goes live, the five beat
 // sections get their real scroll heights, and the document grows ~4,400px
 // under a reader who is now looking at the film instead of what they clicked.
+/** Distance from where the browser's own hash jump would have put this id. */
+async function hashOffset(page, id) {
+  return page.evaluate((i) => {
+    const el = document.getElementById(i)
+    if (!el) return null
+    // The ids carry scroll-margin-top so a jump clears the sticky header, so
+    // "on target" is the element's top at that margin, not at zero.
+    const margin = parseFloat(getComputedStyle(el).scrollMarginTop) || 0
+    return Math.round(el.getBoundingClientRect().top - margin)
+  }, id)
+}
+
 for (const id of ['work', 'skills', 'ledger']) {
   const hc = await browser.newContext({ viewport: { width: 1440, height: 900 } })
   const ph = await hc.newPage()
   await ph.goto(`${URL}#${id}`, { waitUntil: 'domcontentloaded' })
   await ph.waitForSelector('.film-gate', { state: 'detached', timeout: 20000 }).catch(() => {})
   await ph.waitForTimeout(3000)
-  const r = await ph.evaluate((i) => {
-    const el = document.getElementById(i)
-    return {
-      y: Math.round(window.scrollY),
-      top: el ? Math.round(el.getBoundingClientRect().top + window.scrollY) : null,
-    }
-  }, id)
-  ok(r.top !== null && Math.abs(r.y - r.top) <= 4, `#${id} lands on target (off by ${r.top === null ? '?' : r.y - r.top}px)`)
+  const off = await hashOffset(ph, id)
+  ok(off !== null && Math.abs(off) <= 4, `#${id} lands on target (off by ${off ?? '?'}px)`)
   await hc.close()
 }
+
+// The film going live late is the whole reason the correction exists, and a
+// warm local machine never reproduces it: the first version counted its window
+// from mount, so any load slower than 2.5s silently did nothing.
+const slowC = await browser.newContext({ viewport: { width: 1440, height: 900 } })
+const slowP = await slowC.newPage()
+const cdp = await slowC.newCDPSession(slowP)
+await cdp.send('Emulation.setCPUThrottlingRate', { rate: 6 })
+for (const pat of ['**/gl/**', '**/three**']) {
+  await slowP.route(pat, async (r) => {
+    await new Promise((s) => setTimeout(s, 3000))
+    await r.continue()
+  })
+}
+await slowP.goto(`${URL}#ledger`, { waitUntil: 'domcontentloaded' })
+await slowP.waitForFunction(() => document.querySelector('canvas')?.dataset.live === 'on', null, {
+  timeout: 45000,
+}).catch(() => {})
+await slowP.waitForTimeout(1500)
+const slowOff = await hashOffset(slowP, 'ledger')
+ok(
+  slowOff !== null && Math.abs(slowOff) <= 4,
+  `#ledger still lands when the film loads late (off by ${slowOff ?? '?'}px)`
+)
+await slowC.close()
 
 // And it must stop correcting the moment the reader scrolls on purpose.
 const hoC = await browser.newContext({ viewport: { width: 1440, height: 900 } })
