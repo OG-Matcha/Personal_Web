@@ -63,6 +63,22 @@
   detail: Flutter + Clean Architecture / BLoC；397 個 Dart 檔、16 個功能模組
   evidence: null
 
+- date: 2026-02
+  kind: research
+  lane: research
+  title: 基於生成式 AI 的個人化財務健康管理系統開發與效益評估
+  org: 國立中央大學資訊管理學系
+  advisor: 邱信瑜 教授
+  period: 2025-07 - 2026-02
+  project: osave
+  publication: 114 年度國科會大專學生研究計畫（NSTC 114-2813-C-008-020-H）
+  detail: >-
+    財伴 oSave 的實證研究，也是計畫執行期間從發票醫生 pivot 過去的那一段。
+    以行為財務學的推力理論為底，做異常消費偵測、動態預算視覺化與遊戲化素養任務
+    三個模組。4 週準實驗封閉測試 82 人：平均每週記帳天數提升 176%、
+    預算達成率翻倍至 76.8%、整體財務焦慮顯著下降（p<0.01）。
+  evidence: null
+
 - date: 2025-09
   kind: role
   lane: practice
