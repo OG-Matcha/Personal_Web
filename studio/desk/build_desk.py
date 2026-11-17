@@ -747,8 +747,14 @@ def export_glb(joined, path):
                 o.select_set(True)
     for j in joined.values():
         j.select_set(True)
-    bpy.ops.export_scene.gltf(filepath=str(path), use_selection=True, export_format='GLB', export_apply=True,
-                              export_draco_mesh_compression_enable=ARGS.get('draco', '1') == '1', export_draco_mesh_compression_level=7,
+    # Plain glTF with its textures as separate files, and no Draco. The live
+    # site's Content-Security-Policy (set at Cloudflare) allows only 'self':
+    # a GLB's embedded images load through blob: URLs and Draco decodes in a
+    # blob: worker with WebAssembly - all three are refused there, and the
+    # page sat at 100% with no model.
+    sep = str(path).endswith('.gltf')
+    bpy.ops.export_scene.gltf(filepath=str(path), use_selection=True, export_format='GLTF_SEPARATE' if sep else 'GLB', export_apply=True,
+                              export_draco_mesh_compression_enable=ARGS.get('draco', '0') == '1', export_draco_mesh_compression_level=7,
                               export_image_format='WEBP', export_materials='EXPORT', export_yup=True)
     print('EXPORTED', path)
 

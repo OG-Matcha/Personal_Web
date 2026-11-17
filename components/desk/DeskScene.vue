@@ -247,7 +247,6 @@ async function start() {
   const owned = [] // GPU things to free on the way out
   const THREE = await import('three')
   const { GLTFLoader } = await import('three/examples/jsm/loaders/GLTFLoader.js')
-  const { DRACOLoader } = await import('three/examples/jsm/loaders/DRACOLoader.js')
   const { RoomEnvironment } = await import('three/examples/jsm/environments/RoomEnvironment.js')
   const { Vector3 } = THREE
   const B = (a) => new Vector3(a[0], a[2], -a[1]) // Blender (Z up) -> three (Y up)
@@ -256,7 +255,6 @@ async function start() {
   renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75))
   renderer.outputColorSpace = THREE.SRGBColorSpace
   renderer.toneMapping = THREE.NoToneMapping
-  const draco = new DRACOLoader().setDecoderPath('/desk/draco/')
   const room = new RoomEnvironment()
   const pmrem = new THREE.PMREMGenerator(renderer)
   const env = pmrem.fromScene(room, 0.04).texture
@@ -275,7 +273,6 @@ async function start() {
       o.material?.dispose?.()
     })
     pmrem.dispose()
-    draco.dispose()
     renderer.dispose()
     renderer.forceContextLoss()
     ready.value = false
@@ -338,9 +335,14 @@ async function start() {
     owned.push(baked[g])
   }
 
-  const loader = new GLTFLoader().setDRACOLoader(draco)
+  // A plain glTF whose .bin and textures are ordinary same-origin files: the
+  // live CSP allows only 'self', which rules out a GLB's blob: textures and
+  // Draco's blob: worker. Progress is counted per file through the manager.
+  const manager = new THREE.LoadingManager()
+  manager.onProgress = (_url, loaded, total) => note('glb')({ lengthComputable: true, loaded, total })
+  const loader = new GLTFLoader(manager)
   const [gltf, d1, r1] = await Promise.all([
-    loader.loadAsync('/desk/desk.glb', note('glb')),
+    loader.loadAsync('/desk/model/desk.gltf'),
     tex(`/desk/desk_${first}.webp`, 'desk'),
     tex(`/desk/room_${first}.webp`, 'room'),
   ])

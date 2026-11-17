@@ -12,7 +12,8 @@
     "lint": "eslint --ext .js,.ts,.vue --ignore-path .gitignore .",
     "lint:fix": "eslint --ext .js,.ts,.vue --ignore-path .gitignore . --fix",
     "format": "prettier --write .",
-    "check:seo": "node scripts/check-seo.mjs"
+    "check:seo": "node scripts/check-seo.mjs",
+    "check:desk": "node scripts/check-desk-csp.mjs"
   },
   "dependencies": {
     "@nuxtjs/sitemap": "^7.2.6",
