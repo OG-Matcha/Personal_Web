@@ -1,0 +1,231 @@
+# -----------------------------------------------------------------------------
+# 履歷 PDF 的內容。`node scripts/build-cv.mjs` 會把它排成 A4，輸出到
+# public/content/ju-shen-huang-cv-{zh,en}.pdf。
+#
+# 規則跟網站一樣：每一筆都要在 timeline.yml 或 work/*.yml 查得到。
+# 網站改了事實，這裡也要跟著改，然後重跑一次。
+# 不放電話與住址：這份 PDF 是公開下載的。
+# -----------------------------------------------------------------------------
+
+updated: 2026-11
+
+zh:
+  name: 黃鉅燊
+  alt: Ju-Shen Huang · OG_Matcha
+  role: 斐闊 Finctory 共同創辦人暨技術長 · 醫數行銷 MedaLink 共同創辦人暨前線部署工程師
+  location: 台灣桃園
+  # 中文寫成單行：>- 折行會在漢字之間留下半形空格。
+  summary: 我把 AI 從展示品，做到三個月後還有人在用。在四人以下的團隊裡帶過四條產品線，也一個人做完診所營運系統的 AI 那一半，從對話引擎到雲端部署。2026 年中央大學資管系畢業（GPA 4.19 / 4.3），同年直升碩士班。
+  labels:
+    experience: 經歷
+    education: 學歷
+    research: 研究
+    awards: 競賽與獎項
+    leadership: 社群與教學
+    skills: 技術
+    certs: 證照與語言
+    updated: 更新於
+    site: 完整年表
+  experience:
+    - org: 醫數行銷 MedaLink
+      role: 共同創辦人暨前線部署工程師（FDE）
+      when: '2026.07 – 現在'
+      points:
+        - 兩個人做完診所營運系統，AI 那一半由我負責：四通路訊息中心、規則化回覆引擎、醫師／診間／儀器資源排程與客戶狀態流。
+        - 173 條 API 路由、64,687 行、63 個回歸測試；Cloudflare Pages Functions + D1 + R2。
+        - 醫療影像不交給模型判讀，療效保證類說法在生成前擋下，AI 答不了的轉給真人。
+    - org: 斐闊 Finctory
+      role: 共同創辦人暨技術長
+      when: '2024.04 – 現在'
+      points:
+        - 負責系統架構、AI 技術選型與工程團隊（4 人以下），同時維運四條產品線；導入敏捷開發。
+        - 主導發票醫生 pivot 為財伴 oSave：從自動抓發票改為會計邏輯記帳，前台三個問題、後端翻成 13 項金流方向，算出六項財務健康指標。
+        - 財伴行動版 Flutter + BLoC（397 個 Dart 檔、16 個功能模組）；後端 Firebase Cloud Functions，品項分類走快取 → 本地規則 → 模型三層。
+        - 2025.06 因教育部 U-Start 計畫正式設立公司；帶隊通過五處青創基地進駐或培育審核。
+    - org: 工業技術研究院 產業科技國際策略發展所
+      role: AI Intern（軟體工程師）
+      when: '2025.09 – 現在'
+      points:
+        - 交付五個內部系統：前端框架遷移、資料 API、LLM 分析管線、新創情報平台；累計逾 300 次提交。
+        - 產出全組共用的生成式 AI 專案範本，以及憑證掃描、靜態分析與 LLM 紅隊測試（OWASP LLM Top 10）標準工作流。
+    - org: 工業技術研究院 產業科技國際策略發展所
+      role: 暑期實習（資料科學家）
+      when: '2025.07 – 2025.08'
+      points:
+        - 建立並標準化台灣新創生態系資料庫，整合政府補助、創育基地與投資單位，用於產業地圖與投資決策。
+        - 為非技術同仁設計並帶領 AI 實作工作坊，把他們的實際需求做成 AI 工具。
+    - org: 國立中央大學
+      role: 研究助理（教授研究計畫）
+      when: '2023.07 – 2026.06'
+      points:
+        - 機器學習與深度學習模型訓練、調參與評估；LLM 提示工程與微調；金融科技資料處理與論文撰寫。
+  education:
+    - school: 國立中央大學 資訊管理學系 碩士班
+      when: '2026.09 – 在學（預計 2028.06）'
+      note: 直升
+    - school: 國立中央大學 資訊管理學系 學士
+      when: '2022.09 – 2026.06'
+      note: GPA 4.19 / 4.3；「人工智慧跨域應用」「商業智慧與分析」兩個學分學程；管理學院院長獎（學年班級前 5 名）、書卷獎（2 / 47）、系優秀學生兩次
+  research:
+    - title: 基於生成式 AI 的個人化財務健康管理系統開發與效益評估
+      when: '2025–2026'
+      note: 國科會大專學生研究計畫（NSTC 114-2813-C-008-020-H）。4 週準實驗 82 人：每週記帳天數 +176%、預算達成率 76.8%、財務焦慮顯著下降（p<0.01）。
+    - title: 探討生成式 AI 於社交工程之發展應用
+      when: '2024–2025'
+      note: 113 年度國科會大專學生研究計畫；即畢業專題 PhishForge。
+    - title: 結合股市異常現象指標及生成式 AI 之股票追蹤系統
+      when: '2024–2025'
+      note: 113 年度國科會大專學生研究計畫。
+    - title: 運用知識圖譜與大型語言模型分析學習軌跡
+      when: '2024'
+      note: LAK 2025 國際學習分析與知識會議 · Practitioner track。
+  awards:
+    - when: '2026.11'
+      title: '臺北秋季程式設計節 城市通微服務大黑客松 佳作'
+    - when: '2026.05'
+      title: '雙北程式設計節 城市儀表板大黑客松 第三名'
+    - when: '2025.09'
+      title: '臺東創新創業大賽 最佳創新創業大獎（90 組報名）'
+    - when: '2025.02'
+      title: '第六屆台積電校園黑客松 TSMC IT CareerHack AI 維運組 第一名'
+    - when: '2024.11'
+      title: '第 29 屆大專校院資訊應用服務創新競賽 資安應用組 第一名'
+    - when: '2024.11'
+      title: '臺灣數創大賞 數位＋組 金獎'
+    - when: '2024.10'
+      title: 'GenAI Stars 生成式 AI 百工百業應用選拔 創意創客組 優選'
+    - when: '2024.06'
+      title: '第六屆 Startup 創業競技場 國內組 第一名'
+  awardsMore: 另有十餘項創業與程式競賽獎項，完整清單見 ogmatcha.com/resume
+  leadership:
+    - when: '2023.10 – 2024.12'
+      title: '中央大學新生知訊網 副執行長'
+      note: '帶四組 30 人交付新生資訊平台，含 AI 客服，服務 1,000 名以上新生'
+    - when: '2023.09'
+      title: 'United Developer Club 共同創辦人暨副召集人'
+      note: '開設全校「從零開始的 Python 專案」課程'
+    - when: '2022.10 – 2024.02'
+      title: '中央大學 ERP 中心 SAP 學生團隊'
+      note: '第一年受訓，第二年擔任暑期講師'
+  skills:
+    - label: 'AI / Agent'
+      items: 'LangGraph · LangChain · AutoGen · OpenAI / Gemini API · LLM 紅隊測試 · RAG（FAISS）'
+    - label: '後端'
+      items: 'Python · FastAPI · Firebase Cloud Functions · Cloudflare Pages Functions · Flask · Laravel · Spring'
+    - label: '前端與行動'
+      items: 'Vue / Nuxt · React · Flutter / Dart（BLoC） · Tailwind CSS · three.js · GSAP · Chrome Extension'
+    - label: '資料'
+      items: 'PostgreSQL · Cloud Firestore · Cloudflare D1 / R2 · Redis · MySQL'
+  certs: TOEIC 835 / 990 · PCEP（Certified Entry-Level Python Programmer） · Data Analysis with Python
+
+en:
+  name: Ju-Shen Huang
+  alt: 黃鉅燊 · OG_Matcha
+  role: Co-founder & CTO, Finctory · Co-founder & Forward-Deployed Engineer, MedaLink
+  location: Taoyuan, Taiwan
+  summary: >-
+    I take AI from demo to something people still use three months later. I have run four
+    product lines with an engineering team of four or fewer, and built the AI half of a clinic
+    operations system alone, from conversation engine to cloud deployment. BS in Information
+    Management, National Central University, 2026 (GPA 4.19 / 4.3); master's program from September 2026.
+  labels:
+    experience: Experience
+    education: Education
+    research: Research
+    awards: Selected awards
+    leadership: Community & teaching
+    skills: Skills
+    certs: Certificates & language
+    updated: Updated
+    site: Full record
+  experience:
+    - org: MedaLink
+      role: Co-founder & Forward-Deployed Engineer
+      when: Jul 2026 – present
+      points:
+        - Two people built a clinic operations system; I own the AI half - a four-channel message centre, a rule-based reply engine, scheduling across doctors, rooms and equipment, and customer state flows.
+        - 173 API routes, 64,687 lines, 63 regression tests; Cloudflare Pages Functions, D1 and R2.
+        - Medical images are never read by the model, treatment-guarantee claims are blocked before generation, and anything the AI cannot answer goes to a person.
+    - org: Finctory
+      role: Co-founder & CTO
+      when: Apr 2024 – present
+      points:
+        - Own system architecture, AI technology choices and the engineering team (four or fewer), across four product lines; introduced agile delivery.
+        - Led the pivot from Invoice Doctor to oSave - from automatic invoice import to bookkeeping with accounting logic. Three questions up front become 13 cash-flow directions and six financial-health indicators.
+        - oSave mobile in Flutter + BLoC (397 Dart files, 16 feature modules); backend on Firebase Cloud Functions with a cache → rules → model classification chain.
+        - Incorporated in June 2025 through the Ministry of Education U-Start program; led the team into five startup hubs and incubators.
+    - org: Industrial Technology Research Institute (ITRI), ISTI
+      role: AI Intern (software engineer)
+      when: Sep 2025 – present
+      points:
+        - Delivered five internal systems - a front-end framework migration, data APIs, an LLM analysis pipeline and a startup-intelligence platform; 300+ commits.
+        - Wrote the division-wide generative-AI project template and standard workflows for secret scanning, static analysis and LLM red-teaming (OWASP LLM Top 10).
+    - org: Industrial Technology Research Institute (ITRI), ISTI
+      role: Summer intern (data scientist)
+      when: Jul – Aug 2025
+      points:
+        - Built and standardised a database of Taiwan's startup ecosystem from grants, incubators and investors, used for industry maps and investment decisions.
+        - Designed and ran hands-on AI workshops that turned non-technical colleagues' needs into working tools.
+    - org: National Central University
+      role: Research assistant (faculty project)
+      when: Jul 2023 – Jun 2026
+      points:
+        - Trained, tuned and evaluated ML and deep-learning models; LLM prompt engineering and fine-tuning; fintech data processing and paper writing.
+  education:
+    - school: MS, Information Management, National Central University
+      when: '2026 – present (expected 2028)'
+      note: Direct admission
+    - school: BS, Information Management, National Central University
+      when: '2022 – 2026'
+      note: GPA 4.19 / 4.3; credit programs in Cross-domain Applications of AI and in Business Intelligence & Analytics; Dean's Award (top 5 of class), Academic Excellence Award (2 / 47), Outstanding Student twice
+  research:
+    - title: A generative-AI personal financial-health system - development and evaluation
+      when: '2025–2026'
+      note: NSTC undergraduate research grant (NSTC 114-2813-C-008-020-H). Four-week quasi-experiment, 82 participants - weekly bookkeeping days +176%, budget attainment 76.8%, financial anxiety down significantly (p<0.01).
+    - title: Generative AI in social engineering
+      when: '2024–2025'
+      note: NSTC undergraduate research grant; the PhishForge capstone.
+    - title: A stock-tracking system combining market-anomaly indicators and generative AI
+      when: '2024–2025'
+      note: NSTC undergraduate research grant.
+    - title: Analysing learning trajectories with knowledge graphs and LLMs
+      when: '2024'
+      note: LAK 2025, International Learning Analytics & Knowledge Conference · Practitioner track.
+  awards:
+    - when: 'Nov 2026'
+      title: 'Taipei Autumn Coding Festival, Town Pass Microservice Hackathon - Honourable Mention'
+    - when: 'May 2026'
+      title: 'Taipei–New Taipei City Dashboard Hackathon - 3rd place'
+    - when: 'Sep 2025'
+      title: 'Taitung Innovation & Entrepreneurship Competition - Best Startup Award (90 teams)'
+    - when: 'Feb 2025'
+      title: '6th TSMC IT CareerHack, AI Ops track - 1st place'
+    - when: 'Nov 2024'
+      title: '29th Information Application Service Innovation Contest, Security track - 1st place'
+    - when: 'Nov 2024'
+      title: 'Taiwan Digital Innovation Awards, Digital+ track - Gold'
+    - when: 'Oct 2024'
+      title: 'GenAI Stars, Creative Maker track - Merit'
+    - when: 'Jun 2024'
+      title: '6th Startup Arena, domestic track - 1st place'
+  awardsMore: Ten-plus further startup and programming awards; the full list is at ogmatcha.com/en/resume
+  leadership:
+    - when: '2023 – 2024'
+      title: 'NCU Freshman Portal - Deputy Executive'
+      note: 'Led four teams of 30 people to ship the freshman platform with an AI assistant; 1,000+ freshmen served'
+    - when: '2023'
+      title: 'United Developer Club - Co-founder & vice convener'
+      note: 'Ran the campus-wide course Python Projects from Zero'
+    - when: '2022 – 2024'
+      title: 'NCU ERP Center SAP student team'
+      note: 'Trainee in year one, summer instructor in year two'
+  skills:
+    - label: 'AI / agents'
+      items: 'LangGraph · LangChain · AutoGen · OpenAI / Gemini APIs · LLM red-teaming · RAG (FAISS)'
+    - label: 'Backend'
+      items: 'Python · FastAPI · Firebase Cloud Functions · Cloudflare Pages Functions · Flask · Laravel · Spring'
+    - label: 'Front end & mobile'
+      items: 'Vue / Nuxt · React · Flutter / Dart (BLoC) · Tailwind CSS · three.js · GSAP · Chrome extensions'
+    - label: 'Data'
+      items: 'PostgreSQL · Cloud Firestore · Cloudflare D1 / R2 · Redis · MySQL'
+  certs: TOEIC 835 / 990 · PCEP (Certified Entry-Level Python Programmer) · Data Analysis with Python

@@ -33,3 +33,6 @@ logs
 
 # `npm run generate` builds here so it never clobbers the dev server's .nuxt
 .nuxt-generate
+
+# Impeccable design-tool state (local only)
+.impeccable/

@@ -1,140 +1,226 @@
 <template>
-  <section id="ledger" class="shell pb-section">
-    <div class="flex flex-wrap items-baseline justify-between gap-4">
-      <h2 class="section-title">{{ heading }}</h2>
-      <!-- Shown whenever this ledger is not the whole record - which is both
-           the `limit` slice and the `foldYears` fold. The old condition tested
-           `limit` only, so the homepage, which folds 24 of 45 rows, offered no
-           way to /resume at all. On /resume itself both props are 0 and this
-           correctly stays hidden. -->
-      <NuxtLink
-        v-if="(limit && timeline.length > limit) || foldYears"
-        to="/resume/"
-        class="mono text-2xs"
-      >
-        全部 {{ timeline.length }} 筆 →
-      </NuxtLink>
-    </div>
-
-    <!-- Date gutter plus entry. A single left rule carries the sequence, so no
-         row needs its own box or its own divider. -->
-    <ol class="mt-6">
+  <!--
+    The press log: every dated entry, newest first. A date column in tabular
+    figures, then the entry. Awards carry a solid patch in the gutter, so the
+    wins read down the left edge like the colour bar reads across a sheet.
+  -->
+  <div class="lg">
+    <ol class="lg-list">
       <li
-        v-for="(entry, i) in entries"
+        v-for="(e, i) in entries"
         v-show="expanded || i < foldAt"
-        :key="entry.date + entry.title"
-        class="grid gap-x-5 gap-y-1 border-t border-rule py-4 md:grid-cols-12"
+        :key="e.date + e.title"
+        class="lg-row"
+        :class="{ 'lg-row--win': e.kind === 'award', 'lg-row--soon': e.upcoming }"
       >
-        <div class="flex items-baseline gap-3 md:col-span-3">
-          <time class="mono text-2xs tabular-nums" :datetime="entry.date">
-            {{ formatDate(entry.date) }}
-          </time>
-          <span class="mono text-2xs text-ink-2">{{ kindLabel(entry.kind) }}</span>
-          <span v-if="entry.ongoing" class="ongoing">進行中</span>
+        <div class="lg-when">
+          <time class="figures" :datetime="e.date">{{ formatDate(e.date) }}</time>
+          <span class="lg-kind">{{ e.kindLabel }}</span>
+          <span v-if="e.ongoing" class="lg-live">{{ c.ongoing }}</span>
+          <span v-if="e.upcoming" class="lg-live">{{ c.upcoming }}</span>
         </div>
 
-        <div class="md:col-span-9">
-          <h3 class="font-display text-lg">{{ entry.title }}</h3>
-          <p v-if="entry.org" class="mt-1 text-2xs text-ink-2">{{ entry.org }}</p>
-
-          <!-- The homepage slice is a scannable index; the full page carries the
-               prose. Same data, two reading speeds. -->
+        <div class="lg-what">
+          <h3 class="lg-title">{{ e.title }}</h3>
+          <p v-if="e.org" class="lg-org">{{ e.org }}</p>
           <template v-if="!compact">
-            <p v-if="entry.advisor" class="mt-1 text-2xs text-ink-2">指導教授：{{ entry.advisor }}</p>
-            <p v-if="entry.publication" class="mt-1 text-2xs text-ink-2">{{ entry.publication }}</p>
-            <p v-if="entry.detail" class="measure mt-2 text-2xs">{{ entry.detail }}</p>
+            <p v-if="e.advisor" class="lg-org">{{ c.advisor }}{{ e.advisor }}</p>
+            <p v-if="e.publication" class="lg-org">{{ e.publication }}</p>
+            <p v-if="e.detail" class="lg-detail">{{ e.detail }}</p>
           </template>
+          <p v-if="e.note" class="lg-org">{{ e.note }}</p>
 
-          <!-- The two things a row can point at. `evidence` was carried in
-               the YAML from the start and rendered nowhere, so three awards
-               had a public announcement on file that no reader could reach. -->
-          <p v-if="entry.project && workSlugs.has(entry.project) || entry.evidence" class="mt-2 flex flex-wrap gap-x-5 gap-y-1">
-            <NuxtLink
-              v-if="entry.project && workSlugs.has(entry.project)"
-              :to="`/work/${entry.project}/`"
-              class="mono text-2xs"
-            >
-              案例研究
+          <p v-if="(e.project && workSlugs.has(e.project)) || e.evidence" class="lg-links">
+            <NuxtLink v-if="e.project && workSlugs.has(e.project)" :to="`${prefix}/work/${e.project}/`">
+              {{ c.case }}
             </NuxtLink>
-            <a v-if="entry.evidence" :href="entry.evidence" v-bind="linkAttrs(entry.evidence)" class="mono text-2xs">
-              公告
-            </a>
+            <a v-if="e.evidence" :href="e.evidence" v-bind="linkAttrs(e.evidence)">{{ c.proof }}</a>
           </p>
         </div>
       </li>
     </ol>
 
-    <!-- The older half of the record is folded, not dropped: it still ships in
-         the HTML, so it is searchable and crawlable, it just does not make the
-         reader scroll three extra screens to reach the end of the page. -->
-    <p v-if="hidden" class="mt-6">
-      <button type="button" class="more mono text-2xs" :aria-expanded="expanded" @click="expanded = !expanded">
-        {{ expanded ? `收合 ${hidden} 筆` : `展開其餘 ${hidden} 筆（${oldestYear} – ${cutoff - 1}）` }}
+    <div class="lg-foot">
+      <button v-if="hidden" type="button" class="btn" :aria-expanded="expanded" @click="expanded = !expanded">
+        {{ expanded ? c.fold(hidden) : c.unfold(hidden, oldestYear, cutoff - 1) }}
       </button>
-    </p>
-  </section>
+      <NuxtLink v-if="foldYears" :to="`${prefix}/resume/`" class="lg-all">{{ c.all(timeline.length) }}</NuxtLink>
+    </div>
+  </div>
 </template>
 
 <script setup>
 const props = defineProps({
-  /** 0 = show everything. The homepage shows a slice; /resume shows all. */
-  limit: { type: Number, default: 0 },
-  heading: { type: String, default: '近期紀錄' },
-  /**
-   * How many calendar years stay open before the rest folds. 0 = no fold.
-   *
-   * Counted back from the newest entry rather than hardcoded, so it does not
-   * quietly start folding this year's work the moment the year rolls over.
-   */
+  /** Calendar years left open before the rest folds. 0 = no fold. */
   foldYears: { type: Number, default: 0 },
+  /** Index view: title, org, links; no prose. */
+  compact: { type: Boolean, default: false },
 })
 
-const { timeline, works } = useContent()
+const { timeline, works, en } = useContent()
+const { locale } = useLocale()
 const workSlugs = new Set(works.map((w) => w.slug))
+const prefix = computed(() => (locale.value === 'en' ? '/en' : ''))
 
-// A limited ledger is an index, so it drops the prose.
-const compact = computed(() => props.limit > 0)
-const entries = computed(() => (props.limit ? timeline.slice(0, props.limit) : timeline))
+const KIND_EN = {
+  role: 'Role',
+  education: 'Education',
+  award: 'Award',
+  research: 'Research',
+  publication: 'Publication',
+  grant: 'Grant',
+  honor: 'Honour',
+  product: 'Product',
+}
 
-const expanded = ref(false)
-
-const yearOf = (e) => Number(String(e?.date ?? '').slice(0, 4)) || 0
-
-/** First year that is still shown unfolded. */
-const cutoff = computed(() =>
-  props.foldYears ? yearOf(entries.value[0]) - (props.foldYears - 1) : 0
+const c = computed(() =>
+  locale.value === 'en'
+    ? {
+        ongoing: 'ongoing',
+        upcoming: 'upcoming',
+        advisor: 'Advisor: ',
+        case: 'Case study',
+        proof: 'Announcement',
+        fold: (n) => `Fold ${n} entries`,
+        unfold: (n, a, b) => `Show ${n} more (${a}–${b})`,
+        all: (n) => `All ${n} entries`,
+      }
+    : {
+        ongoing: '進行中',
+        upcoming: '即將',
+        advisor: '指導教授：',
+        case: '案例研究',
+        proof: '公告',
+        fold: (n) => `收合 ${n} 筆`,
+        unfold: (n, a, b) => `展開其餘 ${n} 筆（${a} – ${b}）`,
+        all: (n) => `全部 ${n} 筆紀錄`,
+      }
 )
 
-/** Index of the first folded row. The timeline is newest first. */
+const entries = computed(() =>
+  timeline.map((e) => {
+    if (locale.value !== 'en') return { ...e, kindLabel: kindLabel(e.kind) }
+    const t = en.timeline?.[`${e.date} ${e.title}`] ?? {}
+    return {
+      ...e,
+      advisor: undefined,
+      publication: t.publication ?? (e.publication ? e.publication : undefined),
+      ...t,
+      kindLabel: KIND_EN[e.kind] ?? e.kind,
+    }
+  })
+)
+
+const expanded = ref(false)
+const yearOf = (e) => Number(String(e?.date ?? '').slice(0, 4)) || 0
+
+// Counted back from the newest entry, so it never starts folding this year's
+// work the moment the year rolls over.
+const cutoff = computed(() => (props.foldYears ? yearOf(entries.value[0]) - (props.foldYears - 1) : 0))
 const foldAt = computed(() => {
   if (!cutoff.value) return entries.value.length
   const i = entries.value.findIndex((e) => yearOf(e) < cutoff.value)
   return i === -1 ? entries.value.length : i
 })
-
 const hidden = computed(() => entries.value.length - foldAt.value)
 const oldestYear = computed(() => yearOf(entries.value[entries.value.length - 1]))
 </script>
 
 <style scoped>
-.more {
-  padding: var(--sp-2) var(--sp-4);
-  border: 1px solid var(--rule-strong);
-  border-radius: var(--r-full);
+.lg-list {
+  margin-top: var(--sp-7);
+  border-top: 1px solid var(--rule);
+}
+
+.lg-row {
+  position: relative;
+  display: grid;
+  gap: var(--sp-1) var(--sp-6);
+  padding-block: var(--sp-4);
+  border-bottom: 1px solid var(--rule);
+}
+
+@media (min-width: 768px) {
+  .lg-row {
+    grid-template-columns: 11rem minmax(0, 1fr);
+  }
+}
+
+.lg-when {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--sp-1) var(--sp-3);
+  font-size: var(--step--1);
+  color: var(--ink-3);
+}
+
+.lg-when time {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* A solid patch marks the wins. */
+.lg-row--win .lg-when time::before {
+  content: '';
+  display: inline-block;
+  width: 0.6em;
+  height: 0.6em;
+  margin-right: 0.45em;
+  background: var(--pop);
+}
+
+.lg-row--soon {
   color: var(--ink-2);
 }
 
-.more:hover {
-  border-color: var(--ink);
-  color: var(--ink);
+.lg-live {
+  color: var(--pop-ink);
+  font-weight: 600;
 }
 
-.ongoing {
-  padding: 1px 7px;
-  border-radius: var(--r-full);
-  background: var(--pop);
-  color: var(--on-pop);
-  font-family: var(--font-mono);
+.lg-title {
+  font-size: var(--step-1);
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.lg-org {
+  margin-top: var(--sp-1);
   font-size: var(--step--1);
+  color: var(--ink-2);
+}
+
+.lg-detail {
+  margin-top: var(--sp-2);
+  font-size: var(--step--1);
+  max-width: var(--measure-han);
+}
+
+.lg-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-1) var(--sp-5);
+  margin-top: var(--sp-2);
+  font-size: var(--step--1);
+  font-weight: 600;
+}
+
+.lg-links a {
+  text-decoration-color: var(--pop-ink);
+}
+
+.lg-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-4) var(--sp-6);
+  margin-top: var(--sp-6);
+}
+
+.lg-all {
+  font-weight: 600;
+  font-size: var(--step--1);
+  text-decoration-color: var(--pop-ink);
 }
 </style>

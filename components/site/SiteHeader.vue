@@ -1,172 +1,202 @@
 <template>
-  <header class="site-header" :data-live="inFilm ? 'on' : 'off'">
-    <div class="shell flex items-center gap-4 py-3">
-      <NuxtLink to="/" class="font-display text-lg no-underline">黃鉅燊</NuxtLink>
+  <!-- A bar floating over the room: name, three places to go, and the
+       controls for the room itself (language, day/night). -->
+  <header class="hd">
+    <div class="hd-bar">
+      <NuxtLink :to="t.home" class="hd-mark">
+        <span class="hd-dot" aria-hidden="true" />
+        <span>{{ t.name }}</span>
+      </NuxtLink>
 
-      <!-- On the homepage the nav stops being a list of pages and becomes a
-           status line: where the film is, what year that is, how far in. The
-           numbers move because the reader is moving them. -->
-      <p v-if="inFilm" class="hud mono ml-auto" aria-hidden="true">
-        <span class="hud-id">SYS//{{ pad(beat + 1) }}</span>
-        <span class="hud-name">{{ current.hud ?? current.title }}</span>
-        <span class="hud-year">{{ year }}</span>
-        <span class="hud-bar"><span class="hud-fill" :style="{ width: `${pct}%` }" /></span>
-        <span class="hud-pct">{{ pct }}%</span>
-      </p>
-
-      <!-- Shown on phones too. It used to be `hidden md:flex`, which left the
-           phone with no way to move around a page that is still fifteen
-           screens long once the film is skipped. Four two-character labels
-           fit next to the wordmark down to 360px; below that the row scrolls
-           rather than wrapping the header onto a second line. -->
-      <nav
-        v-else
-        aria-label="主要導覽"
-        class="scroll-x ml-auto flex items-center gap-4 md:gap-6"
-      >
-        <a v-for="l in links" :key="l.href" :href="l.href" class="nav-link">{{ l.label }}</a>
+      <nav :aria-label="t.navLabel" class="scroll-x hd-nav">
+        <NuxtLink v-for="l in t.links" :key="l.href" :to="l.href" class="hd-link">{{ l.label }}</NuxtLink>
       </nav>
 
+      <div class="hd-tools">
+        <NuxtLink :to="t.altHref" class="hd-lang" :hreflang="t.altLang" :lang="t.altLang">{{ t.altLabel }}</NuxtLink>
+        <ThemeToggle />
+        <a :href="`mailto:${site.contact.email}`" class="hd-mail" :aria-label="`${t.mail} ${site.contact.email}`">
+          <Mail :size="16" :stroke-width="2.2" aria-hidden="true" />
+          <span class="hd-mail-text">{{ t.mail }}</span>
+        </a>
+      </div>
     </div>
   </header>
 </template>
 
 <script setup>
-import { useCinema } from '~/composables/useCinema'
-import { beatWindows } from '~/composables/useFilm'
+import { Mail } from 'lucide-vue-next'
+import ThemeToggle from '~/components/site/ThemeToggle.vue'
 
-const { progress, beat, live, onscreen } = useCinema()
+const { locale, altPath } = useLocale()
+const { site } = useContent()
 
-/**
- * The status line belongs to the film. Past it the reader is in the written
- * record, and a bar still reading "SYS//05 100%" is annotating a section it
- * has nothing to do with - so the ordinary nav comes back.
- */
-const inFilm = computed(() => live.value && onscreen.value)
-const { beatCopy } = useContent()
-
-const windows = beatWindows()
-
-/**
- * Every one of these points at an element that exists. The first version had a
- * tab labelled "2025" pointing at a beat id, which read as a stray year in a
- * row of nouns and landed somewhere the reader had no reason to expect.
- */
-/**
- * Four, and no two of them reach the same content.
- *
- * This briefly had six: the four anchors plus 作品集 and 履歷. But /portfolio
- * renders the same component 作品 scrolls to, so two tabs led to one thing.
- * 現在 went too - it is the first block after the film, impossible to scroll
- * past, and a tab for it only competed with the three that are easy to miss.
- *
- * 履歷 stays because /resume is not a section of this page: it is the whole
- * 45-entry record where the homepage folds to the recent two years.
- * /portfolio is reached from the end of the work section and from the footer,
- * which is where a reader is when they want more of it.
- */
-const links = [
-  { href: '/#work', label: '作品' },
-  { href: '/#skills', label: '能力' },
-  { href: '/#ledger', label: '年表' },
-  { href: '/resume/', label: '履歷' },
-]
-
-const current = computed(() => {
-  const w = windows[Math.min(windows.length - 1, Math.max(0, beat.value))]
-  return beatCopy.find((b) => b.id === w.id) ?? { title: w.id }
-})
-
-/** The year under the lens, interpolated across the beat rather than snapped. */
-const year = computed(() => {
-  const w = windows[Math.min(windows.length - 1, Math.max(0, beat.value))]
-  const t = Math.min(1, Math.max(0, (progress.value - w.spanStart) / 0.2))
-  return t < 0.5 ? w.from.slice(0, 4) : w.to.slice(0, 4)
-})
-
-const pct = computed(() => Math.round(progress.value * 100))
-
-function pad(n) {
-  return String(n).padStart(2, '0')
-}
+const t = computed(() =>
+  locale.value === 'en'
+    ? {
+        home: '/en/',
+        name: 'Ju-Shen Huang',
+        navLabel: 'Main',
+        links: [
+          { href: '/en/#work', label: 'Work' },
+          { href: '/en/#record', label: 'Record' },
+          { href: '/en/resume/', label: 'Résumé' },
+        ],
+        altHref: altPath.value,
+        altLang: 'zh-Hant-TW',
+        altLabel: '中文',
+        mail: 'Email',
+      }
+    : {
+        home: '/',
+        name: '黃鉅燊',
+        navLabel: '主要導覽',
+        links: [
+          { href: '/#work', label: '作品' },
+          { href: '/#record', label: '年表' },
+          { href: '/resume/', label: '履歷' },
+        ],
+        altHref: altPath.value,
+        altLang: 'en',
+        altLabel: 'EN',
+        mail: '寫信',
+      }
+)
 </script>
 
 <style scoped>
-.site-header {
+.hd {
   position: sticky;
   top: 0;
   z-index: 40;
-  border-bottom: 1px solid var(--rule);
-  background: color-mix(in oklab, var(--bg) 86%, transparent);
-  backdrop-filter: blur(10px);
+  padding: var(--sp-3) var(--sp-3) 0;
+  pointer-events: none;
 }
 
-/* Live, the bar is over a moving field, so it needs to be more opaque than a
-   header over paper does. */
-.site-header[data-live='on'] {
-  background: color-mix(in oklab, var(--bg) 94%, transparent);
+/* Text scrolling up fades out before it reaches the bar, instead of
+   showing in the gap above it. */
+.hd::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 -0.75rem;
+  z-index: -1;
+  background: linear-gradient(var(--bg) 55%, transparent);
 }
 
-.hud {
+.hd-bar {
+  pointer-events: auto;
   display: flex;
   align-items: center;
-  gap: var(--sp-4);
-  margin-left: auto;
-  font-size: var(--step--2);
-  letter-spacing: 0.14em;
-  color: var(--ink-3);
-  /* Tabular figures: the percentage counts up while the reader scrolls, and
-     proportional digits make the whole line jitter. */
-  font-variant-numeric: tabular-nums;
+  gap: var(--sp-5);
+  max-width: 72rem;
+  height: calc(var(--header-h) - var(--sp-3));
+  margin-inline: auto;
+  padding-inline: var(--sp-5) 6px;
+  border-radius: var(--r-full);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+  transition: background-color var(--dur-3) var(--ease-inout);
 }
 
-.hud-id {
-  color: var(--pop-ink);
+.hd-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--step-0);
+  text-decoration: none;
+  white-space: nowrap;
 }
 
-.hud-name {
-  color: var(--ink);
-  letter-spacing: 0.08em;
-}
-
-.hud-bar {
-  position: relative;
-  display: block;
-  width: 7rem;
-  height: 2px;
-  background: var(--rule);
-}
-
-.hud-fill {
-  position: absolute;
-  inset: 0 auto 0 0;
-  display: block;
+/* A lump of terracotta: the studio's one signature colour. */
+.hd-dot {
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
   background: var(--pop);
+  box-shadow: inset -2px -2px 3px rgb(0 0 0 / 0.18), inset 2px 2px 3px rgb(255 255 255 / 0.35);
+  transition: transform var(--dur-3) var(--ease-entrance);
 }
 
-.hud-pct {
-  min-width: 2.6em;
-  text-align: right;
+.hd-mark:hover .hd-dot {
+  transform: scale(1.25);
 }
 
-/* Below the point where the HUD would crowd the name, drop the ornamental
-   halves and keep the two that carry information. */
-@media (max-width: 60rem) {
-  .hud-name,
-  .hud-bar {
+.hd-nav {
+  display: flex;
+  gap: var(--sp-5);
+  margin-left: auto;
+}
+
+.hd-link,
+.hd-lang {
+  font-size: var(--step--1);
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--ink-2);
+  white-space: nowrap;
+  padding-block: var(--sp-2);
+}
+
+.hd-link:hover,
+.hd-lang:hover,
+.hd-link.router-link-exact-active:not([href*='#']) {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--pop-ink);
+  text-decoration-thickness: 2px;
+}
+
+.hd-tools {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.hd-mail {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 40px;
+  padding-inline: var(--sp-4);
+  border-radius: var(--r-full);
+  background: var(--pop);
+  color: var(--on-pop);
+  font-size: var(--step--1);
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color var(--dur-1), color var(--dur-1);
+}
+
+.hd-mail:hover {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+@media (max-width: 560px) {
+  .hd {
+    padding-inline: var(--sp-2);
+  }
+  .hd-bar {
+    gap: var(--sp-3);
+    padding-left: var(--sp-4);
+  }
+  .hd-nav {
+    gap: var(--sp-3);
+  }
+  .hd-tools {
+    gap: var(--sp-1);
+  }
+  .hd-mark span:last-child,
+  .hd-mail-text {
     display: none;
   }
-}
-
-.nav-link {
-  white-space: nowrap;
-  font-size: var(--step--1);
-  color: var(--ink-2);
-  text-decoration: none;
-  transition: color var(--dur-1);
-}
-
-.nav-link:hover {
-  color: var(--ink);
+  .hd-mail {
+    width: 40px;
+    padding: 0;
+    justify-content: center;
+  }
 }
 </style>

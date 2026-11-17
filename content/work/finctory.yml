@@ -10,50 +10,54 @@ orgUrl: https://www.finctory.com/
 period: { start: 2024-04, end: null }
 team: 工程團隊 4 人以下 · 領導團隊 4 人（CEO / CTO / CPO / COO）
 status: 營運中
+links:
+  - label: 官網 finctory.com
+    labelEn: finctory.com
+    href: https://www.finctory.com/
 cover: null
 thumbnail: null
 screenshots: []
 
+# 作品頁是給使用者和訪客看的產品介紹：講它能幫你做什麼，不講內部決策和程式行數。
+# （原本的架構決策、資料流、程式規模寫在 git 歷史裡。）
+
+tagline: 讓每一分錢都活得有意義的金融科技新創。
 summary: >-
-  我在這裡學會的不是怎麼寫系統，是怎麼讓系統活得比寫它的人久。一個沒有投資人、
-  所有人還在唸書、每個人隨時可以走的組織，技術決策的第一個約束是交接。
+  2024 年四月，幾個還在念書的人組了隊；兩年後，它是一間登記在案的公司，
+  有四條產品線：財伴 oSave、找好康 SurPrice、淘換算和財伴 Podcast。
+  我是共同創辦人兼技術長。
 
-problem: >-
-  2024 年四月組隊的時候，我原本以為技術長的工作是把技術做對。後來發現不是——
-  兩年後這是一間登記在案的公司、四條產品線、四個領導職位，
-  而當初那批夥伴幾乎全部換過一輪。
+outcomes:
+  - value: 4 條
+    label: 產品線
+  - value: NT$ 100 萬+
+    label: 競賽獎金與補助
+  - value: 已登記
+    label: 完成法人登記
+  - value: 青創基地
+    label: 進駐雙北與桃園多處
 
-  真正的問題是：一個沒有投資人、所有人都還在唸書、每個人隨時可以走的組織，
-  要怎麼讓技術決策撐得過人員流動？我做的每一個選擇，第一個要通過的檢查
-  不是「這樣寫最好嗎」，是「下一個人接得住嗎」。
+highlightsTitle: 產品
+highlights:
+  - title: 財伴 oSave
+    text: 用會計邏輯記帳、算出財務健康分數的 App，已在 iOS 與 Android 上架。
+    shot: /images/osave-1.webp
+    href: /work/osave/
+  - title: 淘換算
+    text: Chrome 擴充套件，自動把淘寶上的人民幣價格換算成新台幣顯示。
+    shot: /images/taobao-1.jpg
 
-decisions:
-  - decision: 技術選型全部收斂到同一套 stack，不讓每個產品各自挑喜歡的工具。
-    rejected: 每條產品線用最適合自己的技術
-    why: >-
-      四條產品線、四個人以下的工程團隊。如果 oSave 用 FastAPI、SurPrice 用 Node、
-      淘換算用別的，那任何一個人離開都會帶走一整條產品線的維護能力。
-      統一 stack 買到的不是效能，是「換人接手」這件事本身。
-    cost: 有些產品用了不是最適合它的工具，PWA 那條尤其明顯。
-    date: 2024-04
+turn:
+  title: 讓系統活得比寫它的人久
+  text: >-
+    一個沒有投資人、所有人都還在念書、每個人隨時可能離開的團隊，
+    寫程式之前要先問「下一個人接得住嗎」。所以四條產品線用同一套技術，
+    換人的時候，不會有人帶走一整條產品線。
 
-  - decision: 產品線擴張，而不是把所有資源壓在旗艦產品上。
-    rejected: 集中火力做 oSave
-
-trace: []
-
-results:
-  - metric: 公司化
-    value: 已完成法人登記
-  - metric: 產品線
-    value: 4 條
-    note: 財伴 oSave · 找好康 SurPrice · 淘換算 · 財伴 Podcast
-  - metric: 競賽獎金與補助
-    value: NT$ 100 萬+
-    note: 含教育部 U-Start 與創新創業實戰模擬補助
-  - metric: 進駐基地
-    value: 桃園青創萌芽團隊
-    note: 另進駐雙北與桃園多處青創基地
+myPart:
+  - 從組隊開始擔任技術長，帶 4 人以下的工程團隊
+  - 統一四條產品線的技術，讓人員交接接得住
+  - 主導財伴 oSave 的系統架構與後端
 
 stack:
   client: [Nuxt.js, Vue.js, Tailwind CSS, PWA]

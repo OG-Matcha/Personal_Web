@@ -10,7 +10,7 @@ const TITLE = '黃鉅燊 Ju-Shen Huang'
 // Vite and cannot import the YAML, so these three numbers are the one copy
 // that has to be kept in step by hand.
 const DESCRIPTION =
-  '黃鉅燊（Ju-Shen Huang / OG_Matcha），斐闊 Finctory 共同創辦人暨技術長、醫數行銷 MedaLink 共同創辦人暨前線部署工程師，中央大學資訊管理學系碩士班。把 LLM 放進會出貨的系統裡：財伴 oSave、PhishForge、診所營運系統，15 項競賽獎項含 5 座全國首獎，3 個國科會研究計畫。'
+  '黃鉅燊（Ju-Shen Huang / OG_Matcha），斐闊 Finctory 共同創辦人暨技術長、醫數行銷 MedaLink 共同創辦人暨前線部署工程師，中央大學資訊管理學系碩士班。把 LLM 放進會出貨的系統裡：財伴 oSave、PhishForge、診所營運系統，16 項競賽獎項含 5 座全國首獎，3 個國科會研究計畫。'
 
 export default defineNuxtConfig({
   devtools: { enabled: false },
@@ -85,7 +85,7 @@ export default defineNuxtConfig({
   routeRules: {
     // /news is gone — its one entry now lives in the timeline. Keep the URL
     // alive so the old inbound links and the previous sitemap don't 404.
-    '/news': { redirect: { to: '/#ledger', statusCode: 301 } },
+    '/news': { redirect: { to: '/#record', statusCode: 301 } },
   },
 
   /**
@@ -113,10 +113,10 @@ export default defineNuxtConfig({
         { name: 'description', content: DESCRIPTION },
         { name: 'author', content: '黃鉅燊 (Ju-Shen Huang)' },
         { name: 'robots', content: 'index, follow' },
-        // One theme, so one colour - and the UA is told, so form controls,
-        // scrollbars and the caret come up dark instead of light-on-dark.
-        { name: 'theme-color', content: '#0c0d0f' },
-        { name: 'color-scheme', content: 'dark' },
+        // Proof and film: the browser chrome follows whichever the system is on.
+        { name: 'theme-color', media: '(prefers-color-scheme: light)', content: '#efe9e0' },
+        { name: 'theme-color', media: '(prefers-color-scheme: dark)', content: '#12141c' },
+        { name: 'color-scheme', content: 'light dark' },
 
         { property: 'og:title', content: TITLE },
         { property: 'og:description', content: DESCRIPTION },
@@ -144,15 +144,12 @@ export default defineNuxtConfig({
       noscript: [{ innerHTML: '<link rel="stylesheet" href="/fonts/cjk.css">' }],
       script: [
         {
-          // Runs before first paint. The homepage ships a gate in its SSR
-          // markup that only JavaScript can ever lift, so the gate stays
-          // `display: none` until this proves there is JavaScript here. The
-          // timer is the failsafe for the one case the component cannot cover
-          // itself: hydration never happening, so its own timeout never runs.
+          // Runs before first paint: applies the reader's stored day/night
+          // choice so it never flashes.
           innerHTML:
-            "var d=document.documentElement;d.classList.add('js');" +
-            "setTimeout(function(){d.classList.add('gate-off');" +
-            "d.classList.remove('gate-locked')},8000)",
+            "var d=document.documentElement;" +
+            "try{var t=localStorage.getItem('theme');" +
+            "if(t==='dark'||t==='light')d.dataset.theme=t}catch(e){}",
           tagPosition: 'head',
         },
         // The JSON-LD used to live here as a hand-written literal. It moved

@@ -6,7 +6,8 @@ import about from '~/content/about.yml'
 import timelineRaw from '~/content/timeline.yml'
 import skills from '~/content/skills.yml'
 import alsoBuilt from '~/content/also-built.yml'
-import beatCopy from '~/content/beats.yml'
+import en from '~/content/en.yml'
+import beatsRaw from '~/content/beats.yml'
 
 import osave from '~/content/work/osave.yml'
 import phishforge from '~/content/work/phishforge.yml'
@@ -36,7 +37,7 @@ export interface TimelineEntry {
   project?: string | null
   evidence?: string | null
   ongoing?: boolean
-  /** Which of the film's four lanes this sits on. See docs/CINEMATIC-BRIEF.md. */
+  /** Which of the four parallel tracks this entry belongs to. */
   lane?: 'venture' | 'research' | 'contest' | 'practice' | 'academic'
   /** Branch within the venture lane. */
   strand?: 'finctory' | 'medalink'
@@ -163,11 +164,44 @@ const wonAwards = timeline.filter(
   (e) => e.kind === 'award' && !SHORTLISTED.test(e.title)
 )
 
+/**
+ * Outcome values may say {awards} or {topPrizes}: counted per project from the
+ * timeline, so a case study never claims a different number than its own
+ * award list (oSave's page once said 6 above a list of 8).
+ */
+function fillCounts(v: unknown, slug: string) {
+  const won = wonAwards.filter((e) => e.project === slug)
+  return String(v)
+    .replace('{awards}', String(won.length))
+    .replace('{topPrizes}', String(won.filter((e) => TOP_PRIZE.test(e.title)).length))
+}
+for (const w of works as any[]) {
+  if (w.outcomes) w.outcomes = w.outcomes.map((o: any) => ({ ...o, value: fillCounts(o.value, w.slug) }))
+  const e = (en as any).works?.[w.slug]
+  if (e?.results) e.results = e.results.map((r: any) => ({ ...r, value: fillCounts(r.value, w.slug) }))
+  if (e?.outcomes) e.outcomes = e.outcomes.map((o: any) => ({ ...o, value: fillCounts(o.value, w.slug) }))
+}
+
 const counts = {
   awards: wonAwards.length,
   topPrizes: wonAwards.filter((e) => TOP_PRIZE.test(e.title)).length,
-  researchGrants: timeline.filter((e) => e.kind === 'research').length,
+  // Only the projects funded by NSTC. The LAK 2025 knowledge-graph work is
+  // `kind: research` too, but it was a general-education centre project, and
+  // counting it made the site claim four NSTC grants where there are three.
+  researchGrants: timeline.filter((e) => e.kind === 'research' && /國科會|NSTC/.test(e.publication ?? '')).length,
 }
+
+/** The five questions on the homepage; each one's events are its date range. */
+const beats = (beatsRaw as { id: string; from: unknown; to: unknown; title: string; lede?: string }[])
+  .map(stripTodo)
+  .map((b) => {
+    const from = normaliseDate(b.from)
+    const to = normaliseDate(b.to)
+    return { ...b, from, to, events: timeline.filter((e) => {
+      const d = e.date.length === 4 ? `${e.date}-01` : e.date
+      return d >= from && d <= to
+    }).reverse() }
+  })
 
 export function useContent() {
   return {
@@ -176,8 +210,9 @@ export function useContent() {
     timeline,
     skills,
     alsoBuilt,
-    beatCopy,
+    en,
     works,
+    beats,
   }
 }
 

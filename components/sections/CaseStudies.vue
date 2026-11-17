@@ -1,129 +1,190 @@
 <template>
-  <section id="work" class="shell">
-    <h2 class="font-display text-3xl">交付紀錄</h2>
-    <p class="mt-3 max-w-measure-han text-base text-ink-2">
-      四件寫成案例研究的東西。每一件都有它當時的決策、沒選的選項，以及那個選擇的代價。
-    </p>
+  <!--
+    The index of case studies. Each one is the real screen, set like a print
+    pinned on the studio wall, with what it was beside it. Rows alternate which
+    side the screen sits on, so four of them read as a run, not a card grid.
+  -->
+  <ol class="cs-list">
+    <li v-for="(w, i) in items" :key="w.slug" class="cs-item" :class="{ 'cs-item--flip': i % 2 === 1 }">
+      <NuxtLink v-if="w.cover" :to="w.href" class="cs-shot" :aria-label="w.title">
+        <SiteShot :src="w.cover" width="1600" height="900" />
+      </NuxtLink>
+      <!-- Finctory is a company, not a screen: its card, to pick up and turn over. -->
+      <div v-else class="cs-shot cs-shot--card"><SiteBizCard /></div>
 
-    <!-- Lead project runs full width with the largest image on the page. The
-         two that follow sit side by side, so the section has rhythm rather
-         than three identical rows. -->
-    <NuxtLink v-if="lead" :to="`/work/${lead.slug}/`" class="lead group mt-7">
-      <img
-        :src="lead.cover"
-        :alt="lead.title"
-        width="1600"
-        height="800"
-        loading="lazy"
-        class="aspect-[16/9] w-full rounded-sm object-cover object-top md:aspect-[21/9]"
-      />
-      <div class="mt-5 grid gap-4 md:grid-cols-12">
-        <div class="md:col-span-7">
-          <h3 class="font-display text-2xl group-hover:underline">{{ lead.title }}</h3>
-          <p class="mt-2 max-w-measure-han text-base text-ink-2">{{ lead.summary }}</p>
-        </div>
-        <dl class="grid grid-cols-2 gap-4 md:col-span-5">
-          <div v-for="r in facts(lead)" :key="r.metric">
-            <dt class="mono text-2xs text-ink-2">{{ r.metric }}</dt>
-            <dd class="mt-1 font-display text-lg">{{ r.value }}</dd>
+      <div class="cs-text">
+        <h2 class="cs-title">
+          <NuxtLink :to="w.href">{{ w.title }}</NuxtLink>
+        </h2>
+        <p class="cs-meta">
+          <span class="cs-role">{{ w.role }}</span>
+          <span class="cs-status">{{ w.status }}</span>
+          <span class="figures">{{ formatDate(w.period.start) }} – {{ w.period.end ? formatDate(w.period.end) : c.now }}</span>
+        </p>
+        <p class="cs-summary">{{ w.summary }}</p>
+        <dl v-if="w.facts.length" class="cs-facts">
+          <div v-for="r in w.facts" :key="r.metric">
+            <dt>{{ r.metric }}</dt>
+            <dd class="figures">{{ r.value }}</dd>
           </div>
         </dl>
+        <p class="cs-go">
+          <NuxtLink :to="w.href" class="btn">{{ c.read }}</NuxtLink>
+        </p>
       </div>
-    </NuxtLink>
-
-    <div class="mt-8 grid gap-7 md:grid-cols-3">
-      <NuxtLink v-for="w in others" :key="w.slug" :to="`/work/${w.slug}/`" class="group">
-        <img
-          v-if="w.cover"
-          :src="w.cover"
-          :alt="w.title"
-          width="1200"
-          height="675"
-          loading="lazy"
-          class="aspect-[16/9] w-full rounded-sm object-cover object-top"
-        />
-        <!-- A case study with no cover leads with its hardest number instead
-             of a grey box. Finctory is a company, not a screen. -->
-        <div v-else class="no-cover flex aspect-[16/9] w-full flex-col justify-end rounded-sm p-5">
-          <p class="font-display text-2xl" :style="{ color: 'var(--on-pop)' }">
-            {{ facts(w)[0]?.value }}
-          </p>
-          <p class="mono text-2xs" :style="{ color: 'var(--on-pop)', opacity: 0.72 }">
-            {{ facts(w)[0]?.metric }}
-          </p>
-        </div>
-
-        <h3 class="mt-4 font-display text-xl group-hover:underline">{{ w.title }}</h3>
-        <p class="mt-2 text-2xs text-ink-2">{{ w.summary }}</p>
-        <ul class="mt-3 flex flex-wrap gap-2">
-          <li v-for="t in stack(w).slice(0, 4)" :key="t" class="chip">{{ t }}</li>
-        </ul>
-      </NuxtLink>
-    </div>
-
-    <!-- Only on the homepage, which carries the selection. On /portfolio this
-         would point at the page it is already on. -->
-    <p v-if="more" class="mt-8">
-      <NuxtLink to="/portfolio/" class="more mono text-2xs">
-        其他 {{ alsoBuilt.length }} 件作品 →
-      </NuxtLink>
-    </p>
-  </section>
+    </li>
+  </ol>
 </template>
 
 <script setup>
-/**
- * The four case studies, as cards.
- *
- * These used to live only on /portfolio, and nothing on the site linked to
- * that page - the header's 作品 tab pointed at a beat inside the film. So the
- * only way to reach a case study was to scroll nine screens of film, then the
- * whole timeline, and notice that one of the ledger rows was a link. This
- * section is the entry point that was missing; /portfolio now renders it too.
- */
-const props = defineProps({
-  /** The homepage shows a selection and links out; /portfolio is the index. */
-  more: { type: Boolean, default: false },
-})
+const { works, en } = useContent()
+const { locale } = useLocale()
 
-const { works, alsoBuilt } = useContent()
+const c = computed(() =>
+  locale.value === 'en' ? { now: 'now', read: 'Read the case study' } : { now: '現在', read: '讀案例研究' }
+)
 
-const lead = works.find((w) => w.cover) ?? works[0]
-const others = works.filter((w) => w.slug !== lead?.slug)
-
-function stack(w) {
-  return Object.values(w.stack ?? {}).flat()
-}
-
-/** Only filled-in, short values reach a card. */
+/** Two short outcomes reach the index: what a visitor cares about, not line counts. */
 function facts(w) {
-  return (w.results ?? [])
-    .filter((r) => r.value && !String(r.value).startsWith('TODO') && String(r.value).length <= 20)
-    .slice(0, 2)
+  if (w.outcomes?.length) return w.outcomes.slice(0, 2).map((o) => ({ metric: o.label, value: o.value }))
+  return (w.results ?? []).filter((r) => r.value && String(r.value).length <= 28).slice(0, 2)
 }
+
+const items = computed(() =>
+  works.map((w) => {
+    const e = locale.value === 'en' ? en.works?.[w.slug] ?? {} : {}
+    return {
+      ...w,
+      ...e,
+      href: `${locale.value === 'en' ? '/en' : ''}/work/${w.slug}/`,
+      facts: e.results ?? facts(w),
+    }
+  })
+)
 </script>
 
 <style scoped>
-.more {
-  display: inline-block;
-  padding: var(--sp-2) var(--sp-4);
-  border: 1px solid var(--rule-strong);
-  border-radius: var(--r-full);
-  color: var(--ink-2);
+.cs-list {
+  display: grid;
+  gap: var(--sp-9);
+}
+
+.cs-item {
+  display: grid;
+  gap: var(--sp-6);
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .cs-item {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: var(--sp-8);
+  }
+
+  .cs-item--flip .cs-shot {
+    order: 2;
+  }
+}
+
+.cs-shot {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: var(--r-3);
+  background: var(--surface-2);
+  box-shadow: var(--shadow-2);
+  transition:
+    transform var(--dur-3) var(--ease-entrance),
+    box-shadow var(--dur-3) var(--ease-entrance);
+}
+
+a.cs-shot:hover,
+a.cs-shot:focus-visible {
+  transform: translateY(-4px) rotate(-0.4deg);
+  box-shadow:
+    0 4px 8px rgb(var(--shadow-rgb) / 0.06),
+    0 36px 64px -20px rgb(var(--shadow-rgb) / 0.34);
+}
+
+.cs-item--flip a.cs-shot:hover,
+.cs-item--flip a.cs-shot:focus-visible {
+  transform: translateY(-4px) rotate(0.4deg);
+}
+
+.cs-shot--card {
+  overflow: visible;
+  background: none;
+  box-shadow: none;
+}
+
+.cs-title {
+  font-size: var(--step-3);
+  font-weight: 800;
+}
+
+.cs-title a {
   text-decoration: none;
 }
 
-.more:hover {
-  border-color: var(--ink);
+.cs-title a:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--pop-ink);
+  text-decoration-thickness: 2px;
+}
+
+.cs-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-1) var(--sp-4);
+  margin-top: var(--sp-3);
+  font-size: var(--step--1);
+  color: var(--ink-3);
+}
+
+.cs-role {
+  font-weight: 700;
   color: var(--ink);
 }
 
-.lead {
-  display: block;
-  text-decoration: none;
+.cs-status {
+  padding: 0 10px;
+  border-radius: var(--r-full);
+  background: var(--surface-2);
+  color: var(--ink-2);
+  font-weight: 600;
 }
 
-.no-cover {
-  background: var(--pop);
+.cs-summary {
+  margin-top: var(--sp-4);
+  color: var(--ink-2);
+  max-width: var(--measure-han);
+}
+
+.cs-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: var(--sp-4);
+  margin-top: var(--sp-5);
+}
+
+.cs-facts div {
+  padding-top: var(--sp-3);
+  border-top: 1px solid var(--rule);
+}
+
+.cs-facts dt {
+  font-size: var(--step--1);
+  color: var(--ink-3);
+}
+
+.cs-facts dd {
+  margin-top: var(--sp-1);
+  font-family: var(--font-display);
+  font-weight: 800;
+}
+
+.cs-go {
+  margin-top: var(--sp-5);
 }
 </style>

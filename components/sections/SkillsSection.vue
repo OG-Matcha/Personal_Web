@@ -1,49 +1,54 @@
 <template>
-  <section id="skills" class="shell">
-    <h2 class="font-display text-2xl">能力斷面</h2>
-    <p class="mt-3 max-w-measure-han text-sm text-ink-2">
-      量尺不是熟練度，是證據層級。每一項都連得到一個可以點開的東西——
-      連不到的，這一頁就不列。
-    </p>
-
-    <!-- The tier legend is the credibility mechanism, so it is stated up front
-         rather than buried in a tooltip. -->
-    <ul class="legend mt-6">
+  <!--
+    Evidence, not proficiency. Each tier prints as an ink density - solid,
+    75 %, 50 %, outline - the same ramp as the colour bar in the slug, so the
+    legend is something a printer would read without being told.
+  -->
+  <div class="sk">
+    <ul class="legend">
       <li v-for="t in tiers" :key="t.id" class="legend-item" :data-tier="t.id">
         <span class="dot" />
-        {{ t.label }}
+        {{ tierLabel(t) }}
       </li>
     </ul>
 
-    <div class="layers mt-8">
+    <div class="layers">
       <section v-for="l in grouped" :key="l.id" class="layer">
-        <h3 class="layer-label mono text-2xs tracking-[0.16em] text-ink-3">
-          {{ l.labelZh }} <span class="text-ink-3/60">{{ l.label }}</span>
-        </h3>
-        <ul class="layer-nodes flex flex-wrap gap-2">
+        <h3 class="layer-label">{{ en ? l.label : l.labelZh }}</h3>
+        <ul class="layer-nodes">
           <li v-for="n in l.nodes" :key="n.name">
             <a
               v-if="isLink(n.evidence)"
-              :href="n.evidence"
+              :href="href(n.evidence)"
               v-bind="linkAttrs(n.evidence)"
               class="node"
               :data-tier="n.tier"
-              :title="labelOf[n.tier]"
             >
-              <span class="dot" /><span class="sr-only">{{ labelOf[n.tier] }}</span>{{ n.name }}
+              <span class="dot" /><span class="sr-only">{{ tierLabel({ id: n.tier, label: labelOf[n.tier] }) }}：</span>{{ n.name }}
             </a>
-            <span v-else class="node" :data-tier="n.tier" :title="labelOf[n.tier]">
-              <span class="dot" /><span class="sr-only">{{ labelOf[n.tier] }}</span>{{ n.name }}
+            <span v-else class="node" :data-tier="n.tier">
+              <span class="dot" /><span class="sr-only">{{ tierLabel({ id: n.tier, label: labelOf[n.tier] }) }}：</span>{{ n.name }}
             </span>
           </li>
         </ul>
       </section>
     </div>
-  </section>
+  </div>
 </template>
 
 <script setup>
 const { skills } = useContent()
+const { locale } = useLocale()
+const en = computed(() => locale.value === 'en')
+const TIER_EN = {
+  'shipped-prod': 'In production',
+  'shipped-competition': 'Shipped for competition',
+  'research-prototype': 'Research prototype',
+  studied: 'Studied',
+}
+function tierLabel(t) {
+  return en.value ? TIER_EN[t.id] ?? t.label : t.label
+}
 
 /**
  * The five layers, in the order data actually travels through them. Kept here
@@ -81,6 +86,11 @@ const grouped = computed(() =>
   })).filter((l) => l.nodes.length)
 )
 
+// Site-internal evidence follows the reader's language.
+function href(e) {
+  return en.value && e.startsWith('/') && !e.startsWith('/en/') ? `/en${e}` : e
+}
+
 function isLink(e) {
   return typeof e === 'string' && e.length > 0
 }
@@ -91,95 +101,97 @@ function isLink(e) {
 .legend {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--sp-5);
+  gap: var(--sp-2) var(--sp-6);
+  margin-top: var(--sp-6);
+  font-size: var(--step--1);
+  color: var(--ink-2);
 }
 
 .legend-item {
   display: flex;
   align-items: center;
   gap: var(--sp-2);
-  font-family: var(--font-mono);
-  font-size: var(--step--2);
-  color: var(--ink-2);
 }
 
-/* One row per layer: the label in a fixed column, the chips filling the rest.
-   This was two columns of stacked blocks, which cannot be balanced - five
-   groups of 189/189/189/141/189px split 2:3 any way you like and the shorter
-   column still ends ~140px early, so a third of the right-hand side was
-   empty. Rows have no such problem, they are denser, and the label column
-   gives the section the same vertical rhythm the timeline has. */
 .layers {
   display: grid;
-  gap: 0;
+  margin-top: var(--sp-6);
+  border-top: 1px solid var(--rule);
 }
 
 .layer {
   display: grid;
   gap: var(--sp-2) var(--sp-6);
   padding-block: var(--sp-4);
-  border-top: 1px solid var(--rule);
-}
-
-.layer:last-child {
   border-bottom: 1px solid var(--rule);
 }
 
 @media (min-width: 46rem) {
   .layer {
-    /* Wide enough for 基礎設施 Infra, the longest label, on one line. */
-    grid-template-columns: 9.5rem minmax(0, 1fr);
+    grid-template-columns: 8rem minmax(0, 1fr);
     align-items: start;
   }
 }
 
 .layer-label {
-  /* Optically aligns the label with the first row of chips, which sit inside
-     their own padding. */
   padding-top: 5px;
+  font-size: var(--step--1);
+  font-weight: 700;
+}
+
+.layer-nodes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
 }
 
 .node {
   display: inline-flex;
   align-items: center;
   gap: var(--sp-2);
-  padding: 4px 10px;
+  padding: 3px 10px;
   border: 1px solid var(--rule);
-  border-radius: var(--r-full);
-  font-size: var(--step--2);
+  font-size: var(--step--1);
   color: var(--ink-2);
   text-decoration: none;
+  transition: border-color var(--dur-1), color var(--dur-1);
 }
 
 a.node:hover {
   color: var(--ink);
-  border-color: var(--ink-2);
+  border-color: var(--ink);
 }
 
-/* One shape, four fills. The tier is legible at a glance without a second
-   colour system fighting the accent. */
+/* Four densities of one ink. */
 .dot {
-  width: 7px;
-  height: 7px;
-  border-radius: var(--r-full);
-  border: 1px solid var(--ink-2);
+  width: 0.6rem;
+  height: 0.6rem;
+  border: 1px solid var(--ink);
   flex: none;
 }
 
 [data-tier='shipped-prod'] .dot {
-  background: var(--pop);
-  border-color: var(--pop);
+  background: var(--ink);
 }
 
 [data-tier='shipped-competition'] .dot {
-  background: var(--ink-2);
+  background: color-mix(in srgb, var(--ink) 70%, transparent);
 }
 
 [data-tier='research-prototype'] .dot {
-  background: linear-gradient(to right, var(--ink-2) 50%, transparent 50%);
+  background: repeating-linear-gradient(45deg, var(--ink) 0 1.5px, transparent 1.5px 3.5px);
 }
 
 [data-tier='studied'] .dot {
   background: transparent;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
 }
 </style>

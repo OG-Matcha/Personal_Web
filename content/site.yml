@@ -4,7 +4,7 @@
 # ⚠️ asOf 是這個網站唯一的防腐機制：每次部署前把它改成當月。
 #    頁面會把它印出來，讀者就知道資料新舊；你也會被迫看一眼有沒有東西過期。
 # -----------------------------------------------------------------------------
-asOf: 2026-08
+asOf: 2026-11
 
 person:
   nameZh: 黃鉅燊
@@ -22,7 +22,7 @@ person:
 now:
   - label: 學位
     value: 中央大學資訊管理學系學士，2026.06 畢業
-    detail: GPA 4.19 / 4.3；2026.09 直升本系碩士班
+    detail: GPA 4.19 / 4.3；商業智慧與分析、人工智慧跨域應用兩個學分學程；2026.09 直升本系碩士班
   - label: 公司
     value: 斐闊 Finctory 共同創辦人暨技術長
     detail: 四條產品線在跑，工程團隊 4 人以下
@@ -40,12 +40,13 @@ open:
   - 講座與工作坊
 
 contact:
-  email: matchaskill@gmail.com
+  email: jushenhuang.jason@gmail.com
   github: https://github.com/OG-Matcha
   linkedin: https://www.linkedin.com/in/ogmatcha/
   instagram: https://www.instagram.com/og_matcha/
+  # 由 content/cv.yml 產生：node scripts/build-cv.mjs
   cv:
-    href: /content/Ju-Shen Huang CV.pdf
-    # TODO: CV 檔案本身停在 2025-04，更新後把日期改掉
-    updated: 2025-04
+    href: /content/ju-shen-huang-cv-zh.pdf
+    hrefEn: /content/ju-shen-huang-cv-en.pdf
+    updated: 2026-11
 

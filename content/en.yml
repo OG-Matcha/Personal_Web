@@ -1,0 +1,409 @@
+# -----------------------------------------------------------------------------
+# English edition. Translation of the Chinese source files, nothing added.
+#
+# Rule: every fact here must also be in the Chinese file it translates. When a
+# Chinese entry changes, change its English twin here in the same commit.
+# Timeline entries are keyed by "<date> <Chinese title>" so a renamed Chinese
+# title shows up as a missing translation (the Chinese text renders instead)
+# rather than as a silently wrong one.
+# -----------------------------------------------------------------------------
+
+thesisLines:
+  - Taking AI from demo
+  - to something that runs.
+thesisSub: Demos are easy. The hard part is that someone is still using it three months later.
+intro: Ju-Shen Huang (黃鉅燊, OG_Matcha online), from Taoyuan, Taiwan. Co-founder and CTO of Finctory, co-founder and forward-deployed engineer at MedaLink. BS in Information Management from National Central University (2026), now in the same department's master's program.
+lede: In a team of four or fewer there is no second person to hand anything to. That constraint made most of my technical decisions. At the other company, there is not even a first person besides me.
+portraitAlt: Photo of Ju-Shen Huang
+caption: Four-colour separation, screen angles 15° / 75° / 0° / 45°. The cursor is a loupe.
+
+posts:
+  - org: Finctory
+    role: Co-founder & CTO
+    scope: System architecture, AI technology choices, the engineering team.
+    facts:
+      - Four product lines
+      - Engineering team of four or fewer
+      - Admitted to five startup hubs and incubators
+  - org: MedaLink
+    role: Co-founder & Forward-Deployed Engineer
+    scope: The AI half, conversation engine to cloud deployment, built alone.
+    facts:
+      - Two people, requirements to production
+      - 173 API routes
+      - 64,687 lines · 63 regression tests
+  - org: ITRI Industry, Science and Technology International Strategy Center
+    role: AI Intern
+    scope: Internal systems, plus engineering standards the whole division now uses.
+    facts:
+      - Five internal systems
+      - 300+ commits
+      - Division-wide GAI template and security workflow
+
+degree: BS, Information Management, National Central University, June 2026
+degreeDetail: GPA 4.19 / 4.3; credit programs in Business Intelligence & Analytics and Cross-domain Applications of AI; master's program in the same department from September 2026
+open:
+  - Generative-AI / agent architecture consulting
+  - Early-stage technical partnerships
+  - Talks and workshops
+
+sheets:
+  now: Three places, three kinds of role
+  work: Shipped
+  workLede: Four things written up as case studies, each with the decision taken, the option not taken, and what the choice cost.
+  skills: Evidence, by layer
+  skillsLede: The scale is not proficiency, it is the level of evidence. Every item links to something you can open. Anything that cannot be linked is not listed.
+  record: The record
+  contact: Get in touch
+
+beats:
+  ignite:
+    title: How do you get people to let you do the work?
+    lede: In my first year I knew nothing, and nobody hands work to someone like that. So I took the jobs nobody wanted - fixing the department's computers, rebuilding a website too slow to use, joining up student groups that never talked. After that, people started asking whether I wanted to build something with them.
+  build:
+    title: Can I do two hard things at once?
+    lede: In March 2024 I started my capstone project and used it to apply for an NSTC undergraduate research grant; in April I became CTO of Finctory. One side owed research results, the other owed releases, and neither could slip. That quarter taught me trade-offs more than anything else.
+  peak:
+    title: Leading 30 people or writing 30 lines of code - which is harder?
+    lede: In the same November I submitted three competition entries and handed over a platform I had run for fourteen months, four teams and 30 people. Code has a compiler to tell you where it broke. People do not.
+  proof:
+    title: What does it take to tear down your own product?
+    lede: In May 2025 we admitted Invoice Doctor had reached the point where we could no longer see its problems, and that testing it further was not worth it, so we started oSave from scratch. The same year the company was registered, we won the TSMC hackathon, two NSTC projects closed, and I joined ITRI.
+  now:
+    title: Graduated. Now what?
+    lede: In June 2026 I finished my bachelor's degree with two credit programs, and in September I moved straight into the master's program. I still run the technical side of both companies; November added a hackathon honourable mention, and there are two open-source projects.
+
+works:
+  osave:
+    title: oSave
+    role: CTO · architecture and backend
+    status: Live
+    tagline: A budgeting app that answers "am I actually financially healthy?"
+    summary: Most budgeting apps only tell you where the money went. oSave keeps your books with accounting logic, works out six financial-health indicators, gives you a score every month, and tells you what pulled it down.
+    outcomes:
+      - value: iOS + Android
+        label: On both app stores
+      - value: '{awards}'
+        label: Competition awards
+      - value: '{topPrizes}'
+        label: Top prizes
+      - value: U-Start
+        label: Ministry of Education startup grant
+    highlights:
+      - title: Three taps per entry
+        text: Pick whether money came in or went out and how you paid, type the item and amount; the category fills itself in. You never need to know accounting, yet every entry carries its accounting meaning.
+      - title: The whole month on one page
+        text: Income versus spending, where the money flowed and what it went on, side by side - you can see at a glance where it came from and where it went.
+      - title: A score, and the reason for it
+        text: Six indicators become a 0-100 score, with what needs work and what to keep, plus one sentence on what to adjust next month.
+    turn:
+      title: From Invoice Doctor to oSave
+      text: The first version, Invoice Doctor, read your receipts and sorted your spending automatically. The data was all there, yet people still could not answer "is this month better or worse?". In May 2025 we changed course - instead of collecting more data, make every entry add up to a conclusion.
+    myPart:
+      - As CTO, led the development team from Invoice Doctor all the way to oSave's launch
+      - Designed the system architecture and wrote the backend and the financial-indicator calculations
+      - Built automatic item categorisation - rules first, AI only when rules miss, and a failed guess never blocks an entry
+    results:
+      - metric: Available on
+        value: iOS + Android
+      - metric: Competition awards
+        value: '{awards}'
+  phishforge:
+    title: PhishForge
+    role: Backend · AI engineering
+    status: Concluded
+    tagline: AI-written phishing you cannot tell from the real thing - so security drills actually teach something.
+    summary: Template drills get recognised after a few rounds; staff learn to spot the company's test mail, not phishing. PhishForge has AI write tailored phishing mail and matching fake login pages for each department and situation, then shows the company how many people opened, clicked and filled in the form.
+    outcomes:
+      - value: 1st place
+        label: Information Application Service Innovation Contest, security track
+      - value: NSTC
+        label: 2024 undergraduate research grant
+      - value: No passwords kept
+        label: Behaviour is recorded, what people type is not
+    highlights:
+      - title: A drill in a few steps
+        text: Enter the company name, department structure and recent context to start - no real personal data about staff needed.
+      - title: AI writes, you approve
+        text: The AI writes mail and sender personas tailored to the scenario, and a rule check stops it producing material that could be used in a real attack.
+      - title: Behaviour, not passwords
+        text: Only opens, clicks, form submissions and time taken are recorded; nothing anyone types is stored. Every drill runs in its own container and is destroyed afterwards.
+    myPart:
+      - Backend and AI engineering - FastAPI backend, PostgreSQL and Redis for data and live statistics
+      - Chained Gemini through LangChain to generate tailored phishing mail and matching fake login pages
+      - Deployed every drill as its own AWS ECS task, destroyed when the drill ends
+    results:
+      - metric: 29th Information Application Service Innovation Contest
+        value: Security track, 1st place
+      - metric: NSTC undergraduate research grant
+        value: Awarded 2024, completed
+  finctory:
+    title: Finctory
+    role: Co-founder · CTO
+    status: Operating
+    tagline: A fintech startup making every dollar count.
+    highlightsTitle: Products
+    summary: In April 2024 a few students formed a team; two years later it is a registered company with four product lines - oSave, SurPrice, Taobao Exchange and the oSave podcast. I am a co-founder and the CTO.
+    outcomes:
+      - value: '4'
+        label: Product lines
+      - value: NT$1M+
+        label: Competition prizes and grants
+      - value: Registered
+        label: Incorporated company
+      - value: Incubators
+        label: Based in several in Taipei and Taoyuan
+    highlights:
+      - title: oSave
+        text: A budgeting app built on accounting logic that scores your financial health, live on iOS and Android.
+      - title: Taobao Exchange
+        text: A Chrome extension that shows Taobao's RMB prices in New Taiwan dollars, automatically.
+    turn:
+      title: Making the system outlive its authors
+      text: In a team with no investors, where everyone is still a student and anyone can leave, the first question before writing code is "can the next person take this over?". So all four product lines share one stack, and no one leaving takes a whole product with them.
+    myPart:
+      - CTO since the team formed, leading an engineering team of four or fewer
+      - Unified the technology across four product lines so handovers hold
+      - Led oSave's system architecture and backend
+    results:
+      - metric: Incorporation
+        value: Registered company
+      - metric: Product lines
+        value: '4'
+  medalink:
+    title: MedaLink
+    role: Co-founder · Forward-Deployed Engineer
+    status: Live
+    tagline: An AI front desk for clinics - replies, scheduling and recalls in one system.
+    summary: Messages from LINE, Facebook, Instagram and the website land in one inbox. The AI answers by each clinic's own rules, books people into slots where the doctor, room and equipment are all free, then takes over reminders, rescheduling, aftercare and six-month recalls.
+    outcomes:
+      - value: Live
+        label: Running in clinics every day
+      - value: 2 people
+        label: Requirements to production
+      - value: 4 channels
+        label: Messages in one inbox
+    highlights:
+      - title: Only bookable slots are offered
+        text: A treatment is split into stages, and a slot only appears when every doctor, assistant, room and machine each stage needs is free. The front desk stops phoning people to fix bad bookings.
+      - title: Every patient's stage at a glance
+        text: Bookings create a record automatically and move through a seven-stage pipeline; reminders, rescheduling, waitlist fills, aftercare and six-month recalls can each be switched on or off.
+      - title: What must not be said, is not said
+        text: Promises of results, comparative claims and post-treatment symptom advice are on a do-not-answer list - the AI stops and alerts the front desk. Wound and medical photos always go to a human.
+    turn:
+      title: More than auto-replies
+      text: A front desk can answer messages for about 176 hours a month; for the other 544, messages keep arriving. But auto-replies are not enough - once the question is answered, the person has to be booked into a slot that really works, followed by reminders, changes and recalls. MedaLink connects that whole chain.
+    myPart:
+      - The AI half of a two-person team, from the conversation engine to cloud deployment
+      - Made the AI answer by each clinic's own playbook, knowledge base and do-not-answer list, in the clinic's own voice
+      - Routed messages to different models by difficulty, so simple greetings use a cheaper model and save the clinic money
+    results:
+      - metric: Team
+        value: 2 people, requirements to production
+      - metric: Status
+        value: Live, running in clinics daily
+
+alsoBuilt:
+  捷伴 Jieban:
+    name: Jieban
+    award: Taipei Autumn Coding Festival, Town Pass Microservice Hackathon, Honourable Mention
+    line: A Taipei MRT companion for older, blind and wheelchair riders - it routes around lifts under maintenance using city open data, picks one exit with a lift map, then talks you out of the station step by step. Speech recognition and intent matching run on the phone, so it works in airplane mode.
+  tessera:
+    line: A Claude Code mod, Windows and CJK first - pasted images and text previewed in any terminal, CJK-correct tables, long diffs folded, and guards for multi-agent runs and Traditional Chinese writing.
+  orca-companion-kit:
+    line: A kit for having an AI agent build your own Orca theme, cursor and desktop pet - one that reacts to your agents, has moods, and survives Orca updates without touching the install.
+  Catalyst:
+    award: TSMC IT CareerHack, AI Ops track, 1st place
+    line: Multi-agent software delivery platform, from requirements analysis to code generation to test and deployment.
+  淘換算 Taobao Exchange:
+    name: Taobao Exchange
+    line: Chrome extension that shows Taobao prices converted from RMB to NT$.
+  Ched.AI:
+    award: GenAI Stars, Creative Maker track, Merit
+    line: Credit-investigation assistant for finance; local LLaMA 3 and OpenAI side by side, with vector retrieval over financial statements.
+  2024 新生知訊網 ChatBot:
+    name: NCU Freshman Portal ChatBot (2024)
+    line: Q&A system for incoming National Central University students, serving 1,000+ freshmen.
+  Cow of Answer:
+    line: Voice-driven stress-relief game, final project for a networking course; deployed end to end with Nginx and containers.
+  BrainLib:
+    line: Academic community platform, final project for systems analysis and design; my one Java / Spring project.
+  Taipei City Dashboard 延伸:
+    name: Taipei City Dashboard extension
+    award: 3rd place
+    line: Taipei–New Taipei Coding Festival hackathon entry, extending the open-source city dashboard with new visualisations.
+
+timeline:
+  '2026-11 2026 臺北秋季程式設計節 城市通微服務大黑客松 - 佳作':
+    title: 2026 Taipei Autumn Coding Festival, Town Pass Microservice Hackathon - Honourable Mention
+    org: Department of Information Technology, Taipei City Government
+    note: Team 「得獎的是!?」; 85 teams applied, 40 reached the final
+  '2026-09 國立中央大學 資訊管理學系 碩士班 入學':
+    title: Master's program, Information Management, National Central University
+    detail: Full-time, enrolled since September 2026, expected to finish June 2028
+  '2026-07 共同創辦 醫數行銷 MedaLink，任前線部署工程師（FDE）':
+    title: Co-founded MedaLink as Forward-Deployed Engineer
+    org: MedaLink Marketing Technology Co., Ltd.
+    detail: Design, integration and deployment of the AI systems. A clinic operations system built on LLMs and a multi-agent architecture - four-channel message centre, rule-based reply engine, resource scheduling and customer state flows - from conversation engine to database, integration to cloud deployment, done alone. A separate company from Finctory.
+  '2026-06 國立中央大學 資訊管理學系 學士畢業':
+    title: BS, Information Management, National Central University
+    detail: GPA 4.19 / 4.3; completed the credit programs in Cross-domain Applications of AI and in Business Intelligence & Analytics
+  '2026-05 雙北程式設計節 城市儀表板大黑客松 - 第三名':
+    title: Taipei–New Taipei Coding Festival, City Dashboard Hackathon - 3rd place
+    org: Taipei City Government · New Taipei City Government
+    note: Built on the open-source Taipei City Dashboard
+  '2026-04 財伴 oSave 行動版開發':
+    title: oSave mobile app development
+    detail: Flutter + Clean Architecture / BLoC; 397 Dart files, 16 feature modules
+  '2026-02 基於生成式 AI 的個人化財務健康管理系統開發與效益評估':
+    title: A generative-AI personal financial-health system - development and evaluation
+    org: Department of Information Management, National Central University
+    publication: NSTC undergraduate research grant, 2025 (NSTC 114-2813-C-008-020-H)
+    detail: The empirical study behind oSave, and the period of the pivot from Invoice Doctor. Built on nudge theory from behavioural finance - anomaly detection on spending, dynamic budget visualisation and gamified literacy tasks. A four-week quasi-experiment with 82 participants - weekly bookkeeping days up 176%, budget attainment doubled to 76.8%, financial anxiety down significantly (p<0.01).
+  '2025-09 工業技術研究院 產科國際所 - AI Intern（軟體工程師）':
+    title: ITRI ISTI - AI Intern (software engineer)
+    org: Innovation and Venture Strategy Division · Zhudong, Hsinchu
+    detail: Continued from the summer internship. Delivered five internal systems - a front-end framework migration, data APIs, an LLM analysis pipeline and a startup-intelligence platform - plus a division-wide generative-AI project template and standard workflows for secret scanning, static analysis and LLM red-teaming (OWASP LLM Top 10). 300+ commits. Project details are not disclosed.
+  '2025-09 財伴 oSave 後端開工':
+    title: oSave backend begins
+    detail: Firebase Cloud Functions (Python); item classification runs in-memory cache → local rules → model
+  '2025-07 工業技術研究院 產科國際所 - 暑期實習（資料科學家）':
+    title: ITRI ISTI - Summer intern (data scientist)
+    org: Innovation and Venture Strategy Division
+    detail: Built and standardised a database of Taiwan's startup ecosystem from government grants, incubators and investors, used for industry maps, quadrant analysis and investment decisions; designed and ran AI workshops for non-technical colleagues.
+  '2025-06 113 學年度第 2 學期 學業成績優良書卷獎':
+    title: Academic Excellence Award, spring 2025
+    org: Department of Information Management, NCU
+    detail: Top 5% of the class (2 / 47)
+  '2025-06 113 學年度第 2 學期 系優秀學生':
+    title: Outstanding Student of the Department, spring 2025
+    org: Department of Information Management, NCU
+    detail: Two nominated per semester
+  '2025-06 斐闊有限公司 正式成立':
+    title: Finctory incorporated
+    org: Finctory Co., Ltd.
+    detail: Registered 5 June 2025, after passing the Ministry of Education U-Start program
+  '2025-06 淘換算 Taobao Exchange':
+    title: Taobao Exchange
+    org: Finctory Co., Ltd.
+    detail: Chrome extension that shows Taobao prices converted from RMB to NT$
+  '2025-05 發票醫生 pivot 為 財伴 oSave':
+    title: Invoice Doctor pivots to oSave
+    detail: Invoice Doctor could pull in spending data but could not answer "so am I financially healthy?". The team rebuilt the architecture, the financial model, the core services and the target user, and changed the name and the input method - from automatic import to manual bookkeeping with accounting logic, for structured data that financial-health indicators can be computed from. Decided 6 May 2025; design and development then ran in parallel.
+  '2025-03 印鏈 PrinterChain':
+    title: PrinterChain
+    org: Finctory
+    detail: Print-matching platform connecting people who need printing with owners of idle printers
+  '2025-02 第六屆台積電校園黑客松（TSMC IT CareerHack）AI 維運懶人包組 - 第一名':
+    title: 6th TSMC IT CareerHack, AI Ops track - 1st place
+    org: Taiwan Semiconductor Manufacturing Company
+    detail: Entry - Catalyst, a multi-agent software delivery platform, from requirements analysis to code generation to test and deployment
+  '2025-02 第七屆社會企業創業提案競賽 後起之秀組 - 優選':
+    title: 7th Social Enterprise Startup Proposal Competition, Rising Star track - Merit
+    org: Taiwan Sustainable Development Association
+    note: Addressing SDG 1.4 (financial inclusion) and SDG 3.4 (mental health)
+  '2025-02 探討生成式 AI 於社交工程之發展應用':
+    title: Generative AI in social engineering
+    org: Department of Information Management, National Central University
+    publication: NSTC undergraduate research grant, 2024
+  '2025-02 結合股市異常現象指標及生成式 AI 之股票追蹤系統':
+    title: A stock-tracking system combining market-anomaly indicators and generative AI
+    org: Department of Information Management, National Central University
+    publication: NSTC undergraduate research grant, 2024
+    detail: My second undergraduate grant that year, a topic of my own unrelated to the capstone. Anomaly indicators select the stocks, an LLM writes the analysis; Flutter front end, Firebase back end, indicators computed with TwStock and Pandas-TA.
+  '2025 114 年度 U-Start 創新創業計畫 - 第一階段入選':
+    title: U-Start Innovation & Entrepreneurship Program 2025 - first-stage selection
+    org: Ministry of Education
+  '2025-09 臺東創新創業大賽 - 最佳創新創業大獎':
+    title: Taitung Innovation & Entrepreneurship Competition - Best Startup Award
+    org: Taitung County Government · Taitung City Youth Work Association
+    detail: The county's first edition. 90 teams nationwide, 8 finalists; Finctory won the top award with oSave, NT$60,000
+  '2025 臺灣數創大賞 - 銅獎':
+    title: Taiwan Digital Innovation Awards - Bronze
+    org: Industrial Park Administration, Ministry of Economic Affairs
+    note: Entered with Finctory's SurPrice
+  '2024-12 臺北市智慧城市青年舉政徵件提案競賽 - 佳作（第四名）':
+    title: Taipei Smart City Youth Policy Proposal Competition - Honourable Mention (4th)
+    org: Department of Youth Affairs, Taipei City Government
+  '2024-12 2024 新生知訊網 副執行長（卸任）':
+    title: NCU Freshman Portal 2024 - Deputy Executive (term ended)
+    org: Counseling Center, National Central University
+    detail: Led four teams - planning, engineering, design, video - 30 people in all, delivering the freshman information platform with a pixel-art campus map and an AI assistant; served 1,000+ freshmen.
+  '2024-11 第 29 屆大專校院資訊應用服務創新競賽 資安應用組 - 第一名':
+    title: 29th Information Application Service Innovation Contest, Security track - 1st place
+    org: Ministry of Digital Affairs · Ministry of Education · Chinese Society for Management of Information Systems
+  '2024-11 第 29 屆大專校院資訊應用服務創新競賽 資訊應用組 IP-06 - 佳作':
+    title: 29th Information Application Service Innovation Contest, Applications track IP-06 - Honourable Mention
+    org: Ministry of Digital Affairs · Ministry of Education · Chinese Society for Management of Information Systems
+  '2024-11 臺灣數創大賞 數位＋組 - 金獎':
+    title: Taiwan Digital Innovation Awards, Digital+ track - Gold
+    org: Industrial Park Administration, MOEA · Taichung Software Park alliance · Tunghai University
+  '2024-11 運用知識圖譜與大型語言模型分析學習軌跡':
+    title: Analysing learning trajectories with knowledge graphs and LLMs
+    org: Center for General Education, National Central University
+    publication: LAK 2025, International Learning Analytics & Knowledge Conference · Practitioner track
+    detail: An LLM turns course material into structured data to build a personal knowledge graph, then compares it against test results to find gaps in coverage; trialled in NCU's Python programming course.
+  '2024-10 GenAI Stars 生成式 AI 百工百業應用選拔 創意創客組 - 優選':
+    title: GenAI Stars, Creative Maker track - Merit
+    org: National Science and Technology Council · Taipei Computer Association
+    detail: Entry - Ched.AI, automated financial-statement analysis and credit-risk assessment
+  '2024-09 桃園新創之星 X 創天下競賽 - 入圍決賽（前 10）':
+    title: Taoyuan Startup Star competition - finalist (top 10)
+    org: Chung Yuan Christian University · Taoyuan Youth Affairs Bureau
+  '2024-07 發票醫生 Invoice Doctor':
+    title: Invoice Doctor
+    org: Finctory
+    detail: The MVP. Pulled e-invoices from the Ministry of Finance and turned them into personal financial advice through an LLM multi-agent architecture - categorisation, spending analysis, price comparison and a conversational assistant. Pivoted to oSave in May 2025.
+  '2024-06 第六屆 Startup 創業競技場 國內組 - 第一名':
+    title: 6th Startup Arena, domestic track - 1st place
+    org: National Taiwan Normal University · Ministry of Education
+  '2024-06 桃園青創力學生創業競賽 - 佳作':
+    title: Taoyuan Youth Startup Competition - Honourable Mention
+    org: Lunghwa University of Science and Technology · Taoyuan Youth Affairs Bureau
+  '2024-06 112 學年度第 2 學期 系優秀學生':
+    title: Outstanding Student of the Department, spring 2024
+    org: Department of Information Management, NCU
+    detail: Two nominated per semester
+  '2024-06 112 學年度 管理學院院長獎':
+    title: Dean's Award, School of Management, 2023–24
+    org: School of Management, NCU
+    detail: Top 5 of the class for the year
+  '2024-05 第七屆致青春・創未來全國選拔大賽 科技應用組 - 優等獎':
+    title: 7th national youth innovation competition, Technology track - Excellence Award
+    org: Chihlee University of Technology
+  '2024-04 共同創辦 斐闊 Finctory，出任技術長':
+    title: Co-founded Finctory as CTO
+    org: Finctory Co., Ltd.
+    detail: Team formed and product work began (incorporated 5 June 2025). Responsible for system architecture, AI technology choices and the engineering team. Led the team through admission to five startup hubs and incubators.
+  '2024-03 PhishForge 畢業專題開發':
+    title: PhishForge, capstone project
+    org: Department of Information Management, National Central University
+    detail: Generative-AI security-drill platform - custom phishing mail and lookalike sites generated and deployed to the cloud, with behaviour data to measure an organisation's awareness. The same topic became the 2024 NSTC grant "Generative AI in social engineering".
+  '2024-01 中央新創擂台賽 - 優選':
+    title: NCU Startup Arena - Merit
+    org: National Central University
+  '2023-10 2024 新生知訊網 副執行長（就任）':
+    title: NCU Freshman Portal 2024 - Deputy Executive
+    org: Counseling Center, National Central University
+  '2023-09 共同創辦 United Developer Club，任副召集人':
+    title: Co-founded United Developer Club, vice convener
+    org: Center for Teaching and Learning Development, NCU
+    detail: Ran a project-based course, Python Projects from Zero, and connected the campus's scattered developer communities
+  '2023-09 網路管理工程師':
+    title: Network administrator
+    org: Graduate Institute of Learning and Instruction, NCU
+    detail: Hardware diagnosis and repair cut network downtime by 40%; rebuilt the WordPress site for 50% faster loads
+  '2023-09 金匠獎程式競賽 Python 個人組 - 優獎':
+    title: Golden Craftsman Programming Contest, Python individual - Merit
+    org: Pro-Skill Computer · Mitac Information Technology
+  '2023-07 研究助理':
+    title: Research assistant
+    org: National Central University (faculty research project)
+    detail: Training, tuning and evaluating ML and deep-learning models; LLM prompt engineering and fine-tuning; fintech data processing and paper writing. Three years.
+  '2022-10 SAP S/4HANA & Basis 學生團隊':
+    title: SAP S/4HANA & Basis student team
+    org: ERP Center, National Central University
+    detail: Trained in the first year, summer instructor in the second, preparing material and teaching
+  '2022-09 入學 國立中央大學 資訊管理學系':
+    title: Entered Information Management, National Central University
+    detail: Later completed the credit programs in Cross-domain Applications of AI and in Business Intelligence & Analytics

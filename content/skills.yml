@@ -41,6 +41,10 @@ nodes:
   - { name: Flutter, layer: client, tier: shipped-prod, evidence: '/work/osave' }
   - { name: Dart, layer: client, tier: shipped-prod, evidence: '/work/osave' }
   - { name: BLoC, layer: client, tier: shipped-prod, evidence: '/work/osave' }
+  # 這個網站的開場桌子：Blender 建模、烘焙光照，three.js 播放。
+  - { name: Blender, layer: client, tier: shipped-prod, evidence: 'https://github.com/OG-Matcha/Personal_Web' }
+  # tessera：Claude Code 的 mod。
+  - { name: TypeScript, layer: client, tier: shipped-prod, evidence: 'https://github.com/OG-Matcha/tessera' }
   - { name: Chrome Extension, layer: client, tier: shipped-prod, evidence: 'https://chromewebstore.google.com/detail/neikbgpobachnkgcefcmedgojmedbfmk' }
   - { name: Streamlit, layer: client, tier: shipped-competition, evidence: 'https://github.com/OG-Matcha/NCU_Fresh_Web_ChatBot' }
   - { name: Gradio, layer: client, tier: shipped-competition, evidence: 'https://github.com/OG-Matcha/Credit-Report' }
@@ -65,9 +69,9 @@ nodes:
   - { name: TensorFlow, layer: agents, tier: studied, evidence: 'https://github.com/OG-Matcha/Basic-TensorFlow' }
 
   # 台積電校園黑客松第一名的參賽作品 Catalyst：Multi-Agent 軟體開發自動化。
-  - { name: AutoGen, layer: agents, tier: shipped-competition, evidence: '/#ledger' }
+  - { name: AutoGen, layer: agents, tier: shipped-competition, evidence: '/resume/#record' }
   # 工研院：全組共用的 LLM 紅隊工作流，對 OWASP LLM Top 10。
-  - { name: LLM 紅隊測試, layer: agents, tier: shipped-prod, evidence: '/#ledger' }
+  - { name: LLM 紅隊測試, layer: agents, tier: shipped-prod, evidence: '/resume/#record' }
 
   # ---- data ----
   - { name: Cloudflare D1, layer: data, tier: shipped-prod, evidence: '/work/medalink' }
@@ -79,7 +83,7 @@ nodes:
   - { name: FAISS, layer: data, tier: shipped-competition, evidence: 'https://github.com/OG-Matcha/Credit-Report' }
   - { name: MySQL, layer: data, tier: shipped-competition, evidence: 'https://github.com/OG-Matcha/BrainLib' }
   # ERP 中心受訓一年，第二年轉任暑期特約講師 —— 年表裡那一條就是佐證。
-  - { name: SAP S/4HANA, layer: data, tier: studied, evidence: '/#ledger' }
+  - { name: SAP S/4HANA, layer: data, tier: studied, evidence: '/resume/#record' }
 
   # ---- infra ----
   - { name: Cloudflare Pages, layer: infra, tier: shipped-prod, evidence: '/work/medalink' }
@@ -87,8 +91,8 @@ nodes:
   - { name: Firebase Auth, layer: infra, tier: shipped-prod, evidence: '/work/osave' }
   - { name: Cloud Messaging, layer: infra, tier: shipped-prod, evidence: '/work/osave' }
   # 工研院：全組共用的 DevSecOps 工作流，其他團隊直接沿用。
-  - { name: Gitleaks, layer: infra, tier: shipped-prod, evidence: '/#ledger' }
-  - { name: Semgrep, layer: infra, tier: shipped-prod, evidence: '/#ledger' }
+  - { name: Gitleaks, layer: infra, tier: shipped-prod, evidence: '/resume/#record' }
+  - { name: Semgrep, layer: infra, tier: shipped-prod, evidence: '/resume/#record' }
   - { name: Docker, layer: infra, tier: shipped-prod, evidence: '/work/phishforge' }
   - { name: AWS ECS, layer: infra, tier: shipped-competition, evidence: '/work/phishforge' }
   - { name: Heroku, layer: infra, tier: shipped-prod, evidence: '/work/osave' }
@@ -105,5 +109,5 @@ nodes:
   # ---------------------------------------------------------------------------
 
 certifications:
-  - { name: 'PCEP - Certified Entry-Level Python Programmer', org: Python Institute, evidence: '/#ledger' }
-  - { name: 'TOEIC 835 / 990', org: ETS, evidence: '/#ledger' }
+  - { name: 'PCEP - Certified Entry-Level Python Programmer', org: Python Institute, evidence: '/resume/#record' }
+  - { name: 'TOEIC 835 / 990', org: ETS, evidence: '/resume/#record' }

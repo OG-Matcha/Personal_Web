@@ -34,6 +34,14 @@ const ROUTES = {
   '/work/medalink/': 'work/medalink/index.html',
   '/work/phishforge/': 'work/phishforge/index.html',
   '/work/finctory/': 'work/finctory/index.html',
+  // English edition: same pages under /en/.
+  '/en/': 'en/index.html',
+  '/en/portfolio/': 'en/portfolio/index.html',
+  '/en/resume/': 'en/resume/index.html',
+  '/en/work/osave/': 'en/work/osave/index.html',
+  '/en/work/medalink/': 'en/work/medalink/index.html',
+  '/en/work/phishforge/': 'en/work/phishforge/index.html',
+  '/en/work/finctory/': 'en/work/finctory/index.html',
 }
 
 const html = Object.fromEntries(
@@ -160,8 +168,9 @@ ok(!/^Disallow: \/$/m.test(robots), 'robots.txt does not block the site')
 // ---------- internal linking ----------
 // Both were prerendered, in the sitemap, and reachable from nowhere.
 for (const [route, h] of Object.entries(html)) {
-  ok(h.includes('href="/portfolio/"'), `${route} links to /portfolio/`)
-  ok(h.includes('href="/resume/"'), `${route} links to /resume/`)
+  const pre = route.startsWith('/en/') ? '/en' : ''
+  ok(h.includes(`href="${pre}/portfolio/"`), `${route} links to ${pre}/portfolio/`)
+  ok(h.includes(`href="${pre}/resume/"`), `${route} links to ${pre}/resume/`)
 }
 
 // ---------- no destination duplicates another ----------
@@ -169,7 +178,7 @@ for (const [route, h] of Object.entries(html)) {
 // tabs already reached: /portfolio rendered exactly the components the
 // homepage rendered. Crawlability was fixed and the information architecture
 // was broken, and nothing here noticed.
-const navHrefs = [...html['/portfolio/'].matchAll(/<a href="([^"]*)" class="nav-link"/g)].map(
+const navHrefs = [...html['/portfolio/'].matchAll(/<a href="([^"]*)" class="hd-link"/g)].map(
   (m) => m[1]
 )
 ok(navHrefs.length > 0, `header nav renders (${navHrefs.length} tabs)`)
@@ -180,7 +189,7 @@ ok(
 
 // `也做過` is the block that made /portfolio a duplicate. Whichever route owns
 // it, exactly one may.
-const owners = Object.entries(html).filter(([, h]) => h.includes('class="tile"'))
+const owners = Object.entries(html).filter(([r]) => !r.startsWith('/en/')).filter(([, h]) => h.includes('class="ab-item"'))
 ok(owners.length === 1, `the "也做過" index lives on exactly one route (${owners.map(([r]) => r).join(', ') || 'none'})`)
 
 // And the homepage has to offer a way to it, or it is orphaned again.

@@ -147,6 +147,7 @@ export function pageNode(opts: {
   dateModified?: string
   /** ProfilePage names its subject; the others are merely about it. */
   primary?: boolean
+  lang?: string
 }) {
   return {
     '@type': opts.type,
@@ -154,7 +155,7 @@ export function pageNode(opts: {
     url: opts.url,
     name: opts.name,
     isPartOf: { '@id': ID.website },
-    inLanguage: 'zh-Hant-TW',
+    inLanguage: opts.lang ?? (opts.url.includes('/en/') ? 'en' : 'zh-Hant-TW'),
     ...(opts.dateModified ? { dateModified: opts.dateModified } : {}),
     ...(opts.primary
       ? { mainEntity: { '@id': ID.person } }

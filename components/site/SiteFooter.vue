@@ -1,27 +1,21 @@
 <template>
-  <!-- The closing beat already makes the ask, so this is only the colophon
-       line: no second heading, no repeated buttons. -->
-  <footer class="footer">
-    <div class="shell flex flex-wrap items-center justify-between gap-x-6 gap-y-3 py-6">
-      <p class="mono text-2xs text-ink-2">© {{ year }} 黃鉅燊 Ju-Shen Huang</p>
-
-      <!-- /portfolio and /resume were reachable from nowhere: both are
-           prerendered and in the sitemap, and no page on the site linked to
-           either. The four case-study pages are dead ends without this. -->
-      <ul class="flex flex-wrap gap-x-5 gap-y-2">
+  <!-- Who made the room and when it was last rearranged. The contact ask
+       lives at the last stop, not here. -->
+  <footer class="ft">
+    <div class="shell ft-row">
+      <p class="ft-line figures">
+        © 2026 {{ en ? 'Ju-Shen Huang 黃鉅燊' : '黃鉅燊 Ju-Shen Huang' }} · {{ en ? 'Updated' : '資料更新於' }}
+        {{ formatDate(site.asOf) }}
+      </p>
+      <ul class="ft-links">
         <li>
-          <NuxtLink to="/portfolio/" class="mono text-2xs text-ink-2 hover:text-ink">作品集</NuxtLink>
+          <NuxtLink :to="en ? '/en/portfolio/' : '/portfolio/'">{{ en ? 'All work' : '作品集' }}</NuxtLink>
         </li>
         <li>
-          <NuxtLink to="/resume/" class="mono text-2xs text-ink-2 hover:text-ink">履歷</NuxtLink>
+          <NuxtLink :to="en ? '/en/resume/' : '/resume/'">{{ en ? 'Résumé' : '履歷' }}</NuxtLink>
         </li>
-      </ul>
-
-      <ul class="flex flex-wrap gap-x-5 gap-y-2">
         <li v-for="l in links" :key="l.label">
-          <a :href="l.href" class="mono text-2xs text-ink-2 hover:text-ink" v-bind="l.attrs">
-            {{ l.label }}
-          </a>
+          <a :href="l.href" v-bind="l.attrs">{{ l.label }}</a>
         </li>
       </ul>
     </div>
@@ -30,22 +24,49 @@
 
 <script setup>
 const { site } = useContent()
-
-// Rendered at build time, so it cannot drift out of date in a static export.
-const year = 2026
+const { locale } = useLocale()
+const en = computed(() => locale.value === 'en')
 
 const links = [
-  { label: 'EMAIL', href: `mailto:${site.contact.email}` },
-  { label: 'GITHUB', href: site.contact.github, attrs: linkAttrs(site.contact.github, { me: true }) },
-  { label: 'LINKEDIN', href: site.contact.linkedin, attrs: linkAttrs(site.contact.linkedin, { me: true }) },
+  { label: 'Email', href: `mailto:${site.contact.email}` },
+  { label: 'GitHub', href: site.contact.github, attrs: linkAttrs(site.contact.github, { me: true }) },
+  { label: 'LinkedIn', href: site.contact.linkedin, attrs: linkAttrs(site.contact.linkedin, { me: true }) },
 ]
 </script>
 
 <style scoped>
-.footer {
+.ft {
   position: relative;
   z-index: 1;
   background: var(--bg);
   border-top: 1px solid var(--rule);
+}
+
+.ft-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-4) var(--sp-7);
+  padding-block: var(--sp-6);
+  font-size: var(--step--1);
+  color: var(--ink-3);
+}
+
+.ft-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-5);
+  margin-left: auto;
+}
+
+.ft-links a {
+  color: var(--ink-2);
+  text-decoration: none;
+}
+
+.ft-links a:hover {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--pop-ink);
 }
 </style>

@@ -1261,7 +1261,7 @@ useHead({
 | Nuxt PageTransition 毀掉 ScrollTrigger（論壇） | https://gsap.com/community/forums/topic/35726-nuxt-3-pagetransition-destroys-scrolltrigger/ | 正是本 repo 的問題 |
 | 被 transform 的元素上 pin（論壇） | https://gsap.com/community/forums/topic/32421-scrolltrigger-pinning-a-transformed-element/ | `will-change` 為何等同 `transform` 地破壞 `position: fixed` |
 | 手機停用 pin（論壇） | https://gsap.com/community/forums/topic/24700-disable-scroll-trigger-pinning-on-mobile/ | — |
-| GSAP 官方 agent skills | https://github.com/greensock/gsap-skills | **本機已有**：`gsap-skills plugin 的 skills/ 目錄`。`gsap-scrolltrigger/SKILL.md` 的「Do Not」清單、`gsap-frameworks/SKILL.md` 的 Nuxt 段、`gsap-performance/SKILL.md` 的 `quickTo`。**先讀這些再讀線上文件** |
+| GSAP 官方 agent skills | https://github.com/greensock/gsap-skills | **本機已有**：Claude Code 的 gsap-skills plugin（`skills/` 目錄）。`gsap-scrolltrigger/SKILL.md` 的「Do Not」清單、`gsap-frameworks/SKILL.md` 的 Nuxt 段、`gsap-performance/SKILL.md` 的 `quickTo`。**先讀這些再讀線上文件** |
 | GSAP 授權變更說明 | https://webflow.com/blog/gsap-becomes-free · https://css-tricks.com/gsap-is-now-completely-free-even-for-commercial-use/ | — |
 
 ### Demo（可直接抄的）

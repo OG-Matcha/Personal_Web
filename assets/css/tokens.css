@@ -1,51 +1,63 @@
 /* ---------------------------------------------------------------------------
-   Design tokens
-   Palette: cool monochrome + one saturated accent. Deliberately NOT the
-   warm-paper / serif / earth-tone family, which is the single most common
-   AI-generated look and reads as templated on sight.
-   The accent is a fill colour first (dark text on lime), never a glow.
+   Design tokens - a person beside the road.
+
+   The homepage is about one person: who he is on the left, how he thinks,
+   the road he took and what he built on the right. Light is a warm
+   putty-coloured page by day; dark is the same page at night. Cards sit on
+   it with soft, downward shadows.
+
 --------------------------------------------------------------------------- */
 
 :root {
-  /* One theme, dark. There is no toggle.
-     The homepage is a film shot in a near-black room; the light variant made
-     the particle field read as faint grey dust on white and there was no way
-     to fix that without designing a second, different film. A site with two
-     themes where one of them is worse is a site with one theme and a bug. */
-  --bg: #0c0d0f;
-  --surface: #141619;
-  --ink: #edeef0; /* 16.8:1 AAA */
-  --ink-2: #9aa0a8; /* 7.4:1  AA  */
-  --rule: #23262b;
-  --rule-strong: #575d66; /* 3.1:1 non-text UI */
+  color-scheme: light;
 
-  /* Accent has two roles that must not be swapped:
-     --pop  is a FILL. Text sitting on it is --on-pop (15.1:1).
-     --pop-ink is accent-coloured type, which on this ground is the same hue. */
-  --pop: #c8f250;
-  --pop-ink: #c8f250;
-  --on-pop: #0c0d0f;
+  --bg: #efe9e0; /* studio wall, day */
+  --surface: #fbf8f3; /* a card propped in front of the plinth */
+  --surface-2: #f5f0e8;
+  --ink: #1e1b18; /* 16.2:1 on --surface */
+  --ink-2: #4b453f; /* 8.9:1 */
+  --ink-3: #6a6259; /* 5.7:1 */
+  --rule: #dcd3c7;
+  --rule-strong: #857c71; /* 3.6:1 non-text */
+
+  /* Terracotta: the one colour that means "act here". */
+  --pop: #c44a24;
+  --pop-ink: #b2411d; /* 5.4:1 as type */
+  --on-pop: #ffffff; /* 4.8:1 on --pop */
+  --select: #f3d27a;
+
+  /* Secondary hues, used only as small markers (status dots, a name block). */
+  --clay-terracotta: #cf603a;
+  --clay-sky: #94bcdf;
+  --clay-sage: #9cc0a4;
+  --clay-butter: #f0cd7c;
+  --clay-lilac: #b2aae4;
+
+  /* Soft studio light falling from upper left. */
+  --shadow-rgb: 64 44 24;
+  --shadow-1: 0 1px 2px rgb(var(--shadow-rgb) / 0.08), 0 6px 16px -6px rgb(var(--shadow-rgb) / 0.16);
+  --shadow-2: 0 2px 4px rgb(var(--shadow-rgb) / 0.06), 0 24px 48px -16px rgb(var(--shadow-rgb) / 0.28);
 
   /* ---- type ---- */
   --font-display: 'Archivo', 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
-  --font-body: 'IBM Plex Sans', 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, 'Noto Sans TC', monospace;
+  --font-body: 'Archivo', 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  --font-mono: 'Archivo', 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
 
   --step--1: clamp(0.8125rem, 0.79rem + 0.11vw, 0.875rem);
   --step-0: clamp(1rem, 0.97rem + 0.15vw, 1.0625rem);
   --step-1: clamp(1.125rem, 1.08rem + 0.23vw, 1.25rem);
   --step-2: clamp(1.375rem, 1.28rem + 0.48vw, 1.75rem);
   --step-3: clamp(1.75rem, 1.53rem + 1.07vw, 2.5rem);
-  --step-4: clamp(2.5rem, 1.96rem + 2.68vw, 4.25rem);
-  --step-5: clamp(3.25rem, 1.7rem + 7.77vw, 8rem);
+  --step-4: clamp(2.25rem, 1.7rem + 2.6vw, 4rem);
+  --step-5: clamp(2.5rem, 1.2rem + 5.6vw, 5.5rem);
 
-  --lh-display-han: 1;
-  --lh-body-han: 1.75;
+  --lh-display-han: 1.12;
+  --lh-body-han: 1.8;
   --lh-body-latin: 1.55;
   --measure-latin: 62ch;
-  --measure-han: 30em;
+  --measure-han: 32em;
 
-  /* ---- space / shape ---- */
+  /* ---- space ---- */
   --sp-1: 4px;
   --sp-2: 8px;
   --sp-3: 12px;
@@ -56,15 +68,15 @@
   --sp-8: 64px;
   --sp-9: 96px;
   --sp-10: 128px;
-  --sp-section: clamp(4rem, 2rem + 9vw, 8rem);
+  --sp-section: clamp(4rem, 2rem + 8vw, 8rem);
 
-  /* Height of the sticky header. The cinema overlay starts below it, so this
-     has to be a token rather than a number repeated in two components. */
-  --header-h: 4.25rem;
+  --header-h: 4rem;
 
-  /* One radius system: everything is sharp except pills. No mixed scales. */
+  /* Clay is soft: everything a hand could press has a radius. */
   --r-0: 0px;
-  --r-1: 3px;
+  --r-1: 8px;
+  --r-2: 14px;
+  --r-3: 24px;
   --r-full: 9999px;
 
   /* ---- motion ---- */
@@ -73,8 +85,43 @@
   --dur-1: 140ms;
   --dur-2: 280ms;
   --dur-3: 520ms;
+}
 
-  --elev-1: 0 1px 2px rgb(0 0 0 / 0.5), 0 16px 40px -16px rgb(0 0 0 / 0.7);
+/* The studio at night. Chosen by the system unless the reader picked a side. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --bg: #12141c;
+    --surface: #1c1f2a;
+    --surface-2: #232736;
+    --ink: #efebe4; /* 13.8:1 on --surface */
+    --ink-2: #bdb7ae; /* 8.3:1 */
+    --ink-3: #979187; /* 5.3:1 */
+    --rule: #2c3040;
+    --rule-strong: #6a7086;
+    --pop: #ff8a5b; /* lamp-lit terracotta */
+    --pop-ink: #ff9a70; /* 7.9:1 */
+    --on-pop: #1a0f0a;
+    --select: #6c5bd4;
+    --shadow-rgb: 0 0 0;
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #12141c;
+  --surface: #1c1f2a;
+  --surface-2: #232736;
+  --ink: #efebe4;
+  --ink-2: #bdb7ae;
+  --ink-3: #979187;
+  --rule: #2c3040;
+  --rule-strong: #6a7086;
+  --pop: #ff8a5b;
+  --pop-ink: #ff9a70;
+  --on-pop: #1a0f0a;
+  --select: #6c5bd4;
+  --shadow-rgb: 0 0 0;
 }
 
 /* ---------------------------------------------------------------------------
@@ -86,6 +133,13 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
+/* Han text wants more leading than Latin. Set once on body and inherited,
+   never on :lang() itself - that rule would match every descendant and undo
+   every heading's own line-height. */
+html:lang(zh-Hant) body {
+  line-height: var(--lh-body-han);
+}
+
 body {
   background: var(--bg);
   color: var(--ink);
@@ -93,13 +147,14 @@ body {
   font-size: var(--step-0);
   line-height: var(--lh-body-latin);
   text-autospace: normal;
+  font-feature-settings: 'tnum' 0;
   -webkit-font-smoothing: antialiased;
+  transition: background-color var(--dur-3) var(--ease-inout), color var(--dur-3) var(--ease-inout);
 }
 
 :lang(zh-Hant),
 :lang(zh-TW) {
   letter-spacing: 0;
-  line-height: var(--lh-body-han);
   word-break: normal;
   overflow-wrap: anywhere;
   line-break: strict;
@@ -112,12 +167,12 @@ h4,
 .display {
   font-family: var(--font-display);
   font-weight: 700;
+  font-stretch: 108%;
   line-height: 1.05;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.015em;
   text-wrap: balance;
 }
 
-/* Latin tracking is wrong for 漢字; negative tracking closes the em box. */
 h1:lang(zh-Hant),
 h2:lang(zh-Hant),
 h3:lang(zh-Hant),
@@ -128,18 +183,24 @@ h4:lang(zh-Hant),
 }
 
 .mono,
+.figures,
+time {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+
 code,
 kbd,
 samp {
-  font-family: var(--font-mono);
-  font-variant-numeric: tabular-nums;
+  font-family: ui-monospace, monospace;
 }
 
 a {
   color: inherit;
   text-decoration-color: var(--rule-strong);
-  text-underline-offset: 0.22em;
+  text-underline-offset: 0.24em;
   text-decoration-thickness: 1px;
+  transition: text-decoration-color var(--dur-1);
 }
 
 a:hover {
@@ -149,43 +210,21 @@ a:hover {
 :focus-visible {
   outline: 2px solid var(--pop-ink);
   outline-offset: 3px;
-  border-radius: var(--r-1);
+  border-radius: 4px;
 }
 
 ::selection {
-  background: var(--pop);
-  color: var(--on-pop);
+  background: var(--select);
+  color: var(--ink);
+}
+
+input,
+textarea {
+  caret-color: var(--pop-ink);
 }
 
 [id] {
-  scroll-margin-top: 5rem;
-}
-
-/* ---- the film gate ------------------------------------------------------
-   The homepage ships its loading cover in the SSR markup, and only JavaScript
-   can ever lift it. So it is not displayed until the inline head script has
-   proved there is JavaScript here to do that. */
-.film-gate {
-  display: none;
-}
-
-html.js .film-gate {
-  display: grid;
-}
-
-/* Set by the inline head script if the app has not lifted the gate on its own
-   within eight seconds. Vue's own timeout lives inside onMounted, so it is no
-   use in the one case that matters: hydration never happening. */
-html.gate-off .film-gate {
-  display: none !important;
-}
-
-/* Set while the film gate is up. Scrolling behind a cover moves the copy
-   without moving the camera, which is exactly the broken-looking state the
-   gate exists to hide. */
-html.gate-locked,
-html.gate-locked body {
-  overflow: hidden;
+  scroll-margin-top: calc(var(--header-h) + 1.5rem);
 }
 
 .scroll-x {

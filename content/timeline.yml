@@ -17,12 +17,20 @@
 # evidence: 得獎公告 / repo / DOI 的 URL。null 代表還沒補。
 # -----------------------------------------------------------------------------
 
+- date: 2026-11
+  kind: award
+  lane: contest
+  title: 2026 臺北秋季程式設計節 城市通微服務大黑客松 - 佳作
+  org: 臺北市政府資訊局
+  note: 隊名「得獎的是!?」；85 組報名、40 組進入決賽
+  # 新聞稿：「得獎的是!?」、「全員被電組」及「AI城市起風」3 組團隊獲頒佳作
+  evidence: https://n.yam.com/Article/20261111908798
+
 - date: 2026-09
   kind: education
   lane: academic
   title: 國立中央大學 資訊管理學系 碩士班 入學
-  detail: 日間，2026-09 至 2028-06
-  upcoming: true
+  detail: 日間，2026-09 起在學，預計 2028-06 畢業
   evidence: null
 
 - date: 2026-07
