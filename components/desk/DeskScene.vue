@@ -260,6 +260,9 @@ onMounted(() => {
   addEventListener('scroll', readScroll, { passive: true })
   addEventListener('resize', readScroll)
   if (navigator.connection?.saveData) return
+  // A machine without a GPU draws WebGL on the CPU (SwiftShader, llvmpipe):
+  // the room would freeze the page for seconds, so the still stays.
+  if (softwareGL()) return
   // The page paints first; the room loads after. If it fails, the still stays.
   const go = () =>
     start().catch(() => dispose?.())
@@ -273,6 +276,19 @@ onBeforeUnmount(() => {
   removeEventListener('resize', readScroll)
   dispose?.()
 })
+
+function softwareGL() {
+  try {
+    const gl = document.createElement('canvas').getContext('webgl', { failIfMajorPerformanceCaveat: true })
+    if (!gl) return true
+    const info = gl.getExtension('WEBGL_debug_renderer_info')
+    const name = info ? gl.getParameter(info.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER)
+    gl.getExtension('WEBGL_lose_context')?.loseContext()
+    return /swiftshader|llvmpipe|software|basic render/i.test(String(name))
+  } catch {
+    return true
+  }
+}
 
 async function start() {
   const owned = [] // GPU things to free on the way out
