@@ -53,7 +53,7 @@
           >
             <span class="pp-nav-line" aria-hidden="true" />
             {{ s.label }}
-            <span v-if="s.id === 'record' && year" class="pp-nav-year figures" aria-hidden="true">
+            <span v-if="s.id === 'record' && active === 'record' && year" class="pp-nav-year figures" aria-hidden="true">
               <Transition name="pp-roll" mode="out-in"
                 ><span :key="year">{{ year }}</span></Transition
               >
@@ -347,9 +347,9 @@ const counts = computed(() =>
         { n: site.counts.researchGrants, label: 'NSTC research grants' },
       ]
     : [
-        { n: site.counts.awards, label: '項競賽獎項' },
-        { n: site.counts.topPrizes, label: '座全國首獎' },
-        { n: site.counts.researchGrants, label: '個國科會研究計畫' },
+        { n: site.counts.awards, label: '競賽獎項' },
+        { n: site.counts.topPrizes, label: '全國首獎' },
+        { n: site.counts.researchGrants, label: '國科會研究計畫' },
       ]
 )
 
@@ -994,6 +994,9 @@ async function startWalk() {
 .pp-counts div {
   display: flex;
   flex-direction: column-reverse;
+  /* Reversed, flex-end is the top: the figures share one line however many
+     lines their labels take. */
+  justify-content: flex-end;
 }
 
 .pp-counts dd {

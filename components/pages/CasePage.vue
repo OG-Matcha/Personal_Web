@@ -368,6 +368,11 @@ function goBack() {
     align-items: center;
   }
 
+  /* The screen moves to the right on even rows and keeps the wide column. */
+  .hl:not(.hl--phone) .hl-item:nth-child(even) {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+  }
+
   .hl:not(.hl--phone) .hl-item:nth-child(even) .screen {
     order: 2;
   }
@@ -375,6 +380,13 @@ function goBack() {
 
 .hl--phone .hl-text {
   margin-top: var(--sp-5);
+}
+
+/* Stacked on a phone, a wide screen still needs air before its heading. */
+@media (max-width: 759px) {
+  .hl:not(.hl--phone) .screen + .hl-text {
+    margin-top: var(--sp-5);
+  }
 }
 
 .hl-text h3 {
@@ -635,6 +647,8 @@ function goBack() {
 
 .hl-item--text {
   display: block !important;
+  /* A words-only card beside phone screens keeps its own height, not theirs. */
+  align-self: start;
   padding: var(--sp-6);
   border-radius: var(--r-3);
   background: var(--surface-2);

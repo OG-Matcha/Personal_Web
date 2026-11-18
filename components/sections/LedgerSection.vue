@@ -210,8 +210,15 @@ const oldestYear = computed(() => yearOf(entries.value[entries.value.length - 1]
   font-weight: 600;
 }
 
+/* The proof under each line: underlined, so it reads as something to open. */
 .lg-links a {
+  text-decoration-line: underline;
   text-decoration-color: var(--pop-ink);
+  text-decoration-thickness: 1.5px;
+}
+
+.lg-links a:hover {
+  color: var(--pop-ink);
 }
 
 .lg-foot {

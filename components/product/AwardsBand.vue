@@ -51,9 +51,9 @@ const counts = computed(() =>
         { n: site.counts.researchGrants, label: 'NSTC research grants' },
       ]
     : [
-        { n: site.counts.awards, label: '項競賽獎項' },
-        { n: site.counts.topPrizes, label: '座全國首獎' },
-        { n: site.counts.researchGrants, label: '個國科會研究計畫' },
+        { n: site.counts.awards, label: '競賽獎項' },
+        { n: site.counts.topPrizes, label: '全國首獎' },
+        { n: site.counts.researchGrants, label: '國科會研究計畫' },
       ]
 )
 

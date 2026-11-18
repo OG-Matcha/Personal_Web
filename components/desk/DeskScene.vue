@@ -1128,7 +1128,13 @@ async function start() {
   right: clamp(var(--sp-4), 3vw, var(--sp-7));
   top: 50%;
   gap: 0;
+  padding: 4px 0;
   transform: translateY(-50%);
+  /* A pill of page colour behind the dots, so they read over the green
+     snack bag and the dark desk mat as well as over the wall. */
+  border-radius: var(--r-full);
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  box-shadow: var(--shadow-1);
 }
 
 .dk-dots button {
@@ -1179,7 +1185,7 @@ async function start() {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: color-mix(in srgb, var(--ink) 30%, transparent);
+  background: color-mix(in srgb, var(--ink) 40%, transparent);
   transition:
     transform 300ms var(--ease-entrance),
     background-color 300ms;

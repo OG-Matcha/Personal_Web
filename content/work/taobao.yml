@@ -6,6 +6,7 @@
 # Highlight 1 is a real capture: the extension's own content script injected into
 # world.taobao.com (no sign-in), only the rate stubbed at 4.38; sellers' photos and
 # product names are blurred the way the store image does. (.audit/tb/shot.mjs, 2026-11-18)
+# Cropped to the Taobao header and four columns, so the NT$ tags, not the blur, carry the frame.
 # 彈出視窗的圖是把 dist/popup.html 單獨打開截的（匯率是示意值）。
 # -----------------------------------------------------------------------------
 
