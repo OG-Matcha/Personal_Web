@@ -9,6 +9,11 @@
 --------------------------------------------------------------------------- */
 
 :root {
+  /* The page grid: one width and one left edge for every page, the edge the
+     header's name sits on (the bar is 72rem inside a 12px margin, and the
+     name 24px into it; on phones 8px + 16px). */
+  --page-w: calc(72rem + 2 * 12px);
+  --page-gut: 24px;
   color-scheme: light;
 
   --bg: #efe9e0; /* studio wall, day */
@@ -160,6 +165,12 @@ body {
   line-break: strict;
 }
 
+@media (min-width: 561px) {
+  :root {
+    --page-gut: 36px;
+  }
+}
+
 h1,
 h2,
 h3,
@@ -180,6 +191,17 @@ h4:lang(zh-Hant),
 .display:lang(zh-Hant) {
   letter-spacing: 0;
   line-height: var(--lh-display-han);
+  /* Break Chinese headings only at spaces and punctuation, never inside a
+     word or a name (醫數行／銷). overflow-wrap: anywhere above still breaks
+     a run that would not fit at all. */
+  word-break: keep-all;
+}
+
+/* No one-character last line (做完。) in running text. */
+p,
+li,
+dd {
+  text-wrap: pretty;
 }
 
 .mono,

@@ -25,14 +25,14 @@ const t = computed(() =>
   locale.value === 'en'
     ? {
         title: 'Work',
-        lede: 'Case studies first: what was decided, what was not, and what it cost. Smaller projects follow.',
-        count: `${works.length} case studies · ${alsoBuilt.length} more`,
+        lede: 'Four products first: what each one does, who uses it, and the part I built. Smaller projects follow.',
+        count: `${works.length} products · ${alsoBuilt.length} more`,
         also: 'Also built',
       }
     : {
         title: '作品集',
-        lede: '先放寫成案例研究的四件：當時的決策、沒選的選項，以及那個選擇的代價。其餘的列在後面。',
-        count: `${works.length} 件案例研究 · 另外 ${alsoBuilt.length} 件`,
+        lede: '先放四個產品：各自做什麼、給誰用、哪一塊是我做的。其餘的列在後面。',
+        count: `${works.length} 個產品 · 另外 ${alsoBuilt.length} 件`,
         also: '也做過',
       }
 )

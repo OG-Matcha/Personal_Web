@@ -10,6 +10,7 @@
   <div class="pp">
     <aside class="pp-me" :aria-label="c.meLabel">
       <div ref="meIn" class="pp-me-in">
+        <div class="pp-badge">
         <div class="pp-id">
           <img
             class="pp-face"
@@ -24,13 +25,13 @@
           </p>
         </div>
 
-        <h1 class="pp-thesis">{{ c.thesis }}</h1>
         <p class="pp-role">
           <template v-for="(r, i) in c.role.split(' · ')" :key="r"
             ><span v-if="i" aria-hidden="true"> · </span
             ><span class="pp-role-part">{{ r }}</span></template
           >
         </p>
+        </div>
 
         <div class="pp-now">
           <h2 class="pp-now-h">{{ c.nowH }}</h2>
@@ -146,7 +147,7 @@
               v-bind="w.internal ? { to: w.href } : { href: w.href, ...linkAttrs(w.href) }"
               class="pp-work-link"
             >
-              <SiteShot class="pp-work-shot" :src="w.img" :width="w.w" :height="w.h" />
+              <span class="pp-device"><SiteShot class="pp-work-shot" fit="cover" sizes="(min-width: 1024px) 50vw, 100vw" :src="w.img" :width="w.w" :height="w.h" /></span>
               <div class="pp-work-body">
                 <p class="pp-work-meta">
                   <span>{{ w.when }}</span>
@@ -173,13 +174,15 @@
       <!-- Contact -->
       <section id="contact" class="pp-sec pp-contact" aria-labelledby="contact-h" data-spy>
         <h2 id="contact-h" class="pp-h">{{ c.contactH }}</h2>
+        <div class="pp-note reveal">
         <p class="pp-lede">{{ c.contactLede }}</p>
-        <p class="pp-mail reveal">
+        <p class="pp-mail">
           <!-- If it has to wrap, it wraps before the @, never inside a word. -->
           <a :href="`mailto:${site.contact.email}`"
             >{{ site.contact.email.split('@')[0] }}<wbr />@{{ site.contact.email.split('@')[1] }}</a
           >
         </p>
+        </div>
       </section>
     </div>
   </div>
@@ -562,8 +565,12 @@ async function startWalk() {
       invalidateOnRefresh: true,
       onRefresh: measure,
       onUpdate: (st) => {
-        const y = st.progress * span
-        toTrail(st.progress)
+        // Never past the last year, and close to a year it settles on that
+        // year's dot, so the two never sit a few pixels apart like a double dot.
+        let y = Math.min(st.progress * span, marks[marks.length - 1] ?? span)
+        const near = marks.find((m) => Math.abs(y - m) < 28)
+        if (near !== undefined) y = near
+        toTrail(y / span)
         toWalker(y)
         let r = -1
         marks.forEach((m, i) => {
@@ -578,8 +585,8 @@ async function startWalk() {
 
 <style scoped>
 .pp {
-  --gut: clamp(var(--sp-4), 5vw, var(--sp-8));
-  max-width: 80rem;
+  --gut: var(--page-gut);
+  max-width: var(--page-w);
   margin-inline: auto;
   padding-inline: var(--gut);
 }
@@ -696,15 +703,20 @@ async function startWalk() {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--sp-2) var(--sp-4);
+  gap: var(--sp-1) var(--sp-2);
   margin-top: var(--sp-6);
+  margin-left: calc(-1 * var(--sp-3));
   list-style: none;
 }
 
 .pp-links a {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: var(--sp-2);
+  min-width: 44px;
+  min-height: 44px;
+  padding-inline: var(--sp-3);
   color: var(--ink-2);
   text-decoration: none;
   transition: color 160ms var(--ease-entrance);
@@ -739,14 +751,40 @@ async function startWalk() {
   color: var(--ink-2);
 }
 
+/* A page torn from the notebook on the desk: punched holes and a red
+   margin line down the left. No ruled lines: Latin words set in Archivo
+   inside Han text stretch some line boxes, so rules drift off the text. */
 .pp-prose {
+  position: relative;
   display: grid;
-  gap: var(--sp-5);
+  gap: 1lh;
   margin-top: var(--sp-6);
   max-width: 36em;
+  padding: 1lh clamp(1rem, 4%, 2rem) 1lh calc(clamp(1rem, 4%, 2rem) + 1.75rem);
   font-size: var(--step-1);
   line-height: 1.85;
   color: var(--ink-2);
+  border-radius: 4px var(--r-1) var(--r-1) 4px;
+  background:
+    radial-gradient(circle at 0.85rem 50%, var(--bg) 0 0.32rem, rgb(var(--shadow-rgb) / 0.12) 0.34rem, transparent 0.42rem) 0 0 / 100% 2.75rem repeat-y,
+    linear-gradient(90deg, transparent calc(clamp(1rem, 4%, 2rem) + 0.75rem), var(--margin-line) 0 calc(clamp(1rem, 4%, 2rem) + 0.75rem + 1.5px), transparent 0),
+    var(--paper);
+  box-shadow: var(--shadow-2);
+  transform: rotate(-0.4deg);
+  --paper: #fffdf8;
+  --margin-line: rgb(207 96 58 / 0.55);
+}
+
+:root[data-theme='dark'] .pp-prose {
+  --paper: #232633;
+  --margin-line: rgb(255 138 91 / 0.45);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .pp-prose {
+    --paper: #232633;
+      --margin-line: rgb(255 138 91 / 0.45);
+  }
 }
 
 .pp-prose p:first-child {
@@ -830,7 +868,8 @@ async function startWalk() {
 }
 
 .pp-road-wrap.is-live .pp-stop:not(.is-lit) > :not(.pp-dot) {
-  opacity: 0.45;
+  /* Quieter, still readable: the text ahead keeps 4.5:1 in both themes. */
+  opacity: 0.72;
   transform: translateY(10px);
 }
 
@@ -841,7 +880,8 @@ async function startWalk() {
 }
 
 .pp-road-wrap.is-live .pp-stop:not(.is-lit) .pp-events li {
-  opacity: 0.35;
+  /* The stop's own dimming already applies; the rows only slide. */
+  opacity: 1;
   transform: translateX(-6px);
 }
 
@@ -943,10 +983,11 @@ async function startWalk() {
   font-weight: 600;
 }
 
+/* Three equal columns at every width: never two and a stray one. */
 .pp-counts {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--sp-5) var(--sp-8);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--sp-5) var(--sp-4);
   margin-top: var(--sp-8);
 }
 
@@ -993,30 +1034,63 @@ async function startWalk() {
 
 .pp-work-link {
   display: grid;
-  grid-template-columns: 11rem 1fr;
+  grid-template-columns: 1fr;
   gap: var(--sp-5);
   padding: var(--sp-4);
   border-radius: var(--r-3);
   color: inherit;
   text-decoration: none;
-  transition:
-    background-color 200ms var(--ease-entrance),
-    box-shadow 200ms var(--ease-entrance),
-    transform 200ms var(--ease-entrance);
 }
 
-.pp-work-link:hover,
+/* No card behind it on hover: the laptop's base is wider than its screen
+   and would stick out of one. The laptop itself lifts off the desk instead. */
+.pp-device {
+  transition:
+    transform 260ms var(--ease-entrance),
+    box-shadow 260ms var(--ease-entrance);
+}
+
+.pp-work-link:hover .pp-device,
+.pp-work-link:focus-visible .pp-device {
+  transform: translateY(-6px);
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.06) inset,
+    0 28px 40px -22px rgb(var(--shadow-rgb) / 0.55);
+}
+
 .pp-work-link:focus-visible {
-  background: var(--surface);
-  box-shadow: var(--shadow-2);
-  transform: translateY(-2px);
+  outline: 2px solid var(--pop);
+  outline-offset: 4px;
+}
+
+/* Each product on the laptop from the desk: a black bezel and the silver
+   base under it, as on the 3D desk. */
+.pp-device {
+  position: relative;
+  display: block;
+  padding: 3.2% 3.2% 4%;
+  border-radius: var(--r-2) var(--r-2) 6px 6px;
+  margin-bottom: 18px;
+  background: #16181d;
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.06) inset;
+}
+
+.pp-device::after {
+  content: '';
+  position: absolute;
+  left: -6%;
+  right: -6%;
+  bottom: -10px;
+  height: 10px;
+  border-radius: 0 0 14px 14px / 0 0 10px 10px;
+  background: linear-gradient(#d9dce2, #a9aeb8);
+  box-shadow: 0 8px 16px -8px rgb(var(--shadow-rgb) / 0.5);
 }
 
 .pp-work-shot {
   width: 100%;
   aspect-ratio: 16 / 10;
-  border-radius: var(--r-2);
-  box-shadow: 0 0 0 1px var(--rule);
+  border-radius: 3px;
 }
 
 .pp-work-meta {
@@ -1101,13 +1175,73 @@ async function startWalk() {
 
 .pp-contact {
   padding-bottom: var(--sp-9);
+  container-type: inline-size;
 }
 
+/* A note stuck on the edge of the screen: butter paper, a strip of tape. */
+.pp-note {
+  position: relative;
+  margin-top: var(--sp-6);
+  padding: var(--sp-7) clamp(1.25rem, 5cqi, 2.5rem) var(--sp-6);
+  background: #f6dc93;
+  color: #1e1b18;
+  box-shadow:
+    0 1px 1px rgb(64 44 24 / 0.1),
+    0 22px 30px -18px rgb(64 44 24 / 0.45);
+  transform: rotate(0.6deg);
+}
+
+.pp-note::before {
+  content: '';
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  width: 7rem;
+  height: 26px;
+  background: rgb(255 255 255 / 0.55);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
+  transform: translateX(-50%) rotate(-2deg);
+}
+
+.pp-note .pp-lede {
+  margin-top: 0;
+  color: #4b453f;
+}
+
+.pp-note .pp-mail a {
+  color: #1e1b18;
+  text-decoration-color: #c44a24;
+}
+
+/* The badge on its lanyard: the name and role on a card with a slot. */
+.pp-badge {
+  position: relative;
+  padding: var(--sp-6) var(--sp-5) var(--sp-5);
+  border-radius: var(--r-2);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+}
+
+.pp-badge::before {
+  content: '';
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  width: 3rem;
+  height: 8px;
+  border-radius: var(--r-full);
+  background: var(--bg);
+  box-shadow: inset 0 1px 2px rgb(var(--shadow-rgb) / 0.25);
+  transform: translateX(-50%);
+}
+
+/* Sized to its column (30 characters of a wide display face, about 17em),
+   so the address stays on one line at every width. */
 .pp-mail {
   margin-top: var(--sp-6);
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(1.3rem, 0.6rem + 2.4vw, 2.5rem);
+  font-size: clamp(1.05rem, 5.6cqi, 2.5rem);
   line-height: 1.1;
 }
 
@@ -1207,13 +1341,22 @@ async function startWalk() {
     top: min(var(--header-h), 100svh - var(--me-h, 0px));
     display: flex;
     flex-direction: column;
-    min-height: calc(100svh - var(--header-h));
+    /* Less the footer's height: at the end of the page the footer lifts the
+       grid, and a full-height column would be pushed up under the header. */
+    min-height: calc(100svh - var(--header-h) - 6rem);
     padding-block: var(--sp-7) var(--sp-6);
   }
 
   .pp-face {
     width: 4.5rem;
     height: 4.5rem;
+  }
+
+  /* Two by two, so the whole column fits a laptop screen under the header
+     and the face is never tucked behind it. */
+  .pp-now ul {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--sp-3) var(--sp-5);
   }
 
   .pp-thesis {
@@ -1310,10 +1453,15 @@ async function startWalk() {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .pp-work-link,
+  .pp-device,
   .pp-arrow,
   .pp-nav-line {
     transition: none;
+  }
+
+  .pp-work-link:hover .pp-device,
+  .pp-work-link:focus-visible .pp-device {
+    transform: none;
   }
 }
 </style>

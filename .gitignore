@@ -36,3 +36,6 @@ logs
 
 # Impeccable design-tool state (local only)
 .impeccable/
+
+# Lighthouse reports (local)
+.audit/

@@ -21,7 +21,7 @@
         </div>
 
         <div class="lg-what">
-          <h3 class="lg-title">{{ e.title }}</h3>
+          <h2 class="lg-title">{{ e.title }}</h2>
           <p v-if="e.org" class="lg-org">{{ e.org }}</p>
           <template v-if="!compact">
             <p v-if="e.advisor" class="lg-org">{{ c.advisor }}{{ e.advisor }}</p>
@@ -79,7 +79,7 @@ const c = computed(() =>
         ongoing: 'ongoing',
         upcoming: 'upcoming',
         advisor: 'Advisor: ',
-        case: 'Case study',
+        case: 'The product',
         proof: 'Announcement',
         fold: (n) => `Fold ${n} entries`,
         unfold: (n, a, b) => `Show ${n} more (${a}–${b})`,
@@ -89,7 +89,7 @@ const c = computed(() =>
         ongoing: '進行中',
         upcoming: '即將',
         advisor: '指導教授：',
-        case: '案例研究',
+        case: '產品介紹',
         proof: '公告',
         fold: (n) => `收合 ${n} 筆`,
         unfold: (n, a, b) => `展開其餘 ${n} 筆（${a} – ${b}）`,

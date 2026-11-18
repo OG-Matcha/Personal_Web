@@ -10,54 +10,58 @@
     has it: at 900px and up without reduced motion the section is tall, the
     stage sticks and the captions change as you scroll - over the still render
     until the 3D has loaded (or for good, on save-data or if WebGL fails).
-    On phones and under reduced motion only the still shows; the person
-    column right after it carries the name and thesis.
+    On phones and under reduced motion the still shows with the name and
+    thesis over it, followed by the walk as a row of picture cards.
   -->
   <section ref="root" class="dk" :class="{ 'is-ready': ready }" :style="{ '--stops': stops.length }" :aria-label="t.label">
     <div class="dk-stage">
       <!-- Both stills ship; CSS shows the one matching the site theme (system or toggle). -->
       <div class="dk-poster" aria-hidden="true">
-        <img class="dk-poster-day" src="/desk/poster-day.webp" alt="" width="1600" height="900" fetchpriority="high" />
-        <img class="dk-poster-night" src="/desk/poster-night.webp" alt="" width="1600" height="900" fetchpriority="high" />
+        <img class="dk-poster-day" src="/desk/poster-day.webp" :srcset="srcset('/desk/poster-day.webp')" sizes="100vw" alt="" width="1600" height="900" fetchpriority="high" />
+        <img class="dk-poster-night" src="/desk/poster-night.webp" :srcset="srcset('/desk/poster-night.webp')" sizes="100vw" alt="" width="1600" height="900" fetchpriority="high" />
+      </div>
+      <!--
+        Until the 3D is ready (several seconds on a cold load), scrolling
+        still walks the desk: each stop shows its own still, the same frame
+        the camera will land on, and the canvas fades in over it when ready.
+      -->
+      <div v-if="stillsOn" class="dk-stills" aria-hidden="true">
+        <template v-for="(s, i) in stops" :key="s.id">
+          <div v-if="i > 0 && on === i" class="dk-still">
+            <img class="dk-poster-day" :src="`/desk/stops/${s.id}-day.webp`" alt="" width="1200" height="800" decoding="async" />
+            <img class="dk-poster-night" :src="`/desk/stops/${s.id}-night.webp`" alt="" width="1200" height="800" decoding="async" />
+          </div>
+        </template>
       </div>
       <canvas ref="canvas" class="dk-canvas" aria-hidden="true" />
       <div class="dk-veil" :class="{ 'is-on': on === 0 }" aria-hidden="true" />
-
-      <!--
-        The loader: the room being set up, with a real count of what has
-        arrived. Wide screens only (the same CSS gate as the 3D). It lifts
-        like a shutter when the room is ready, and a CSS timer lifts it
-        anyway after a few seconds, so a slow line or no script never traps
-        anyone behind it; the still is underneath.
-      -->
-      <div v-if="!skipLoader" class="dk-load" :class="{ 'is-done': loaded }" aria-hidden="true">
-        <div class="dk-load-panel dk-load-top" />
-        <div class="dk-load-panel dk-load-bot" />
-        <div class="dk-load-in">
-          <p class="dk-load-name">
-            <span v-for="(ch, k) in [...t.name]" :key="k" :style="{ '--k': k }">{{ ch === ' ' ? '\u00a0' : ch }}</span>
-          </p>
-          <div class="dk-load-bar"><span :style="{ transform: `scaleX(${pct / 100})` }" /></div>
-          <p class="dk-load-row">
-            <span class="dk-load-step">{{ step }}</span>
-            <span class="dk-load-pct figures">{{ String(Math.round(pct)).padStart(3, '0') }}</span>
-          </p>
-        </div>
-      </div>
 
       <p v-if="hover" class="dk-tag" :style="{ left: `${hover.x}px`, top: `${hover.y}px` }" aria-hidden="true">
         {{ hover.label }}
       </p>
 
-      <!-- One caption per stop. In 3D only the current one shows. -->
+      <!--
+        One caption per stop. In 3D only the current one shows, and none while
+        the camera is between stops, so a card never names the wrong thing.
+        All stay in the tab order: tabbing into one walks the camera there.
+      -->
       <ol class="dk-caps">
-        <li v-for="(s, i) in stops" :key="s.id" class="dk-cap" :class="[`dk-cap--${s.id}`, { 'is-on': on === i }]" :inert="on !== i">
+        <li
+          v-for="(s, i) in stops"
+          :key="s.id"
+          class="dk-cap"
+          :class="[`dk-cap--${s.id}`, s.side && `dk-cap--${s.side}`, { 'is-on': on === i && !moving && !leaving }]"
+          @focusin="on !== i && scrollToStop(i)"
+        >
           <template v-if="s.id === 'hero'">
-            <p class="dk-name">{{ t.name }}</p>
-            <p class="dk-thesis">{{ t.thesis }}</p>
+            <h1 class="dk-title">
+              <span class="dk-name">{{ t.name }}</span>{{ ' ' }}<span class="dk-thesis">{{ t.thesis }}</span>
+            </h1>
             <p class="dk-hint">{{ t.hint }}</p>
+            <a href="#about" class="dk-skip">{{ t.skip }}</a>
           </template>
           <template v-else>
+            <p class="dk-eyebrow figures">{{ String(i).padStart(2, '0') }} · {{ s.thing }}</p>
             <h2 class="dk-h">{{ s.title }}</h2>
             <p class="dk-text">{{ s.text }}</p>
             <NuxtLink v-if="s.href" :to="s.href" class="dk-link">{{ s.cta }} →</NuxtLink>
@@ -65,17 +69,43 @@
         </li>
       </ol>
 
-      <div class="dk-dots" aria-hidden="true">
-        <span v-for="(s, i) in stops" :key="s.id" :class="{ 'is-on': on === i }" />
-      </div>
+      <!-- The stops as buttons: jump straight to one, by mouse or keyboard. -->
+      <nav class="dk-dots" :class="{ 'is-gone': leaving }" :aria-label="t.stopsLabel">
+        <button
+          v-for="(s, i) in stops"
+          :key="s.id"
+          type="button"
+          :class="{ 'is-on': on === i }"
+          :aria-label="s.thing ?? t.name"
+          :aria-current="on === i ? 'step' : undefined"
+          @click="scrollToStop(i)"
+        >
+          <span class="dk-dot" />
+          <span class="dk-dot-label" aria-hidden="true">{{ s.thing ?? t.name }}</span>
+        </button>
+      </nav>
     </div>
+
+    <!--
+      Phones and reduced motion: the same walk as a row of pictures, one per
+      stop, each with its caption. The pictures are frames of the 3D scene
+      (scripts/make-desk-stills.mjs); CSS shows the day or night set.
+    -->
+    <ol class="dk-tour" :aria-label="t.tour">
+      <li v-for="(s, i) in stops.slice(1)" :key="s.id" class="dk-stop">
+        <div class="dk-stop-pic">
+          <img class="dk-poster-day" :src="`/desk/stops/${s.id}-day.webp`" :srcset="srcset(`/desk/stops/${s.id}-day.webp`)" sizes="(min-width: 900px) 25vw, 82vw" alt="" width="1200" height="800" loading="lazy" decoding="async" />
+          <img class="dk-poster-night" :src="`/desk/stops/${s.id}-night.webp`" :srcset="srcset(`/desk/stops/${s.id}-night.webp`)" sizes="(min-width: 900px) 25vw, 82vw" alt="" width="1200" height="800" loading="lazy" decoding="async" />
+          <span class="dk-stop-n figures" aria-hidden="true">{{ String(i + 1).padStart(2, '0') }} · {{ s.thing }}</span>
+        </div>
+        <h2 class="dk-h">{{ s.title }}</h2>
+        <p class="dk-text">{{ s.text }}</p>
+        <NuxtLink v-if="s.href" :to="s.href" class="dk-link">{{ s.cta }} →</NuxtLink>
+      </li>
+    </ol>
   </section>
 </template>
 
-<script>
-// Survives remounts within one tab: the loader shows on the first visit only.
-let loaderSeen = false
-</script>
 
 <script setup>
 const { site } = useContent()
@@ -89,14 +119,18 @@ const t = computed(() =>
         name: 'Ju-Shen Huang',
         thesis: 'I take AI from demo to something people still use three months later.',
         hint: 'Scroll to walk across my desk',
-        steps: ['Wiping the desk', 'Switching on the lamp', 'Making coffee', 'Restocking Kuai Kuai', 'Ready'],
+        tour: 'Things on my desk',
+        stopsLabel: 'Stops on the desk',
+        skip: 'Skip the desk ↓',
       }
     : {
         label: '我的桌子',
         name: '黃鉅燊',
         thesis: '我把 AI 從展示品，​做到三個月後還有人在用。',
         hint: '往下捲，走過我的桌子',
-        steps: ['擦桌子', '開檯燈', '泡咖啡', '補乖乖', '好了'],
+        tour: '桌上的東西',
+        stopsLabel: '書桌上的每一站',
+        skip: '跳過書桌，直接看介紹 ↓',
       }
 )
 
@@ -106,12 +140,12 @@ const t = computed(() =>
 */
 const STOPS = [
   { id: 'hero', cam: [0.78, -1.42, 1.4], at: [-0.02, 0.12, 0.92] },
-  { id: 'notebook', cam: [-0.06, -0.66, 1.16], at: [-0.2, -0.19, 0.76], spot: [-0.2, -0.22, 0.77] },
+  { id: 'notebook', side: 'right', cam: [-0.06, -0.66, 1.16], at: [-0.2, -0.19, 0.76], spot: [-0.2, -0.22, 0.77] },
   { id: 'laptop', cam: [0.1, -0.5, 1.03], at: [0.0, 0.1, 0.85], spot: [0.0, 0.12, 0.86] },
   { id: 'phone', cam: [0.33, -0.36, 0.93], at: [0.43, -0.02, 0.83], spot: [0.43, -0.03, 0.83] },
-  { id: 'tablet', cam: [-0.3, -0.38, 0.99], at: [-0.45, 0.09, 0.84], spot: [-0.45, 0.09, 0.84] },
+  { id: 'tablet', side: 'right', cam: [-0.3, -0.38, 0.99], at: [-0.45, 0.09, 0.84], spot: [-0.45, 0.09, 0.84] },
   { id: 'reports', cam: [0.48, -0.25, 1.15], at: [0.5, 0.18, 0.78], spot: [0.52, 0.2, 0.79] },
-  { id: 'shelf', cam: [0.05, -0.62, 1.46], at: [0.05, 0.52, 1.31], spot: [0.05, 0.52, 1.32] },
+  { id: 'shelf', side: 'right', cam: [0.25, -0.45, 1.5], at: [0.12, 0.52, 1.32], spot: [0.05, 0.52, 1.32] }, // from the right, so the lamp head stays out of frame
   { id: 'kuaikuai', cam: [0.08, -0.26, 0.98], at: [0.25, 0.13, 0.84], spot: [0.25, 0.12, 0.84] },
 ]
 
@@ -123,7 +157,7 @@ const stops = computed(() => {
     phone: { thing: '手機', title: '財伴 oSave', text: '用會計邏輯記帳的 App：問你三個問題，後端轉成 13 種現金流向和 6 個財務健康指標，回答「我的財務健不健康」。', href: '/work/osave/', cta: '看財伴怎麼做的' },
     tablet: { thing: '平板', title: '醫數行銷 MedaLink', text: '診所的 AI 營運系統：在 LINE 上回病患、把醫師診間儀器的時段算出來，AI 那一半是我一個人做的。', href: '/work/medalink/', cta: '看診所系統' },
     reports: { thing: '一疊報告', title: `${c.researchGrants} 個國科會計畫`, text: '從生成式 AI 社交工程、股市異常追蹤，到財伴的 82 人實證研究；另有一篇 LAK 2025 國際會議發表。', href: '/resume/', cta: '看完整年表' },
-    shelf: { thing: '獎盃架', title: `${c.awards} 個競賽獎項`, text: `其中 ${c.topPrizes} 個全國首獎，包括台積電校園黑客松第一名。每一座都附上主辦單位和公告。`, href: '/resume/', cta: '看每一座的出處' },
+    shelf: { thing: '獎盃架', title: `${c.awards} 個競賽獎項`, text: `其中 ${c.topPrizes} 個全國首獎，包括台積電校園黑客松第一名。架上只擺得下四座，其他的在年表裡，每一座都附上主辦單位和公告。`, href: '/resume/', cta: '看每一座的出處' },
     kuaikuai: { thing: '綠色乖乖', title: '機器乖乖，不當機', text: '台灣工程師的老規矩：伺服器旁邊放一包綠色乖乖。我放的這包是台積電聯名款，到目前為止都很乖。', href: '/#contact', cta: '寫信給我' },
   }
   const enT = {
@@ -132,7 +166,7 @@ const stops = computed(() => {
     phone: { thing: 'Phone', title: 'oSave', text: 'A budgeting app built on accounting logic: three questions, turned by the backend into 13 cash-flow directions and six financial-health indicators, to answer "am I financially healthy?".', href: '/en/work/osave/', cta: 'How oSave was built' },
     tablet: { thing: 'Tablet', title: 'MedaLink', text: 'An AI operations system for clinics: answers patients on LINE and books the slot where doctor, room and equipment are all free. I built the AI half alone.', href: '/en/work/medalink/', cta: 'See the clinic system' },
     reports: { thing: 'A stack of reports', title: `${c.researchGrants} NSTC research grants`, text: 'From generative AI in social engineering and market-anomaly tracking to an 82-person study of oSave; plus a LAK 2025 paper.', href: '/en/resume/', cta: 'See the full record' },
-    shelf: { thing: 'The shelf', title: `${c.awards} competition awards`, text: `${c.topPrizes} of them national first prizes, including first at TSMC IT CareerHack. Each one links to its organiser and announcement.`, href: '/en/resume/', cta: 'Where each one came from' },
+    shelf: { thing: 'The shelf', title: `${c.awards} competition awards`, text: `${c.topPrizes} of them national first prizes, including first at TSMC IT CareerHack. Only four fit on the shelf; the record has the rest, each with its organiser and announcement.`, href: '/en/resume/', cta: 'Where each one came from' },
     kuaikuai: { thing: 'A green bag of Kuai Kuai', title: 'Keeps the machines good', text: 'A Taiwanese engineering custom: a bag of green Kuai Kuai next to the server keeps it from crashing. Mine is the TSMC edition. So far, so good.', href: '/en/#contact', cta: 'Write to me' },
   }
   const T = isEn.value ? enT : zh
@@ -142,37 +176,17 @@ const stops = computed(() => {
 const root = ref(null)
 const canvas = ref(null)
 const ready = ref(false)
+// The stills stay under the canvas until its 900 ms fade-in has finished.
+const stillsOn = ref(true)
+watch(ready, (r) => {
+  if (r) setTimeout(() => (stillsOn.value = false), 1000)
+  else stillsOn.value = true
+})
 const on = ref(0)
+const moving = ref(false)
+const leaving = ref(false)
 const hover = ref(null)
 
-/*
-  Loader state. `got` is the real fraction of the three files that has
-  arrived; `pct` is what is shown: it eases towards `got`, creeps a little
-  on its own so a file without a length never looks stuck, and never goes
-  backwards. Seen once per tab: coming back to the page in the app skips it.
-*/
-const skipLoader = ref(loaderSeen)
-const loaded = ref(false)
-const pct = ref(0)
-let got = 0
-let pctRaf = 0
-const step = computed(() => {
-  const s = t.value.steps
-  return loaded.value ? s[s.length - 1] : s[Math.min(s.length - 2, Math.floor((pct.value / 100) * (s.length - 1)))]
-})
-function tickPct() {
-  pctRaf = 0
-  const goal = loaded.value ? 100 : Math.max(got * 100, Math.min(90, pct.value + 0.25))
-  pct.value = Math.min(100, pct.value + Math.max(0.15, (goal - pct.value) * 0.12))
-  if (pct.value < 99.9) pctRaf = requestAnimationFrame(tickPct)
-  else pct.value = 100
-}
-function finishLoader() {
-  if (loaded.value) return
-  loaded.value = true
-  loaderSeen = true
-  if (!pctRaf) pctRaf = requestAnimationFrame(tickPct)
-}
 
 let dispose = null
 let alive = true
@@ -199,6 +213,18 @@ function readScroll() {
   const e = hold(f - i)
   walk.i = i
   walk.e = e
+  moving.value = e > 0.1 && e < 0.9
+  // As the stage scrolls away, the room sinks into the page colour from
+  // below, so the walk ends in the page instead of at a straight cut.
+  const box = el.getBoundingClientRect()
+  // The stage has started to scroll away with the section: the last card
+  // and the dots go first, so no card floats over the page coming up.
+  leaving.value = p > 0.99 || box.bottom < innerHeight - 2
+  // While the room fills the top of the window, the header floats on it with
+  // no page-coloured band behind it.
+  document.documentElement.classList.toggle('is-over-desk', box.bottom > 120)
+  const gone = (innerHeight - box.bottom) / (innerHeight * 0.5)
+  el.style.setProperty('--out', Math.min(1, Math.max(0, gone)).toFixed(3))
   if (e < 0.08) on.value = i
   else if (e > 0.92) on.value = i + 1
   onWalk?.()
@@ -219,8 +245,6 @@ watch(on, async (i) => {
 
 onMounted(() => {
   const tall = matchMedia('(min-width: 900px) and (prefers-reduced-motion: no-preference)').matches
-  if (!tall || navigator.connection?.saveData) finishLoader()
-  else if (!skipLoader.value) pctRaf = requestAnimationFrame(tickPct)
   if (!tall) return
   readScroll()
   addEventListener('scroll', readScroll, { passive: true })
@@ -228,16 +252,13 @@ onMounted(() => {
   if (navigator.connection?.saveData) return
   // The page paints first; the room loads after. If it fails, the still stays.
   const go = () =>
-    start().catch(() => {
-      dispose?.()
-      finishLoader()
-    })
+    start().catch(() => dispose?.())
   'requestIdleCallback' in window ? requestIdleCallback(go, { timeout: 1200 }) : setTimeout(go, 400)
 })
 
 onBeforeUnmount(() => {
   alive = false
-  cancelAnimationFrame(pctRaf)
+  document.documentElement.classList.remove('is-over-desk')
   removeEventListener('scroll', readScroll)
   removeEventListener('resize', readScroll)
   dispose?.()
@@ -289,23 +310,24 @@ async function start() {
     const th = document.documentElement.dataset.theme
     return th ? th === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches
   }
-  // Bytes arrived per file, weighted by its rough size, for the loader.
-  const part = { glb: 0, desk: 0, room: 0 }
-  const W = { glb: 0.45, desk: 0.45, room: 0.1 }
-  const note = (k) => (e) => {
-    part[k] = e.lengthComputable && e.total ? e.loaded / e.total : part[k]
-    got = Object.keys(W).reduce((a, j) => a + W[j] * part[j], 0)
+  // Screens and the desk are seen at a slant; without the most anisotropic
+  // filtering the GPU offers, a 1900 px screenshot smears into a grey blur.
+  const maxAniso = renderer.capabilities.getMaxAnisotropy()
+  const sharpen = (map) => {
+    if (!map) return
+    map.colorSpace = THREE.SRGBColorSpace
+    map.anisotropy = maxAniso
+    map.needsUpdate = true
   }
   const tl = new THREE.TextureLoader()
-  const tex = (url, k) =>
+  const tex = (url) =>
     new Promise((res, rej) =>
       tl.load(url, (x) => {
-        if (k) note(k)({ lengthComputable: true, loaded: 1, total: 1 })
         x.flipY = false
         // Display-ready sRGB from Blender (AgX). Decoded to linear on sampling and
         // encoded back on output, so what Blender showed is what the page shows.
         x.colorSpace = THREE.SRGBColorSpace
-        x.anisotropy = 8
+        x.anisotropy = maxAniso
         owned.push(x)
         res(x)
       }, undefined, rej)
@@ -337,14 +359,12 @@ async function start() {
 
   // A plain glTF whose .bin and textures are ordinary same-origin files: the
   // live CSP allows only 'self', which rules out a GLB's blob: textures and
-  // Draco's blob: worker. Progress is counted per file through the manager.
-  const manager = new THREE.LoadingManager()
-  manager.onProgress = (_url, loaded, total) => note('glb')({ lengthComputable: true, loaded, total })
-  const loader = new GLTFLoader(manager)
+  // Draco's blob: worker.
+  const loader = new GLTFLoader()
   const [gltf, d1, r1] = await Promise.all([
     loader.loadAsync('/desk/model/desk.gltf'),
-    tex(`/desk/desk_${first}.webp`, 'desk'),
-    tex(`/desk/room_${first}.webp`, 'room'),
+    tex(`/desk/desk_${first}.webp`),
+    tex(`/desk/room_${first}.webp`),
   ])
   gltf.scene.traverse((o) => {
     if (!o.isMesh) return
@@ -378,7 +398,7 @@ async function start() {
     else if (o.name.startsWith('screen_')) {
       const m = o.material
       const map = m.emissiveMap || m.map
-      if (map) map.colorSpace = THREE.SRGBColorSpace
+      sharpen(map)
       o.material = new THREE.MeshBasicMaterial({ map, toneMapped: false })
       owned.push(o.material)
       glow.push(o.material)
@@ -388,7 +408,7 @@ async function start() {
       // and applyMood sets the overall brightness, so day and night stay in step
       // with the baked room around it.
       const map = o.material.map
-      if (map) map.colorSpace = THREE.SRGBColorSpace
+      sharpen(map)
       const g = o.geometry
       const nrm = g.attributes.normal
       const col = new Float32Array(nrm.count * 3)
@@ -410,7 +430,7 @@ async function start() {
       // Printed paper with its own sharp texture; applyMood dims it with the room.
       const m = o.material
       const map = m.emissiveMap || m.map
-      if (map) map.colorSpace = THREE.SRGBColorSpace
+      sharpen(map)
       o.material = new THREE.MeshBasicMaterial({ map, toneMapped: false })
       o.userData.paper = true
       owned.push(o.material)
@@ -427,7 +447,21 @@ async function start() {
       // Trophies and the plaque: real metal and glass, lit by the room.
       if (o.name.startsWith('crystal')) {
         // Clear glass by reflection only; real transmission costs a second full render every frame.
-        o.material = new THREE.MeshStandardMaterial({ color: 0xeef4ff, roughness: 0.05, metalness: 0, transparent: true, opacity: 0.35 })
+        // Faintly blue and mostly see-through, with the room's reflections
+        // pushed up, so it reads as glass against the white wall rather than
+        // as a frosted white slab.
+        // Standard, not Physical: the clearcoat shader cost a second of
+        // main-thread time to compile (Lighthouse TBT 1.5 s -> 2.7 s).
+        o.material = new THREE.MeshStandardMaterial({
+          color: 0x7fa6d6,
+          roughness: 0.02,
+          metalness: 0,
+          envMapIntensity: 2.4,
+          transparent: true,
+          opacity: 0.42,
+          depthWrite: false,
+        })
+        o.material.userData.env = 2.4
         owned.push(o.material)
       }
       o.material.userData.emit = o.material.emissiveIntensity ?? 0
@@ -439,7 +473,7 @@ async function start() {
   const applyMood = () => {
     const n = night.value
     for (const m of shiny) {
-      if ('envMapIntensity' in m) m.envMapIntensity = 1 - 0.94 * n
+      if ('envMapIntensity' in m) m.envMapIntensity = (m.userData.env ?? 1) * (1 - 0.94 * n)
       // The printed certificate is lit a little by day so it reads; at night only the lamp reaches it.
       if (m.emissiveMap) m.emissiveIntensity = m.userData.emit * (1 - 0.9 * n)
     }
@@ -558,8 +592,6 @@ async function start() {
   onScroll()
   cur.cam.copy(want.cam)
   cur.at.copy(want.at)
-  // First arrival: start a step back and drift in as the shutter lifts.
-  if (!skipLoader.value && cur.at.distanceTo(path[0].at) < 1e-6) cur.cam.addScaledVector(cur.cam.clone().sub(cur.at), 0.28)
   addEventListener('resize', size)
   canvas.value.addEventListener('pointermove', onMove)
   canvas.value.addEventListener('pointerleave', onLeave)
@@ -569,7 +601,6 @@ async function start() {
   requestAnimationFrame(() =>
     requestAnimationFrame(() => {
       ready.value = true
-      finishLoader()
     })
   )
 
@@ -594,7 +625,8 @@ async function start() {
   overflow: hidden;
 }
 
-.dk-poster .dk-poster-night {
+/* Two classes, to outrank `.dk-poster img { display: block }` below. */
+.dk .dk-poster-night {
   display: none;
 }
 
@@ -622,31 +654,196 @@ async function start() {
   object-fit: cover;
 }
 
-/* Phones and reduced motion: the still alone, then the person column. */
+/* Phones and reduced motion: the still, with the name and thesis laid over
+   its lower edge, so the first screen says whose desk this is. */
 .dk-poster img {
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 4 / 3;
   max-height: 80svh;
 }
 
 .dk-canvas,
 .dk-veil,
-.dk-caps,
 .dk-dots,
-.dk-tag {
+.dk-tag,
+.dk-cap:not(.dk-cap--hero),
+.dk-cap--hero .dk-hint,
+.dk-cap--hero .dk-skip {
   display: none;
 }
 
+/* The still stays clear, with only a short fade at its foot; the name and
+   thesis start on that fade and run on below it, still in the first screen. */
+.dk-caps {
+  position: relative;
+  margin-top: -3.5rem;
+  padding: 0 var(--page-gut) var(--sp-5);
+  list-style: none;
+}
+
+.dk-poster {
+  position: relative;
+}
+
+.dk-poster::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  height: 5rem;
+  background: linear-gradient(transparent, var(--bg));
+  pointer-events: none;
+}
+
+.dk-caps .dk-title > span {
+  display: block;
+}
+
+.dk-name {
+  font-size: clamp(2.25rem, 1.5rem + 3vw, 3.5rem);
+}
+
+.dk-caps .dk-thesis {
+  margin-top: var(--sp-2);
+  font-size: var(--step-1);
+}
+
+/* The tour: a row of cards you swipe through, each snapping into place,
+   the next one peeking in from the right so it is clear there is more. */
+.dk-tour {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min(82%, 26rem);
+  gap: var(--sp-4);
+  padding: var(--sp-6) var(--page-gut) var(--sp-7);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--page-gut);
+  scrollbar-width: none;
+  list-style: none;
+}
+
+.dk-tour::-webkit-scrollbar {
+  display: none;
+}
+
+/* Wide screens under reduced motion: room for all of them, no swiping. */
+@media (min-width: 900px) {
+  .dk-tour {
+    grid-auto-flow: row;
+    grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+    gap: var(--sp-7) var(--sp-6);
+    max-width: var(--page-w);
+    margin-inline: auto;
+    padding-inline: var(--page-gut);
+    overflow: visible;
+  }
+}
+
+.dk-stop {
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.dk-stop-pic {
+  position: relative;
+  width: 100%;
+  margin-bottom: var(--sp-4);
+  overflow: hidden;
+  border-radius: var(--r-3);
+  box-shadow: var(--shadow-1);
+}
+
+.dk-stop-pic img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+}
+
+.dk-stop-n {
+  position: absolute;
+  left: var(--sp-3);
+  top: var(--sp-3);
+  padding: 2px 10px;
+  border-radius: var(--r-full);
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  color: var(--ink-2);
+  font-size: var(--step--1);
+  font-weight: 700;
+}
+
+.dk-stop .dk-h {
+  font-size: var(--step-2);
+}
+
+.dk-stop .dk-text {
+  font-size: var(--step--1);
+}
+
+.dk-stop .dk-link {
+  margin-top: auto;
+  padding-top: var(--sp-3);
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
 /* Wide screens with motion: the section is tall and the stage sticks, so scrolling is walking.
-   One 75svh slice per stop, plus a window so the last stop can be held. */
+   One 55svh slice per stop, plus a window so the last stop can be held. */
+.dk-stills {
+  display: none;
+}
+
 @media (min-width: 900px) and (prefers-reduced-motion: no-preference) {
+  .dk-stills {
+    display: block;
+    position: absolute;
+    inset: 0;
+  }
+
+  .dk-still {
+    position: absolute;
+    inset: 0;
+    animation: dk-still-in 450ms var(--ease-entrance) both;
+  }
+
+  .dk-still img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
   .dk {
-    height: calc(var(--stops) * 75svh + 100svh);
+    height: calc(var(--stops) * 55svh + 100svh);
+    /* Up under the floating header, so the room reaches the top of the
+       window instead of starting below a band of page colour. */
+    margin-top: calc(-1 * var(--header-h));
+  }
+
+  .dk-tour {
+    display: none;
   }
 
   .dk-stage {
     position: sticky;
     top: 0;
     height: 100svh;
+  }
+
+  /* Grows up from the bottom edge as the stage leaves. Its lowest row is
+     always the solid page colour, so there is never a seam to see. */
+  .dk-stage::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 4;
+    height: calc(var(--out, 0) * 75%);
+    pointer-events: none;
+    background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--bg) 80%, transparent) 60%, var(--bg));
   }
 
   .dk-poster {
@@ -689,8 +886,32 @@ async function start() {
   }
 
   .dk-caps {
+    position: static;
+    margin-top: 0;
+    padding: 0;
+    background: none;
+  }
+
+  .dk-poster::after {
+    display: none;
+  }
+
+  .dk-caps .dk-name {
+    font-size: clamp(2.5rem, 1.6rem + 3.4vw, 4.75rem);
+  }
+
+  .dk-caps .dk-thesis {
+    margin-top: var(--sp-4);
+    font-size: var(--step-2);
+  }
+
+  .dk-cap:not(.dk-cap--hero),
+  .dk-cap--hero .dk-hint {
     display: block;
-    list-style: none;
+  }
+
+  .dk-cap--hero .dk-skip {
+    display: inline-flex;
   }
 
   .dk-cap {
@@ -710,10 +931,17 @@ async function start() {
       transform 450ms var(--ease-entrance);
   }
 
-  .dk-cap.is-on {
+  .dk-cap.is-on,
+  .dk-cap:focus-within {
     opacity: 1;
     transform: none;
     pointer-events: auto;
+  }
+
+  /* Cards sit on the side away from the thing they are about. */
+  .dk-cap--right {
+    left: auto;
+    right: calc(clamp(var(--sp-4), 5vw, var(--sp-9)) + 1.5rem);
   }
 
   /* The opening caption is the name, set large, with no card behind it. */
@@ -754,6 +982,21 @@ async function start() {
   text-wrap: balance;
 }
 
+.dk-skip {
+  align-items: center;
+  min-height: 44px;
+  font-size: var(--step--1);
+  font-weight: 700;
+  color: var(--ink-2);
+  text-decoration: underline;
+  text-decoration-color: var(--pop-ink);
+  text-underline-offset: 0.24em;
+}
+
+.dk-skip:hover {
+  color: var(--ink);
+}
+
 .dk-hint {
   margin-top: var(--sp-6);
   font-size: var(--step--1);
@@ -783,6 +1026,13 @@ async function start() {
     transform: scaleY(1);
     opacity: 0;
   }
+}
+
+.dk-eyebrow {
+  margin-bottom: var(--sp-2);
+  font-size: var(--step--1);
+  font-weight: 700;
+  color: var(--pop-ink);
 }
 
 .dk-h {
@@ -827,11 +1077,55 @@ async function start() {
   position: absolute;
   right: clamp(var(--sp-4), 3vw, var(--sp-7));
   top: 50%;
-  gap: 10px;
+  gap: 0;
   transform: translateY(-50%);
 }
 
-.dk-dots span {
+.dk-dots button {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  cursor: pointer;
+}
+
+.dk-dots button:hover .dk-dot {
+  background: var(--ink);
+}
+
+/* The stop's name, shown beside its dot on hover or keyboard focus. */
+.dk-dot-label {
+  position: absolute;
+  right: calc(100% + 6px);
+  top: 50%;
+  padding: 3px 10px;
+  border-radius: var(--r-full);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+  color: var(--ink);
+  font-size: var(--step--1);
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(6px, -50%);
+  transition:
+    opacity 200ms var(--ease-entrance),
+    transform 200ms var(--ease-entrance);
+  pointer-events: none;
+}
+
+.dk-dots button:hover .dk-dot-label,
+.dk-dots button:focus-visible .dk-dot-label {
+  opacity: 1;
+  transform: translate(0, -50%);
+}
+
+.dk-dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
@@ -841,129 +1135,30 @@ async function start() {
     background-color 300ms;
 }
 
-.dk-dots span.is-on {
+.dk-dots .is-on .dk-dot {
   background: var(--pop);
   transform: scale(1.6);
 }
 
-/* ---- loader ------------------------------------------------------------ */
-.dk-load {
-  display: none;
+.dk-dots {
+  transition: opacity 300ms var(--ease-entrance);
 }
 
-@media (min-width: 900px) and (prefers-reduced-motion: no-preference) {
-  .dk-load {
-    display: block;
-    position: absolute;
-    inset: 0;
-    z-index: 5;
-    pointer-events: none;
-    /* The safety net: lifts by itself if the script never gets here. */
-    animation: dk-load-auto 0s linear 7s forwards;
-  }
+.dk-dots.is-gone {
+  opacity: 0;
+}
 
-  .dk-load-panel {
-    position: absolute;
-    left: 0;
-    right: 0;
-    height: 50.5%;
-    background: var(--ink);
-    transition: transform 900ms cubic-bezier(0.76, 0, 0.24, 1) 350ms;
-  }
+:global(.hd::before) {
+  transition: opacity var(--dur-3) var(--ease-inout);
+}
 
-  .dk-load-top {
-    top: 0;
-  }
+:global(html.is-over-desk .hd::before) {
+  opacity: 0;
+}
 
-  .dk-load-bot {
-    bottom: 0;
-  }
-
-  .dk-load-in {
-    position: absolute;
-    left: clamp(var(--sp-5), 6vw, var(--sp-10, 6rem));
-    right: clamp(var(--sp-5), 6vw, var(--sp-10, 6rem));
-    bottom: 12svh;
-    color: var(--bg);
-    transition:
-      opacity 300ms var(--ease-entrance),
-      transform 300ms var(--ease-entrance);
-  }
-
-  .dk-load-name {
-    display: flex;
-    overflow: hidden;
-    font-family: var(--font-display);
-    font-weight: 900;
-    font-stretch: 112%;
-    font-size: clamp(4rem, 2rem + 7vw, 9rem);
-    line-height: 1;
-    letter-spacing: -0.01em;
-  }
-
-  .dk-load-name span {
-    display: inline-block;
-    transform: translateY(105%);
-    animation: dk-load-rise 800ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
-    animation-delay: calc(120ms + var(--k) * 70ms);
-  }
-
-  .dk-load-bar {
-    margin-top: var(--sp-5);
-    height: 2px;
-    background: color-mix(in srgb, var(--bg) 22%, transparent);
-  }
-
-  .dk-load-bar span {
-    display: block;
-    height: 100%;
-    background: var(--bg);
-    transform-origin: left;
-  }
-
-  .dk-load-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-top: var(--sp-3);
-    font-size: var(--step-0, 1rem);
-    color: color-mix(in srgb, var(--bg) 75%, transparent);
-  }
-
-  .dk-load-pct {
-    font-size: var(--step-2, 1.5rem);
-    font-weight: 700;
-    color: var(--bg);
-    font-variant-numeric: tabular-nums;
-  }
-
-  .dk-load.is-done .dk-load-in {
+@keyframes dk-still-in {
+  from {
     opacity: 0;
-    transform: translateY(-12px);
-  }
-
-  .dk-load.is-done .dk-load-top {
-    transform: translateY(-101%);
-  }
-
-  .dk-load.is-done .dk-load-bot {
-    transform: translateY(101%);
-  }
-
-  .dk-load.is-done {
-    animation: dk-load-auto 0s linear 1300ms forwards;
-  }
-}
-
-@keyframes dk-load-rise {
-  to {
-    transform: none;
-  }
-}
-
-@keyframes dk-load-auto {
-  to {
-    visibility: hidden;
   }
 }
 </style>

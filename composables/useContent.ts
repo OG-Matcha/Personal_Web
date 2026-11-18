@@ -13,6 +13,8 @@ import osave from '~/content/work/osave.yml'
 import phishforge from '~/content/work/phishforge.yml'
 import finctory from '~/content/work/finctory.yml'
 import medalink from '~/content/work/medalink.yml'
+import surprice from '~/content/work/surprice.yml'
+import taobao from '~/content/work/taobao.yml'
 
 export type TimelineKind =
   | 'role'
@@ -129,7 +131,7 @@ function stripTodo<T>(value: T): T {
   return value
 }
 
-const works = [osave, phishforge, finctory, medalink]
+const works = [osave, phishforge, finctory, medalink, surprice, taobao]
   .map(stripTodo)
   .map((w) => ({ ...w, period: { start: normaliseDate(w.period?.start), end: normaliseDate(w.period?.end) } }))
   .sort((a, b) => (a.order ?? 99) - (b.order ?? 99))

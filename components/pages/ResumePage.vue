@@ -33,6 +33,10 @@
     <Station id="skills" wide :title="t.skills" :lede="t.skillsLede">
       <SkillsSection />
     </Station>
+
+    <Station id="faq" wide :title="t.faq" :lede="t.faqLede">
+      <QuickFacts />
+    </Station>
   </div>
 </template>
 
@@ -41,6 +45,7 @@ import { FileDown } from 'lucide-vue-next'
 import Station from '~/components/studio/Station.vue'
 import LedgerSection from '~/components/sections/LedgerSection.vue'
 import SkillsSection from '~/components/sections/SkillsSection.vue'
+import QuickFacts from '~/components/sections/QuickFacts.vue'
 
 const { timeline, site, en } = useContent()
 const { locale } = useLocale()
@@ -54,8 +59,8 @@ const cv = computed(() => {
 const t = computed(() =>
   locale.value === 'en'
     ? {
-        title: 'The full record',
-        lede: `${timeline.length} entries, newest first. Data as of ${formatDate(site.asOf)}. Every entry is dated; announcements are linked where they exist.`,
+        title: 'Résumé',
+        lede: `The full record: ${timeline.length} entries, newest first. Data as of ${formatDate(site.asOf)}. Every entry is dated; announcements are linked where they exist.`,
         awards: 'Awards',
         top: 'Top prizes',
         grants: 'NSTC grants',
@@ -64,10 +69,12 @@ const t = computed(() =>
         cvOther: '中文版',
         skills: en.sheets.skills,
         skillsLede: en.sheets.skillsLede,
+        faq: 'Quick answers',
+        faqLede: 'The questions people search for, answered from the record above.',
       }
     : {
-        title: '完整年表',
-        lede: `${timeline.length} 筆紀錄，逆時序。資料截至 ${formatDate(site.asOf)}。每一筆都有日期，有公告的附上連結。`,
+        title: '履歷',
+        lede: `完整年表，${timeline.length} 筆紀錄，逆時序。資料截至 ${formatDate(site.asOf)}。每一筆都有日期，有公告的附上連結。`,
         awards: '競賽獎項',
         top: '全國首獎',
         grants: '國科會計畫',
@@ -76,6 +83,8 @@ const t = computed(() =>
         cvOther: 'English',
         skills: '能力斷面',
         skillsLede: '量尺不是熟練度，是證據層級。每一項都連得到一個可以點開的東西；連不到的，這一頁就不列。',
+        faq: '快速問答',
+        faqLede: '大家會搜的幾個問題，答案都出自上面的年表。',
       }
 )
 </script>

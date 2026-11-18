@@ -19,8 +19,8 @@
           <a v-for="l in links" :key="l.href" class="btn" :href="l.href" v-bind="linkAttrs(l.href)">{{ l.label }} ↗</a>
         </p>
       </div>
-      <figure v-if="work.cover" class="case-cover">
-        <img :src="work.cover" :alt="work.title" width="1600" height="1000" fetchpriority="high" />
+      <figure v-if="work.hero ?? work.cover" class="case-cover">
+        <img :src="work.hero ?? work.cover" :srcset="srcset(work.hero ?? work.cover)" sizes="(min-width: 1024px) 55vw, 100vw" :alt="work.title" width="1600" height="1000" fetchpriority="high" />
       </figure>
       <div v-else class="case-cover case-cover--card"><SiteBizCard /></div>
     </header>
@@ -38,10 +38,10 @@
          three across; wide screens get a row each. -->
     <section v-if="highlights.length" class="shell case-block">
       <h2 class="case-h2">{{ work.highlightsTitle || t.does }}</h2>
-      <ol class="hl" :class="{ 'hl--phone': phoneShots }">
+      <ol class="hl" :class="{ 'hl--phone': phoneShots || storeShots }">
         <li v-for="h in highlights" :key="h.title" class="hl-item" :class="{ 'hl-item--text': !h.shot }">
-          <div v-if="h.shot" :class="phoneShots ? 'device' : 'screen'">
-            <img :src="h.shot" :alt="h.title" loading="lazy" />
+          <div v-if="h.shot" :class="storeShots ? 'store' : phoneShots ? 'device' : 'screen'">
+            <img :src="h.shot" :srcset="srcset(h.shot)" sizes="(min-width: 1024px) 60vw, 100vw" :alt="h.title" loading="lazy" />
           </div>
           <div class="hl-text">
             <h3>
@@ -52,6 +52,18 @@
           </div>
         </li>
       </ol>
+    </section>
+
+    <!-- One thing to try with your own hands, where a product has one. -->
+    <section v-if="work.demo === 'slots'" class="shell case-block">
+      <h2 class="case-h2">{{ t.demoH }}</h2>
+      <p class="demo-lede">{{ t.demoLede }}</p>
+      <ProductSlotDemo />
+    </section>
+    <section v-else-if="work.demo === 'fx'" class="shell case-block">
+      <h2 class="case-h2">{{ t.fxH }}</h2>
+      <p class="demo-lede">{{ t.fxLede }}</p>
+      <ProductFxDemo />
     </section>
 
     <!-- Fallback for cases not yet rewritten as a product page. -->
@@ -97,10 +109,22 @@
 
     <section class="shell case-block">
       <p class="stack"><span>{{ t.stack }}</span>{{ flatStack.join(' · ') }}</p>
-      <p class="mt-8">
+    </section>
+
+    <!-- The way on: the next product, large enough to be the obvious next step. -->
+    <nav class="shell case-block" :aria-label="t.nextLabel">
+      <NuxtLink :to="next.href" class="next">
+        <span class="next-text">
+          <span class="next-eyebrow mono text-2xs">{{ t.next }}</span>
+          <span class="next-title">{{ next.title }}</span>
+          <span class="next-tag">{{ next.tagline }}</span>
+        </span>
+        <span class="next-pic"><img :src="next.cover" :srcset="srcset(next.cover)" sizes="(min-width: 768px) 50vw, 100vw" alt="" width="1600" height="900" loading="lazy" decoding="async" /></span>
+      </NuxtLink>
+      <p class="mt-6">
         <button type="button" class="back mono text-2xs" @click="goBack">← {{ backLabel }}</button>
       </p>
-    </section>
+    </nav>
   </article>
 </template>
 
@@ -120,9 +144,23 @@ const router = useRouter()
 
 const t = computed(() =>
   props.locale === 'en'
-    ? { now: 'now', does: 'What it does', mine: 'What I did', awards: 'Awards and grants', stack: 'Built with', screen: 'screen', back: 'All work', backPrev: 'Back', home: '/en/portfolio/' }
-    : { now: '現在', does: '它能做什麼', mine: '我負責的部分', awards: '得獎與補助', stack: '用到的技術', screen: '畫面', back: '看所有作品', backPrev: '回上一頁', home: '/portfolio/' }
+    ? { now: 'now', does: 'What it does', mine: 'What I did', awards: 'Awards and grants', stack: 'Built with', screen: 'screen', next: 'Next product', nextLabel: 'More work', back: 'All work', backPrev: 'Back', home: '/en/portfolio/', demoH: 'Try it: a time that actually works', demoLede: 'A treatment is a chain of steps, and each step needs its own people, room and machine. Pick one: only the times when all of them are free come back.', fxH: 'Try it: Taobao in NT$', fxLede: 'This is what a Taobao results page looks like with the extension on. Flip the switch, or change the rate.' }
+    : { now: '現在', does: '它能做什麼', mine: '我負責的部分', awards: '得獎與補助', stack: '用到的技術', screen: '畫面', next: '下一個產品', nextLabel: '更多作品', back: '看所有作品', backPrev: '回上一頁', home: '/portfolio/', demoH: '試試看：排得出來的時段', demoLede: '一個療程是好幾個步驟，每一步要的人、診間、儀器都不一樣。選一個療程，只有每一樣都空著的時段才會留下來。', fxH: '試試看：把淘寶換成台幣', fxLede: '裝了淘換算之後，淘寶的搜尋結果大概長這樣。打開開關，或改一下匯率看看。' }
 )
+
+/** The next product in the portfolio's order, wrapping round to the first. */
+const { works, en } = useContent()
+const next = computed(() => {
+  const i = works.findIndex((w) => w.slug === props.work.slug)
+  const n = works[(i + 1) % works.length]
+  const tr = props.locale === 'en' ? (en.works?.[n.slug] ?? {}) : {}
+  return {
+    title: tr.title ?? n.title,
+    tagline: tr.tagline ?? n.tagline,
+    cover: n.cover ?? n.thumbnail,
+    href: `${props.locale === 'en' ? '/en' : ''}/work/${n.slug}/`,
+  }
+})
 
 /** Anything still marked TODO is not rendered. */
 function ok(v) {
@@ -133,6 +171,8 @@ const work = computed(() => props.work)
 const outcomes = computed(() => (work.value.outcomes ?? []).filter((o) => ok(o.value)))
 const highlights = computed(() => (work.value.highlights ?? []).filter((h) => ok(h.title)))
 const phoneShots = computed(() => work.value.screenshotShape === 'phone')
+// Store artwork already has its own phone and headline: shown as a card, not inside another phone frame.
+const storeShots = computed(() => work.value.highlightShape === 'store')
 const links = computed(() => (work.value.links ?? []).filter((l) => ok(l.href)))
 const flatStack = computed(() => Object.values(work.value.stack ?? {}).flat().filter(ok))
 
@@ -186,9 +226,16 @@ function goBack() {
   color: var(--pop-ink);
 }
 
+.case-intro {
+  container-type: inline-size;
+}
+
+/* Sized to its column, so a name like PhishForge (about 6.4em of this face)
+   always fits whole: a word is never broken, only the space between words. */
 .case-title {
   margin-top: var(--sp-2);
-  font-size: var(--step-5);
+  font-size: min(var(--step-5), 15cqi);
+  overflow-wrap: normal;
   font-weight: 900;
   line-height: 1.02;
 }
@@ -223,6 +270,12 @@ function goBack() {
   flex-wrap: wrap;
   gap: var(--sp-3);
   margin-top: var(--sp-5);
+}
+
+.demo-lede {
+  margin-top: var(--sp-3);
+  max-width: 40em;
+  color: var(--ink-2);
 }
 
 .case-cover {
@@ -269,9 +322,16 @@ function goBack() {
   gap: var(--sp-1);
 }
 
+/* Each figure stays on one line and shrinks to its column when it is long
+   ("iOS ＋ Android"), instead of breaking in two. */
+.case-outcomes > div {
+  container-type: inline-size;
+}
+
 .case-outcomes dd {
   font-family: var(--font-display);
-  font-size: var(--step-3);
+  font-size: min(var(--step-3), 13cqi);
+  white-space: nowrap;
   font-weight: 800;
   line-height: 1.1;
 }
@@ -329,6 +389,21 @@ function goBack() {
 }
 
 /* A phone, not a screenshot with a border: rounded body, the screen inset. */
+.store {
+  max-width: 300px;
+  margin-inline: auto;
+  overflow: hidden;
+  border-radius: var(--r-3);
+  box-shadow: var(--shadow-2);
+}
+
+.store img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 9 / 16;
+}
+
 .device {
   max-width: 300px;
   margin-inline: auto;
@@ -468,6 +543,8 @@ function goBack() {
 }
 
 .back {
+  min-height: 44px;
+  padding-inline: 0;
   color: var(--ink-2);
   font-weight: 600;
   text-decoration: underline;
@@ -477,6 +554,74 @@ function goBack() {
 
 .back:hover {
   color: var(--ink);
+}
+
+.next {
+  display: grid;
+  gap: var(--sp-6);
+  align-items: center;
+  padding: var(--sp-6);
+  border-radius: var(--r-3);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+  text-decoration: none;
+  transition:
+    box-shadow var(--dur-3) var(--ease-entrance),
+    transform var(--dur-3) var(--ease-entrance);
+}
+
+.next:hover {
+  box-shadow: var(--shadow-2);
+  transform: translateY(-3px);
+}
+
+.next-text {
+  display: grid;
+  gap: var(--sp-2);
+}
+
+.next-eyebrow {
+  color: var(--pop-ink);
+  font-weight: 700;
+}
+
+.next-title {
+  font-family: var(--font-display);
+  font-size: var(--step-4);
+  font-weight: 900;
+  line-height: 1.1;
+  color: var(--ink);
+  word-break: keep-all;
+}
+
+.next-tag {
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+
+.next-pic {
+  display: block;
+  overflow: hidden;
+  border-radius: var(--r-2);
+  aspect-ratio: 16 / 9;
+}
+
+.next-pic img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 700ms var(--ease-entrance);
+}
+
+.next:hover .next-pic img {
+  transform: scale(1.04);
+}
+
+@media (min-width: 768px) {
+  .next {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    padding: var(--sp-7);
+  }
 }
 
 /* Wide screens in a row: tall captures are cut from the bottom, where a

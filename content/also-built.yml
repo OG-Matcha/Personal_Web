@@ -42,14 +42,6 @@
   repo: null
   award: 台積電校園黑客松 AI 維運懶人包組 第一名
 
-- name: 淘換算 Taobao Exchange
-  thumbnail: /images/taobao-1.jpg
-  year: 2025
-  line: Chrome 擴充套件，自動把淘寶的人民幣金額換算成新台幣顯示。
-  stack: [TypeScript, Chrome Extension]
-  repo: https://chromewebstore.google.com/detail/neikbgpobachnkgcefcmedgojmedbfmk
-  award: null
-
 - name: Ched.AI
   thumbnail: /images/chedai-1.png
   year: 2024

@@ -3,7 +3,7 @@
        controls for the room itself (language, day/night). -->
   <header class="hd">
     <div class="hd-bar">
-      <NuxtLink :to="t.home" class="hd-mark">
+      <NuxtLink :to="t.home" class="hd-mark" :aria-label="t.name">
         <span class="hd-dot" aria-hidden="true" />
         <span>{{ t.name }}</span>
       </NuxtLink>
@@ -107,6 +107,7 @@ const t = computed(() =>
   font-size: var(--step-0);
   text-decoration: none;
   white-space: nowrap;
+  min-height: 40px;
 }
 
 /* A lump of terracotta: the studio's one signature colour. */
@@ -136,7 +137,10 @@ const t = computed(() =>
   text-decoration: none;
   color: var(--ink-2);
   white-space: nowrap;
-  padding-block: var(--sp-2);
+  /* 40px tall hit area: thumbs miss 18px-tall text links. */
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
 }
 
 .hd-link:hover,
@@ -189,14 +193,30 @@ const t = computed(() =>
   .hd-tools {
     gap: var(--sp-1);
   }
-  .hd-mark span:last-child,
+  /* The Chinese name is three characters and fits; the English one does
+     not, and leaves the dot standing in for it. */
+  .hd-mark span:last-child:lang(en),
   .hd-mail-text {
     display: none;
+  }
+  .hd-mark {
+    min-width: 40px;
+    justify-content: center;
+  }
+  .hd-lang {
+    min-width: 40px;
+    justify-content: center;
   }
   .hd-mail {
     width: 40px;
     padding: 0;
     justify-content: center;
+  }
+}
+
+@media (max-width: 370px) {
+  .hd-mark span:last-child {
+    display: none;
   }
 }
 </style>

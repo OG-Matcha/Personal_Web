@@ -1,0 +1,63 @@
+# -----------------------------------------------------------------------------
+# 產品頁：淘換算 Taobao Exchange（斐闊 Finctory）
+#
+# 照擴充套件的原始碼、README 和 Chrome 線上應用程式商店的公開頁寫。
+# 使用者數和評分是 2026-11-18 從商店頁抄的，會變；改數字時一起改這行日期。
+# 第一項不放圖：頁首就是那張前後對照，下面的「試試看」也演一次。
+# 彈出視窗的圖是把 dist/popup.html 單獨打開截的（匯率是示意值）。
+# -----------------------------------------------------------------------------
+
+slug: taobao
+tier: promoted
+order: 6
+
+title: 淘換算 Taobao Exchange
+titleEn: Taobao Exchange
+role: 獨立開發
+org: 斐闊 Finctory
+orgUrl: https://www.finctory.com/
+period: { start: 2025-06, end: null }
+status: 已上架
+links:
+  - label: Chrome 線上應用程式商店
+    labelEn: Chrome Web Store
+    href: https://chromewebstore.google.com/detail/neikbgpobachnkgcefcmedgojmedbfmk
+
+cover: /images/taobao-1.jpg
+thumbnail: /images/taobao-1.jpg
+hero: /images/taobao-1.jpg
+screenshots: []
+demo: fx
+
+# 作品頁是給使用者和訪客看的產品介紹：講它能幫你做什麼，不講內部決策和程式行數。
+
+tagline: 逛淘寶，價格旁邊直接出現台幣。
+summary: >-
+  在淘寶和天貓買東西，每看到一個人民幣價格就得自己乘一次匯率。
+  裝了淘換算，商品頁、搜尋結果和購物車上的價格旁邊會直接標出新台幣，匯率每天自己更新。
+
+outcomes:
+  - value: 279 位
+    label: Chrome 商店使用者
+  - value: 4.8 星
+    label: 5 則評分
+  - value: 不用登入
+    label: 全程在你的瀏覽器裡算
+
+highlights:
+  - title: 價格旁邊，直接是台幣
+    text: 商品頁、搜尋結果、購物車、收藏和足跡頁上，每個人民幣價格旁邊都會多一個台幣標籤。往下捲、換頁、篩選，新載入的價格也會跟著換算。
+  - title: 匯率每天自己更新
+    text: 點右上角的圖示，看得到現在用的匯率和最後更新的時間。不用自己輸入匯率，也不用設定。
+    shot: /images/taobao-popup.webp
+  - title: 不用登入，也不碰你的資料
+    text: 所有換算都在你自己的瀏覽器裡完成，不需要帳號，不讀也不存你的購物紀錄；結帳和登入頁面它根本不會出現。
+
+myPart:
+  - 一個人從零做到上架：價格偵測、匯率更新、彈出視窗和歡迎頁
+  - 讓淘寶不斷變動的頁面（捲動載入、單頁切換）上的價格都換算得到
+  - 送審、上架 Chrome 線上應用程式商店，之後持續維護
+
+stack:
+  client: [React, TypeScript, Vite]
+  infra: [Chrome Extension Manifest V3]

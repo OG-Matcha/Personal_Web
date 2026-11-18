@@ -63,16 +63,28 @@ outcomes:
   - value: U-Start
     label: 教育部創業補助
 
+# 「它能做什麼」用上架商店的產品圖（Figma oSave_v1.3「產品圖」頁，Android 1080x1920），
+# 不用封面裡那三張畫面，免得同一頁出現兩次。
+highlightShape: store
 highlights:
   - title: 記一筆，只要三下
     text: 選錢是進來還是出去、用什麼付，再打品項和金額；類別會自己填好。不用懂會計，記下來的每一筆卻都帶著會計上的意義。
-    shot: /images/osave-2.webp
+    shot: /images/osave-classify.webp
   - title: 一頁看懂這個月
     text: 收支比較、金流走向、支出比例攤在同一頁，錢從哪裡來、流到哪裡去，一眼就看得出來。
-    shot: /images/osave-3.webp
+    shot: /images/osave-share.webp
   - title: 給你分數，也告訴你為什麼
     text: 六項指標換算成 0–100 分，列出需要改善和值得保持的地方，再用一句話說下個月可以怎麼調整。
-    shot: /images/osave-4.webp
+    shot: /images/osave-health.webp
+  - title: 花得不對勁，先提醒你
+    text: 拿你平常的消費習慣來比，哪一類突然變多，就先跳出提示，並列出是哪幾筆。
+    shot: /images/osave-anomaly.webp
+  - title: 存錢有目標，也看得到進度
+    text: 自訂目標金額和期限，進度條跟著每一筆收支走，還會估算哪一天能達成。
+    shot: /images/osave-goal.webp
+  - title: 這週比上週，這個月比上個月
+    text: 週和月一鍵切換，收入和支出的差異直接畫成長條圖，不用自己翻紀錄去算。
+    shot: /images/osave-compare.webp
 
 turn:
   title: 從發票醫生到財伴

@@ -50,7 +50,6 @@ defineProps({
 
 .st-card {
   width: 100%;
-  max-width: 64rem;
   margin-inline: auto;
   padding: clamp(var(--sp-5), 3.5vw, var(--sp-8));
   background: var(--surface);

@@ -14,8 +14,11 @@ links:
   - label: 官網 finctory.com
     labelEn: finctory.com
     href: https://www.finctory.com/
+  - label: 找好康 SurPrice
+    labelEn: SurPrice
+    href: https://surprice-web.finctory.com/
 cover: null
-thumbnail: null
+thumbnail: /images/finctory-site.webp  # 沒有封面時，「下一個產品」卡片用這張
 screenshots: []
 
 # 作品頁是給使用者和訪客看的產品介紹：講它能幫你做什麼，不講內部決策和程式行數。
@@ -43,9 +46,14 @@ highlights:
     text: 用會計邏輯記帳、算出財務健康分數的 App，已在 iOS 與 Android 上架。
     shot: /images/osave-1.webp
     href: /work/osave/
+  - title: 找好康 SurPrice
+    text: 跨通路找特價：各家 DM 上的優惠收在同一頁，依快截止、離我近、低價或折扣排序，每一筆都標出單位價格和還剩幾天。一張張滑過去，右滑收進自己的好康手冊；出門前就看得到附近哪家門市能用，直接導航過去。
+    shot: /images/surprice-cover.webp
+    href: /work/surprice/
   - title: 淘換算
     text: Chrome 擴充套件，自動把淘寶上的人民幣價格換算成新台幣顯示。
     shot: /images/taobao-1.jpg
+    href: /work/taobao/
 
 turn:
   title: 讓系統活得比寫它的人久

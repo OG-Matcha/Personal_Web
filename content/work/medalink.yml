@@ -25,6 +25,8 @@ links:
     href: https://medalink.ai/
 cover: /images/medalink-cover.webp
 thumbnail: /images/medalink-cover.webp
+demo: slots  # 案例頁的互動示範（components/product/SlotDemo.vue）
+hero: /images/medalink-hero-cover.webp  # 案例頁主圖：不重複標題的產品畫面
 screenshots:
   - /images/medalink-2.jpg
   - /images/medalink-3.jpg

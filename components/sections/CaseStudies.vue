@@ -7,7 +7,7 @@
   <ol class="cs-list">
     <li v-for="(w, i) in items" :key="w.slug" class="cs-item" :class="{ 'cs-item--flip': i % 2 === 1 }">
       <NuxtLink v-if="w.cover" :to="w.href" class="cs-shot" :aria-label="w.title">
-        <SiteShot :src="w.cover" width="1600" height="900" />
+        <SiteShot :src="w.cover" width="1600" height="900" fit="cover" />
       </NuxtLink>
       <!-- Finctory is a company, not a screen: its card, to pick up and turn over. -->
       <div v-else class="cs-shot cs-shot--card"><SiteBizCard /></div>
@@ -41,7 +41,7 @@ const { works, en } = useContent()
 const { locale } = useLocale()
 
 const c = computed(() =>
-  locale.value === 'en' ? { now: 'now', read: 'Read the case study' } : { now: '現在', read: '讀案例研究' }
+  locale.value === 'en' ? { now: 'now', read: 'See the product' } : { now: '現在', read: '看產品介紹' }
 )
 
 /** Two short outcomes reach the index: what a visitor cares about, not line counts. */

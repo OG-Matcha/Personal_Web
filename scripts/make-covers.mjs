@@ -35,7 +35,7 @@ if (!pages.length) {
   process.exit(1)
 }
 
-const browser = await chromium.launch()
+const browser = await chromium.launch({ channel: 'chrome' }) // the installed Chrome; no bundled download needed
 // Rendered at 2x and written at 1600x900, so the type is resampled down rather
 // than drawn at its final size - which is the difference between crisp and
 // merely sharp on a display that is showing it at 1600 anyway.

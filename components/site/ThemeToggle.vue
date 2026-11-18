@@ -1,7 +1,7 @@
 <template>
   <!-- Day or night in the studio. The stored choice is applied before first
        paint by the inline script in nuxt.config; this only flips and remembers. -->
-  <button type="button" class="tg" :aria-pressed="night" :aria-label="label" :title="label" @click="flip">
+  <button type="button" class="tg" :aria-pressed="night" :aria-label="label" :title="label" @click="flip($event)">
     <Moon v-if="night" :size="18" :stroke-width="2" aria-hidden="true" />
     <Sun v-else :size="18" :stroke-width="2" aria-hidden="true" />
   </button>
@@ -33,7 +33,7 @@ onMounted(() => {
   night.value = current()
 })
 
-function flip() {
+function apply() {
   night.value = !night.value
   const v = night.value ? 'dark' : 'light'
   document.documentElement.dataset.theme = v
@@ -41,7 +41,50 @@ function flip() {
     localStorage.setItem('theme', v)
   } catch {}
 }
+
+/*
+  Every colour on the page eases at its own pace, so a plain swap passes
+  through moments where a pale header holds pale text. A view transition
+  swaps the whole page at once instead, revealed as a circle growing out of
+  this button: the lights going on (or off) from where you reached for them.
+*/
+function flip(e) {
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches
+  if (!document.startViewTransition || still) return apply()
+  const r = e.currentTarget.getBoundingClientRect()
+  const x = r.left + r.width / 2
+  const y = r.top + r.height / 2
+  const end = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y))
+  const root = document.documentElement
+  root.classList.add('is-theming')
+  const vt = document.startViewTransition(apply)
+  vt.ready
+    .then(() =>
+      root.animate(
+        { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${end}px at ${x}px ${y}px)`] },
+        { duration: 650, easing: 'cubic-bezier(0.65, 0, 0.35, 1)', pseudoElement: '::view-transition-new(root)' }
+      )
+    )
+    .catch(() => {})
+  vt.finished.finally(() => root.classList.remove('is-theming'))
+}
 </script>
+
+<style>
+/* The reveal replaces the default cross-fade; colour transitions are held off
+   so the new snapshot is taken already settled. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+html.is-theming,
+html.is-theming *,
+html.is-theming *::before,
+html.is-theming *::after {
+  transition: none !important;
+}
+</style>
 
 <style scoped>
 .tg {

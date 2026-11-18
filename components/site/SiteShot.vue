@@ -1,13 +1,12 @@
 <template>
   <!--
-    A screenshot shown whole. Screens come in every shape (a 2.95:1 banner, a
-    1.41:1 scan), so the frame never crops: the picture is contained, and the
-    space around it is filled by a blurred copy of the same picture. Both are
-    the same URL, so the browser fetches it once, and both stay lazy.
+    A screenshot in a fixed frame. Screens come in every shape (a 2.95:1
+    banner, a 1.41:1 scan), so by default the frame never crops: the picture
+    sits whole on a plain mat, like a print mounted in a frame. Covers made
+    for the frame's own shape pass fit="cover" and fill it edge to edge.
   -->
-  <span class="shot">
-    <img class="shot-bg" :src="src" alt="" aria-hidden="true" loading="lazy" decoding="async" />
-    <img class="shot-img" :src="src" :alt="alt" :width="width" :height="height" loading="lazy" decoding="async" />
+  <span class="shot" :class="`shot--${fit}`">
+    <img class="shot-img" :src="src" :srcset="srcset(src)" :sizes="sizes" :alt="alt" :width="width" :height="height" loading="lazy" decoding="async" />
   </span>
 </template>
 
@@ -17,6 +16,8 @@ defineProps({
   alt: { type: String, default: '' },
   width: { type: [Number, String], default: undefined },
   height: { type: [Number, String], default: undefined },
+  sizes: { type: String, default: '(min-width: 1024px) 40vw, 100vw' },
+  fit: { type: String, default: 'contain', validator: (v) => ['contain', 'cover'].includes(v) },
 })
 </script>
 
@@ -30,21 +31,23 @@ defineProps({
   background: var(--surface-2);
 }
 
-.shot-bg {
-  position: absolute;
-  inset: -12%;
-  width: 124%;
-  height: 124%;
-  object-fit: cover;
-  filter: blur(22px) saturate(1.15);
-  opacity: 0.6;
-}
-
 .shot-img {
-  position: relative;
   display: block;
   width: 100%;
   height: 100%;
   object-fit: contain;
+}
+
+/* The mat: a little air on every side, so a picture that does not match
+   the frame reads as placed, not as letterboxed. */
+.shot--contain .shot-img {
+  padding: 7%;
+  filter: drop-shadow(0 6px 14px rgb(0 0 0 / 0.14));
+}
+
+.shot--cover .shot-img {
+  object-fit: cover;
+  /* Covers put their name and type at the top left; crop from the right. */
+  object-position: left top;
 }
 </style>

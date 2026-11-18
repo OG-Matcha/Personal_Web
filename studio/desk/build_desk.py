@@ -390,7 +390,7 @@ TBB = TB @ Matrix.Translation((0, -0.01, 0.014)) @ Euler((math.radians(64), 0, 0
 box('tab_body', (0.247, 0.178, 0.006), (0, 0.089, 0.003), m=M['alu'], bevel=0.004, parent=TBB)
 plane('tab_glass', 0.245, 0.176, (0, 0.089, 0.0061), m=M['glass_black'], parent=TBB)
 plane('screen_tablet', 0.229, 0.160, (0, 0.089, 0.0064),
-      m=img_mat('scr_tablet', IMG / 'medalink-1.jpg', emit=1.6 if MOOD == 'night' else 1.0), col='screens', parent=TBB)
+      m=img_mat('scr_tablet', TEX / 'tablet.png', emit=1.6 if MOOD == 'night' else 1.0), col='screens', parent=TBB)
 
 # ---- mug ----------------------------------------------------------------
 

@@ -50,6 +50,8 @@ const NODE_TYPE = {
   medalink: { '@type': 'SoftwareApplication', applicationCategory: 'BusinessApplication' },
   phishforge: { '@type': 'CreativeWork', sourceOrganization: { '@id': ID.ncu } },
   finctory: { '@type': 'Organization', '@id': 'https://www.finctory.com/#org' },
+  surprice: { '@type': 'WebApplication', applicationCategory: 'ShoppingApplication', operatingSystem: 'Web', browserRequirements: 'Requires a modern mobile or desktop browser' },
+  taobao: { '@type': 'SoftwareApplication', applicationCategory: 'ShoppingApplication', operatingSystem: 'Chrome' },
 }
 
 const url = `https://www.ogmatcha.com/work/${work.slug}/`
@@ -62,7 +64,7 @@ const workId = (NODE_TYPE[work.slug] ?? {})['@id'] ?? `${url}#work`
 const workNode = computed(() => {
   const base = NODE_TYPE[work.slug] ?? { '@type': 'CreativeWork' }
   // Only store listings are install URLs; the official site goes in sameAs.
-  const install = links.value.map((l) => l.href).filter((h) => /apps\.apple\.com|play\.google\.com/.test(h))
+  const install = links.value.map((l) => l.href).filter((h) => /apps\.apple\.com|play\.google\.com|chromewebstore\.google\.com/.test(h))
   const site = links.value.map((l) => l.href).filter((h) => !install.includes(h))
   return {
     ...base,
@@ -77,7 +79,7 @@ const workNode = computed(() => {
     ...(base['@type'] === 'Organization'
       ? { founder: { '@id': ID.person } }
       : { creator: { '@id': ID.person } }),
-    ...(install.length && base['@type'] === 'SoftwareApplication'
+    ...(install.length && /Application$/.test(base['@type'])
       ? { installUrl: install }
       : {}),
     ...(site.length && base['@type'] !== 'Organization' ? { sameAs: site } : {}),

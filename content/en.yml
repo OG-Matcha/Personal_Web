@@ -74,6 +74,63 @@ beats:
     lede: In June 2026 I finished my bachelor's degree with two credit programs, and in September I moved straight into the master's program. I still run the technical side of both companies; November added a hackathon honourable mention, and there are two open-source projects.
 
 works:
+  surprice:
+    title: SurPrice
+    role: CTO · lead developer
+    status: Live
+    tagline: Supermarket deals across every chain, kept in your own deal book.
+    summary: Every supermarket, pharmacy and hypermarket has its own flyer, and comparing them means leafing through each one. SurPrice puts the deals from all of them on one page, works out the unit price, marks how many days are left, and before you head out shows which nearby store honours them.
+    outcomes:
+      - value: Every chain
+        label: Supermarkets, hypermarkets, pharmacies and convenience stores together
+      - value: No install
+        label: Opens in a phone browser
+      - value: '{awards}'
+        label: Competition awards
+    highlights:
+      - title: Every flyer on one page
+        text: No more leafing through flyers one by one. This week's deals from every chain sit together, sorted by ending soon, nearest, lowest price or biggest discount, and you can search by product or brand. Comparing prices in bed at night, the screen follows your phone into dark mode.
+      - title: The maths done for you
+        text: '"Buy one get one" and "two for" prices are the hardest to compare. Every deal is turned into an average price and a unit price (per 100 ml, say), with the days left beside it and a link to the flyer it came from, so you can check.'
+      - title: Only the stores you go to
+        text: Pick the chains you shop at and the home page, the swipe deck and the nearby map keep only their deals, with a count for each.
+      - title: Filter by category and chain
+        text: Food, drinks, personal care, pets, babies... filter by category and chain together, and see how many deals will be left before you tap.
+      - title: Text too small? One tap
+        text: Older shoppers compare prices too. "Large text" in the corner scales the whole screen, prices and days left included.
+      - title: Swipe to save, then get directions
+        text: Once signed in, flick through deals like cards and swipe right to keep one in your deal book, with the ones ending soonest first. Under "Nearby", see which stores honour the deals you kept and get directions in one tap.
+    myPart:
+      - As Finctory's CTO, led product development and wrote most of the code
+      - Rebuilt the prototype as a real web app - search, swipe deck, saved deals and nearby stores
+      - Turned flyers in every chain's own format into deals you can search, sort and compare by unit price
+    results:
+      - metric: Competition awards
+        value: '{awards}'
+  taobao:
+    title: Taobao Exchange
+    role: Solo developer
+    status: On the Chrome Web Store
+    tagline: Shop Taobao and see NT$ right next to the price.
+    summary: Shopping on Taobao and Tmall means multiplying every RMB price by the exchange rate yourself. With Taobao Exchange installed, prices on product pages, search results and the cart get their New Taiwan dollar figure right beside them, at a rate that updates itself every day.
+    outcomes:
+      - value: '279'
+        label: Chrome Web Store users
+      - value: 4.8 stars
+        label: From 5 ratings
+      - value: No sign-in
+        label: Everything is worked out in your browser
+    highlights:
+      - title: NT$, right next to the price
+        text: On product pages, search results, the cart, favourites and your browsing history, every RMB price gets an NT$ tag beside it. Scroll, page or filter and the newly loaded prices are converted too.
+      - title: A rate that updates itself
+        text: Click the icon in the toolbar to see the rate in use and when it was last updated. Nothing to type in and nothing to set up.
+      - title: No account, and hands off your data
+        text: All conversion happens in your own browser. No account, and it neither reads nor stores your shopping history; it never runs on checkout or sign-in pages at all.
+    myPart:
+      - Built it alone from nothing to the store - price detection, daily rates, the popup and the welcome page
+      - Made prices convert on Taobao's ever-shifting pages, through infinite scroll and in-page navigation
+      - Took it through Chrome Web Store review, and still maintain it
   osave:
     title: oSave
     role: CTO · architecture and backend
@@ -96,6 +153,12 @@ works:
         text: Income versus spending, where the money flowed and what it went on, side by side - you can see at a glance where it came from and where it went.
       - title: A score, and the reason for it
         text: Six indicators become a 0-100 score, with what needs work and what to keep, plus one sentence on what to adjust next month.
+      - title: A heads-up when spending looks off
+        text: It compares this month with your usual habits; when one category suddenly jumps, it flags it and lists the entries behind it.
+      - title: A savings goal you can watch
+        text: Set an amount and a deadline; the progress bar moves with every entry and estimates the day you will get there.
+      - title: This week against last, this month against last
+        text: Switch between week and month and the difference in income and spending is drawn as bars, with no digging through records.
     turn:
       title: From Invoice Doctor to oSave
       text: The first version, Invoice Doctor, read your receipts and sorted your spending automatically. The data was all there, yet people still could not answer "is this month better or worse?". In May 2025 we changed course - instead of collecting more data, make every entry add up to a conclusion.
@@ -156,6 +219,8 @@ works:
     highlights:
       - title: oSave
         text: A budgeting app built on accounting logic that scores your financial health, live on iOS and Android.
+      - title: SurPrice
+        text: Deals from every chain's flyer on one page, sorted by ending soon, nearest, lowest price or biggest discount, each with its unit price and the days left. Swipe through them, keep the ones you want in your own deal book, and before you head out see which nearby store honours them, with directions.
       - title: Taobao Exchange
         text: A Chrome extension that shows Taobao's RMB prices in New Taiwan dollars, automatically.
     turn:
@@ -215,9 +280,6 @@ alsoBuilt:
   Catalyst:
     award: TSMC IT CareerHack, AI Ops track, 1st place
     line: Multi-agent software delivery platform, from requirements analysis to code generation to test and deployment.
-  淘換算 Taobao Exchange:
-    name: Taobao Exchange
-    line: Chrome extension that shows Taobao prices converted from RMB to NT$.
   Ched.AI:
     award: GenAI Stars, Creative Maker track, Merit
     line: Credit-investigation assistant for finance; local LLaMA 3 and OpenAI side by side, with vector retrieval over financial statements.

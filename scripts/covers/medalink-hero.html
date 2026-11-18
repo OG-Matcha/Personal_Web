@@ -1,0 +1,101 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>MedaLink hero</title>
+<link rel="stylesheet" href="../../public/fonts/latin.css" />
+<link rel="stylesheet" href="../../public/fonts/cjk.css" />
+<style>
+  /* The case page's own picture. The page already prints the name, the lede
+     and the facts beside it, so this one carries no words: the three screens
+     the product is used through, laid on the desk at once. Same ground and
+     window chrome as medalink.html, so the card and the page read as one. */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    position: relative;
+    width: 1600px;
+    height: 900px;
+    overflow: hidden;
+    background:
+      radial-gradient(120% 90% at 85% 10%, #e8efff 0%, transparent 60%),
+      linear-gradient(160deg, #f6f8fc, #e9eef8);
+    font-family: 'Noto Sans TC', sans-serif;
+  }
+
+  .window {
+    position: absolute;
+    overflow: hidden;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow:
+      0 0 0 1px rgb(15 28 68 / 0.08),
+      0 30px 60px -20px rgb(15 28 68 / 0.35);
+  }
+
+  .chrome {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    height: 34px;
+    padding-inline: 14px;
+    border-bottom: 1px solid #e6eaf2;
+    background: #f7f9fc;
+  }
+
+  .chrome i {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: #d6dce8;
+  }
+
+  .chrome p {
+    margin-left: 12px;
+    font-size: 14px;
+    color: #8b96ae;
+  }
+
+  .window img {
+    display: block;
+    width: 100%;
+  }
+
+  .w1 {
+    left: 70px;
+    top: 150px;
+    width: 820px;
+    transform: rotate(-2deg);
+  }
+
+  .w2 {
+    left: 470px;
+    top: 70px;
+    width: 760px;
+    transform: rotate(1.2deg);
+    z-index: 1;
+  }
+
+  .w3 {
+    right: 60px;
+    top: 300px;
+    width: 700px;
+    transform: rotate(-0.8deg);
+    z-index: 2;
+  }
+</style>
+
+<div class="window w1">
+  <div class="chrome"><i></i><i></i><i></i><p>客戶資料</p></div>
+  <img src="../../public/images/medalink-2.jpg" alt="" />
+</div>
+<div class="window w2">
+  <div class="chrome"><i></i><i></i><i></i><p>行事曆</p></div>
+  <img src="../../public/images/medalink-1.jpg" alt="" />
+</div>
+<div class="window w3">
+  <div class="chrome"><i></i><i></i><i></i><p>資源與療程</p></div>
+  <img src="../../public/images/medalink-3.jpg" alt="" />
+</div>

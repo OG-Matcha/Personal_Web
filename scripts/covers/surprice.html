@@ -1,0 +1,99 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>SurPrice cover</title>
+<link rel="stylesheet" href="../../public/fonts/latin.css" />
+<link rel="stylesheet" href="../../public/fonts/cjk.css" />
+<style>
+  /* SurPrice's own look: the butter-to-mint wash of the app's header, its
+     teal and green logo, one phone showing the deal list. The copy is the
+     product's own words (the app's README and its sign-in screens). */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    position: relative;
+    width: 1600px;
+    height: 900px;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 820px 1fr;
+    align-items: center;
+    padding-left: 110px;
+    background:
+      radial-gradient(90% 120% at 0% 0%, #fbf3a6 0%, transparent 55%),
+      radial-gradient(90% 120% at 100% 0%, #a9efe6 0%, transparent 60%),
+      #f4f8f6;
+    font-family: 'Noto Sans TC', sans-serif;
+    color: #23302e;
+  }
+
+  .logo {
+    display: block;
+    width: 420px;
+  }
+
+  .lede {
+    margin-top: 44px;
+    max-width: 15em;
+    font-size: 44px;
+    font-weight: 800;
+    line-height: 1.38;
+    color: #0a6877;
+  }
+
+  .points {
+    display: grid;
+    gap: 14px;
+    margin-top: 40px;
+    list-style: none;
+    font-size: 24px;
+    line-height: 1.5;
+    color: #3d4b49;
+  }
+
+  .points li::before {
+    content: '';
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-right: 14px;
+    border-radius: 50%;
+    background: #29b9a3;
+    vertical-align: 0.15em;
+  }
+
+  .phone {
+    position: absolute;
+    right: 150px;
+    top: 70px;
+    width: 400px;
+    padding: 14px;
+    border-radius: 58px;
+    background: #1d2324;
+    box-shadow:
+      0 0 0 2px #3a4243 inset,
+      0 50px 80px -30px rgb(10 60 60 / 0.45);
+    transform: rotate(3deg);
+  }
+
+  .phone img {
+    display: block;
+    width: 100%;
+    border-radius: 44px;
+  }
+</style>
+
+<div>
+  <img class="logo" src="surprice-logo.svg" alt="" />
+  <p class="lede">跨通路找特價，<br />收藏成自己的優惠手冊。</p>
+  <ul class="points">
+    <li>一張張滑過優惠，右滑收進好康手冊</li>
+    <li>出門前就知道附近哪家門市能用，直接導航過去</li>
+    <li>每一筆都標出單位價格和還剩幾天</li>
+  </ul>
+</div>
+
+<div class="phone"><img src="surprice-list.webp" alt="" /></div>

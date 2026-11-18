@@ -1,0 +1,76 @@
+# -----------------------------------------------------------------------------
+# 產品頁：找好康 SurPrice（斐闊 Finctory）
+#
+# 照 surprice-web.finctory.com 的公開畫面和產品 README 的定位寫。
+# 原始碼是私有的（© Finctory），這裡只講產品能做什麼，不寫內部架構和資料管線。
+# 畫面是 2026-11-18 用手機尺寸（390x844 @2x）截的訪客畫面；
+# 滑卡、收藏、附近門市要 Google 登入，沒有截，只用文字介紹。
+# -----------------------------------------------------------------------------
+
+slug: surprice
+tier: promoted
+order: 5
+
+title: 找好康 SurPrice
+titleEn: SurPrice
+role: 技術長 · 主要開發
+org: 斐闊 Finctory
+orgUrl: https://www.finctory.com/
+period: { start: 2025-04, end: null }
+status: 已上線
+links:
+  - label: 打開找好康
+    labelEn: Open SurPrice
+    href: https://surprice-web.finctory.com/
+
+cover: /images/surprice-cover.webp
+thumbnail: /images/surprice-cover.webp
+hero: /images/surprice-cover.webp
+# 手機直式畫面，和 9:19.5 的 device 框剛好同比例。
+screenshotShape: phone
+screenshots: []
+
+# 作品頁是給使用者和訪客看的產品介紹：講它能幫你做什麼，不講內部決策和程式行數。
+
+tagline: 跨通路找特價，收藏成自己的優惠手冊。
+summary: >-
+  每家超市、藥妝、量販都有自己的 DM，想比價就得一份一份翻。找好康把各家 DM 上的優惠收在同一頁，
+  幫你算好單位價格、標出還剩幾天，出門前就知道附近哪家門市能用。
+
+outcomes:
+  - value: 跨通路
+    label: 超市、量販、藥妝、超商一起看
+  - value: 不用下載
+    label: 手機瀏覽器打開就能用
+  - value: '{awards} 項'
+    label: 競賽得獎
+
+highlights:
+  - title: 各家 DM，收在同一頁
+    text: 不用再一份一份翻 DM。各通路當期的優惠排在一起，可以依快截止、離我近、低價或折扣排序，也能直接搜商品或品牌。晚上躺著比價，畫面也會跟著手機換成深色。
+    # 淺色清單已經在頁首封面的手機裡，這裡放深色版，免得同一頁出現兩次。
+    shot: /images/surprice-dark.webp
+  - title: 每一筆都幫你算好
+    text: 「買一送一」「兩件平均」這種價格最難比。每一筆都換算成平均單價和單位價格（例如每 100ml 多少錢），旁邊標出還剩幾天，也附上 DM 原文和更新日期，可以自己對照。
+    shot: /images/surprice-detail.webp
+  - title: 只看你會去的店
+    text: 選好常去的通路，首頁、滑卡和附近門市就只留下那幾家的優惠，每家還列出目前有幾筆。
+    shot: /images/surprice-stores.webp
+  - title: 用分類和通路篩
+    text: 食品、飲料、個人護理、寵物、嬰幼兒⋯⋯分類和通路一起篩，按下去之前就看得到會剩幾筆。
+    shot: /images/surprice-filter.webp
+  - title: 字太小，一鍵放大
+    text: 長輩也會用到比價。右上角的「大字」把整個畫面放大，價格和剩餘天數一樣清楚。
+    shot: /images/surprice-bigtext.webp
+  - title: 滑一滑收藏，出門直接導航
+    text: 登入之後，優惠可以像卡片一樣一張張滑過，右滑收進自己的好康手冊，快截止的排最前面。到了「附近」，看得到收藏的優惠在哪幾家門市能用，點一下就導航過去。
+
+myPart:
+  - 以斐闊技術長身分帶產品開發，也是這個專案最主要的開發者
+  - 從原型改版成正式的 Web App：搜尋、滑卡、收藏、附近門市
+  - 把各通路格式不同的 DM 整理成可以搜尋、排序、比單價的優惠資料
+
+stack:
+  client: [Next.js, React, TypeScript, Tailwind CSS, MapLibre GL]
+  data: [Supabase, PostgreSQL, PostGIS]
+  infra: [Cloudflare Workers, Playwright]
