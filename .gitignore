@@ -39,3 +39,7 @@ logs
 
 # Lighthouse reports (local)
 .audit/
+
+# Search Console service-account keys never belong in the repo
+*service-account*.json
+gsc-key*.json

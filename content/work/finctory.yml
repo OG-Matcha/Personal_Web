@@ -25,6 +25,9 @@ screenshots: []
 # （原本的架構決策、資料流、程式規模寫在 git 歷史裡。）
 
 tagline: 讓每一分錢都活得有意義的金融科技新創。
+# 搜尋結果用。Search Console：「斐闊有限公司」有曝光、沒點擊，舊描述裡沒有這個名稱。
+seoTitle: 斐闊有限公司 Finctory
+seoDescription: 斐闊有限公司（Finctory）是學生創業的金融科技公司，2025 年完成登記，產品有財伴 oSave、找好康 SurPrice、淘換算。黃鉅燊是共同創辦人暨技術長。
 summary: >-
   2024 年四月，幾個還在念書的人組了隊；兩年後，它是一間登記在案的公司，
   有四條產品線：財伴 oSave、找好康 SurPrice、淘換算和財伴 Podcast。

@@ -25,17 +25,22 @@ const evidence = computed(() =>
   timeline.filter((e) => e.project === work.slug && (e.kind === 'award' || e.kind === 'grant'))
 )
 
+// A case may name itself the way people search for it (seoTitle) and lead its
+// snippet with who and what (seoDescription); otherwise its title and summary.
+const seoTitle = `${work.seoTitle ?? work.title} | 黃鉅燊 Ju-Shen Huang`
+const seoDescription = work.seoDescription ?? work.summary
+
 useSeoMeta({
-  title: `${work.title} | 黃鉅燊 Ju-Shen Huang`,
-  description: work.summary,
-  ogTitle: `${work.title} | 黃鉅燊 Ju-Shen Huang`,
-  ogDescription: work.summary,
+  title: seoTitle,
+  description: seoDescription,
+  ogTitle: seoTitle,
+  ogDescription: seoDescription,
   ogUrl: `https://www.ogmatcha.com/work/${work.slug}/`,
   // Globally 'profile', which told every scraper that a product page was a
   // personal profile.
   ogType: 'article',
-  twitterTitle: `${work.title} | 黃鉅燊 Ju-Shen Huang`,
-  twitterDescription: work.summary,
+  twitterTitle: seoTitle,
+  twitterDescription: seoDescription,
 })
 
 /**

@@ -42,8 +42,8 @@ usePageSeo({
   lang: 'en',
   type: 'WebPage',
   ogType: 'article',
-  title: `${work.title} | Ju-Shen Huang`,
-  description: e.summary ?? zh.summary,
+  title: `${e.seoTitle ?? work.title} | Ju-Shen Huang`,
+  description: e.seoDescription ?? e.summary ?? zh.summary,
 })
 </script>
 
