@@ -41,8 +41,6 @@ summary: >-
   術後衛教和半年回診也一起接手。
 
 outcomes:
-  - value: 已上線
-    label: 每天在診所裡跑
   - value: 2 人
     label: 從需求做到上線
   - value: 4 個通路

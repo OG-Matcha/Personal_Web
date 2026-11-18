@@ -180,8 +180,6 @@ works:
     outcomes:
       - value: 1st place
         label: Information Application Service Innovation Contest, security track
-      - value: NSTC
-        label: 2024 undergraduate research grant
       - value: No passwords kept
         label: Behaviour is recorded, what people type is not
     highlights:
@@ -213,10 +211,6 @@ works:
         label: Product lines
       - value: NT$1M+
         label: Competition prizes and grants
-      - value: Registered
-        label: Incorporated company
-      - value: Incubators
-        label: Based in several in Taipei and Taoyuan
     highlights:
       - title: oSave
         text: A budgeting app built on accounting logic that scores your financial health, live on iOS and Android.
@@ -245,8 +239,6 @@ works:
     tagline: An AI front desk for clinics - replies, scheduling and recalls in one system.
     summary: Messages from LINE, Facebook, Instagram and the website land in one inbox. The AI answers by each clinic's own rules, books people into slots where the doctor, room and equipment are all free, then takes over reminders, rescheduling, aftercare and six-month recalls.
     outcomes:
-      - value: Live
-        label: Running in clinics every day
       - value: 2 people
         label: Requirements to production
       - value: 4 channels

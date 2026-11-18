@@ -29,8 +29,6 @@ summary: >-
 outcomes:
   - value: 第一名
     label: 大專校院資訊應用服務創新競賽 資安應用組
-  - value: 國科會
-    label: 113 年度大專學生研究計畫
   - value: 不留密碼
     label: 只記錄行為，不存受測者輸入的內容
 
