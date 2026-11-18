@@ -130,8 +130,8 @@ export default defineNuxtConfig({
         { name: 'twitter:card', content: 'summary_large_image' },
       ],
       link: [
-        { rel: 'icon', type: 'image/png', href: '/images/favicon.png' },
-        { rel: 'apple-touch-icon', sizes: '180x180', href: '/images/favicon.png' },
+        { rel: 'icon', type: 'image/png', sizes: '48x48', href: '/images/favicon-48.png' },
+        { rel: 'apple-touch-icon', sizes: '180x180', href: '/images/apple-touch-icon.png' },
         { rel: 'canonical', href: SITE_URL },
 
         // Latin faces are 0.8 kB gzipped — cheap enough to block on.

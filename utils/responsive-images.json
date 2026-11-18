@@ -239,6 +239,16 @@
    "/images/taobao-1.jpg"
   ]
  ],
+ "/images/taobao-live.webp": [
+  [
+   800,
+   "/images/taobao-live-800w.webp"
+  ],
+  [
+   1600,
+   "/images/taobao-live.webp"
+  ]
+ ],
  "/images/taobao-popup.webp": [
   [
    800,

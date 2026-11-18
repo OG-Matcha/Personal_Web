@@ -3,7 +3,9 @@
 #
 # 照擴充套件的原始碼、README 和 Chrome 線上應用程式商店的公開頁寫。
 # 使用者數和評分是 2026-11-18 從商店頁抄的，會變；改數字時一起改這行日期。
-# 第一項不放圖：頁首就是那張前後對照，下面的「試試看」也演一次。
+# Highlight 1 is a real capture: the extension's own content script injected into
+# world.taobao.com (no sign-in), only the rate stubbed at 4.38; sellers' photos and
+# product names are blurred the way the store image does. (.audit/tb/shot.mjs, 2026-11-18)
 # 彈出視窗的圖是把 dist/popup.html 單獨打開截的（匯率是示意值）。
 # -----------------------------------------------------------------------------
 
@@ -47,6 +49,7 @@ outcomes:
 highlights:
   - title: 價格旁邊，直接是台幣
     text: 商品頁、搜尋結果、購物車、收藏和足跡頁上，每個人民幣價格旁邊都會多一個台幣標籤。往下捲、換頁、篩選，新載入的價格也會跟著換算。
+    shot: /images/taobao-live.webp
   - title: 匯率每天自己更新
     text: 點右上角的圖示，看得到現在用的匯率和最後更新的時間。不用自己輸入匯率，也不用設定。
     shot: /images/taobao-popup.webp

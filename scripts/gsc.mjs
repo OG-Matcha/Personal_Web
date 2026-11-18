@@ -6,7 +6,8 @@
  *   node scripts/gsc.mjs pages [days]          the same, per page
  *   node scripts/gsc.mjs inspect [url ...]     index status of each URL (default: every page in the sitemap)
  *   node scripts/gsc.mjs sitemaps              sitemaps Google has, when it last read them, and errors
- *   node scripts/gsc.mjs submit                resubmit /sitemap.xml (the only write; needs a full user)
+ *   node scripts/gsc.mjs submit                resubmit /sitemap.xml (writes need a full user)
+ *   node scripts/gsc.mjs drop <sitemap url>    remove a stale sitemap from the property
  *
  * Auth is a service account added to the property as a restricted user. The
  * key never lives in this repo: point GSC_KEY at it (default
@@ -94,7 +95,7 @@ async function inspect(tok, urls) {
 }
 
 const [cmd = 'queries', ...rest] = process.argv.slice(2)
-const tok = await token(cmd === 'submit')
+const tok = await token(cmd === 'submit' || cmd === 'drop')
 const SM = `https://www.googleapis.com/webmasters/v3/sites/${encodeURIComponent(SITE)}/sitemaps`
 if (cmd === 'sites') console.log(JSON.stringify(await api(tok, 'https://www.googleapis.com/webmasters/v3/sites'), null, 2))
 else if (cmd === 'queries') await analytics(tok, 'query', Number(rest[0]) || 90)
@@ -106,4 +107,7 @@ else if (cmd === 'sitemaps') {
 } else if (cmd === 'submit') {
   await api(tok, `${SM}/${encodeURIComponent(`${ORIGIN}/sitemap.xml`)}`, null, 'PUT')
   console.log('resubmitted', `${ORIGIN}/sitemap.xml`)
+} else if (cmd === 'drop' && rest[0]) {
+  await api(tok, `${SM}/${encodeURIComponent(rest[0])}`, null, 'DELETE')
+  console.log('removed', rest[0])
 } else console.log('usage: node scripts/gsc.mjs sites | queries [days] | pages [days] | inspect [url ...]')

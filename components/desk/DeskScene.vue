@@ -15,10 +15,20 @@
   -->
   <section ref="root" class="dk" :class="{ 'is-ready': ready }" :style="{ '--stops': stops.length }" :aria-label="t.label">
     <div class="dk-stage">
-      <!-- Both stills ship; CSS shows the one matching the site theme (system or toggle). -->
+      <!--
+        One still downloads, not two: <picture> picks day or night from the
+        system scheme before any CSS runs, so a phone spends its first
+        bandwidth on the picture it will show (both used to load at high
+        priority, one of them hidden). Only when the toggle overrides the
+        system does the other still appear - lazy, so it loads only then.
+      -->
       <div class="dk-poster" aria-hidden="true">
-        <img class="dk-poster-day" src="/desk/poster-day.webp" :srcset="srcset('/desk/poster-day.webp')" sizes="100vw" alt="" width="1600" height="900" fetchpriority="high" />
-        <img class="dk-poster-night" src="/desk/poster-night.webp" :srcset="srcset('/desk/poster-night.webp')" sizes="100vw" alt="" width="1600" height="900" fetchpriority="high" />
+        <picture class="dk-poster-auto">
+          <source media="(prefers-color-scheme: dark)" :srcset="srcset('/desk/poster-night.webp')" sizes="100vw" />
+          <img src="/desk/poster-day.webp" :srcset="srcset('/desk/poster-day.webp')" sizes="100vw" alt="" width="1600" height="900" fetchpriority="high" />
+        </picture>
+        <img class="dk-forced dk-forced-day" src="/desk/poster-day.webp" :srcset="srcset('/desk/poster-day.webp')" sizes="100vw" alt="" width="1600" height="900" loading="lazy" />
+        <img class="dk-forced dk-forced-night" src="/desk/poster-night.webp" :srcset="srcset('/desk/poster-night.webp')" sizes="100vw" alt="" width="1600" height="900" loading="lazy" />
       </div>
       <!--
         Until the 3D is ready (several seconds on a cold load), scrolling
@@ -626,8 +636,32 @@ async function start() {
 }
 
 /* Two classes, to outrank `.dk-poster img { display: block }` below. */
-.dk .dk-poster-night {
+.dk .dk-poster-night,
+.dk .dk-forced {
   display: none;
+}
+
+.dk-poster-auto {
+  display: block;
+}
+
+/* The toggle disagrees with the system: hide the <picture>, show the other still. */
+@media (prefers-color-scheme: dark) {
+  :root[data-theme='light'] .dk-poster-auto {
+    display: none;
+  }
+  :root[data-theme='light'] .dk .dk-forced-day {
+    display: block;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root[data-theme='dark'] .dk-poster-auto {
+    display: none;
+  }
+  :root[data-theme='dark'] .dk .dk-forced-night {
+    display: block;
+  }
 }
 
 @media (prefers-color-scheme: dark) {

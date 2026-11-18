@@ -153,6 +153,11 @@ body {
   line-height: var(--lh-body-latin);
   text-autospace: normal;
   font-feature-settings: 'tnum' 0;
+  /* Both webfonts are variable from 400 to 900, so there is no weight to fake.
+     Leaving weight synthesis on cost a phone 2-3 s of layout per page (a 4x
+     CPU trace of /resume/: 3.2-5.0 s of Layout with it, 1.6-2.0 s without),
+     while drawing the same glyphs. */
+  font-synthesis-weight: none;
   -webkit-font-smoothing: antialiased;
   transition: background-color var(--dur-3) var(--ease-inout), color var(--dur-3) var(--ease-inout);
 }
