@@ -6,7 +6,9 @@ Expects in <bake dir>: desk_{day,night}.png, room_{day,night}.png (from
 finish_bake.py), model/desk.gltf (from build_desk.py --export <dir>/model/desk.gltf) and
 poster_{day,night}.png (from build_desk.py --preview).
 The desk atlas is shipped at 3072 px: at the closest camera stop a 4096 atlas
-is not visibly sharper, and it costs nearly twice the bytes.
+is not visibly sharper, and it costs nearly twice the bytes (checked again
+2026-11-19: +124 KB for a barely sharper notebook). The room atlas ships at
+2048: it holds the shelf and its wood, and it is small (about 40 KB).
 """
 import shutil
 import sys
@@ -18,7 +20,7 @@ src = Path(sys.argv[1])
 out = Path(__file__).resolve().parents[2] / 'public' / 'desk'
 out.mkdir(parents=True, exist_ok=True)
 
-SIZES = {'desk': 3072, 'room': 1536}
+SIZES = {'desk': 3072, 'room': 2048}
 for g, size in SIZES.items():
     for mood in ('day', 'night'):
         im = Image.open(src / f'{g}_{mood}.png').convert('RGB')

@@ -142,7 +142,9 @@ M = {
     'wall': mat('wall', srgb('#ece6dc'), 0.85),
     'floor': mat('floor', srgb('#6b4f3a'), 0.6),
     'frame': mat('frame', srgb('#f4f1ea'), 0.5),
-    'ceramic': mat('ceramic', srgb('#c2410c'), 0.32, coat=0.6),
+    # Off-white glaze: the orange one baked flat (no specular on the web) and
+    # was the loudest thing in the opening frame.
+    'ceramic': mat('ceramic', srgb('#ebe5da'), 0.32, coat=0.6),
     'coffee': mat('coffee', srgb('#2a170c'), 0.15),
     'paper': mat('paper', srgb('#f5f1e8'), 0.9),
     'navy': mat('navy', srgb('#1f2a44'), 0.7),
@@ -162,6 +164,9 @@ M = {
 
 # ---- geometry helpers ---------------------------------------------------
 
+# The shelf bakes with the room. Moved into the desk atlas (2026-11-19) it
+# took texels from the notebook, whose thin arrows then vanished; the room
+# atlas is baked at 4096 instead, so the shelf stays sharp there.
 ROOM = ('floor', 'wall_', 'win_', 'desk_leg', 'desk_rail', 'shelf', 'art')
 
 
@@ -204,9 +209,14 @@ def wood_uv(o, xy):
     """Planar top-down UVs in metres (1.6 m = one image width), so every wooden part shares one grain scale."""
     me = o.data
     lay = me.uv_layers.new(name='wood')
-    for loop in me.loops:
-        co = me.vertices[loop.vertex_index].co
-        lay.data[loop.index].uv = ((co.x + xy[0]) / 1.6 + 0.5, (co.y + xy[1]) / 1.6 + 0.5)
+    for poly in me.polygons:
+        # Edges facing front or back take the grain from the front (x, z), so
+        # it runs along them instead of smearing into stripes down the edge.
+        side = abs(poly.normal.z) < 0.5
+        for li in poly.loop_indices:
+            co = me.vertices[me.loops[li].vertex_index].co
+            v = (co.z * 4.0 + xy[1]) / 1.6 + 0.5 if side else (co.y + xy[1]) / 1.6 + 0.5
+            lay.data[li].uv = ((co.x + xy[0]) / 1.6 + 0.5, v)
     return o
 
 
@@ -218,6 +228,11 @@ def lathe(name, profile, loc=(0, 0, 0), rot=(0, 0, 0), m=None, steps=48, col='st
     edges = [bm.edges.new((verts[i], verts[i + 1])) for i in range(len(verts) - 1)]
     bmesh.ops.spin(bm, geom=verts + edges, cent=(0, 0, 0), axis=(0, 0, 1), angle=math.tau, steps=steps, use_merge=True)
     bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-6)
+    # A profile that starts and ends on the axis is a closed solid (mug, pot,
+    # bulb): make every face point outwards. Spun as is, the mug and the pot
+    # came out inside-out and baked nearly black (2026-11-19).
+    if profile[0][0] == 0 and profile[-1][0] == 0:
+        bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
     bm.to_mesh(me)
     bm.free()
     for p in me.polygons:
@@ -541,7 +556,9 @@ plane('pf_photo', 0.064, 0.0853, (-0.0, -0.0056, 0.0505), (math.radians(90 - 12)
 # ---- shelf of awards on the back wall -----------------------------------
 
 SZ = 1.22
-wood_uv(box('shelf', (1.0, 0.2, 0.025), (0.05, 0.52, SZ), m=M['wood'], bevel=0.003), (0.05, 0.52))
+# No bevel: its rims unwrapped into thin islands that baked as bright and dark
+# stripes along the front edge.
+wood_uv(box('shelf', (1.0, 0.2, 0.025), (0.05, 0.52, SZ), m=M['wood'], bevel=0), (0.05, 0.52))
 for sx in (-0.38, 0.48):
     box(f'shelf_bracket{sx}', (0.02, 0.16, 0.02), (sx, 0.54, SZ - 0.03), m=M['metal_dark'], bevel=0.002)
 T0 = SZ + 0.0125
@@ -575,8 +592,10 @@ plane('print_cert', 0.1202, 0.17, (0.42, 0.5935, T0 + 0.112), (math.radians(90 -
       m=img_mat('cert', TEX / 'certificate.png', emit=1.0), col='screens')
 ART = TEX / 'art.png'
 box('art_frame', (0.42, 0.025, 0.54), (-0.52, 0.61, 1.42), m=M['base_black'], bevel=0.003)
-plane('art', 0.36, 0.48, (-0.52, 0.5965, 1.42), (math.pi / 2, 0, 0),
-      m=img_mat('art', ART if ART.exists() else TEX / 'mat.png', 0.8))
+# The painting too keeps its own texture: in the room atlas it had a few
+# hundred texels and read as a blur at the shelf stop.
+plane('print_art', 0.36, 0.48, (-0.52, 0.5965, 1.42), (math.pi / 2, 0, 0),
+      m=img_mat('art', ART if ART.exists() else TEX / 'mat.png', emit=1.0), col='screens')
 
 # ---- light --------------------------------------------------------------
 
@@ -660,7 +679,10 @@ scene.view_settings.look = 'AgX - Medium High Contrast'
 scene.render.resolution_x = 1600
 scene.render.resolution_y = 900
 
-def bake(outdir, size_desk=4096, size_room=2048, samples=256):
+WOOD_TEXELS = 1.0
+
+
+def bake(outdir, size_desk=4096, size_room=4096, samples=256):
     """Join each bake group into one mesh with its own UV atlas and bake diffuse light into it."""
     outdir = Path(outdir)
     outdir.mkdir(parents=True, exist_ok=True)
@@ -689,7 +711,9 @@ def bake(outdir, size_desk=4096, size_room=2048, samples=256):
             bm = bmesh.new()
             bm.from_mesh(j.data)
             mw3 = j.matrix_world.to_3x3()
-            dead = [f for f in bm.faces if (mw3 @ f.normal).normalized().z < -0.7]
+            mw = j.matrix_world
+            # Only on and near the desk top: the shelf's underside is in view.
+            dead = [f for f in bm.faces if (mw3 @ f.normal).normalized().z < -0.7 and (mw @ f.calc_center_median()).z < TOP + 0.3]
             bmesh.ops.delete(bm, geom=dead, context='FACES')
             bm.to_mesh(j.data)
             bm.free()
@@ -702,8 +726,31 @@ def bake(outdir, size_desk=4096, size_room=2048, samples=256):
         bpy.ops.object.mode_set(mode='EDIT')
         bpy.ops.mesh.select_all(action='SELECT')
         bpy.ops.uv.smart_project(angle_limit=math.radians(60), island_margin=0.0015, area_weight=0.0, correct_aspect=True)
+        if g == 'desk':
+            # Room to give the wood more texels than the rest. Tried 1.5x on
+            # 2026-11-19: the grain looked the same (its look is oak.png's),
+            # while the notebook's handwriting and the report covers blurred.
+            wood = [i for i, sl in enumerate(j.material_slots) if sl.material and sl.material.name == 'wood']
+            # Edited in place in edit mode: writing a bmesh back with to_mesh
+            # reset the active UV layer, and the atlas no longer matched the export.
+            bm = bmesh.from_edit_mesh(j.data)
+            lay = bm.loops.layers.uv['bake']
+            for f in bm.faces:
+                for lp in f.loops:
+                    if f.material_index in wood:
+                        lp[lay].uv *= WOOD_TEXELS
+                    # pack_islands moves only selected UVs, and editing them
+                    # here drops the selection: the scaled wood was left
+                    # unpacked, past the atlas edge (2026-11-19).
+                    lp[lay].select = True
+                    lp[lay].select_edge = True
+            bmesh.update_edit_mesh(j.data)
         bpy.ops.uv.pack_islands(margin=0.0015, rotate=True)
         bpy.ops.object.mode_set(mode='OBJECT')
+        lo = min(min(d.uv) for d in j.data.uv_layers['bake'].data)
+        hi = max(max(d.uv) for d in j.data.uv_layers['bake'].data)
+        print('UV RANGE', g, round(lo, 4), round(hi, 4))
+        assert lo >= -1e-4 and hi <= 1 + 1e-4, f'{g}: bake UVs outside the atlas'
         joined[g] = j
     for g, j in joined.items():
         size = size_desk if g == 'desk' else size_room
@@ -717,6 +764,7 @@ def bake(outdir, size_desk=4096, size_room=2048, samples=256):
         bpy.ops.object.select_all(action='DESELECT')
         j.select_set(True)
         bpy.context.view_layer.objects.active = j
+        print('BAKE UV', g, j.data.uv_layers.active.name, [l.name for l in j.data.uv_layers])
         bpy.ops.object.bake(type='DIFFUSE')
         raw = outdir / f'{g}_{MOOD}_raw.exr'
         img.filepath_raw = str(raw)
