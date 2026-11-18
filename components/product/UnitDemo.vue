@@ -18,8 +18,8 @@
         <span class="up-deal">{{ o.deal }}</span>
         <span class="up-size">{{ o.sizeLabel }}</span>
         <label class="up-price">
-          <span>{{ t.shelf }}</span>
-          <span class="up-input">$<input v-model.number="price[o.key]" type="number" inputmode="numeric" min="1" max="9999" class="figures" :aria-label="`${o.store} ${t.shelf}`" /></span>
+          <span>{{ o.bundle ? t.bundle : t.shelf }}</span>
+          <span class="up-input">$<input v-model.number="price[o.key]" type="number" inputmode="numeric" min="1" max="9999" class="figures" :aria-label="`${o.store} ${o.bundle ? t.bundle : t.shelf}`" @change="fix(o.src)" /></span>
         </label>
         <span class="up-out">
           <span class="up-each figures">{{ t.each }} ${{ o.each }}</span>
@@ -39,7 +39,7 @@ const { locale } = useLocale()
 const E = computed(() => locale.value === 'en')
 
 // deal: n = items you take home, pay = how many shelf prices you pay for
-// (a 60%-off second one is 1.6), or bundle = one price for all n.
+// (a 60%-off second one is 1.6), or bundle = the price is for all n together.
 const data = {
   milk: {
     emoji: '🥛',
@@ -47,7 +47,7 @@ const data = {
     offers: [
       { key: 'a', size: 936, n: 2, pay: 1.6, price: 92, deal: ['Second one 60% off', '第二件 6 折'] },
       { key: 'b', size: 1857, n: 1, pay: 1, price: 159, deal: ['Single bottle', '單瓶'] },
-      { key: 'c', size: 290, n: 4, bundle: 99, price: 35, deal: ['Any 4 for $99', '任選 4 瓶 $99'] },
+      { key: 'c', size: 290, n: 4, bundle: true, price: 99, deal: ['Any 4 for one price', '任選 4 瓶一口價'] },
     ],
   },
   tissue: {
@@ -69,6 +69,16 @@ const data = {
       { key: 'c', size: 1000, n: 1, pay: 1, price: 799, deal: ['Bulk 1 kg', '量販 1 公斤'] },
     ],
   },
+}
+
+// A shelf price stays between $1 and $9,999; an empty or odd entry snaps
+// back to the flyer's price when the field is left.
+const clampPrice = (v, fallback) => {
+  const n = Number(v)
+  return Number.isFinite(n) && n >= 1 ? Math.min(9999, Math.round(n)) : fallback
+}
+function fix(o) {
+  price[o.key] = clampPrice(price[o.key], o.price)
 }
 
 const good = ref('milk')
@@ -94,12 +104,15 @@ const rows = computed(() => {
   const lang = E.value ? 0 : 1
   const u = d.count ? (E.value ? ' sheets' : ' 抽') : d.u
   const list = d.offers.map((o, i) => {
-    const p = Math.max(1, Number(price[o.key]) || o.price)
-    const total = o.bundle ?? p * o.pay
+    const p = clampPrice(price[o.key], o.price)
+    const total = o.bundle ? p : p * o.pay
     const each = total / o.n
     const unit = (each / o.size) * 100
     return {
       key: o.key,
+      src: o,
+      shelfN: o.bundle ? p / o.n : p,
+      bundle: !!o.bundle,
       store: stores.value[i],
       deal: o.deal[lang],
       sizeLabel: o.sizeLabel?.[lang] ?? `${o.size.toLocaleString('en-US')}${d.u}${o.n > 1 ? (E.value ? ` × ${o.n}` : ` × ${o.n}`) : ''}`,
@@ -117,8 +130,14 @@ const saving = computed(() => {
   const r = rows.value
   const best = r.find((x) => x.best)
   const worst = r.reduce((w, x) => (x.unitN > w.unitN ? x : w))
-  const pct = Math.round((1 - best.unitN / worst.unitN) * 100)
+  const pct = Math.min(99, Math.round((1 - best.unitN / worst.unitN) * 100))
   if (pct < 1) return E.value ? 'All three come out the same.' : '三家算下來差不多。'
+  // Only say the shelf price misleads when it does: the cheapest tag is not the best buy.
+  const cheapestTag = r.reduce((c, x) => (x.shelfN < c.shelfN ? x : c))
+  if (cheapestTag === best)
+    return E.value
+      ? `${best.store} has the lowest tag and the best unit price: ${pct}% less per 100${best.u.trim()} than ${worst.store}.`
+      : `${best.store} 標價最低，單位價格也最低，每 100${best.u.trim()} 比 ${worst.store} 便宜 ${pct}%。`
   return E.value
     ? `${best.store} is ${pct}% cheaper per 100${best.u.trim()} than ${worst.store}, even though the shelf prices say otherwise.`
     : `${best.store} 每 100${best.u.trim()} 比 ${worst.store} 便宜 ${pct}%，只看標價是看不出來的。`
@@ -126,8 +145,8 @@ const saving = computed(() => {
 
 const t = computed(() =>
   E.value
-    ? { pick: 'Pick something to compare', shelf: 'Shelf price', each: 'Each', best: 'Best per unit', note: 'Made-up stores and prices. Change a shelf price and see the ranking move. SurPrice does this for every deal in each flyer.' }
-    : { pick: '選一樣東西來比', shelf: '標價', each: '平均每件', best: '單位價格最低', note: '店家和價格都是示意。改改看標價，排名會跟著變；找好康會對每一份 DM 的每一筆優惠這樣算。' }
+    ? { pick: 'Pick something to compare', shelf: 'Shelf price', bundle: 'Bundle price', each: 'Each', best: 'Best per unit', note: 'Made-up stores and prices. Change a shelf price and see the ranking move. SurPrice does this for every deal in each flyer.' }
+    : { pick: '選一樣東西來比', shelf: '標價', bundle: '一口價', each: '平均每件', best: '單位價格最低', note: '店家和價格都是示意。改改看標價，排名會跟著變；找好康會對每一份 DM 的每一筆優惠這樣算。' }
 )
 </script>
 

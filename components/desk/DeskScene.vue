@@ -229,7 +229,9 @@ function readScroll() {
   const box = el.getBoundingClientRect()
   // The stage has started to scroll away with the section: the last card
   // and the dots go first, so no card floats over the page coming up.
-  leaving.value = p > 0.99 || box.bottom < innerHeight - 2
+  // The last card and the dots stay through the first part of the crane up,
+  // so the move never runs with nothing on screen to read.
+  leaving.value = box.bottom < innerHeight * 0.72
   // While the room fills the top of the window, the header floats on it with
   // no page-coloured band behind it.
   document.documentElement.classList.toggle('is-over-desk', box.bottom > 120)
@@ -525,7 +527,9 @@ async function start() {
   // ---- camera path ----------------------------------------------------
   const path = STOPS.map((s) => ({ cam: B(s.cam), at: B(s.at), spot: s.spot ? B(s.spot) : null }))
   const want = { cam: path[0].cam.clone(), at: path[0].at.clone() }
-  const exit = { cam: B([-0.19, -0.42, 1.62]), at: B([-0.2, -0.17, 0.76]) }
+  // Close and nearly straight down, so the frame is the open notebook alone:
+  // the mug and the tablet stay outside it.
+  const exit = { cam: B([-0.2, -0.3, 1.24]), at: B([-0.2, -0.19, 0.76]) }
   const cur = { cam: want.cam.clone(), at: want.at.clone() }
   const mouse = { x: 0, y: 0, sx: 0, sy: 0 }
   const el = root.value

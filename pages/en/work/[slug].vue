@@ -28,7 +28,8 @@ const work = {
   org: null,
   links: (zh.links ?? []).map((l) => ({ ...l, label: l.labelEn ?? l.label })),
   outcomes: e.outcomes ?? [],
-  highlights: byIndex(zh.highlights, e.highlights).map((h) => (h.href ? { ...h, href: `/en${h.href}` } : h)),
+  // Only site paths move under /en; a link off the site stays as it is.
+  highlights: byIndex(zh.highlights, e.highlights).map((h) => (h.href?.startsWith('/') ? { ...h, href: `/en${h.href}` } : h)),
   turn: zh.turn && e.turn ? { ...zh.turn, ...e.turn } : null,
   myPart: e.myPart ?? [],
 }

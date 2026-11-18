@@ -50,13 +50,17 @@ highlights:
     shot: /images/osave-1.webp
     href: /work/osave/
   - title: 找好康 SurPrice
-    text: 跨通路找特價：各家 DM 上的優惠收在同一頁，依快截止、離我近、低價或折扣排序，每一筆都標出單位價格和還剩幾天。一張張滑過去，右滑收進自己的好康手冊；出門前就看得到附近哪家門市能用，直接導航過去。
+    text: 跨通路找特價的 Web App：各家 DM 的優惠收在同一頁，每一筆都算好單位價格和還剩幾天。
     shot: /images/surprice-cover.webp
     href: /work/surprice/
   - title: 淘換算
     text: Chrome 擴充套件，自動把淘寶上的人民幣價格換算成新台幣顯示。
     shot: /images/taobao-1.jpg
     href: /work/taobao/
+  # Public show page (Apple Podcasts, 2026-11-18). No host name here: only the owner's name goes on the site.
+  - title: 財伴 Podcast
+    text: 財伴自己的節目，聊記帳和理財，2025 年 11 月開播，在 Apple Podcasts 等平台都聽得到。
+    href: https://podcasts.apple.com/tw/podcast/id1854686389
 
 turn:
   title: 讓系統活得比寫它的人久

@@ -221,9 +221,11 @@ works:
       - title: oSave
         text: A budgeting app built on accounting logic that scores your financial health, live on iOS and Android.
       - title: SurPrice
-        text: Deals from every chain's flyer on one page, sorted by ending soon, nearest, lowest price or biggest discount, each with its unit price and the days left. Swipe through them, keep the ones you want in your own deal book, and before you head out see which nearby store honours them, with directions.
+        text: A web app for deals across chains - every flyer's offers on one page, each worked out to a unit price and the days left.
       - title: Taobao Exchange
         text: A Chrome extension that shows Taobao's RMB prices in New Taiwan dollars, automatically.
+      - title: oSave Podcast
+        text: oSave's own show about budgeting and money, on air since November 2025 on Apple Podcasts and other platforms.
     turn:
       title: Making the system outlive its authors
       text: In a team with no investors, where everyone is still a student and anyone can leave, the first question before writing code is "can the next person take this over?". So all four product lines share one stack, and no one leaving takes a whole product with them.

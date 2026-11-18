@@ -199,9 +199,11 @@ const t = computed(() =>
   }
   /* Same 8px between words, but each link's hit area takes half of it. */
   .hd-nav {
-    gap: 0;
+    gap: 2px;
   }
   .hd-link {
+    justify-content: center;
+    min-width: 36px;
     padding-inline: 4px;
   }
   .hd-tools {

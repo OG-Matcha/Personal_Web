@@ -35,7 +35,7 @@
         </div>
         <p v-else class="ph-verdict" :class="{ 'is-right': right(m) }">
           <strong>{{ m.phish ? t.wasPhish : t.wasOk }}</strong>
-          <span>{{ right(m) ? t.right : t.wrong }}</span>
+          <span>{{ right(m) ? t.right : m.phish ? t.missed : t.falseAlarm }}</span>
           <span class="ph-why">{{ m.why }}</span>
         </p>
       </li>
@@ -175,7 +175,8 @@ const t = computed(() =>
         wasPhish: 'Phishing.',
         wasOk: 'Real.',
         right: 'You got it.',
-        wrong: 'Missed this one.',
+        missed: 'You let this one through.',
+        falseAlarm: 'You flagged a real mail.',
         score: (n, of) => `${n} of ${of} right. PhishForge writes mails like the first one for each department, so a drill tests judgement, not memory of a template.`,
         again: 'Try again',
         note: 'Made-up company and addresses, written for this page; not output from PhishForge.',
@@ -190,7 +191,8 @@ const t = computed(() =>
         wasPhish: '釣魚信。',
         wasOk: '正常的信。',
         right: '你答對了。',
-        wrong: '這封沒抓到。',
+        missed: '這封你放過了。',
+        falseAlarm: '這封是正常的，你誤判了。',
         score: (n, of) => `答對 ${n} / ${of} 封。PhishForge 會依部門寫出第一封那樣的信，演練考的是判斷力，不是記不記得範本。`,
         again: '再試一次',
         note: '公司、人名和網址都是為這一頁編的，不是 PhishForge 產生的內容。',

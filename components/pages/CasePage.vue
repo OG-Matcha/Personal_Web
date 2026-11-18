@@ -264,6 +264,9 @@ function goBack() {
 
 .case-tagline {
   margin-top: var(--sp-4);
+  /* The largest Chinese line on the page: break at punctuation, never inside a word. */
+  word-break: keep-all;
+  text-wrap: balance;
   font-family: var(--font-display);
   font-size: var(--step-2);
   font-weight: 700;
