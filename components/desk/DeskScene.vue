@@ -211,7 +211,7 @@ const hold = (t) => {
   const x = Math.min(1, Math.max(0, (t - 0.3) / 0.4))
   return x * x * (3 - 2 * x)
 }
-const walk = { i: 0, e: 0 }
+const walk = { i: 0, e: 0, out: 0 }
 let onWalk = null
 function readScroll() {
   const el = root.value
@@ -234,7 +234,8 @@ function readScroll() {
   // no page-coloured band behind it.
   document.documentElement.classList.toggle('is-over-desk', box.bottom > 120)
   const gone = (innerHeight - box.bottom) / (innerHeight * 0.5)
-  el.style.setProperty('--out', Math.min(1, Math.max(0, gone)).toFixed(3))
+  walk.out = Math.min(1, Math.max(0, gone))
+  el.style.setProperty('--out', walk.out.toFixed(3))
   if (e < 0.08) on.value = i
   else if (e > 0.92) on.value = i + 1
   onWalk?.()
@@ -524,6 +525,7 @@ async function start() {
   // ---- camera path ----------------------------------------------------
   const path = STOPS.map((s) => ({ cam: B(s.cam), at: B(s.at), spot: s.spot ? B(s.spot) : null }))
   const want = { cam: path[0].cam.clone(), at: path[0].at.clone() }
+  const exit = { cam: B([-0.19, -0.42, 1.62]), at: B([-0.2, -0.17, 0.76]) }
   const cur = { cam: want.cam.clone(), at: want.at.clone() }
   const mouse = { x: 0, y: 0, sx: 0, sy: 0 }
   const el = root.value
@@ -535,6 +537,14 @@ async function start() {
     want.at.lerpVectors(a.at, b.at, e)
     // Rise a little between stops, as if leaning back to look for the next thing.
     want.cam.y += 0.06 * Math.sin(Math.PI * e)
+    // Leaving: the camera cranes up off the last stop and settles over the
+    // open notebook, the first thing on the tour, while the room sinks into
+    // the page colour. The walk ends where it began, on the page.
+    if (walk.out > 0) {
+      const o = walk.out * walk.out * (3 - 2 * walk.out)
+      want.cam.lerp(exit.cam, o)
+      want.at.lerp(exit.at, o)
+    }
     kick()
   }
 

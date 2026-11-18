@@ -34,6 +34,8 @@ outcomes:
   - value: 不留密碼
     label: 只記錄行為，不存受測者輸入的內容
 
+demo: phish
+
 highlights:
   - title: 幾步就能開一場演練
     text: 輸入公司名稱、部門結構和近期情境就能開始，不需要員工的真實個資。

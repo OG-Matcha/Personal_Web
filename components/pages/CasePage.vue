@@ -65,6 +65,21 @@
       <p class="demo-lede">{{ t.fxLede }}</p>
       <ProductFxDemo />
     </section>
+    <section v-else-if="work.demo === 'health'" class="shell case-block">
+      <h2 class="case-h2">{{ t.healthH }}</h2>
+      <p class="demo-lede">{{ t.healthLede }}</p>
+      <ProductOsaveDemo />
+    </section>
+    <section v-else-if="work.demo === 'phish'" class="shell case-block">
+      <h2 class="case-h2">{{ t.phishH }}</h2>
+      <p class="demo-lede">{{ t.phishLede }}</p>
+      <ProductPhishDemo />
+    </section>
+    <section v-else-if="work.demo === 'unit'" class="shell case-block">
+      <h2 class="case-h2">{{ t.unitH }}</h2>
+      <p class="demo-lede">{{ t.unitLede }}</p>
+      <ProductUnitDemo />
+    </section>
 
     <!-- Fallback for cases not yet rewritten as a product page. -->
     <section v-else-if="!highlights.length && work.screenshots?.length" class="shell case-block">
@@ -149,8 +164,8 @@ const router = useRouter()
 
 const t = computed(() =>
   props.locale === 'en'
-    ? { now: 'now', does: 'What it does', mine: 'What I did', awards: 'Awards and grants', stack: 'Built with', screen: 'screen', next: 'Next product', nextLabel: 'More work', back: 'All work', backPrev: 'Back', home: '/en/portfolio/', demoH: 'Try it: a time that actually works', demoLede: 'A treatment is a chain of steps, and each step needs its own people, room and machine. Pick one: only the times when all of them are free come back.', fxH: 'Try it: Taobao in NT$', fxLede: 'This is what a Taobao results page looks like with the extension on. Flip the switch, or change the rate.' }
-    : { now: '現在', does: '它能做什麼', mine: '我負責的部分', awards: '得獎與補助', stack: '用到的技術', screen: '畫面', next: '下一個產品', nextLabel: '更多作品', back: '看所有作品', backPrev: '回上一頁', home: '/portfolio/', demoH: '試試看：排得出來的時段', demoLede: '一個療程是好幾個步驟，每一步要的人、診間、儀器都不一樣。選一個療程，只有每一樣都空著的時段才會留下來。', fxH: '試試看：把淘寶換成台幣', fxLede: '裝了淘換算之後，淘寶的搜尋結果大概長這樣。打開開關，或改一下匯率看看。' }
+    ? { now: 'now', does: 'What it does', mine: 'What I did', awards: 'Awards and grants', stack: 'Built with', screen: 'screen', next: 'Next product', nextLabel: 'More work', back: 'All work', backPrev: 'Back', home: '/en/portfolio/', demoH: 'Try it: a time that actually works', demoLede: 'A treatment is a chain of steps, and each step needs its own people, room and machine. Pick one: only the times when all of them are free come back.', fxH: 'Try it: Taobao in NT$', fxLede: 'This is what a Taobao results page looks like with the extension on. Flip the switch, or change the rate.', healthH: 'Try it: score a month', healthLede: 'Move the money around and watch the six indicators and the score. The weakest one tells you where to start.', phishH: 'Try it: spot the phish', phishLede: 'Three mails in a purchasing inbox. One of them was written for exactly this department.', unitH: 'Try it: which deal is cheaper?', unitLede: 'Flyers price things in ways that are hard to compare. Here is the same item at three stores, worked out per 100 ml or g.' }
+    : { now: '現在', does: '它能做什麼', mine: '我負責的部分', awards: '得獎與補助', stack: '用到的技術', screen: '畫面', next: '下一個產品', nextLabel: '更多作品', back: '看所有作品', backPrev: '回上一頁', home: '/portfolio/', demoH: '試試看：排得出來的時段', demoLede: '一個療程是好幾個步驟，每一步要的人、診間、儀器都不一樣。選一個療程，只有每一樣都空著的時段才會留下來。', fxH: '試試看：把淘寶換成台幣', fxLede: '裝了淘換算之後，淘寶的搜尋結果大概長這樣。打開開關，或改一下匯率看看。', healthH: '試試看：幫一個月打分數', healthLede: '把這個月的錢挪一挪，看六項指標和總分怎麼動；分數最低的那一項，就是該先改的地方。', phishH: '試試看：哪封是釣魚信', phishLede: '採購部信箱裡的三封信，其中有一封就是照這個部門寫的。', unitH: '試試看：哪一家比較便宜', unitLede: 'DM 上的價格寫法五花八門，很難直接比。同一樣東西、三家店，換算成每 100ml 或每 100g 來看。' }
 )
 
 /** The next product in the portfolio's order, wrapping round to the first. */

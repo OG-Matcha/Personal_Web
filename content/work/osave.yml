@@ -66,6 +66,8 @@ outcomes:
 # 「它能做什麼」用上架商店的產品圖（Figma oSave_v1.3「產品圖」頁，Android 1080x1920），
 # 不用封面裡那三張畫面，免得同一頁出現兩次。
 highlightShape: store
+demo: health
+
 highlights:
   - title: 記一筆，只要三下
     text: 選錢是進來還是出去、用什麼付，再打品項和金額；類別會自己填好。不用懂會計，記下來的每一筆卻都帶著會計上的意義。

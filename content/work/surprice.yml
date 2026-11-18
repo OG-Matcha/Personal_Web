@@ -45,6 +45,8 @@ outcomes:
   - value: '{awards} 項'
     label: 競賽得獎
 
+demo: unit
+
 highlights:
   - title: 各家 DM，收在同一頁
     text: 不用再一份一份翻 DM。各通路當期的優惠排在一起，可以依快截止、離我近、低價或折扣排序，也能直接搜商品或品牌。晚上躺著比價，畫面也會跟著手機換成深色。
