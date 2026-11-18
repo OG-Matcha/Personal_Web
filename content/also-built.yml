@@ -19,6 +19,7 @@
 
 - name: tessera
   thumbnail: /images/tessera-1.png
+  thumbFit: contain # 2:1, too wide to crop
   year: 2026
   line: Claude Code 的 mod，Windows 與中日韓文字優先：任何終端機都看得到貼上的圖片和文字、中日韓對齊的表格、長 diff 自動摺疊，以及多 agent 與繁體中文寫作的防呆。
   stack: [TypeScript, Claude Code Mods]
@@ -52,6 +53,7 @@
 
 - name: 2024 新生知訊網 ChatBot
   thumbnail: /images/ncufresh-1.jpg
+  thumbFit: contain # 2.95:1 banner
   year: 2024
   line: 中央大學新生入學問答系統，服務 1,000 名以上新生。
   stack: [Python, Flask, LangChain, OpenAI API, Streamlit]
@@ -68,6 +70,7 @@
 
 - name: BrainLib
   thumbnail: /images/brainlib-1.png
+  thumbFit: contain # text runs to both edges
   year: 2024
   line: 學術交流社群平台，系統分析與設計課程期末專案；唯一一個 Java／Spring 的作品。
   stack: [Vue.js, Spring, Hibernate, PostgreSQL, Docker]

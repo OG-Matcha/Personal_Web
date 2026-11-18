@@ -160,13 +160,17 @@ const oldestYear = computed(() => yearOf(entries.value[entries.value.length - 1]
   font-weight: 600;
 }
 
-/* A solid patch marks the wins. */
-.lg-row--win .lg-when time::before {
+/* A solid patch marks the wins. Every row keeps the patch's place, so the
+   dates stand on one line whether or not the row won. */
+.lg-when time::before {
   content: '';
   display: inline-block;
   width: 0.6em;
   height: 0.6em;
   margin-right: 0.45em;
+}
+
+.lg-row--win .lg-when time::before {
   background: var(--pop);
 }
 

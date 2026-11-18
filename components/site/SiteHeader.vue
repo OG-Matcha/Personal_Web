@@ -5,11 +5,15 @@
     <div class="hd-bar">
       <NuxtLink :to="t.home" class="hd-mark" :aria-label="t.name">
         <span class="hd-dot" aria-hidden="true" />
-        <span>{{ t.name }}</span>
+        <span class="hd-name">{{ t.name }}</span>
+        <span v-if="t.short" class="hd-name-short" aria-hidden="true">{{ t.short }}</span>
       </NuxtLink>
 
       <nav :aria-label="t.navLabel" class="scroll-x hd-nav">
-        <NuxtLink v-for="l in t.links" :key="l.href" :to="l.href" class="hd-link">{{ l.label }}</NuxtLink>
+        <NuxtLink v-for="l in t.links" :key="l.href" :to="l.href" class="hd-link" :aria-label="l.short ? l.label : undefined">
+          <template v-if="l.short"><span class="hd-link-full">{{ l.label }}</span><span class="hd-link-short" aria-hidden="true">{{ l.short }}</span></template>
+          <template v-else>{{ l.label }}</template>
+        </NuxtLink>
       </nav>
 
       <div class="hd-tools">
@@ -36,11 +40,12 @@ const t = computed(() =>
     ? {
         home: '/en/',
         name: 'Ju-Shen Huang',
+        short: 'J. Huang',
         navLabel: 'Main',
         links: [
           { href: '/en/#work', label: 'Work' },
           { href: '/en/#record', label: 'Record' },
-          { href: '/en/resume/', label: 'Résumé' },
+          { href: '/en/resume/', label: 'Résumé', short: 'CV' },
         ],
         altHref: altPath.value,
         altLang: 'zh-Hant-TW',
@@ -120,6 +125,11 @@ const t = computed(() =>
   transition: transform var(--dur-3) var(--ease-entrance);
 }
 
+.hd-name-short,
+.hd-link-short {
+  display: none;
+}
+
 .hd-mark:hover .hd-dot {
   transform: scale(1.25);
 }
@@ -188,16 +198,26 @@ const t = computed(() =>
     padding-left: var(--sp-4);
   }
   .hd-nav {
-    gap: var(--sp-3);
+    gap: var(--sp-2);
   }
   .hd-tools {
     gap: var(--sp-1);
   }
-  /* The Chinese name is three characters and fits; the English one does
-     not, and leaves the dot standing in for it. */
-  .hd-mark span:last-child:lang(en),
+  /* The Chinese name is three characters and fits; the English one is
+     shortened rather than dropped, so the bar still says whose site this is. */
+  .hd-mark:has(.hd-name-short) .hd-name,
   .hd-mail-text {
     display: none;
+  }
+  .hd-mark .hd-name-short {
+    display: inline;
+  }
+  /* "Résumé" is the widest word in the bar; a phone gets the short form. */
+  .hd-link-full {
+    display: none;
+  }
+  .hd-link-short {
+    display: inline;
   }
   .hd-mark {
     min-width: 40px;
@@ -215,7 +235,14 @@ const t = computed(() =>
 }
 
 @media (max-width: 370px) {
-  .hd-mark span:last-child {
+  .hd-mark .hd-name {
+    display: none;
+  }
+}
+
+/* Below this the shortened English name crowds the links; the dot stays. */
+@media (max-width: 380px) {
+  .hd-mark .hd-name-short {
     display: none;
   }
 }

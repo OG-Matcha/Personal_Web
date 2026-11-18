@@ -11,6 +11,8 @@ period: { start: 2024-03, end: 2024-09 }
 status: 已結案
 cover: /images/phishforge-1.png
 thumbnail: /images/phishforge-1.png
+# The logo sits right of centre; crop evenly so its last letter stays in.
+coverFocus: center
 screenshots:
   - /images/phishforge-2.png
   - /images/phishforge-3.png

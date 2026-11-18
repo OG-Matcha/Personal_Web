@@ -7,7 +7,7 @@
   <ol class="cs-list">
     <li v-for="(w, i) in items" :key="w.slug" class="cs-item" :class="{ 'cs-item--flip': i % 2 === 1 }">
       <NuxtLink v-if="w.cover" :to="w.href" class="cs-shot" :aria-label="w.title">
-        <SiteShot :src="w.cover" width="1600" height="900" fit="cover" />
+        <SiteShot :src="w.cover" width="1600" height="900" fit="cover" :focus="w.coverFocus" />
       </NuxtLink>
       <!-- Finctory is a company, not a screen: its card, to pick up and turn over. -->
       <div v-else class="cs-shot cs-shot--card"><SiteBizCard /></div>
@@ -79,6 +79,11 @@ const items = computed(() =>
   .cs-item {
     grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
     gap: var(--sp-8);
+  }
+
+  /* The picture always gets the wide column, on whichever side it sits. */
+  .cs-item--flip {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
   }
 
   .cs-item--flip .cs-shot {
@@ -169,6 +174,9 @@ a.cs-shot:focus-visible {
 }
 
 .cs-facts div {
+  /* Labels wrap to different lengths; the figures still sit on one line. */
+  display: flex;
+  flex-direction: column;
   padding-top: var(--sp-3);
   border-top: 1px solid var(--rule);
 }
@@ -179,7 +187,8 @@ a.cs-shot:focus-visible {
 }
 
 .cs-facts dd {
-  margin-top: var(--sp-1);
+  margin-top: auto;
+  padding-top: var(--sp-1);
   font-family: var(--font-display);
   font-weight: 800;
 }

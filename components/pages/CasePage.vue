@@ -67,7 +67,7 @@
     </section>
 
     <!-- Fallback for cases not yet rewritten as a product page. -->
-    <section v-else-if="work.screenshots?.length" class="shell case-block">
+    <section v-else-if="!highlights.length && work.screenshots?.length" class="shell case-block">
       <div class="grid gap-5" :class="phoneShots ? 'sm:grid-cols-3' : 'sm:grid-cols-2'">
         <div v-for="(src, i) in work.screenshots" :key="src" :class="phoneShots ? 'device' : 'screen'">
           <img :src="src" :alt="`${work.title} ${t.screen} ${i + 1}`" loading="lazy" />
@@ -119,7 +119,7 @@
           <span class="next-title">{{ next.title }}</span>
           <span class="next-tag">{{ next.tagline }}</span>
         </span>
-        <span class="next-pic"><img :src="next.cover" :srcset="srcset(next.cover)" sizes="(min-width: 768px) 50vw, 100vw" alt="" width="1600" height="900" loading="lazy" decoding="async" /></span>
+        <span class="next-pic"><img :style="next.focus ? { objectPosition: next.focus } : null" :src="next.cover" :srcset="srcset(next.cover)" sizes="(min-width: 768px) 50vw, 100vw" alt="" width="1600" height="900" loading="lazy" decoding="async" /></span>
       </NuxtLink>
       <p class="mt-6">
         <button type="button" class="back mono text-2xs" @click="goBack">← {{ backLabel }}</button>
@@ -158,6 +158,7 @@ const next = computed(() => {
     title: tr.title ?? n.title,
     tagline: tr.tagline ?? n.tagline,
     cover: n.cover ?? n.thumbnail,
+    focus: n.coverFocus,
     href: `${props.locale === 'en' ? '/en' : ''}/work/${n.slug}/`,
   }
 })

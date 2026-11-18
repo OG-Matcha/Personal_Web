@@ -1017,7 +1017,9 @@ async function startWalk() {
 /* The work: a row each, picture beside words; the whole row is the link. */
 .pp-works {
   display: grid;
-  gap: var(--sp-3);
+  /* Far more air between works than inside one, so each picture reads as
+     belonging to the title under it, not to the one above. */
+  gap: var(--sp-7);
   margin-top: var(--sp-6);
   list-style: none;
 }
@@ -1035,7 +1037,7 @@ async function startWalk() {
 .pp-work-link {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--sp-5);
+  gap: var(--sp-4);
   padding: var(--sp-4);
   border-radius: var(--r-3);
   color: inherit;

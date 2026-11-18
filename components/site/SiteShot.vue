@@ -5,7 +5,7 @@
     sits whole on a plain mat, like a print mounted in a frame. Covers made
     for the frame's own shape pass fit="cover" and fill it edge to edge.
   -->
-  <span class="shot" :class="`shot--${fit}`">
+  <span class="shot" :class="`shot--${fit}`" :style="focus ? { '--shot-focus': focus } : null">
     <img class="shot-img" :src="src" :srcset="srcset(src)" :sizes="sizes" :alt="alt" :width="width" :height="height" loading="lazy" decoding="async" />
   </span>
 </template>
@@ -18,6 +18,8 @@ defineProps({
   height: { type: [Number, String], default: undefined },
   sizes: { type: String, default: '(min-width: 1024px) 40vw, 100vw' },
   fit: { type: String, default: 'contain', validator: (v) => ['contain', 'cover'].includes(v) },
+  // Where a cover keeps its subject when cropped (object-position); default left top.
+  focus: { type: String, default: '' },
 })
 </script>
 
@@ -48,6 +50,6 @@ defineProps({
 .shot--cover .shot-img {
   object-fit: cover;
   /* Covers put their name and type at the top left; crop from the right. */
-  object-position: left top;
+  object-position: var(--shot-focus, left top);
 }
 </style>
