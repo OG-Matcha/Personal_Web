@@ -42,15 +42,17 @@ const E = computed(() => locale.value === 'en')
 const on = ref(false)
 const rate = ref(4.38)
 const twd = (cny) => {
-  const r = Number(rate.value) > 0 ? Number(rate.value) : 4.38
+  const v = Number(rate.value)
+  // Anything outside a believable CNY rate falls back to the example rate.
+  const r = v >= 3 && v <= 6 ? v : 4.38
   return (Math.round(cny * r * 10) / 10).toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
 }
 
 const items = computed(() => [
-  { id: 'bag', emoji: '👜', tint: '#fde7d4', cny: 299, name: E.value ? 'Canvas tote bag' : '帆布托特包' },
-  { id: 'lamp', emoji: '💡', tint: '#fff3c4', cny: 89.9, name: E.value ? 'Clip-on desk lamp' : '夾式檯燈' },
-  { id: 'mug', emoji: '☕', tint: '#e3efe6', cny: 35.8, name: E.value ? 'Enamel mug' : '琺瑯馬克杯' },
-  { id: 'kb', emoji: '⌨️', tint: '#e5e9f6', cny: 459, name: E.value ? 'Mechanical keyboard' : '機械鍵盤' },
+  { id: 'bag', emoji: '👜', tint: 'var(--fx-t1)', cny: 299, name: E.value ? 'Canvas tote bag' : '帆布托特包' },
+  { id: 'lamp', emoji: '💡', tint: 'var(--fx-t2)', cny: 89.9, name: E.value ? 'Clip-on desk lamp' : '夾式檯燈' },
+  { id: 'mug', emoji: '☕', tint: 'var(--fx-t3)', cny: 35.8, name: E.value ? 'Enamel mug' : '琺瑯馬克杯' },
+  { id: 'kb', emoji: '⌨️', tint: 'var(--fx-t4)', cny: 459, name: E.value ? 'Mechanical keyboard' : '機械鍵盤' },
 ])
 
 const t = computed(() =>
@@ -69,6 +71,28 @@ const t = computed(() =>
 </script>
 
 <style scoped>
+/* Pastel tiles by day; the same hues sunk low at night, so they do not glare. */
+.fx-card {
+  --fx-t1: #fde7d4;
+  --fx-t2: #fff3c4;
+  --fx-t3: #e3efe6;
+  --fx-t4: #e5e9f6;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .fx-card {
+    --fx-t1: #3a2a22;
+    --fx-t2: #393322;
+    --fx-t3: #243229;
+    --fx-t4: #262b3d;
+  }
+}
+:root[data-theme='dark'] .fx-card {
+  --fx-t1: #3a2a22;
+  --fx-t2: #393322;
+  --fx-t3: #243229;
+  --fx-t4: #262b3d;
+}
+
 .fx-card {
   display: grid;
   gap: var(--sp-6);
@@ -188,7 +212,9 @@ const t = computed(() =>
   place-items: center;
   aspect-ratio: 1;
   border-radius: calc(var(--r-2) - 4px);
-  font-size: clamp(2rem, 8vw, 2.75rem);
+  /* The emoji fills half the tile, so the tile reads as a product, not an empty slot. */
+  font-size: clamp(3rem, 11vw, 5.5rem);
+  line-height: 1;
 }
 
 .fx-name {

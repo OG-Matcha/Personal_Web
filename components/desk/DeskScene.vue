@@ -238,7 +238,13 @@ function readScroll() {
   if (e < 0.08) on.value = i
   else if (e > 0.92) on.value = i + 1
   onWalk?.()
+  // Left between two stops, the room has no words on it. Once the reader
+  // stops scrolling, walk the rest of the way to the nearer stop.
+  clearTimeout(settle)
+  const inside = box.top <= 1 && box.bottom >= innerHeight - 1
+  if (inside && e > 0.1 && e < 0.9) settle = setTimeout(() => scrollToStop(e < 0.5 ? i : i + 1), 220)
 }
+let settle = 0
 function scrollToStop(i) {
   const el = root.value
   const span = el.offsetHeight - innerHeight
@@ -271,6 +277,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   alive = false
+  clearTimeout(settle)
   document.documentElement.classList.remove('is-over-desk')
   removeEventListener('scroll', readScroll)
   removeEventListener('resize', readScroll)

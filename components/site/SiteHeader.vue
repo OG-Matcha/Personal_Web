@@ -197,8 +197,12 @@ const t = computed(() =>
     gap: var(--sp-3);
     padding-left: var(--sp-4);
   }
+  /* Same 8px between words, but each link's hit area takes half of it. */
   .hd-nav {
-    gap: var(--sp-2);
+    gap: 0;
+  }
+  .hd-link {
+    padding-inline: 4px;
   }
   .hd-tools {
     gap: var(--sp-1);

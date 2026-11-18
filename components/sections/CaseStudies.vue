@@ -6,7 +6,7 @@
   -->
   <ol class="cs-list">
     <li v-for="(w, i) in items" :key="w.slug" class="cs-item" :class="{ 'cs-item--flip': i % 2 === 1 }">
-      <NuxtLink v-if="w.cover" :to="w.href" class="cs-shot" :aria-label="w.title">
+      <NuxtLink v-if="w.cover" :to="w.href" class="cs-shot" :aria-label="w.title" :style="{ viewTransitionName: `cover-${w.slug}` }">
         <SiteShot :src="w.cover" width="1600" height="900" fit="cover" :focus="w.coverFocus" />
       </NuxtLink>
       <!-- Finctory is a company, not a screen: its card, to pick up and turn over. -->
@@ -174,9 +174,12 @@ a.cs-shot:focus-visible {
 }
 
 .cs-facts div {
-  /* Labels wrap to different lengths; the figures still sit on one line. */
-  display: flex;
-  flex-direction: column;
+  /* Label row and value row are shared across the line (subgrid): labels
+     start level and values start level, whatever wraps. */
+  display: grid;
+  grid-row: span 2;
+  grid-template-rows: subgrid;
+  row-gap: var(--sp-1);
   padding-top: var(--sp-3);
   border-top: 1px solid var(--rule);
 }
@@ -187,8 +190,6 @@ a.cs-shot:focus-visible {
 }
 
 .cs-facts dd {
-  margin-top: auto;
-  padding-top: var(--sp-1);
   font-family: var(--font-display);
   font-weight: 800;
 }

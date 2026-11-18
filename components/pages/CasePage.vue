@@ -19,7 +19,7 @@
           <a v-for="l in links" :key="l.href" class="btn" :href="l.href" v-bind="linkAttrs(l.href)">{{ l.label }} ↗</a>
         </p>
       </div>
-      <figure v-if="work.hero ?? work.cover" class="case-cover">
+      <figure v-if="work.hero ?? work.cover" class="case-cover" :style="{ viewTransitionName: `cover-${work.slug}` }">
         <img :src="work.hero ?? work.cover" :srcset="srcset(work.hero ?? work.cover)" sizes="(min-width: 1024px) 55vw, 100vw" :alt="work.title" width="1600" height="1000" fetchpriority="high" />
       </figure>
       <div v-else class="case-cover case-cover--card"><SiteBizCard /></div>
@@ -105,9 +105,14 @@
           </li>
         </ul>
       </div>
+      <!-- No awards: the stack takes the second column instead of leaving it empty. -->
+      <div v-else-if="work.myPart?.length && flatStack.length">
+        <h2 class="case-h2">{{ t.stack }}</h2>
+        <p class="stack-col">{{ flatStack.join(' · ') }}</p>
+      </div>
     </section>
 
-    <section class="shell case-block">
+    <section v-if="evidence.length || !work.myPart?.length" class="shell case-block">
       <p class="stack"><span>{{ t.stack }}</span>{{ flatStack.join(' · ') }}</p>
     </section>
 
@@ -119,7 +124,7 @@
           <span class="next-title">{{ next.title }}</span>
           <span class="next-tag">{{ next.tagline }}</span>
         </span>
-        <span class="next-pic"><img :style="next.focus ? { objectPosition: next.focus } : null" :src="next.cover" :srcset="srcset(next.cover)" sizes="(min-width: 768px) 50vw, 100vw" alt="" width="1600" height="900" loading="lazy" decoding="async" /></span>
+        <span class="next-pic" :style="{ viewTransitionName: `cover-${next.slug}` }"><img :style="next.focus ? { objectPosition: next.focus } : null" :src="next.cover" :srcset="srcset(next.cover)" sizes="(min-width: 768px) 50vw, 100vw" alt="" width="1600" height="900" loading="lazy" decoding="async" /></span>
       </NuxtLink>
       <p class="mt-6">
         <button type="button" class="back mono text-2xs" @click="goBack">← {{ backLabel }}</button>
@@ -159,6 +164,7 @@ const next = computed(() => {
     tagline: tr.tagline ?? n.tagline,
     cover: n.cover ?? n.thumbnail,
     focus: n.coverFocus,
+    slug: n.slug,
     href: `${props.locale === 'en' ? '/en' : ''}/work/${n.slug}/`,
   }
 })
@@ -489,6 +495,12 @@ function goBack() {
   .case-facts {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+}
+
+.stack-col {
+  margin-top: var(--sp-4);
+  color: var(--ink-2);
+  line-height: 1.8;
 }
 
 .case-role {

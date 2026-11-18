@@ -15,6 +15,9 @@ const DESCRIPTION =
 export default defineNuxtConfig({
   devtools: { enabled: false },
   ssr: true,
+  // Page changes run as view transitions: a product's cover carries over
+  // from the card you clicked into the page it opens (view-transition-name).
+  experimental: { viewTransition: true },
 
   // No image module: every file in public/images is already resized and
   // compressed to under 200 kB at build time, so an on-the-fly resizer would

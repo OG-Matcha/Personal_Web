@@ -1039,7 +1039,7 @@ async function startWalk() {
 
 .pp-work-link {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--sp-4);
   padding: var(--sp-4);
   border-radius: var(--r-3);
@@ -1246,11 +1246,14 @@ async function startWalk() {
   margin-top: var(--sp-6);
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(1.05rem, 5.6cqi, 2.5rem);
+  font-size: clamp(0.95rem, 5.4cqi, 2.5rem);
   line-height: 1.1;
 }
 
 .pp-mail a {
+  /* The address is one unit: never split at a dot. It is sized to the
+     card (cqi) so it fits on one line. */
+  white-space: nowrap;
   text-decoration: underline;
   text-decoration-thickness: 2px;
   text-underline-offset: 0.18em;
@@ -1451,7 +1454,7 @@ async function startWalk() {
 
 @media (max-width: 560px) {
   .pp-work-link {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--sp-3);
     padding: var(--sp-3);
   }

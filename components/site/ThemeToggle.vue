@@ -78,6 +78,18 @@ function flip(e) {
   animation: none;
   mix-blend-mode: normal;
 }
+/* A cover moving between pages takes the site's entrance curve. */
+::view-transition-group(*) {
+  animation-duration: 520ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
 html.is-theming,
 html.is-theming *,
 html.is-theming *::before,

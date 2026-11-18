@@ -62,6 +62,10 @@ const links = [
 .ft-links a {
   color: var(--ink-2);
   text-decoration: none;
+  /* A 40px-tall target around 14px of text, without moving the text. */
+  display: inline-block;
+  padding-block: 13px;
+  margin-block: -13px;
 }
 
 .ft-links a:hover {
