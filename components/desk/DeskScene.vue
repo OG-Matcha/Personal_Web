@@ -62,7 +62,7 @@
           class="dk-cap"
           :data-stop="s.id"
           :class="[`dk-cap--${s.id}`, s.side && `dk-cap--${s.side}`, { 'is-on': on === i && !moving && !leaving }]"
-          @focusin="on !== i && scrollToStop(i)"
+          @focusin="walkToFocus(i)"
         >
           <template v-if="s.id === 'hero'">
             <h1 class="dk-title">
@@ -346,19 +346,45 @@ function closeDrawer() {
 }
 
 // When the caption you were on goes inert, take keyboard focus to the new one.
+// Focus landing in another caption walks the camera there. Stops passed on
+// the way must not pull focus to themselves, so for the length of that walk
+// focus stays in the caption the reader chose.
+let walkTo = -1
+let walkUntil = 0
+function walkToFocus(i) {
+  if (on.value === i) return
+  walkTo = i
+  walkUntil = performance.now() + 1500
+  scrollToStop(i)
+}
 watch(on, async (i) => {
   const a = document.activeElement
   if (!root.value?.contains(a) || !a.closest('.dk-cap')) return
   await nextTick()
-  root.value.querySelectorAll('.dk-cap')[i]?.querySelector('a, button')?.focus({ preventScroll: true })
+  const caps = root.value.querySelectorAll('.dk-cap')
+  if (performance.now() < walkUntil && caps[walkTo]?.contains(document.activeElement)) return
+  const cap = caps[i]
+  // Already in it (focusing a link there is what walked the camera, or
+  // Shift+Tab came back into it): leave focus where the reader put it.
+  if (cap?.contains(document.activeElement)) return
+  cap?.querySelector('a, button')?.focus({ preventScroll: true })
 })
 
 // Resizing across the 3D desk's size limit swaps the caption cards for the
 // picture tour (or back). Focus left on a button that is now hidden would fall
 // to the page; move it to the same button for the same stop in the shown layout.
+// Chrome may already have dropped focus to the page by the time the change
+// event fires, so remember what last had focus here; act after layout.
 let tallMq = null
+let lastIn = null
+// Focus or a press anywhere else forgets it, so a resize never pulls focus back here.
+const noteFocus = (e) => (lastIn = root.value?.contains(e.target) ? e.target : null)
 function keepFocus() {
-  const a = document.activeElement
+  requestAnimationFrame(moveFocus)
+}
+function moveFocus() {
+  let a = document.activeElement
+  if ((!a || a === document.body) && lastIn && !lastIn.offsetParent) a = lastIn
   if (!a || !root.value?.contains(a) || a.offsetParent) return
   const id = a.closest('[data-stop]')?.dataset.stop
   const kind = a.classList.contains('dk-link') ? '.dk-link' : '.dk-open'
@@ -369,6 +395,8 @@ function keepFocus() {
 onMounted(() => {
   tallMq = matchMedia(TALL)
   tallMq.addEventListener('change', keepFocus)
+  document.addEventListener('focusin', noteFocus)
+  document.addEventListener('pointerdown', noteFocus)
   const tall = tallMq.matches
   if (!tall) return
   readScroll()
@@ -388,6 +416,8 @@ onMounted(() => {
 onBeforeUnmount(() => {
   alive = false
   tallMq?.removeEventListener('change', keepFocus)
+  document.removeEventListener('focusin', noteFocus)
+  document.removeEventListener('pointerdown', noteFocus)
   clearTimeout(settle)
   document.documentElement.classList.remove('is-over-desk')
   removeEventListener('scroll', readScroll)
