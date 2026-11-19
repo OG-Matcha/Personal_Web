@@ -25,10 +25,10 @@
       <div class="dk-poster" aria-hidden="true">
         <picture class="dk-poster-auto">
           <source media="(prefers-color-scheme: dark)" :srcset="srcset('/desk/poster-night.webp')" sizes="100vw" />
-          <img src="/desk/poster-day.webp" :srcset="srcset('/desk/poster-day.webp')" sizes="100vw" alt="" width="1600" height="900" fetchpriority="high" />
+          <img src="/desk/poster-day.webp" :srcset="srcset('/desk/poster-day.webp')" sizes="100vw" alt="" width="1600" height="1000" fetchpriority="high" />
         </picture>
-        <img class="dk-forced dk-forced-day" src="/desk/poster-day.webp" :srcset="srcset('/desk/poster-day.webp')" sizes="100vw" alt="" width="1600" height="900" loading="lazy" />
-        <img class="dk-forced dk-forced-night" src="/desk/poster-night.webp" :srcset="srcset('/desk/poster-night.webp')" sizes="100vw" alt="" width="1600" height="900" loading="lazy" />
+        <img class="dk-forced dk-forced-day" src="/desk/poster-day.webp" :srcset="srcset('/desk/poster-day.webp')" sizes="100vw" alt="" width="1600" height="1000" loading="lazy" />
+        <img class="dk-forced dk-forced-night" src="/desk/poster-night.webp" :srcset="srcset('/desk/poster-night.webp')" sizes="100vw" alt="" width="1600" height="1000" loading="lazy" />
       </div>
       <!--
         Until the 3D is ready (several seconds on a cold load), scrolling
@@ -75,8 +75,8 @@
             <h2 class="dk-h">{{ s.title }}</h2>
             <p class="dk-text">{{ s.text }}</p>
             <p class="dk-acts">
-              <button v-if="s.open" type="button" class="dk-open" @click="drawer = s.id">{{ s.open }}</button>
-              <NuxtLink v-if="s.href" :to="s.href" class="dk-link">{{ s.cta }} →</NuxtLink>
+              <button v-if="s.open" type="button" class="dk-open" :data-stop="s.id" @click="drawer = s.id">{{ s.open }}</button>
+              <NuxtLink v-if="s.href" :to="s.href" class="dk-link" :aria-current="s.href.includes('#') ? false : undefined">{{ s.cta }} →</NuxtLink>
             </p>
           </template>
         </li>
@@ -109,17 +109,17 @@
         <div class="dk-stop-pic">
           <img class="dk-poster-day" :src="`/desk/stops/${s.id}-day.webp`" :srcset="srcset(`/desk/stops/${s.id}-day.webp`)" sizes="(min-width: 900px) 25vw, 82vw" alt="" width="1200" height="800" loading="lazy" decoding="async" />
           <img class="dk-poster-night" :src="`/desk/stops/${s.id}-night.webp`" :srcset="srcset(`/desk/stops/${s.id}-night.webp`)" sizes="(min-width: 900px) 25vw, 82vw" alt="" width="1200" height="800" loading="lazy" decoding="async" />
-          <span class="dk-stop-n figures" aria-hidden="true">{{ String(i + 1).padStart(2, '0') }} · {{ s.thing }}</span>
+          <span class="dk-stop-n figures" aria-hidden="true">{{ String(i + 1).padStart(2, '0') }}<span class="dk-stop-of"> / {{ String(stops.length - 1).padStart(2, '0') }}</span> · {{ s.thing }}</span>
         </div>
         <h2 class="dk-h">{{ s.title }}</h2>
         <p class="dk-text">{{ s.text }}</p>
         <p class="dk-acts">
-          <button v-if="s.open" type="button" class="dk-open" @click="drawer = s.id">{{ s.open }}</button>
-          <NuxtLink v-if="s.href" :to="s.href" class="dk-link">{{ s.cta }} →</NuxtLink>
+          <button v-if="s.open" type="button" class="dk-open" :data-stop="s.id" @click="drawer = s.id">{{ s.open }}</button>
+          <NuxtLink v-if="s.href" :to="s.href" class="dk-link" :aria-current="s.href.includes('#') ? false : undefined">{{ s.cta }} →</NuxtLink>
         </p>
       </li>
     </ol>
-    <DeskDrawer :id="drawer" @close="drawer = null" />
+    <DeskDrawer :id="drawer" @close="closeDrawer" />
   </section>
 </template>
 
@@ -263,6 +263,17 @@ function scrollToStop(i) {
   scrollTo({ top: el.getBoundingClientRect().top + scrollY + (span * (i + 0.5)) / N, behavior: 'smooth' })
 }
 
+// The dialog hands focus back to whatever had it, which is the page itself
+// when it was opened by clicking the 3D desk; Tab would then start from the
+// hero and scroll back up. Put focus on the visible button for this object.
+function closeDrawer() {
+  const id = drawer.value
+  drawer.value = null
+  const all = [...(root.value?.querySelectorAll(`.dk-open[data-stop="${id}"]`) ?? [])].filter((b) => b.offsetParent && !b.closest('[inert]'))
+  const btn = all.find((b) => b.closest('.is-on')) ?? all[0]
+  btn?.focus({ preventScroll: true })
+}
+
 // When the caption you were on goes inert, take keyboard focus to the new one.
 watch(on, async (i) => {
   const a = document.activeElement
@@ -272,7 +283,7 @@ watch(on, async (i) => {
 })
 
 onMounted(() => {
-  const tall = matchMedia('(min-width: 900px) and (prefers-reduced-motion: no-preference)').matches
+  const tall = matchMedia('(min-width: 900px) and (min-height: 560px) and (prefers-reduced-motion: no-preference)').matches
   if (!tall) return
   readScroll()
   addEventListener('scroll', readScroll, { passive: true })
@@ -860,6 +871,10 @@ async function start() {
   font-weight: 700;
 }
 
+.dk-stop-of {
+  color: var(--ink-3);
+}
+
 .dk-stop .dk-h {
   font-size: var(--step-2);
 }
@@ -885,7 +900,7 @@ async function start() {
   display: none;
 }
 
-@media (min-width: 900px) and (prefers-reduced-motion: no-preference) {
+@media (min-width: 900px) and (min-height: 560px) and (prefers-reduced-motion: no-preference) {
   .dk-stills {
     display: block;
     position: absolute;
@@ -940,6 +955,12 @@ async function start() {
     inset: 0;
   }
 
+  /* The <picture> must be as tall as the stage, or its image's 100% height
+     has nothing to resolve against and the still stops at 16:9. */
+  .dk-poster-auto {
+    height: 100%;
+  }
+
   .dk-poster img,
   .dk-canvas {
     height: 100%;
@@ -964,7 +985,7 @@ async function start() {
     display: block;
     position: absolute;
     inset: 0;
-    background: radial-gradient(ellipse 50% 55% at 10% 20%, color-mix(in srgb, var(--bg) 70%, transparent), transparent 70%);
+    background: radial-gradient(ellipse 52% 78% at 10% 32%, color-mix(in srgb, var(--bg) 80%, transparent), transparent 72%);
     opacity: 0;
     pointer-events: none;
     transition: opacity 600ms var(--ease-entrance);

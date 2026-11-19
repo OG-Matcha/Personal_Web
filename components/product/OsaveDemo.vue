@@ -13,18 +13,36 @@
     </div>
 
     <div class="os-body">
+      <!-- Phones: the score rides along at the top while the sliders scroll,
+           so each drag shows its effect without scrolling down to the chart. -->
+      <div class="os-peek" aria-hidden="true">
+        <span class="os-peek-n figures" :style="{ color: bandColor }">{{ total }}</span>
+        <span class="os-band" :style="{ background: bandColor }">{{ bandLabel }}</span>
+        <span class="os-peek-low">{{ t.worst }}{{ worst.name }}</span>
+      </div>
       <div class="os-inputs">
-        <label v-for="f in fields" :key="f.key" class="os-field">
+        <div v-for="f in fields" :key="f.key" class="os-field">
           <span class="os-field-head">
-            <span>{{ f.label }}</span>
-            <output class="figures">{{ f.unit === '%' ? `${m[f.key]}%` : `$${m[f.key].toLocaleString('en-US')}` }}</output>
+            <label :for="`${uid}-${f.key}`">{{ f.label }}</label>
+            <output class="figures" :for="`${uid}-${f.key}`" aria-hidden="true">{{ fmt(f) }}</output>
           </span>
-          <input v-model.number="m[f.key]" type="range" :min="f.min" :max="f.max" :step="f.step" @input="preset = ''" />
-          <span class="os-field-hint">{{ f.hint }}</span>
-        </label>
+          <input
+            :id="`${uid}-${f.key}`"
+            v-model.number="m[f.key]"
+            type="range"
+            :min="f.min"
+            :max="f.max"
+            :step="f.step"
+            :aria-valuetext="fmt(f)"
+            :aria-describedby="`${uid}-${f.key}-h`"
+            @input="preset = ''"
+          />
+          <span :id="`${uid}-${f.key}-h`" class="os-field-hint">{{ f.hint }}</span>
+        </div>
       </div>
 
-      <div class="os-result" aria-live="polite">
+      <div class="os-result">
+        <p class="sr-only" aria-live="polite" aria-atomic="true">{{ said }}</p>
         <div class="os-score">
           <span class="os-score-n figures" :style="{ color: bandColor }">{{ total }}</span>
           <span class="os-score-of">/ 100</span>
@@ -133,6 +151,21 @@ const worst = computed(() => axes.value.reduce((w, a) => (a.score < w.score ? a 
 const bandLabel = computed(() => (total.value >= 70 ? (E.value ? 'Good' : '好') : total.value >= 40 ? (E.value ? 'Fair' : '尚可') : E.value ? 'Poor' : '差'))
 const bandColor = computed(() => (total.value >= 70 ? 'var(--os-good)' : total.value >= 40 ? 'var(--os-fair)' : 'var(--os-poor)'))
 
+const uid = useId()
+const fmt = (f) => (f.unit === '%' ? `${m[f.key]}%` : `$${m[f.key].toLocaleString('en-US')}`)
+
+// Announce only the score, after the slider settles, so screen readers are
+// not flooded with one message per step while dragging.
+const said = ref('')
+let sayT
+watch([total, bandLabel], () => {
+  clearTimeout(sayT)
+  sayT = setTimeout(() => {
+    said.value = E.value ? `Score ${total.value} of 100, ${bandLabel.value}. Weakest: ${worst.value.name}.` : `${total.value} 分，${bandLabel.value}。最需要注意：${worst.value.name}。`
+  }, 700)
+})
+onBeforeUnmount(() => clearTimeout(sayT))
+
 const R = 92
 const pt = (i, r) => {
   const a = -Math.PI / 2 + (i * Math.PI * 2) / 6
@@ -159,8 +192,8 @@ const t = computed(() =>
 
 <style scoped>
 .os-card {
-  --os-good: #2f8f5b;
-  --os-fair: #c98a12;
+  --os-good: #24734a;
+  --os-fair: #8a5c00;
   --os-poor: #c44a24;
   display: grid;
   gap: var(--sp-6);
@@ -219,6 +252,39 @@ const t = computed(() =>
   .os-body {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
     align-items: center;
+  }
+}
+
+.os-peek {
+  position: sticky;
+  top: var(--os-peek-top, calc(var(--header-h) + var(--sp-1)));
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin: calc(-1 * var(--sp-4)) 0 calc(-1 * var(--sp-4));
+  padding: var(--sp-2) 0;
+  background: var(--surface);
+  border-bottom: 1px solid var(--rule);
+}
+
+.os-peek-n {
+  font-family: var(--font-display);
+  font-size: var(--step-3);
+  font-weight: 900;
+  line-height: 1;
+}
+
+.os-peek-low {
+  margin-left: auto;
+  font-size: var(--step--1);
+  font-weight: 700;
+  color: var(--ink-2);
+}
+
+@media (min-width: 860px) {
+  .os-peek {
+    display: none;
   }
 }
 

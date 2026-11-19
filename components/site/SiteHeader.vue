@@ -10,7 +10,7 @@
       </NuxtLink>
 
       <nav :aria-label="t.navLabel" class="scroll-x hd-nav">
-        <NuxtLink v-for="l in t.links" :key="l.href" :to="l.href" class="hd-link" :aria-label="l.short ? l.label : undefined">
+        <NuxtLink v-for="l in t.links" :key="l.href" :to="l.href" class="hd-link" :aria-label="l.short ? l.label : undefined" v-bind="l.href.includes('#') ? { 'aria-current': false } : {}">
           <template v-if="l.short"><span class="hd-link-full">{{ l.label }}</span><span class="hd-link-short" aria-hidden="true">{{ l.short }}</span></template>
           <template v-else>{{ l.label }}</template>
         </NuxtLink>
@@ -117,6 +117,7 @@ const t = computed(() =>
 
 /* A lump of terracotta: the studio's one signature colour. */
 .hd-dot {
+  flex: none;
   width: 0.8rem;
   height: 0.8rem;
   border-radius: 50%;
@@ -151,6 +152,11 @@ const t = computed(() =>
   display: inline-flex;
   align-items: center;
   min-height: 40px;
+}
+
+.hd-lang {
+  justify-content: center;
+  min-width: 40px;
 }
 
 .hd-link:hover,
@@ -197,14 +203,14 @@ const t = computed(() =>
     gap: var(--sp-3);
     padding-left: var(--sp-4);
   }
-  /* Same 8px between words, but each link's hit area takes half of it. */
+  /* 16px between words: each link's hit area takes 6px of it, 4px is gap. */
   .hd-nav {
-    gap: 2px;
+    gap: 4px;
   }
   .hd-link {
     justify-content: center;
-    min-width: 36px;
-    padding-inline: 4px;
+    min-width: 40px;
+    padding-inline: 6px;
   }
   .hd-tools {
     gap: var(--sp-1);
@@ -242,6 +248,14 @@ const t = computed(() =>
 
 @media (max-width: 370px) {
   .hd-mark .hd-name {
+    display: none;
+  }
+}
+
+/* A 320px phone cannot fit every control: the address stays in the footer
+   and on the résumé, so the mail button goes before the links are clipped. */
+@media (max-width: 359px) {
+  .hd-mail {
     display: none;
   }
 }

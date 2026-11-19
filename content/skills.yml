@@ -64,14 +64,14 @@ nodes:
   - { name: LangChain, layer: agents, tier: shipped-prod, evidence: '/work/osave' }
   - { name: OpenAI API, layer: agents, tier: shipped-prod, evidence: '/work/osave' }
   - { name: Gemini API, layer: agents, tier: shipped-competition, evidence: '/work/phishforge' }
-  - { name: LLaMA 3（本地）, layer: agents, tier: shipped-competition, evidence: 'https://github.com/OG-Matcha/Credit-Report' }
+  - { name: LLaMA 3（本地）, name_en: LLaMA 3 (local), layer: agents, tier: shipped-competition, evidence: 'https://github.com/OG-Matcha/Credit-Report' }
   - { name: scikit-learn, layer: agents, tier: studied, evidence: 'https://github.com/OG-Matcha/Scikit_Learn_FC' }
   - { name: TensorFlow, layer: agents, tier: studied, evidence: 'https://github.com/OG-Matcha/Basic-TensorFlow' }
 
   # 台積電校園黑客松第一名的參賽作品 Catalyst：Multi-Agent 軟體開發自動化。
   - { name: AutoGen, layer: agents, tier: shipped-competition, evidence: '/resume/#record' }
   # 工研院：全組共用的 LLM 紅隊工作流，對 OWASP LLM Top 10。
-  - { name: LLM 紅隊測試, layer: agents, tier: shipped-prod, evidence: '/resume/#record' }
+  - { name: LLM 紅隊測試, name_en: LLM red-teaming, layer: agents, tier: shipped-prod, evidence: '/resume/#record' }
 
   # ---- data ----
   - { name: Cloudflare D1, layer: data, tier: shipped-prod, evidence: '/work/medalink' }

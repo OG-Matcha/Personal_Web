@@ -139,6 +139,9 @@ export default defineNuxtConfig({
 
         // Latin faces are 0.8 kB gzipped — cheap enough to block on.
         { rel: 'stylesheet', href: '/fonts/latin.css' },
+        // The basic-Latin slice is needed on every page; fetch it with the
+        // HTML instead of after the stylesheet, so headings don't reflow.
+        { rel: 'preload', as: 'font', type: 'font/woff2', href: '/fonts/archivo-var-002.woff2', crossorigin: '' },
         // The CJK sheet is ~100 kB gzipped of unicode-range declarations for
         // 213 sliced faces. Loaded async so it never blocks first paint; the
         // fallback stack (PingFang TC / 微軟正黑) carries the text until it lands.

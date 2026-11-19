@@ -97,6 +97,7 @@ useHead(() => ({
 
 .qf-item {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--sp-2);
   padding-bottom: var(--sp-6);
   border-bottom: 1px solid var(--rule);
@@ -114,6 +115,7 @@ useHead(() => ({
 }
 
 .qf-a {
+  overflow-wrap: anywhere;
   color: var(--ink-2);
   line-height: 1.75;
 }

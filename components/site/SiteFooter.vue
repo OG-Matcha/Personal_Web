@@ -4,7 +4,7 @@
   <footer class="ft">
     <div class="shell ft-row">
       <p class="ft-line figures">
-        © 2026 {{ en ? 'Ju-Shen Huang 黃鉅燊' : '黃鉅燊 Ju-Shen Huang' }} · {{ en ? 'Updated' : '資料更新於' }}
+        © 2026 <template v-if="en">Ju-Shen Huang <span lang="zh-Hant">黃鉅燊</span></template><template v-else>黃鉅燊 Ju-Shen Huang</template> · {{ en ? 'Updated' : '資料更新於' }}
         {{ formatDate(site.asOf) }}
       </p>
       <ul class="ft-links">

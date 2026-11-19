@@ -222,6 +222,9 @@ onBeforeUnmount(() => {
 }
 
 .sr-more a {
+  display: inline-block;
+  padding-block: 12px;
+  margin-block: -12px;
   color: var(--pop-ink);
   font-weight: 600;
 }

@@ -6,8 +6,8 @@
     price and one price per 100 ml or g. Stores and prices are made up.
   -->
   <div class="up-card">
-    <div class="up-tabs" role="tablist" :aria-label="t.pick">
-      <button v-for="g in goods" :key="g.id" type="button" role="tab" :aria-selected="good === g.id" class="up-tab" :class="{ 'is-on': good === g.id }" @click="good = g.id">
+    <div class="up-tabs" role="group" :aria-label="t.pick">
+      <button v-for="g in goods" :key="g.id" type="button" :aria-pressed="good === g.id" class="up-tab" :class="{ 'is-on': good === g.id }" @click="good = g.id">
         <span aria-hidden="true">{{ g.emoji }}</span> {{ g.name }}
       </button>
     </div>
@@ -222,7 +222,7 @@ const t = computed(() =>
   justify-self: start;
   padding: 1px 8px;
   border-radius: var(--r-1);
-  background: #e8372b;
+  background: #c62a1e;
   color: #fff;
   font-size: var(--step--1);
   font-weight: 800;

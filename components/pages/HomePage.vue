@@ -21,7 +21,7 @@
           />
           <p class="pp-names">
             <span class="pp-name" :lang="c.nameLang">{{ c.name }}</span>
-            <span class="pp-alt">{{ c.altName }}</span>
+            <span class="pp-alt" :lang="isEn ? 'zh-Hant' : undefined">{{ c.altName }}</span>
           </p>
         </div>
 
@@ -652,6 +652,12 @@ async function startWalk() {
   white-space: nowrap;
 }
 
+@media (max-width: 380px) {
+  .pp-role-part {
+    white-space: normal;
+  }
+}
+
 .pp-now {
   margin-top: var(--sp-6);
 }
@@ -979,6 +985,9 @@ async function startWalk() {
 }
 
 .pp-more a {
+  display: inline-block;
+  padding-block: 12px;
+  margin-block: -12px;
   color: var(--pop-ink);
   font-weight: 600;
 }

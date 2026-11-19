@@ -30,7 +30,7 @@
               <span v-if="a.prize">{{ a.comp }}</span>
               <span v-if="a.org" class="dd-org">{{ a.org }}</span>
             </span>
-            <a v-if="a.evidence" :href="a.evidence" class="dd-src" target="_blank" rel="noopener">{{ t.source }} <span aria-hidden="true">↗</span></a>
+            <a v-if="a.evidence" :href="a.evidence" class="dd-src" target="_blank" rel="noopener" :aria-label="E ? `${a.comp}: announcement (opens in a new tab)` : `${a.comp}公告（另開新分頁）`">{{ t.source }} <span aria-hidden="true">↗</span></a>
           </li>
         </ol>
         <ol v-else-if="shown === 'reports'" class="dd-list">
@@ -354,6 +354,11 @@ const c = computed(() => {
 /* The demos bring their own top margin for the case page; in here the lede is enough. */
 .dd-body :deep(> div:not(.dd-list)) {
   margin-top: var(--sp-4);
+}
+
+.dd-body :deep(.os-card) {
+  /* The sheet scrolls under its own top padding; stick at the very edge. */
+  --os-peek-top: calc(-1 * var(--sp-4));
 }
 
 /* The check-up in a window-high sheet: the result sits at the top and stays

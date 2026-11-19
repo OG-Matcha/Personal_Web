@@ -10,7 +10,7 @@
  * screens), not from a separate render that would drift from it.
  *
  * Writes public/desk/stops/<stop>-<day|night>.webp, 1200x800 (3:2), and
- * public/desk/poster-<day|night>.webp, 1600x900, the opening frame. Run it
+ * public/desk/poster-<day|night>.webp, 1600x1000, the opening frame. Run it
  * after studio/desk/ship.py, which still writes Blender's own posters there.
  * Needs Python with Pillow for the WebP encode.
  */
@@ -51,12 +51,20 @@ for (const [theme, mood] of [['light', 'day'], ['dark', 'night']]) {
     console.log(`${ids[i]}-${mood}`)
   }
   // The still under the canvas while the 3D loads (and for good on phones):
-  // the opening frame at 16:9, so the canvas fading in over it is seamless.
-  await page.setViewportSize({ width: 1600, height: 900 })
-  await page.evaluate(() => scrollTo({ top: 0, behavior: 'instant' }))
-  await page.waitForTimeout(2500)
-  await page.locator('.dk-stage').screenshot({ path: path.join(tmp, `poster-${mood}.png`) })
+  // the opening frame at 16:10. The camera keeps its width below 16:9 and
+  // shows more height, so a centred crop of this matches 16:10 and 16:9 alike.
+  // A fresh page at that size: resizing this one left the camera framed for 3:2.
   await ctx.close()
+  const pctx = await browser.newContext({ viewport: { width: 1600, height: 1000 }, deviceScaleFactor: 1, colorScheme: theme })
+  await pctx.addInitScript((t) => localStorage.setItem('theme', t), theme)
+  const pp = await pctx.newPage()
+  await pp.goto(url, { waitUntil: 'load' })
+  await pp.waitForSelector('.dk.is-ready', { timeout: 60000 })
+  await pp.addStyleTag({ content: '.dk-caps,.dk-dots,.dk-tag,.dk-veil,.hd{visibility:hidden!important}' })
+  await pp.mouse.move(0, 0)
+  await pp.waitForTimeout(3000)
+  await pp.locator('.dk-stage').screenshot({ path: path.join(tmp, `poster-${mood}.png`) })
+  await pctx.close()
 }
 await browser.close()
 

@@ -77,6 +77,7 @@ const t = computed(() =>
   --fx-t2: #fff3c4;
   --fx-t3: #e3efe6;
   --fx-t4: #e5e9f6;
+  --fx-cny: #b8400c;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) .fx-card {
@@ -84,6 +85,7 @@ const t = computed(() =>
     --fx-t2: #393322;
     --fx-t3: #243229;
     --fx-t4: #262b3d;
+    --fx-cny: #ff8a5b;
   }
 }
 :root[data-theme='dark'] .fx-card {
@@ -91,6 +93,7 @@ const t = computed(() =>
   --fx-t2: #393322;
   --fx-t3: #243229;
   --fx-t4: #262b3d;
+  --fx-cny: #ff8a5b;
 }
 
 .fx-card {
@@ -233,7 +236,7 @@ const t = computed(() =>
 .fx-cny {
   font-size: var(--step-1);
   font-weight: 800;
-  color: #f2520d;
+  color: var(--fx-cny);
 }
 
 .fx-twd {

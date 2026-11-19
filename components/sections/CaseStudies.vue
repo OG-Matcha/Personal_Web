@@ -57,7 +57,7 @@ const items = computed(() =>
       ...w,
       ...e,
       href: `${locale.value === 'en' ? '/en' : ''}/work/${w.slug}/`,
-      facts: e.results ?? facts(w),
+      facts: e.results ?? facts({ ...w, ...e }),
     }
   })
 )

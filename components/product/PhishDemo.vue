@@ -29,9 +29,9 @@
           <span class="ph-url" :class="{ 'ph-mark': shown && m.clues.includes('link') }">{{ m.link.url }}</span>
         </p>
 
-        <div v-if="!shown" class="ph-pick" role="radiogroup" :aria-label="`${t.mail} ${i + 1}`">
-          <button type="button" role="radio" :aria-checked="pick[m.id] === 'ok'" class="ph-choice" :class="{ 'is-on': pick[m.id] === 'ok' }" @click="pick[m.id] = 'ok'">{{ t.ok }}</button>
-          <button type="button" role="radio" :aria-checked="pick[m.id] === 'phish'" class="ph-choice ph-choice--bad" :class="{ 'is-on': pick[m.id] === 'phish' }" @click="pick[m.id] = 'phish'">{{ t.phish }}</button>
+        <div v-if="!shown" class="ph-pick" role="group" :aria-label="`${t.mail} ${i + 1}`">
+          <button type="button" :aria-pressed="pick[m.id] === 'ok'" class="ph-choice" :class="{ 'is-on': pick[m.id] === 'ok' }" @click="pick[m.id] = 'ok'">{{ t.ok }}</button>
+          <button type="button" :aria-pressed="pick[m.id] === 'phish'" class="ph-choice ph-choice--bad" :class="{ 'is-on': pick[m.id] === 'phish' }" @click="pick[m.id] = 'phish'">{{ t.phish }}</button>
         </div>
         <p v-else class="ph-verdict" :class="{ 'is-right': right(m) }">
           <strong>{{ m.phish ? t.wasPhish : t.wasOk }}</strong>

@@ -133,3 +133,17 @@
     font-weight: 600;
   }
 }
+
+/* White product screenshots glare on the night page; turn them down a step. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) :not(.ab-media) > .shot > .shot-img,
+  :root:not([data-theme='light']) .screen > img,
+  :root:not([data-theme='light']) .device > img {
+    filter: brightness(0.88);
+  }
+}
+:root[data-theme='dark'] :not(.ab-media) > .shot > .shot-img,
+:root[data-theme='dark'] .screen > img,
+:root[data-theme='dark'] .device > img {
+  filter: brightness(0.88);
+}
