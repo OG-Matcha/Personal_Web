@@ -786,6 +786,7 @@ async function start() {
     sf.u.set(-e[8], -e[9], -e[10]).normalize()
     sf.hWorld = sf.corners[0].distanceTo(sf.corners[3])
     sf.aspect = sf.corners[0].distanceTo(sf.corners[1]) / sf.hWorld
+    sf.mat = mesh.material
     sf.id = id
     sf.on = true
     sf.shown = false
@@ -804,8 +805,13 @@ async function start() {
       return [r.left + ((q.x + 1) / 2) * r.width, r.top + ((1 - q.y) / 2) * r.height]
     })
     el.style.transform = quadMatrix(el.offsetWidth, el.offsetHeight, p)
+    // The 3D screen's brightness (it dims a little with the room's light), as a
+    // CSS brightness, so the page's copy of the picture matches it exactly.
+    el.style.setProperty('--glow', Math.pow(sf.mat?.color?.r ?? 1, 1 / 2.2).toFixed(3))
   }
-  const onClick = () => {
+  const onClick = (ev) => {
+    // A tap has no hover before it: find what is under the finger first.
+    if (ev.pointerType !== 'mouse') onMove(ev)
     if (hover.value?.here) drawer.value = stops.value[hover.value.i].id
     else if (hover.value) scrollToStop(hover.value.i)
   }
