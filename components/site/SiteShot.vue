@@ -6,7 +6,7 @@
     for the frame's own shape pass fit="cover" and fill it edge to edge.
   -->
   <span class="shot" :class="`shot--${fit}`" :style="focus ? { '--shot-focus': focus } : null">
-    <img class="shot-img" :src="src" :srcset="srcset(src)" :sizes="sizes" :alt="alt" :width="width" :height="height" loading="lazy" decoding="async" />
+    <img class="shot-img" :src="src" :srcset="srcset(src)" :sizes="sizes" :alt="alt" :width="width" :height="height" :loading="eager ? 'eager' : 'lazy'" :fetchpriority="eager ? 'high' : undefined" decoding="async" />
   </span>
 </template>
 
@@ -20,6 +20,8 @@ defineProps({
   fit: { type: String, default: 'contain', validator: (v) => ['contain', 'cover'].includes(v) },
   // Where a cover keeps its subject when cropped (object-position); default left top.
   focus: { type: String, default: '' },
+  // The first picture on a page, inside the first screen: load it at once.
+  eager: { type: Boolean, default: false },
 })
 </script>
 

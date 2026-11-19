@@ -132,6 +132,7 @@ export default defineNuxtConfig({
         { property: 'og:type', content: 'profile' },
         { property: 'og:url', content: `${SITE_URL}/` },
         { property: 'og:image', content: `${SITE_URL}/images/og-cover.png` },
+        { name: 'twitter:image', content: `${SITE_URL}/images/og-cover.png` },
         { property: 'og:image:width', content: '1200' },
         { property: 'og:image:height', content: '630' },
         { property: 'og:site_name', content: '黃鉅燊 Ju-Shen Huang' },

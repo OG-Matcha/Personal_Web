@@ -34,13 +34,13 @@ nodes:
   - { name: Vue.js, layer: client, tier: shipped-prod, evidence: 'https://www.finctory.com/' }
   - { name: Tailwind CSS, layer: client, tier: shipped-prod, evidence: 'https://www.finctory.com/' }
   - { name: GSAP, layer: client, tier: shipped-prod, evidence: 'https://github.com/OG-Matcha/Personal_Web' }
-  - { name: React, layer: client, tier: shipped-prod, evidence: '/work/medalink' }
-  - { name: Vite, layer: client, tier: shipped-prod, evidence: '/work/medalink' }
+  - { name: React, layer: client, tier: shipped-prod, evidence: '/work/medalink/' }
+  - { name: Vite, layer: client, tier: shipped-prod, evidence: '/work/medalink/' }
   - { name: three.js, layer: client, tier: shipped-prod, evidence: 'https://github.com/OG-Matcha/Personal_Web' }
   # oSave 行動版：397 個 Dart 檔、84,978 行、16 個功能模組。
-  - { name: Flutter, layer: client, tier: shipped-prod, evidence: '/work/osave' }
-  - { name: Dart, layer: client, tier: shipped-prod, evidence: '/work/osave' }
-  - { name: BLoC, layer: client, tier: shipped-prod, evidence: '/work/osave' }
+  - { name: Flutter, layer: client, tier: shipped-prod, evidence: '/work/osave/' }
+  - { name: Dart, layer: client, tier: shipped-prod, evidence: '/work/osave/' }
+  - { name: BLoC, layer: client, tier: shipped-prod, evidence: '/work/osave/' }
   # 這個網站的開場桌子：Blender 建模、烘焙光照，three.js 播放。
   - { name: Blender, layer: client, tier: shipped-prod, evidence: 'https://github.com/OG-Matcha/Personal_Web' }
   # tessera：Claude Code 的 mod。
@@ -50,20 +50,20 @@ nodes:
   - { name: Gradio, layer: client, tier: shipped-competition, evidence: 'https://github.com/OG-Matcha/Credit-Report' }
 
   # ---- edge & api ----
-  - { name: FastAPI, layer: edge-api, tier: shipped-prod, evidence: '/work/osave' }
-  - { name: Python, layer: edge-api, tier: shipped-prod, evidence: '/work/phishforge' }
-  - { name: Cloudflare Pages Functions, layer: edge-api, tier: shipped-prod, evidence: '/work/medalink' }
-  - { name: Firebase Cloud Functions, layer: edge-api, tier: shipped-prod, evidence: '/work/osave' }
+  - { name: FastAPI, layer: edge-api, tier: shipped-prod, evidence: '/work/osave/' }
+  - { name: Python, layer: edge-api, tier: shipped-prod, evidence: '/work/phishforge/' }
+  - { name: Cloudflare Pages Functions, layer: edge-api, tier: shipped-prod, evidence: '/work/medalink/' }
+  - { name: Firebase Cloud Functions, layer: edge-api, tier: shipped-prod, evidence: '/work/osave/' }
   - { name: Flask, layer: edge-api, tier: shipped-competition, evidence: 'https://github.com/OG-Matcha/NCU_Fresh_Web_ChatBot' }
   - { name: Laravel / PHP, layer: edge-api, tier: shipped-competition, evidence: 'https://github.com/OG-Matcha/Cow-of-Answer' }
   - { name: Spring / Java, layer: edge-api, tier: shipped-competition, evidence: 'https://github.com/OG-Matcha/BrainLib' }
   - { name: Django, layer: edge-api, tier: studied, evidence: 'https://github.com/OG-Matcha/Django_REST_Framework' }
 
   # ---- agents ----
-  - { name: LangGraph, layer: agents, tier: shipped-prod, evidence: '/work/osave' }
-  - { name: LangChain, layer: agents, tier: shipped-prod, evidence: '/work/osave' }
-  - { name: OpenAI API, layer: agents, tier: shipped-prod, evidence: '/work/osave' }
-  - { name: Gemini API, layer: agents, tier: shipped-competition, evidence: '/work/phishforge' }
+  - { name: LangGraph, layer: agents, tier: shipped-prod, evidence: '/work/osave/' }
+  - { name: LangChain, layer: agents, tier: shipped-prod, evidence: '/work/osave/' }
+  - { name: OpenAI API, layer: agents, tier: shipped-prod, evidence: '/work/osave/' }
+  - { name: Gemini API, layer: agents, tier: shipped-competition, evidence: '/work/phishforge/' }
   - { name: LLaMA 3（本地）, name_en: LLaMA 3 (local), layer: agents, tier: shipped-competition, evidence: 'https://github.com/OG-Matcha/Credit-Report' }
   - { name: scikit-learn, layer: agents, tier: studied, evidence: 'https://github.com/OG-Matcha/Scikit_Learn_FC' }
   - { name: TensorFlow, layer: agents, tier: studied, evidence: 'https://github.com/OG-Matcha/Basic-TensorFlow' }
@@ -74,28 +74,28 @@ nodes:
   - { name: LLM 紅隊測試, name_en: LLM red-teaming, layer: agents, tier: shipped-prod, evidence: '/resume/#record' }
 
   # ---- data ----
-  - { name: Cloudflare D1, layer: data, tier: shipped-prod, evidence: '/work/medalink' }
-  - { name: Cloudflare R2, layer: data, tier: shipped-prod, evidence: '/work/medalink' }
-  - { name: Cloud Firestore, layer: data, tier: shipped-prod, evidence: '/work/osave' }
-  - { name: Drift, layer: data, tier: shipped-prod, evidence: '/work/osave' }
-  - { name: PostgreSQL, layer: data, tier: shipped-prod, evidence: '/work/osave' }
-  - { name: Redis, layer: data, tier: shipped-competition, evidence: '/work/phishforge' }
+  - { name: Cloudflare D1, layer: data, tier: shipped-prod, evidence: '/work/medalink/' }
+  - { name: Cloudflare R2, layer: data, tier: shipped-prod, evidence: '/work/medalink/' }
+  - { name: Cloud Firestore, layer: data, tier: shipped-prod, evidence: '/work/osave/' }
+  - { name: Drift, layer: data, tier: shipped-prod, evidence: '/work/osave/' }
+  - { name: PostgreSQL, layer: data, tier: shipped-prod, evidence: '/work/osave/' }
+  - { name: Redis, layer: data, tier: shipped-competition, evidence: '/work/phishforge/' }
   - { name: FAISS, layer: data, tier: shipped-competition, evidence: 'https://github.com/OG-Matcha/Credit-Report' }
   - { name: MySQL, layer: data, tier: shipped-competition, evidence: 'https://github.com/OG-Matcha/BrainLib' }
   # ERP 中心受訓一年，第二年轉任暑期特約講師 —— 年表裡那一條就是佐證。
   - { name: SAP S/4HANA, layer: data, tier: studied, evidence: '/resume/#record' }
 
   # ---- infra ----
-  - { name: Cloudflare Pages, layer: infra, tier: shipped-prod, evidence: '/work/medalink' }
-  - { name: Cloudflare Workers, layer: infra, tier: shipped-prod, evidence: '/work/medalink' }
-  - { name: Firebase Auth, layer: infra, tier: shipped-prod, evidence: '/work/osave' }
-  - { name: Cloud Messaging, layer: infra, tier: shipped-prod, evidence: '/work/osave' }
+  - { name: Cloudflare Pages, layer: infra, tier: shipped-prod, evidence: '/work/medalink/' }
+  - { name: Cloudflare Workers, layer: infra, tier: shipped-prod, evidence: '/work/medalink/' }
+  - { name: Firebase Auth, layer: infra, tier: shipped-prod, evidence: '/work/osave/' }
+  - { name: Cloud Messaging, layer: infra, tier: shipped-prod, evidence: '/work/osave/' }
   # 工研院：全組共用的 DevSecOps 工作流，其他團隊直接沿用。
   - { name: Gitleaks, layer: infra, tier: shipped-prod, evidence: '/resume/#record' }
   - { name: Semgrep, layer: infra, tier: shipped-prod, evidence: '/resume/#record' }
-  - { name: Docker, layer: infra, tier: shipped-prod, evidence: '/work/phishforge' }
-  - { name: AWS ECS, layer: infra, tier: shipped-competition, evidence: '/work/phishforge' }
-  - { name: Heroku, layer: infra, tier: shipped-prod, evidence: '/work/osave' }
+  - { name: Docker, layer: infra, tier: shipped-prod, evidence: '/work/phishforge/' }
+  - { name: AWS ECS, layer: infra, tier: shipped-competition, evidence: '/work/phishforge/' }
+  - { name: Heroku, layer: infra, tier: shipped-prod, evidence: '/work/osave/' }
   - { name: Azure, layer: infra, tier: shipped-competition, evidence: 'https://github.com/OG-Matcha/Cow-of-Answer' }
   - { name: Nginx, layer: infra, tier: shipped-competition, evidence: 'https://github.com/OG-Matcha/Cow-of-Answer' }
   - { name: GitHub Actions, layer: infra, tier: shipped-prod, evidence: 'https://github.com/OG-Matcha/Personal_Web' }

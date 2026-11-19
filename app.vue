@@ -1,4 +1,6 @@
 <template>
+  <!-- Says the new page's title to screen readers after each page change. -->
+  <NuxtRouteAnnouncer />
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>

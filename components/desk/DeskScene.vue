@@ -464,13 +464,19 @@ async function start() {
   const B = (a) => new Vector3(a[0], a[2], -a[1]) // Blender (Z up) -> three (Y up)
 
   const renderer = new THREE.WebGLRenderer({ canvas: canvas.value, antialias: true, powerPreference: 'high-performance' })
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75))
+  // Checking each shader for errors makes the browser link it on the spot,
+  // freezing the page for a second or more; without the check, compileAsync
+  // below links them off the main thread.
+  renderer.debug.checkShaderErrors = !!import.meta.dev
+  // Pixels drawn per frame, capped by total count and not just by density: a
+  // 1920x1080 window at 2x was 6.4 million pixels a frame and ran at 28 fps on
+  // integrated graphics. `prCap` drops a step when frames keep running slow.
+  let prCap = 1.75
+  const pixelRatio = (w, h) => Math.max(1, Math.min(devicePixelRatio, prCap, Math.sqrt(3.7e6 / Math.max(1, w * h))))
   renderer.outputColorSpace = THREE.SRGBColorSpace
   renderer.toneMapping = THREE.NoToneMapping
   const room = new RoomEnvironment()
   const pmrem = new THREE.PMREMGenerator(renderer)
-  const env = pmrem.fromScene(room, 0.04).texture
-  owned.push(env)
   let raf = 0
   let gone = false
   let teardown = () => {}
@@ -491,6 +497,38 @@ async function start() {
   }
   // A lost GPU context would leave a black canvas over the still: drop back to the still.
   canvas.value.addEventListener('webglcontextlost', () => dispose(), { once: true })
+  // The room's reflections are rendered once at start. Doing it straight away
+  // links its shaders on the main thread (about a second on a laptop GPU), so
+  // they are compiled off it first: the room's own materials, and the blur and
+  // GGX passes PMREM uses (private fields; if a three update renames them, this
+  // just falls back to linking them inline as before).
+  // Shaders differ by where they draw: PMREM draws into half-float targets, so
+  // compile while one is bound (compileAsync picks its programs synchronously,
+  // so the screen is bound again right after the call).
+  try {
+    const rt = new THREE.WebGLRenderTarget(16, 16, { type: THREE.HalfFloatType })
+    pmrem._setSize?.(256)
+    const probe = pmrem._allocateTargets?.()
+    // Each compiled the way PMREM draws it: the passes as a lone mesh, and a
+    // stand-in for its backdrop box (same settings, so the same shader).
+    const lone = (m, cam) => renderer.compileAsync(new THREE.Mesh(new THREE.BufferGeometry(), m), cam)
+    const backdrop = new THREE.MeshBasicMaterial({ name: 'PMREM.Background', side: THREE.BackSide, depthWrite: false, depthTest: false })
+    renderer.setRenderTarget(rt)
+    const jobs = [
+      renderer.compileAsync(room, new THREE.PerspectiveCamera()),
+      lone(backdrop, new THREE.PerspectiveCamera()),
+      ...[pmrem._blurMaterial, pmrem._ggxMaterial].filter(Boolean).map((m) => lone(m, new THREE.OrthographicCamera())),
+    ]
+    renderer.setRenderTarget(null)
+    await Promise.all(jobs)
+    probe?.dispose()
+    rt.dispose()
+    // Kept until teardown: disposing it would release the shader just compiled.
+    owned.push(backdrop)
+  } catch {}
+  if (gone) return
+  const env = pmrem.fromScene(room, 0.04).texture
+  owned.push(env)
   const scene = new THREE.Scene()
   scene.environment = env
 
@@ -717,6 +755,7 @@ async function start() {
   const size = () => {
     const w = canvas.value.clientWidth
     const h = canvas.value.clientHeight
+    renderer.setPixelRatio(pixelRatio(w, h))
     renderer.setSize(w, h, false)
     view.w = w
     view.h = h
@@ -886,12 +925,23 @@ async function start() {
   // feel per unit of time, so a 144 Hz screen does not move twice as fast.
   let last = 0
   let dt = 1
+  let slow = 0
+  let counted = 0
   const ease = (k) => 1 - Math.pow(1 - k, dt)
   function frame(now) {
     raf = 0
     if (!visible || gone) return
     dt = last ? Math.min(4, (now - last) / (1000 / 60)) : 1
     last = now
+    // Over 21 ms a frame for most of the last 45 while moving: draw fewer pixels.
+    if (dt > 1.3) slow++
+    if (++counted >= 45) {
+      if (slow > 30 && prCap > 1) {
+        prCap = Math.max(1, renderer.getPixelRatio() - 0.25)
+        size()
+      }
+      slow = counted = 0
+    }
     mouse.sx += (mouse.x - mouse.sx) * ease(0.05)
     mouse.sy += (mouse.y - mouse.sy) * ease(0.05)
     let tc = want.cam
@@ -950,6 +1000,23 @@ async function start() {
       (!sf.on || sf.shown)
     if (!settled) raf = requestAnimationFrame(frame)
     else last = 0
+  }
+
+  // Compile every shader and upload every texture before the first frame,
+  // off the main thread where the browser can and a texture per frame
+  // otherwise, so the page stays clickable while the room gets ready.
+  try {
+    await renderer.compileAsync(scene, camera)
+  } catch {}
+  if (gone) return
+  const textures = new Set()
+  scene.traverse((o) => {
+    for (const m of [o.material].flat()) for (const v of Object.values(m ?? {})) if (v?.isTexture) textures.add(v)
+  })
+  for (const t of textures) {
+    renderer.initTexture(t)
+    await new Promise((r) => requestAnimationFrame(r))
+    if (gone) return
   }
 
   size()
