@@ -13,7 +13,7 @@
     On phones and under reduced motion the still shows with the name and
     thesis over it, followed by the walk as a row of picture cards.
   -->
-  <section ref="root" class="dk" :class="{ 'is-ready': ready }" :style="{ '--stops': stops.length }" :aria-label="t.label">
+  <section ref="root" class="dk" :class="{ 'is-ready': ready, 'is-pocket': pocket }" :style="{ '--stops': stops.length }" :aria-label="t.label">
     <div class="dk-stage">
       <!--
         One still downloads, not two: <picture> picks day or night from the
@@ -44,6 +44,10 @@
         </template>
       </div>
       <canvas ref="canvas" class="dk-canvas" aria-hidden="true" />
+      <!-- Phones with the small 3D desk: how to use it, until it has been used. -->
+      <div v-if="pocket" class="dk-touch" :class="{ 'is-on': ready && !touched }" aria-hidden="true">
+        <span>{{ t.touch }}</span>
+      </div>
       <div class="dk-veil" :class="{ 'is-on': on === 0 }" aria-hidden="true" />
 
       <p v-if="hover" class="dk-tag" :style="{ left: `${hover.x}px`, top: `${hover.y}px` }" aria-hidden="true">
@@ -168,6 +172,7 @@ const t = computed(() =>
         name: 'Ju-Shen Huang',
         thesis: 'I take AI from demo to something people still use three months later.',
         hint: 'Scroll to walk across my desk',
+        touch: 'Drag to look around · tap a thing',
         tour: 'Things on my desk',
         stopsLabel: 'Stops on the desk',
         skip: 'Skip the desk ↓',
@@ -178,6 +183,7 @@ const t = computed(() =>
         name: '黃鉅燊',
         thesis: '我把 AI 從展示品，​做到三個月後還有人在用。',
         hint: '往下捲，走過我的桌子',
+        touch: '左右拖曳看看 · 點桌上的東西',
         tour: '桌上的東西',
         stopsLabel: '書桌上的每一站',
         skip: '跳過書桌，直接看介紹 ↓',
@@ -227,6 +233,10 @@ const stops = computed(() => {
 const root = ref(null)
 const canvas = ref(null)
 const ready = ref(false)
+// Phones (below the tall layout, motion allowed): the room runs as a small
+// 3D picture in place of the still at the top; no walk, drag to look around.
+const pocket = ref(false)
+const touched = ref(false)
 // The stills stay under the canvas until its 900 ms fade-in has finished.
 const stillsOn = ref(true)
 watch(ready, (r) => {
@@ -398,7 +408,7 @@ onMounted(() => {
   document.addEventListener('focusin', noteFocus)
   document.addEventListener('pointerdown', noteFocus)
   const tall = tallMq.matches
-  if (!tall) return
+  if (!tall) return pocketLater()
   readScroll()
   addEventListener('scroll', readScroll, { passive: true })
   addEventListener('resize', readScroll)
@@ -413,9 +423,36 @@ onMounted(() => {
   'requestIdleCallback' in window ? requestIdleCallback(go, { timeout: 1200 }) : setTimeout(go, 400)
 })
 
+// The phone's small 3D desk: only once the page has loaded and gone idle, and
+// only where it costs the reader little - not on save-data or a slow
+// connection, a low-memory phone, a CPU-drawn WebGL or with reduced motion.
+// About 2.5 MB, the same files the big desk loads.
+function pocketLater() {
+  if (!matchMedia('(prefers-reduced-motion: no-preference)').matches) return
+  const c = navigator.connection
+  if (c?.saveData || /2g|3g/.test(c?.effectiveType ?? '')) return
+  if ((navigator.deviceMemory ?? 8) < 4) return
+  const go = () => {
+    if (!alive || tallMq.matches || softwareGL()) return
+    warm()
+    pocket.value = true
+    // Turning a tablet into the tall layout: the big desk is set up on load only, so the small one just goes.
+    tallMq.addEventListener('change', pocketOff)
+    nextTick(() => start(true).catch(() => dispose?.()))
+  }
+  const idle = () => ('requestIdleCallback' in window ? requestIdleCallback(go, { timeout: 2500 }) : setTimeout(go, 800))
+  document.readyState === 'complete' ? idle() : addEventListener('load', idle, { once: true })
+}
+function pocketOff() {
+  if (!tallMq.matches) return
+  pocket.value = false
+  dispose?.()
+}
+
 onBeforeUnmount(() => {
   alive = false
   tallMq?.removeEventListener('change', keepFocus)
+  tallMq?.removeEventListener('change', pocketOff)
   document.removeEventListener('focusin', noteFocus)
   document.removeEventListener('pointerdown', noteFocus)
   clearTimeout(settle)
@@ -455,7 +492,7 @@ function softwareGL() {
   }
 }
 
-async function start() {
+async function start(small = false) {
   const owned = [] // GPU things to free on the way out
   const THREE = await import('three')
   const { GLTFLoader } = await import('three/examples/jsm/loaders/GLTFLoader.js')
@@ -463,7 +500,7 @@ async function start() {
   const { Vector3 } = THREE
   const B = (a) => new Vector3(a[0], a[2], -a[1]) // Blender (Z up) -> three (Y up)
 
-  const renderer = new THREE.WebGLRenderer({ canvas: canvas.value, antialias: true, powerPreference: 'high-performance' })
+  const renderer = new THREE.WebGLRenderer({ canvas: canvas.value, antialias: true, powerPreference: small ? 'low-power' : 'high-performance' })
   // Checking each shader for errors makes the browser link it on the spot,
   // freezing the page for a second or more; without the check, compileAsync
   // below links them off the main thread.
@@ -471,8 +508,9 @@ async function start() {
   // Pixels drawn per frame, capped by total count and not just by density: a
   // 1920x1080 window at 2x was 6.4 million pixels a frame and ran at 28 fps on
   // integrated graphics. `prCap` drops a step when frames keep running slow.
-  let prCap = 1.75
-  const pixelRatio = (w, h) => Math.max(1, Math.min(devicePixelRatio, prCap, Math.sqrt(3.7e6 / Math.max(1, w * h))))
+  // The phone's picture is small: 2x of it is under a million pixels.
+  let prCap = small ? 2 : 1.75
+  const pixelRatio = (w, h) => Math.max(1, Math.min(devicePixelRatio, prCap, Math.sqrt((small ? 1e6 : 3.7e6) / Math.max(1, w * h))))
   renderer.outputColorSpace = THREE.SRGBColorSpace
   renderer.toneMapping = THREE.NoToneMapping
   const room = new RoomEnvironment()
@@ -494,6 +532,7 @@ async function start() {
     renderer.dispose()
     renderer.forceContextLoss()
     ready.value = false
+    pocket.value = false
   }
   // A lost GPU context would leave a black canvas over the still: drop back to the still.
   canvas.value.addEventListener('webglcontextlost', () => dispose(), { once: true })
@@ -505,7 +544,9 @@ async function start() {
   // Shaders differ by where they draw: PMREM draws into half-float targets, so
   // compile while one is bound (compileAsync picks its programs synchronously,
   // so the screen is bound again right after the call).
-  try {
+  // The phone's small desk skips the reflections altogether (see `small`
+  // below): linking their shaders alone held a phone's main thread 1.3 s.
+  if (!small) try {
     const rt = new THREE.WebGLRenderTarget(16, 16, { type: THREE.HalfFloatType })
     pmrem._setSize?.(256)
     const probe = pmrem._allocateTargets?.()
@@ -527,10 +568,12 @@ async function start() {
     owned.push(backdrop)
   } catch {}
   if (gone) return
-  const env = pmrem.fromScene(room, 0.04).texture
-  owned.push(env)
   const scene = new THREE.Scene()
-  scene.environment = env
+  if (!small) {
+    const env = pmrem.fromScene(room, 0.04).texture
+    owned.push(env)
+    scene.environment = env
+  }
 
   // Same lens as the Blender camera: 30 mm on a 36 mm sensor.
   const camera = new THREE.PerspectiveCamera(36, 16 / 9, 0.02, 30)
@@ -549,18 +592,28 @@ async function start() {
     map.needsUpdate = true
   }
   const tl = new THREE.TextureLoader()
-  const tex = (url) =>
-    new Promise((res, rej) =>
-      tl.load(url, (x) => {
-        x.flipY = false
-        // Display-ready sRGB from Blender (AgX). Decoded to linear on sampling and
-        // encoded back on output, so what Blender showed is what the page shows.
-        x.colorSpace = THREE.SRGBColorSpace
-        x.anisotropy = maxAniso
-        owned.push(x)
-        res(x)
-      }, undefined, rej)
-    )
+  const done = (x) => {
+    x.flipY = false
+    // Display-ready sRGB from Blender (AgX). Decoded to linear on sampling and
+    // encoded back on output, so what Blender showed is what the page shows.
+    x.colorSpace = THREE.SRGBColorSpace
+    x.anisotropy = maxAniso
+    owned.push(x)
+    return x
+  }
+  // The bakes are decoded off the main thread (an <img> is decoded inside the
+  // upload, about 0.4 s for the 3072 px desk), and for the phone's small
+  // picture halved on the way: `px` is the bake's width.
+  const tex = async (url, px) => {
+    if (typeof createImageBitmap !== 'function') return new Promise((res, rej) => tl.load(url, (x) => res(done(x)), undefined, rej))
+    const blob = await (await fetch(url)).blob()
+    const opts = { imageOrientation: 'none', premultiplyAlpha: 'none', colorSpaceConversion: 'none' }
+    const bmp = await createImageBitmap(blob, small ? { ...opts, resizeWidth: px / 2, resizeHeight: px / 2, resizeQuality: 'high' } : opts)
+    const x = new THREE.Texture(bmp)
+    x.needsUpdate = true
+    return done(x)
+  }
+  const SIZE = { desk: 3072, room: 2048 }
 
   const night = { value: dark() ? 1 : 0 }
   const first = night.value ? 'night' : 'day'
@@ -592,8 +645,8 @@ async function start() {
   const loader = new GLTFLoader()
   const [gltf, d1, r1] = await Promise.all([
     loader.parseAsync(deskGltf, '/desk/model/'),
-    tex(`/desk/desk_${first}.webp`),
-    tex(`/desk/room_${first}.webp`),
+    tex(`/desk/desk_${first}.webp`, SIZE.desk),
+    tex(`/desk/room_${first}.webp`, SIZE.room),
   ])
   gltf.scene.traverse((o) => {
     if (!o.isMesh) return
@@ -607,16 +660,36 @@ async function start() {
   baked.room.uniforms[key].value = r1
   baked.desk.uniforms[first === 'day' ? 'uNight' : 'uDay'].value = d1
   baked.room.uniforms[first === 'day' ? 'uNight' : 'uDay'].value = r1
-  // The other mood arrives later; until then both slots hold the first.
-  Promise.all([tex(`/desk/desk_${other}.webp`), tex(`/desk/room_${other}.webp`)])
-    .then(([d2, r2]) => {
-      if (gone) return
-      const k2 = other === 'day' ? 'uDay' : 'uNight'
-      baked.desk.uniforms[k2].value = d2
-      baked.room.uniforms[k2].value = r2
-      kick()
-    })
-    .catch(() => {}) // the theme switch then keeps the first mood; nothing else breaks
+  // The other mood arrives later; until then both slots hold the first. Each
+  // is sent to the GPU in a frame of its own before it is used, not all inside
+  // the next draw. The phone fetches it only when the theme is switched.
+  let otherAsked = false
+  let otherReady = false
+  const loadOther = () => {
+    if (otherAsked) return
+    otherAsked = true
+    Promise.all([tex(`/desk/desk_${other}.webp`, SIZE.desk), tex(`/desk/room_${other}.webp`, SIZE.room)])
+      .then(async ([d2, r2]) => {
+        for (const x of [d2, r2]) {
+          await new Promise((r) => requestAnimationFrame(r))
+          if (gone) return
+          renderer.initTexture(x)
+        }
+        const k2 = other === 'day' ? 'uDay' : 'uNight'
+        baked.desk.uniforms[k2].value = d2
+        baked.room.uniforms[k2].value = r2
+        otherReady = true
+        if (small) {
+          night.value = target = dark() ? 1 : 0
+          applyMood()
+          kick()
+          requestAnimationFrame(() => requestAnimationFrame(() => (ready.value = !gone)))
+        }
+        kick()
+      })
+      .catch(() => {}) // the theme switch then keeps the first mood; nothing else breaks
+  }
+  if (!small) loadOther()
 
   const glow = []
   const shiny = []
@@ -673,6 +746,38 @@ async function start() {
       o.material = new THREE.MeshBasicMaterial({ color: 0xffd9a8, transparent: true })
       owned.push(o.material)
       o.userData.bulb = true
+    } else if (small) {
+      // The phone's small desk has no reflections to light real metal with:
+      // the trophies are painted instead, their sheen worked out once per
+      // vertex from the window's direction, like the bag. At a phone's size
+      // the cups are a few dozen pixels tall.
+      const name = o.material.name
+      if (name === 'crystal') o.material = new THREE.MeshBasicMaterial({ color: 0x9fb9dc, transparent: true, opacity: 0.45, depthWrite: false })
+      else {
+        const base = o.material.color.clone()
+        const metal = name !== 'base_black'
+        const g = o.geometry
+        const nrm = g.attributes.normal
+        const col = new Float32Array(nrm.count * 3)
+        const key = new Vector3(-0.75, 0.55, 0.35).normalize()
+        const half = key.clone().add(new Vector3(0, 0, 1)).normalize()
+        const n3 = new Vector3()
+        o.updateWorldMatrix(true, false)
+        const q = new THREE.Matrix3().getNormalMatrix(o.matrixWorld)
+        for (let i = 0; i < nrm.count; i++) {
+          n3.fromBufferAttribute(nrm, i).applyMatrix3(q).normalize()
+          const d = Math.max(0, n3.dot(key))
+          const sp = Math.pow(Math.max(0, n3.dot(half)), 24) * (metal ? 0.9 : 0.12)
+          const k = metal ? 0.5 + 0.8 * d : 1
+          col[i * 3] = base.r * k + sp
+          col[i * 3 + 1] = base.g * k + sp
+          col[i * 3 + 2] = base.b * k + sp
+        }
+        g.setAttribute('color', new THREE.BufferAttribute(col, 3))
+        o.material = new THREE.MeshBasicMaterial({ vertexColors: true })
+      }
+      o.userData.paint = o.material.color.clone()
+      owned.push(o.material)
     } else {
       // Trophies and the plaque: real metal and glass, lit by the room.
       if (o.name.startsWith('crystal')) {
@@ -710,6 +815,7 @@ async function start() {
     gltf.scene.traverse((o) => {
       if (o.userData.sky) o.material.color.setRGB(0.87 - 0.78 * n, 0.91 - 0.79 * n, 0.96 - 0.72 * n)
       if (o.userData.bulb) o.material.opacity = 0.15 + 0.85 * n
+      if (o.userData.paint) o.material.color.copy(o.userData.paint).multiplyScalar(1 - 0.72 * n)
       // Matched to the baked wall beside it: daylight by day, a little warm lamp spill at night.
       if (o.userData.bag) o.material.color.setRGB(0.92 - 0.72 * n, 0.92 - 0.75 * n, 0.9 - 0.78 * n)
       if (o.userData.paper === 'near') o.material.color.setRGB(0.86 - 0.66 * n, 0.85 - 0.68 * n, 0.83 - 0.71 * n)
@@ -765,7 +871,16 @@ async function start() {
     view.reach = w * (0.08 + 0.05 * Math.min(1, Math.max(0, (1500 - w) / 500, (900 - h) / 300)))
     camera.aspect = w / h
     // Keep the 16:9 framing of the Blender camera; narrower windows widen the view instead of cropping.
-    camera.fov = camera.aspect < 16 / 9 ? THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(36) / 2) * (16 / 9) / camera.aspect)) : 36
+    const widen = (a) => (a < 16 / 9 ? THREE.MathUtils.radToDeg(2 * Math.atan((Math.tan(THREE.MathUtils.degToRad(36) / 2) * (16 / 9)) / a)) : 36)
+    camera.fov = widen(camera.aspect)
+    if (small) {
+      // The phone's picture is the 16:10 still cropped to fill its box
+      // (object-fit: cover), so the canvas crops the same 16:10 view: it
+      // fades in over the still without the picture jumping.
+      const v = Math.tan(THREE.MathUtils.degToRad(widen(1.6)) / 2)
+      camera.fov = THREE.MathUtils.radToDeg(2 * Math.atan(camera.aspect < 1.6 ? v : (v * 1.6) / camera.aspect))
+      view.reach = 0
+    }
     camera.updateProjectionMatrix()
     if (sf.on) {
       // Too small for the 3D desk now (the page below takes over): put it down.
@@ -792,7 +907,9 @@ async function start() {
     // The thing you are standing at opens; any other thing walks you to it.
     const st = best && stops.value[best.i]
     const here = best && best.i === on.value && !moving.value && st.open
-    hover.value = best ? { i: best.i, x: best.x, y: best.y, label: here ? `${st.thing} · ${st.open}` : best.i === on.value ? st.thing : `${st.thing} · ${t.value.go}`, here } : null
+    // The small desk has no walk: every thing is right here.
+    const label = !best ? '' : small ? (st.open ? `${st.thing} · ${st.open}` : st.thing) : here ? `${st.thing} · ${st.open}` : best.i === on.value ? st.thing : `${st.thing} · ${t.value.go}`
+    hover.value = best ? { i: best.i, x: best.x, y: best.y, label, here } : null
     canvas.value.style.cursor = best ? 'pointer' : ''
     kick()
   }
@@ -851,7 +968,7 @@ async function start() {
       dev.style.transform = ''
     }
   }
-  onScreen = (id) => {
+  if (!small) onScreen = (id) => {
     reset()
     if (!id) {
       sf.on = false
@@ -899,13 +1016,65 @@ async function start() {
     el.style.setProperty('--glow', Math.pow(sf.mat?.color?.r ?? 1, 1 / 2.2).toFixed(3))
   }
   const onClick = (ev) => {
+    if (small && drag.moved) return
     // A tap has no hover before it: find what is under the finger first.
     if (ev.pointerType !== 'mouse') onMove(ev)
+    if (small) {
+      const st = hover.value && stops.value[hover.value.i]
+      hover.value = null
+      if (!st) return
+      touched.value = true
+      // Things with a drawer open it, growing out of the thing; the rest
+      // bring their card in the row below into view.
+      if (st.open) drawer.value = st.id
+      else root.value?.querySelector(`.dk-stop[data-stop="${st.id}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' })
+      return
+    }
     if (hover.value?.here) drawer.value = stops.value[hover.value.i].id
     else if (hover.value) scrollToStop(hover.value.i)
   }
+  // The small desk: a finger dragged sideways turns the view around the desk
+  // (vertical drags stay page scrolling, touch-action: pan-y), and it swings
+  // back to the front view when the finger lifts.
+  const drag = { id: -1, x0: 0, x: 0, sx: 0, moved: false }
+  const onDown = (ev) => {
+    if (ev.pointerType === 'mouse') return
+    drag.id = ev.pointerId
+    drag.x0 = ev.clientX
+    drag.moved = false
+  }
+  const onDrag = (ev) => {
+    if (ev.pointerId !== drag.id) return
+    const dx = ev.clientX - drag.x0
+    if (Math.abs(dx) > 8) drag.moved = touched.value = true
+    drag.x = Math.max(-1, Math.min(1, dx / 160))
+    kick()
+  }
+  const onUp = (ev) => {
+    if (ev.pointerId !== drag.id) return
+    drag.id = -1
+    drag.x = 0
+    kick()
+  }
+  // The scroll that takes the picture away leans the camera toward the open
+  // notebook, the first card in the row coming up underneath.
+  const onPocketScroll = () => {
+    const r = canvas.value.getBoundingClientRect()
+    const p = Math.min(1, Math.max(0, -r.top / Math.max(1, r.height)))
+    const o = 0.45 * p * p * (3 - 2 * p)
+    want.cam.copy(path[0].cam).lerp(exit.cam, o)
+    want.at.copy(path[0].at).lerp(exit.at, o)
+    kick()
+  }
 
   const mo = new MutationObserver(() => {
+    // The phone has only the first mood until the theme is switched: the
+    // still for the new theme shows while the other bake loads, and the room
+    // fades back in already in it.
+    if (small && !otherReady) {
+      ready.value = false
+      return loadOther()
+    }
     target = dark() ? 1 : 0
     kick()
   })
@@ -922,7 +1091,7 @@ async function start() {
     visible = e.isIntersecting
     kick()
   })
-  io.observe(el)
+  io.observe(small ? canvas.value : el)
 
   // Each easing below was tuned per frame at 60 Hz; `ease(k)` gives the same
   // feel per unit of time, so a 144 Hz screen does not move twice as fast.
@@ -947,6 +1116,8 @@ async function start() {
     }
     mouse.sx += (mouse.x - mouse.sx) * ease(0.05)
     mouse.sy += (mouse.y - mouse.sy) * ease(0.05)
+    drag.sx += (drag.x - drag.sx) * ease(drag.id < 0 ? 0.06 : 0.2)
+    if (Math.abs(drag.x - drag.sx) < 1e-4) drag.sx = drag.x
     let tc = want.cam
     let ta = want.at
     const tu = sf.on ? sf.u : worldUp
@@ -975,6 +1146,8 @@ async function start() {
     const sway = sf.on ? 0 : 1
     camera.position.x += mouse.sx * 0.03 * sway
     camera.position.y -= mouse.sy * 0.018 * sway
+    // About eight degrees around the desk at a full drag.
+    camera.position.x += drag.sx * 0.22
     camera.up.copy(cur.up)
     camera.lookAt(cur.at)
     if (Math.abs(night.value - target) > 0.001) {
@@ -996,6 +1169,7 @@ async function start() {
       cur.cam.distanceToSquared(tc) < 1e-9 &&
       cur.at.distanceToSquared(ta) < 1e-9 &&
       Math.abs(mouse.x - mouse.sx) + Math.abs(mouse.y - mouse.sy) < 1e-3 &&
+      drag.sx === drag.x &&
       Math.abs(night.value - target) <= 0.001 &&
       cur.up.distanceToSquared(tu) < 1e-9 &&
       view.shift === shiftTo &&
@@ -1022,9 +1196,20 @@ async function start() {
     if (gone) return
   }
 
+  // Turned into the tall layout while this was loading: the small desk is not wanted.
+  if (small && !pocket.value) return dispose()
   size()
-  onWalk = onScroll
-  onScroll()
+  if (small) {
+    onPocketScroll()
+    addEventListener('scroll', onPocketScroll, { passive: true })
+    canvas.value.addEventListener('pointerdown', onDown)
+    addEventListener('pointermove', onDrag, { passive: true })
+    addEventListener('pointerup', onUp)
+    addEventListener('pointercancel', onUp)
+  } else {
+    onWalk = onScroll
+    onScroll()
+  }
   cur.cam.copy(want.cam)
   cur.at.copy(want.at)
   addEventListener('resize', size)
@@ -1048,6 +1233,10 @@ async function start() {
     io.disconnect()
     mo.disconnect()
     removeEventListener('resize', size)
+    removeEventListener('scroll', onPocketScroll)
+    removeEventListener('pointermove', onDrag)
+    removeEventListener('pointerup', onUp)
+    removeEventListener('pointercancel', onUp)
   }
 }
 </script>
@@ -1185,6 +1374,60 @@ async function start() {
 .dk-caps .dk-thesis {
   margin-top: var(--sp-2);
   font-size: var(--step-1);
+}
+
+/* Phones with the small 3D desk: the canvas takes exactly the still's box
+   and fades in over it, with the same fade into the page at its foot. Only
+   sideways drags reach it; up and down still scroll the page. */
+.dk.is-pocket .dk-canvas,
+.dk-touch {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  max-height: 80svh;
+}
+
+.dk.is-pocket .dk-canvas {
+  display: block;
+  opacity: 0;
+  touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent;
+  mask-image: linear-gradient(#000 calc(100% - 5rem), transparent);
+  transition: opacity 900ms var(--ease-entrance);
+}
+
+.dk.is-pocket.is-ready .dk-canvas {
+  opacity: 1;
+}
+
+/* How to use it: on the fade at the picture's foot, right of the name, clear of
+   the things on the desk; gone once it has been used. */
+.dk-touch {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 0 var(--page-gut) 2.4rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 400ms var(--ease-entrance);
+}
+
+.dk-touch.is-on {
+  opacity: 1;
+  transition-delay: 1200ms;
+}
+
+.dk-touch span {
+  padding: 0.35em 0.85em;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  box-shadow: var(--shadow-1);
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--ink-2);
 }
 
 /* The tour: a row of cards you swipe through, each snapping into place,
