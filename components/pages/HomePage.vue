@@ -1046,16 +1046,54 @@ async function startWalk() {
   color: var(--ink-2);
 }
 
+/* Each stop's events on an index card: one ruled line per row (a wrapped
+   title gets a second line, still on the rules), the red head line, and the
+   cards tipped a little either way, as if dealt onto the desk. */
 .pp-events {
+  --rule-h: 2rem;
+  --sink: 0.4rem; /* lifts each rule to just under the baseline, where a hand writes */
+  --card: #fffdf8;
+  --card-rule: rgb(70 120 190 / 0.22);
+  --card-head: rgb(207 96 58 / 0.6);
   display: grid;
-  gap: var(--sp-2);
   margin-top: var(--sp-4);
-  padding: var(--sp-4) var(--sp-5);
-  border-radius: var(--r-2);
-  background: var(--surface);
-  box-shadow: var(--shadow-1);
+  padding: calc(var(--rule-h) * 0.75) var(--sp-5) calc(var(--rule-h) * 0.5);
+  border-radius: 3px;
+  background:
+    linear-gradient(var(--card-head), var(--card-head)) 0 calc(var(--rule-h) * 0.75 - 2px) / 100% 1.5px no-repeat,
+    repeating-linear-gradient(transparent 0 calc(var(--rule-h) - 1px), var(--card-rule) 0 var(--rule-h)) 0 calc(var(--rule-h) * 0.75 - var(--sink)) / 100% calc(100% - var(--rule-h) * 1.25) no-repeat,
+    var(--card);
+  box-shadow: var(--shadow-2);
   list-style: none;
   font-size: var(--step--1);
+  line-height: var(--rule-h);
+  rotate: 0.5deg;
+}
+
+@media (max-width: 640px) {
+  .pp-events {
+    --rule-h: 1.75rem;
+    --sink: 0.3rem;
+    padding-inline: var(--sp-4);
+  }
+}
+
+.pp-stop:nth-child(even) .pp-events {
+  rotate: -0.6deg;
+}
+
+:root[data-theme='dark'] .pp-events {
+  --card: #232633;
+  --card-rule: rgb(140 170 230 / 0.13);
+  --card-head: rgb(255 138 91 / 0.45);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .pp-events {
+    --card: #232633;
+    --card-rule: rgb(140 170 230 / 0.13);
+    --card-head: rgb(255 138 91 / 0.45);
+  }
 }
 
 .pp-events li {
