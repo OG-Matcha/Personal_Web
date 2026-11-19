@@ -16,7 +16,8 @@
       </fieldset>
 
       <p class="sd-swipe" aria-hidden="true">{{ t.swipe }}</p>
-      <div class="sd-grid-wrap" :class="{ 'is-end': atEnd }" @scroll.passive="onScroll">
+      <!-- Scrolls sideways on a phone; focusable so the arrow keys can scroll it too. -->
+      <div class="sd-grid-wrap" :class="{ 'is-end': atEnd }" tabindex="0" role="region" :aria-label="t.day" @scroll.passive="onScroll">
         <div class="sd-grid" role="img" :aria-label="gridLabel" :style="{ '--n': SLOTS }">
           <span class="sd-corner" aria-hidden="true" />
           <span v-for="s in SLOTS" :key="'h' + s" class="sd-time figures" aria-hidden="true">{{ s % 2 === 1 ? clock(s - 1) : '' }}</span>
@@ -140,12 +141,14 @@ const t = computed(() =>
         found: (n) => (n ? `${n} times fit today` : 'Nothing fits today'),
         note: 'A made-up day at a made-up clinic. The rule is the real one.',
         swipe: 'Swipe for the rest of the day →',
+        day: 'The day, slot by slot',
       }
     : {
         pick: '療程',
         found: (n) => (n ? `今天有 ${n} 個時段排得進去` : '今天排不進去'),
         note: '診所和預約都是虛構的示意；排時段的規則是產品裡真的那一套。',
         swipe: '左右滑動看整天 →',
+        day: '這一天的時段表',
       }
 )
 
@@ -222,6 +225,12 @@ const gridLabel = computed(() =>
 
 .sd-grid-wrap {
   overflow-x: auto;
+  border-radius: var(--r-2);
+}
+
+.sd-grid-wrap:focus-visible {
+  outline: 2px solid var(--pop-ink);
+  outline-offset: 2px;
 }
 
 .sd-swipe {

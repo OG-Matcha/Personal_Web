@@ -23,7 +23,7 @@ MOODS = {
     # and which way. The grain only ever moves away from the text colour (lighter
     # by day, darker by night), so no word on it has less contrast than on the
     # flat page: --pop-ink is 4.75:1 on the day background with no room to spare.
-    'day': ((0xEF, 0xE9, 0xE0), 16, +1),
+    'day': ((0xEF, 0xE9, 0xE0), 22, +1),
     'night': ((0x12, 0x14, 0x1C), 13, -1),
 }
 

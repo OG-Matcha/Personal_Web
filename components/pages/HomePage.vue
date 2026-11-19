@@ -9,6 +9,10 @@
   <DeskScene />
   <!-- The walk ends looking down at the desk; the page is laid out on it. -->
   <div class="pp-desk">
+  <!-- Things left on the desk, rendered from the same 3D models (studio/desk/render_props.py) -->
+  <div class="pp-props" aria-hidden="true">
+    <img v-for="p in props" :key="p.n" :class="`pp-prop pp-prop--${p.n}`" :src="`/images/desk-prop-${p.n}.webp`" :width="p.w" :height="p.h" alt="" loading="lazy" decoding="async" />
+  </div>
   <div class="pp">
     <aside class="pp-me" :aria-label="c.meLabel">
       <div ref="meIn" class="pp-me-in">
@@ -204,6 +208,13 @@ const pre = computed(() => (isEn.value ? '/en' : ''))
 const cvHref = computed(() => (isEn.value ? site.contact.cv.hrefEn : site.contact.cv.href))
 const work = Object.fromEntries(works.map((w) => [w.slug, w]))
 const repo = (n) => alsoBuilt.find((a) => a.name === n)
+// Desk props for the right margin (studio/desk/ship_props.py prints the sizes;
+// they show at half size, sharp on a 2x screen). Same scale for all three.
+const props = [
+  { n: 'mug', w: 276, h: 207 },
+  { n: 'kuaikuai', w: 285, h: 276 },
+  { n: 'plant', w: 384, h: 304 },
+]
 
 // The paragraphs under 我怎麼想 are a first-person draft written from the
 // case studies and the five questions; every claim in them is checkable in
@@ -590,6 +601,52 @@ async function startWalk() {
 .pp-desk {
   position: relative;
   isolation: isolate;
+  overflow-x: clip; /* props hang off the window's edge; clip, not hidden, keeps the column sticky */
+}
+
+/* Things left on the desk, in the right margin only. The room's sun throws
+   every shadow up and to the right, so each thing sits just past the column
+   and its shadow runs off the window: nothing ever darkens the text. */
+.pp-props {
+  display: none;
+}
+
+@media (min-width: 1440px) {
+  .pp-props {
+    display: block;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .pp-prop {
+    position: absolute;
+    left: calc(50% + var(--page-w) / 2 - 1.25rem);
+    height: auto;
+  }
+
+  .pp-prop--mug {
+    top: 30rem;
+  }
+
+  .pp-prop--kuaikuai {
+    top: 47%;
+    rotate: 6deg;
+  }
+
+  .pp-prop--plant {
+    top: 76%;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .pp-prop {
+    filter: brightness(0.72) saturate(0.85);
+  }
+}
+
+:root[data-theme='dark'] .pp-prop {
+  filter: brightness(0.72) saturate(0.85);
 }
 
 /* The desk top, washed out to the page colour (studio/desk/make_page_grain.py):

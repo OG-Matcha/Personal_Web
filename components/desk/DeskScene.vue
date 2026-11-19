@@ -143,6 +143,7 @@ const t = computed(() =>
         tour: 'Things on my desk',
         stopsLabel: 'Stops on the desk',
         skip: 'Skip the desk ↓',
+        go: 'walk over',
       }
     : {
         label: '我的桌子',
@@ -152,6 +153,7 @@ const t = computed(() =>
         tour: '桌上的東西',
         stopsLabel: '書桌上的每一站',
         skip: '跳過書桌，直接看介紹 ↓',
+        go: '走過去看',
       }
 )
 
@@ -576,7 +578,11 @@ async function start() {
   applyMood()
 
   // ---- camera path ----------------------------------------------------
-  const path = STOPS.map((s) => ({ cam: B(s.cam), at: B(s.at), spot: s.spot ? B(s.spot) : null }))
+  const path = STOPS.map((s) => ({ cam: B(s.cam), at: B(s.at), spot: s.spot ? B(s.spot) : null, side: !s.spot ? 0 : s.side === 'right' ? 1 : -1 }))
+  // The stops were framed at 1440x900. On a narrower or shorter window the
+  // caption card takes more of the picture, so the picture slides away from it
+  // (a shifted view window, the camera itself stays put): px per unit of side.
+  const view = { w: 1, h: 1, shift: 0, want: 0, reach: 0 }
   const want = { cam: path[0].cam.clone(), at: path[0].at.clone() }
   // Close and nearly straight down, so the frame is the open notebook alone:
   // the mug and the tablet stay outside it.
@@ -592,6 +598,7 @@ async function start() {
     want.at.lerpVectors(a.at, b.at, e)
     // Rise a little between stops, as if leaning back to look for the next thing.
     want.cam.y += 0.06 * Math.sin(Math.PI * e)
+    view.want = (a.side + ((b ?? a).side - a.side) * e) * (1 - walk.out)
     // Leaving: the camera cranes up off the last stop and settles over the
     // open notebook, the first thing on the tour, while the room sinks into
     // the page colour. The walk ends where it began, on the page.
@@ -607,6 +614,9 @@ async function start() {
     const w = canvas.value.clientWidth
     const h = canvas.value.clientHeight
     renderer.setSize(w, h, false)
+    view.w = w
+    view.h = h
+    view.reach = w * 0.13 * Math.min(1, Math.max(0, (1500 - w) / 500, (900 - h) / 300))
     camera.aspect = w / h
     // Keep the 16:9 framing of the Blender camera; narrower windows widen the view instead of cropping.
     camera.fov = camera.aspect < 16 / 9 ? THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(36) / 2) * (16 / 9) / camera.aspect)) : 36
@@ -631,7 +641,7 @@ async function start() {
     // The thing you are standing at opens; any other thing walks you to it.
     const st = best && stops.value[best.i]
     const here = best && best.i === on.value && !moving.value && st.open
-    hover.value = best ? { i: best.i, x: best.x, y: best.y, label: here ? `${st.thing} · ${st.open}` : st.thing, here } : null
+    hover.value = best ? { i: best.i, x: best.x, y: best.y, label: here ? `${st.thing} · ${st.open}` : best.i === on.value ? st.thing : `${st.thing} · ${t.value.go}`, here } : null
     canvas.value.style.cursor = best ? 'pointer' : ''
     kick()
   }
@@ -695,6 +705,11 @@ async function start() {
     }
     cur.cam.lerp(tc, 0.09)
     cur.at.lerp(ta, 0.09)
+    const shiftTo = view.want * view.reach
+    view.shift += (shiftTo - view.shift) * 0.09
+    if (Math.abs(shiftTo - view.shift) < 0.25) view.shift = shiftTo
+    if (Math.abs(view.shift) > 0.25) camera.setViewOffset(view.w, view.h, view.shift, 0, view.w, view.h)
+    else if (camera.view?.enabled) camera.clearViewOffset()
     camera.position.copy(cur.cam)
     // The camera sways with the pointer: a couple of centimetres, enough to feel present.
     camera.position.x += mouse.sx * 0.03
@@ -709,7 +724,8 @@ async function start() {
       cur.cam.distanceToSquared(tc) < 1e-9 &&
       cur.at.distanceToSquared(ta) < 1e-9 &&
       Math.abs(mouse.x - mouse.sx) + Math.abs(mouse.y - mouse.sy) < 1e-3 &&
-      Math.abs(night.value - target) <= 0.001
+      Math.abs(night.value - target) <= 0.001 &&
+      view.shift === shiftTo
     if (!settled) raf = requestAnimationFrame(frame)
   }
 
@@ -877,16 +893,35 @@ async function start() {
   display: none;
 }
 
-/* Wide screens under reduced motion: room for all of them, no swiping. */
+/* Wide screens under reduced motion: room for all of them, no swiping.
+   Seven stops never fill rows evenly, so the first (the notebook, where the
+   walk starts) takes two columns with a wide picture: eight cells, two rows
+   of four or four rows of two, and no card left alone at the end. */
 @media (min-width: 900px) {
   .dk-tour {
     grid-auto-flow: row;
-    grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--sp-7) var(--sp-6);
     max-width: var(--page-w);
     margin-inline: auto;
     padding-inline: var(--page-gut);
     overflow: visible;
+  }
+}
+
+@media (min-width: 900px) {
+  .dk-stop:first-child {
+    grid-column: span 2;
+  }
+
+  .dk-stop:first-child .dk-stop-pic img {
+    aspect-ratio: 3 / 1;
+  }
+}
+
+@media (min-width: 1200px) {
+  .dk-tour {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
@@ -1100,6 +1135,30 @@ async function start() {
     opacity: 1;
     transform: none;
     pointer-events: auto;
+  }
+
+  /* A short window: the card keeps every word but takes less of the height,
+     so it stays below the thing instead of climbing over it. */
+  @media (max-height: 820px) {
+    .dk-cap:not(.dk-cap--hero) {
+      bottom: var(--sp-5);
+      max-width: min(26rem, 40vw);
+      padding: var(--sp-4) var(--sp-5);
+    }
+
+    .dk-cap:not(.dk-cap--hero) .dk-h {
+      font-size: var(--step-2);
+    }
+
+    .dk-cap:not(.dk-cap--hero) .dk-text {
+      margin-top: var(--sp-2);
+      font-size: var(--step--1);
+      line-height: 1.65;
+    }
+
+    .dk-cap:not(.dk-cap--hero) .dk-acts {
+      margin-top: var(--sp-3);
+    }
   }
 
   /* Cards sit on the side away from the thing they are about. */
