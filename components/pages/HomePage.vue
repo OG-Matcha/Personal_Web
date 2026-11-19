@@ -7,6 +7,8 @@
     On a phone the left column becomes the opening and the rest follows.
   -->
   <DeskScene />
+  <!-- The walk ends looking down at the desk; the page is laid out on it. -->
+  <div class="pp-desk">
   <div class="pp">
     <aside class="pp-me" :aria-label="c.meLabel">
       <div ref="meIn" class="pp-me-in">
@@ -185,6 +187,7 @@
         </div>
       </section>
     </div>
+  </div>
   </div>
 </template>
 
@@ -584,6 +587,35 @@ async function startWalk() {
 </script>
 
 <style scoped>
+.pp-desk {
+  position: relative;
+  isolation: isolate;
+}
+
+/* The desk top, washed out to the page colour (studio/desk/make_page_grain.py):
+   one tile stretched to the window's width and repeated down. It fades in
+   over the first screen, so it meets the room's fade with no edge. */
+.pp-desk::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: url('/images/desk-grain-day.webp') center top / max(100%, 1024px) auto repeat-y;
+  -webkit-mask-image: linear-gradient(transparent, #000 32rem);
+  mask-image: linear-gradient(transparent, #000 32rem);
+  pointer-events: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .pp-desk::before {
+    background-image: url('/images/desk-grain-night.webp');
+  }
+}
+
+:root[data-theme='dark'] .pp-desk::before {
+  background-image: url('/images/desk-grain-night.webp');
+}
+
 .pp {
   --gut: var(--page-gut);
   max-width: var(--page-w);

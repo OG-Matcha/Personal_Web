@@ -119,12 +119,16 @@
         </p>
       </li>
     </ol>
-    <DeskDrawer :id="drawer" @close="closeDrawer" />
+    <DeskDrawer :id="drawer" :origin="origin" :delay="origin ? 380 : 0" @close="closeDrawer" />
   </section>
 </template>
 
 
 <script setup>
+// The model's 5 kB of JSON ships inside the page code. As its own file it was
+// one more round trip before the buffer and pictures could even be requested,
+// and Cloudflare does not cache .gltf, so every visit went back to the origin.
+import deskGltf from '~/public/desk/model/desk.gltf?raw'
 const { site } = useContent()
 const { locale } = useLocale()
 const isEn = computed(() => locale.value === 'en')
@@ -222,6 +226,13 @@ const hold = (t) => {
 }
 const walk = { i: 0, e: 0, out: 0 }
 let onWalk = null
+// Set by the 3D scene: lean the camera in to a stop's thing (or back out with
+// null). Returns where that thing sits on screen, for the drawer to grow from.
+let onFocus = null
+const origin = ref(null)
+watch(drawer, (id) => {
+  origin.value = onFocus?.(id) ?? null
+})
 function readScroll() {
   const el = root.value
   if (!el) return
@@ -292,7 +303,8 @@ onMounted(() => {
   // A machine without a GPU draws WebGL on the CPU (SwiftShader, llvmpipe):
   // the room would freeze the page for seconds, so the still stays.
   if (softwareGL()) return
-  // The page paints first; the room loads after. If it fails, the still stays.
+  warm()
+  // The page paints first; the room is built after. If it fails, the still stays.
   const go = () =>
     start().catch(() => dispose?.())
   'requestIdleCallback' in window ? requestIdleCallback(go, { timeout: 1200 }) : setTimeout(go, 400)
@@ -306,6 +318,23 @@ onBeforeUnmount(() => {
   removeEventListener('resize', readScroll)
   dispose?.()
 })
+
+// Download everything the room needs at once, while the page hydrates,
+// instead of one step after another (three.js, then the model, then its
+// buffer and pictures). The loaders in start() then read them from cache.
+function warm() {
+  const th = document.documentElement.dataset.theme
+  const mood = (th ? th === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches) ? 'night' : 'day'
+  import('three').catch(() => {})
+  for (const g of ['desk', 'room']) {
+    const img = new Image()
+    img.crossOrigin = 'anonymous' // as three's TextureLoader asks, so the cached copy matches
+    img.src = `/desk/${g}_${mood}.webp`
+  }
+  const j = JSON.parse(deskGltf)
+  for (const x of [...(j.buffers ?? []), ...(j.images ?? [])])
+    if (x.uri && !x.uri.startsWith('data:')) fetch(`/desk/model/${x.uri}`).catch(() => {})
+}
 
 function softwareGL() {
   try {
@@ -418,7 +447,7 @@ async function start() {
   // Draco's blob: worker.
   const loader = new GLTFLoader()
   const [gltf, d1, r1] = await Promise.all([
-    loader.loadAsync('/desk/model/desk.gltf'),
+    loader.parseAsync(deskGltf, '/desk/model/'),
     tex(`/desk/desk_${first}.webp`),
     tex(`/desk/room_${first}.webp`),
   ])
@@ -611,6 +640,23 @@ async function start() {
     mouse.x = mouse.y = 0
     kick()
   }
+  // Picking a thing up: the camera leans in to it, then the drawer opens out
+  // of it; closing the drawer, the camera leans back to where it stood.
+  const focus = { i: -1, on: false }
+  const pc = new THREE.Vector3()
+  const pa = new THREE.Vector3()
+  onFocus = (id) => {
+    const i = id ? stops.value.findIndex((s) => s.id === id) : -1
+    focus.on = i >= 0 && !!path[i].spot
+    // The name tag would float over the thing as the camera leans in.
+    hover.value = null
+    kick()
+    if (!focus.on) return null
+    focus.i = i
+    const r = canvas.value.getBoundingClientRect()
+    const v = path[i].spot.clone().project(camera)
+    return { x: Math.round(r.left + ((v.x + 1) / 2) * r.width), y: Math.round(r.top + ((1 - v.y) / 2) * r.height) }
+  }
   const onClick = () => {
     if (hover.value?.here) drawer.value = stops.value[hover.value.i].id
     else if (hover.value) scrollToStop(hover.value.i)
@@ -640,8 +686,15 @@ async function start() {
     if (!visible || gone) return
     mouse.sx += (mouse.x - mouse.sx) * 0.05
     mouse.sy += (mouse.y - mouse.sy) * 0.05
-    cur.cam.lerp(want.cam, 0.08)
-    cur.at.lerp(want.at, 0.08)
+    let tc = want.cam
+    let ta = want.at
+    if (focus.on) {
+      const spot = path[focus.i].spot
+      tc = pc.copy(want.cam).lerp(spot, 0.4)
+      ta = pa.copy(want.at).lerp(spot, 0.85)
+    }
+    cur.cam.lerp(tc, 0.09)
+    cur.at.lerp(ta, 0.09)
     camera.position.copy(cur.cam)
     // The camera sways with the pointer: a couple of centimetres, enough to feel present.
     camera.position.x += mouse.sx * 0.03
@@ -653,8 +706,8 @@ async function start() {
     }
     renderer.render(scene, camera)
     const settled =
-      cur.cam.distanceToSquared(want.cam) < 1e-9 &&
-      cur.at.distanceToSquared(want.at) < 1e-9 &&
+      cur.cam.distanceToSquared(tc) < 1e-9 &&
+      cur.at.distanceToSquared(ta) < 1e-9 &&
       Math.abs(mouse.x - mouse.sx) + Math.abs(mouse.y - mouse.sy) < 1e-3 &&
       Math.abs(night.value - target) <= 0.001
     if (!settled) raf = requestAnimationFrame(frame)
@@ -681,6 +734,7 @@ async function start() {
   // everything in `owned` and the WebGL context itself.
   teardown = () => {
     onWalk = null
+    onFocus = null
     io.disconnect()
     mo.disconnect()
     removeEventListener('resize', size)

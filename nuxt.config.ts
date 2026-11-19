@@ -17,7 +17,13 @@ export default defineNuxtConfig({
   ssr: true,
   // Page changes run as view transitions: a product's cover carries over
   // from the card you clicked into the page it opens (view-transition-name).
-  experimental: { viewTransition: true },
+  experimental: {
+    viewTransition: true,
+    // Links fetch the next page's code and data when pointed at or focused,
+    // not when they scroll into view: on the homepage a dozen visible links
+    // were pulling other pages' chunks while the desk was still loading.
+    defaults: { nuxtLink: { prefetchOn: { visibility: false, interaction: true } } },
+  },
 
   // No image module: every file in public/images is already resized and
   // compressed to under 200 kB at build time, so an on-the-fly resizer would

@@ -49,7 +49,13 @@
 </template>
 
 <script setup>
-const props = defineProps({ id: { type: String, default: null } })
+const props = defineProps({
+  id: { type: String, default: null },
+  // Where the thing sits on screen, and how long the camera takes to lean in
+  // to it: the sheet then grows out of that point instead of rising from below.
+  origin: { type: Object, default: null },
+  delay: { type: Number, default: 0 },
+})
 const emit = defineEmits(['close'])
 
 const { timeline, en } = useContent()
@@ -70,8 +76,14 @@ watch(
     await nextTick()
     const d = dlg.value
     if (!d) return
-    if (id && !d.open) d.showModal()
-    else if (!id && d.open) d.close()
+    if (id && !d.open) {
+      if (props.delay) await new Promise((r) => setTimeout(r, props.delay))
+      if (props.id !== id) return
+      d.classList.toggle('dd--from', !!props.origin)
+      d.showModal()
+      const b = props.origin && d.getBoundingClientRect()
+      d.style.transformOrigin = b ? `${props.origin.x - b.left}px ${props.origin.y - b.top}px` : ''
+    } else if (!id && d.open) d.close()
   },
   { flush: 'post' }
 )
@@ -201,6 +213,26 @@ const c = computed(() => {
 .dd[open]::backdrop {
   background: rgb(10 12 10 / 0.55);
   backdrop-filter: blur(6px);
+}
+
+/* Opened from the 3D desk: the camera has leaned in to the thing, so the
+   sheet grows out of it, and the room stays readable around the sheet. */
+.dd--from {
+  translate: 0 0;
+  scale: 0.4;
+}
+
+@starting-style {
+  .dd--from[open] {
+    opacity: 0;
+    translate: 0 0;
+    scale: 0.4;
+  }
+}
+
+.dd--from[open]::backdrop {
+  background: rgb(10 12 10 / 0.3);
+  backdrop-filter: blur(2px);
 }
 
 @starting-style {
