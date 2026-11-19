@@ -551,19 +551,26 @@ async function start(small = false) {
     pmrem._setSize?.(256)
     const probe = pmrem._allocateTargets?.()
     // Each compiled the way PMREM draws it: the passes as a lone mesh, and a
-    // stand-in for its backdrop box (same settings, so the same shader).
-    const lone = (m, cam) => renderer.compileAsync(new THREE.Mesh(new THREE.BufferGeometry(), m), cam)
+    // stand-in for its backdrop box (same settings, so the same shader). The
+    // stand-ins need the attributes the real meshes have (a position; the box
+    // also normals): three keys its shaders on them, and with an empty
+    // geometry all three were compiled again inside the first draw, 3 s.
+    const flat = new THREE.BufferGeometry().setAttribute('position', new THREE.BufferAttribute(new Float32Array(9), 3))
+    const box = new THREE.BoxGeometry()
+    const lone = (m, cam, g = flat) => renderer.compileAsync(new THREE.Mesh(g, m), cam)
     const backdrop = new THREE.MeshBasicMaterial({ name: 'PMREM.Background', side: THREE.BackSide, depthWrite: false, depthTest: false })
     renderer.setRenderTarget(rt)
     const jobs = [
       renderer.compileAsync(room, new THREE.PerspectiveCamera()),
-      lone(backdrop, new THREE.PerspectiveCamera()),
+      lone(backdrop, new THREE.PerspectiveCamera(), box),
       ...[pmrem._blurMaterial, pmrem._ggxMaterial].filter(Boolean).map((m) => lone(m, new THREE.OrthographicCamera())),
     ]
     renderer.setRenderTarget(null)
     await Promise.all(jobs)
     probe?.dispose()
     rt.dispose()
+    flat.dispose()
+    box.dispose()
     // Kept until teardown: disposing it would release the shader just compiled.
     owned.push(backdrop)
   } catch {}
