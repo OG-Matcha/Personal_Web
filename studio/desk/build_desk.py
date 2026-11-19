@@ -206,7 +206,7 @@ def box(name, size, loc=(0, 0, 0), rot=(0, 0, 0), m=None, bevel=0.002, col='stat
 
 
 def wood_uv(o, xy):
-    """Planar top-down UVs in metres (1.6 m = one image width), so every wooden part shares one grain scale."""
+    """Planar top-down UVs in metres (1.2 m = one image width), so every wooden part shares one grain scale."""
     me = o.data
     lay = me.uv_layers.new(name='wood')
     for poly in me.polygons:
@@ -215,8 +215,8 @@ def wood_uv(o, xy):
         side = abs(poly.normal.z) < 0.5
         for li in poly.loop_indices:
             co = me.vertices[me.loops[li].vertex_index].co
-            v = (co.z * 4.0 + xy[1]) / 1.6 + 0.5 if side else (co.y + xy[1]) / 1.6 + 0.5
-            lay.data[li].uv = ((co.x + xy[0]) / 1.6 + 0.5, v)
+            v = (co.z * 4.0 + xy[1]) / 1.2 + 0.5 if side else (co.y + xy[1]) / 1.2 + 0.5
+            lay.data[li].uv = ((co.x + xy[0]) / 1.2 + 0.5, v)
     return o
 
 
