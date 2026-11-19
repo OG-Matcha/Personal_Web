@@ -2,7 +2,7 @@
   <!-- Document scroll, deliberately. The previous layout made #mainContent the
        real scroller on desktop, which broke every window.scrollY read on the
        site and would break ScrollTrigger pinning outright. -->
-  <div class="min-h-screen bg-bg text-ink">
+  <div class="flex min-h-screen flex-col bg-bg text-ink">
     <a
       href="#main"
       class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:bg-bg focus:px-4 focus:py-2 focus:shadow-raised"
@@ -13,7 +13,7 @@
     <SiteHeader />
 
     <!-- tabindex -1 so the skip link moves focus here, not just the view. -->
-    <main id="main" tabindex="-1">
+    <main id="main" class="flex-1" tabindex="-1">
       <slot />
     </main>
 

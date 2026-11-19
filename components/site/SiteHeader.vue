@@ -266,4 +266,34 @@ const t = computed(() =>
     display: none;
   }
 }
+
+/* Touch: each 40px control answers taps 2px further out on every side, 44px
+   in all, without moving anything. The nav's 4px gaps are split between
+   neighbours, so no two areas overlap. */
+@media (pointer: coarse) {
+  /* The nav scrolls sideways on the narrowest phones, which clips at its
+     padding box: 2px of padding gives the links' outer edge room, and the
+     negative margins keep every word where it was. */
+  .hd-nav {
+    padding: 2px;
+    margin-block: -2px;
+    margin-right: -2px;
+  }
+  .hd-mark,
+  .hd-link,
+  .hd-lang,
+  .hd-mail,
+  .hd-tools :deep(.tg) {
+    position: relative;
+  }
+  .hd-mark::after,
+  .hd-link::after,
+  .hd-lang::after,
+  .hd-mail::after,
+  .hd-tools :deep(.tg)::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+  }
+}
 </style>

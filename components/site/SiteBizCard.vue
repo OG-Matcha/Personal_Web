@@ -10,7 +10,7 @@
       class="bc"
       role="button"
       tabindex="0"
-      :aria-label="t.flip"
+      :aria-describedby="hintId"
       :aria-pressed="back ? 'true' : 'false'"
       :style="{ '--rx': `${rx}deg`, '--ry': `${ry}deg`, '--mx': `${mx}%`, '--my': `${my}%` }"
       @pointerdown="down"
@@ -38,6 +38,8 @@
         <p class="bc-secret">{{ t.secret }}</p>
       </div>
     </div>
+    <!-- The name comes from the face showing, so it matches what is seen (WCAG 2.5.3); how to flip is a description. -->
+    <p :id="hintId" class="bc-hint">{{ t.flip }}</p>
   </div>
 </template>
 
@@ -45,10 +47,11 @@
 const { locale } = useLocale()
 const t = computed(() =>
   locale.value === 'en'
-    ? { flip: 'Finctory business card. Press to flip.', secret: 'You found the back. Say hi.' }
-    : { flip: '斐闊名片，按一下翻面', secret: '你翻到背面了，來打聲招呼吧。' }
+    ? { flip: 'Press to flip the card.', secret: 'You found the back. Say hi.' }
+    : { flip: '按一下翻面', secret: '你翻到背面了，來打聲招呼吧。' }
 )
 
+const hintId = useId()
 const card = ref(null)
 const rx = ref(-6)
 const ry = ref(-14)
@@ -172,6 +175,15 @@ onBeforeUnmount(() => cancelAnimationFrame(raf))
 </script>
 
 <style scoped>
+.bc-hint {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 .bc-stage {
   position: relative;
   display: grid;
