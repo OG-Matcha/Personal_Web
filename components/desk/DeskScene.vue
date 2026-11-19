@@ -60,6 +60,7 @@
           v-for="(s, i) in stops"
           :key="s.id"
           class="dk-cap"
+          :data-stop="s.id"
           :class="[`dk-cap--${s.id}`, s.side && `dk-cap--${s.side}`, { 'is-on': on === i && !moving && !leaving }]"
           @focusin="on !== i && scrollToStop(i)"
         >
@@ -105,7 +106,7 @@
       (scripts/make-desk-stills.mjs); CSS shows the day or night set.
     -->
     <ol class="dk-tour" :aria-label="t.tour">
-      <li v-for="(s, i) in stops.slice(1)" :key="s.id" class="dk-stop">
+      <li v-for="(s, i) in stops.slice(1)" :key="s.id" class="dk-stop" :data-stop="s.id">
         <div class="dk-stop-pic">
           <img class="dk-poster-day" :src="`/desk/stops/${s.id}-day.webp`" :srcset="srcset(`/desk/stops/${s.id}-day.webp`)" sizes="(min-width: 900px) 25vw, 82vw" alt="" width="1200" height="800" loading="lazy" decoding="async" />
           <img class="dk-poster-night" :src="`/desk/stops/${s.id}-night.webp`" :srcset="srcset(`/desk/stops/${s.id}-night.webp`)" sizes="(min-width: 900px) 25vw, 82vw" alt="" width="1200" height="800" loading="lazy" decoding="async" />
@@ -352,8 +353,23 @@ watch(on, async (i) => {
   root.value.querySelectorAll('.dk-cap')[i]?.querySelector('a, button')?.focus({ preventScroll: true })
 })
 
+// Resizing across the 3D desk's size limit swaps the caption cards for the
+// picture tour (or back). Focus left on a button that is now hidden would fall
+// to the page; move it to the same button for the same stop in the shown layout.
+let tallMq = null
+function keepFocus() {
+  const a = document.activeElement
+  if (!a || !root.value?.contains(a) || a.offsetParent) return
+  const id = a.closest('[data-stop]')?.dataset.stop
+  const kind = a.classList.contains('dk-link') ? '.dk-link' : '.dk-open'
+  const next = [...root.value.querySelectorAll(`[data-stop="${id}"] ${kind}, ${kind}[data-stop="${id}"]`)].find((b) => b !== a && b.offsetParent && !b.closest('[inert]'))
+  next?.focus({ preventScroll: true })
+}
+
 onMounted(() => {
-  const tall = matchMedia(TALL).matches
+  tallMq = matchMedia(TALL)
+  tallMq.addEventListener('change', keepFocus)
+  const tall = tallMq.matches
   if (!tall) return
   readScroll()
   addEventListener('scroll', readScroll, { passive: true })
@@ -371,6 +387,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   alive = false
+  tallMq?.removeEventListener('change', keepFocus)
   clearTimeout(settle)
   document.documentElement.classList.remove('is-over-desk')
   removeEventListener('scroll', readScroll)

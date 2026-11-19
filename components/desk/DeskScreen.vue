@@ -24,21 +24,9 @@
     @keydown="onKey"
   >
     <template v-if="shown">
-      <div ref="device" class="ds-device" :class="`ds-device--${shown.id}`" :style="{ width: `${shown.w}px`, height: `${shown.h}px`, backgroundImage: `url(/desk/model/${shown.id}.webp)` }">
-        <div class="ds-scrim" aria-hidden="true" />
-        <div class="ds-sheet">
-          <span v-if="shown.id === 'phone'" class="ds-grab" aria-hidden="true" />
-          <!-- First in the dialog, so Tab goes through the demo before the way out
-               (focus starts on the dialog itself, which reads its title and line).
-               Focusable so the keyboard can scroll it. Zoomed on a big screen, so
-               the app fills it at a reading size instead of sitting small. -->
-          <div ref="scroller" class="ds-scroll" tabindex="0" role="region" :aria-label="t.region" :style="{ zoom }">
-            <ProductOsaveDemo v-if="shown.id === 'phone'" />
-            <ProductSlotDemo v-else />
-          </div>
-        </div>
-      </div>
-
+      <!-- What it is comes first, so a screen reader reads the title and line
+           before the demo. It is drawn over the device (z-index) and Tab
+           still starts in the demo (onKey), then reaches the ways out. -->
       <div class="ds-bar">
         <div class="ds-text">
           <p class="ds-eyebrow">{{ c.thing }}</p>
@@ -49,6 +37,21 @@
         <button type="button" class="ds-x" :aria-label="t.down" @click="leave">
           <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
         </button>
+      </div>
+
+      <div ref="device" class="ds-device" :class="`ds-device--${shown.id}`" :style="{ width: `${shown.w}px`, height: `${shown.h}px`, backgroundImage: `url(/desk/model/${shown.id}.webp)` }">
+        <div class="ds-scrim" aria-hidden="true" />
+        <div class="ds-sheet">
+          <span v-if="shown.id === 'phone'" class="ds-grab" aria-hidden="true" />
+          <!-- The first Tab from the dialog lands here (onKey), so the keyboard
+               goes through the demo before the ways out.
+               Focusable so the keyboard can scroll it. Zoomed on a big screen, so
+               the app fills it at a reading size instead of sitting small. -->
+          <div ref="scroller" class="ds-scroll" tabindex="0" role="region" :aria-label="t.region" :style="{ zoom }">
+            <ProductOsaveDemo v-if="shown.id === 'phone'" />
+            <ProductSlotDemo v-else />
+          </div>
+        </div>
       </div>
     </template>
   </dialog>
@@ -152,6 +155,12 @@ function onWheel(ev) {
 function onKey(ev) {
   const el = scroller.value
   if (!el || ev.target !== dlg.value) return
+  // The bar is first in the document for reading order; Tab still starts in the demo.
+  if (ev.key === 'Tab' && !ev.shiftKey) {
+    ev.preventDefault()
+    el.focus({ preventScroll: true })
+    return
+  }
   const page = el.clientHeight * 0.85
   const by = { PageDown: page, PageUp: -page, ' ': ev.shiftKey ? -page : page, ArrowDown: 40, ArrowUp: -40, End: el.scrollHeight, Home: -el.scrollHeight }[ev.key]
   if (by === undefined) return
@@ -350,6 +359,7 @@ function onKey(ev) {
 /* What it is and the ways out, under the screen. */
 .ds-bar {
   position: absolute;
+  z-index: 1;
   left: 50%;
   bottom: 16px;
   display: grid;
