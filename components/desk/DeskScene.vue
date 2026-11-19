@@ -759,7 +759,10 @@ async function start() {
     renderer.setSize(w, h, false)
     view.w = w
     view.h = h
-    view.reach = w * 0.13 * Math.min(1, Math.max(0, (1500 - w) / 500, (900 - h) / 300))
+    // How far the thing slides away from its card: always some (at 1440 the
+    // card still covered the notebook's corner, the tablet's and a trophy's
+    // base), more on narrow or short windows where the card takes more room.
+    view.reach = w * (0.08 + 0.05 * Math.min(1, Math.max(0, (1500 - w) / 500, (900 - h) / 300)))
     camera.aspect = w / h
     // Keep the 16:9 framing of the Blender camera; narrower windows widen the view instead of cropping.
     camera.fov = camera.aspect < 16 / 9 ? THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(36) / 2) * (16 / 9) / camera.aspect)) : 36
@@ -1110,6 +1113,26 @@ async function start() {
   display: block;
   width: 100%;
   object-fit: cover;
+}
+
+/* A 32 px copy of each still, inline, painted until the still itself arrives:
+   coming to the home page from another page, the room is there at once,
+   blurred, instead of an empty dark box. */
+.dk-poster-day,
+.dk-forced-day,
+.dk-poster-auto img {
+  background: url(data:image/webp;base64,UklGRsQAAABXRUJQVlA4ILgAAABQBQCdASogABQAPtFWpEuoJKOhsAgBABoJZQDCsoNB+DXqVQBWYzWRPu5YniVKi3dXrIAA/vN2bHEgJ8Epz2VgEBGVrc01rcxVTJmf93bPV5GcNyrdFyNcWqQrym3GV17A/OrAitixPFr33q4KVV7KWTdY6yizuUHYCNFHnNaZY5mceQCQuPpZvPGHOLEm8FzcRpW64xSO+ASGBsWEW7oj4nLfE+PKS1E4dzGd/cAXLE2th++xqoAA) center / cover;
+}
+
+.dk-poster-night,
+.dk-forced-night {
+  background: url(data:image/webp;base64,UklGRqQAAABXRUJQVlA4IJgAAAAwBQCdASogABQAPtFUo0uoJKMhsBgMAQAaCUAXYAZQZm4nU7PP9Yt+7aJF58zOkvR39AD+vaZj8a200m6LSttBSGOt6Eg/5jn38jy3w1YjqdEBCRzsCWWWYsGAEJmEeIssbIbROVkK0nTtFmKLHzBm9xC9a5mjGeAIlTjiKE6g2Bb0fFoH20X+dZCKi9S8F2Wvszq4+V4AAA==) center / cover;
+}
+
+@media (prefers-color-scheme: dark) {
+  .dk-poster-auto img {
+    background-image: url(data:image/webp;base64,UklGRqQAAABXRUJQVlA4IJgAAAAwBQCdASogABQAPtFUo0uoJKMhsBgMAQAaCUAXYAZQZm4nU7PP9Yt+7aJF58zOkvR39AD+vaZj8a200m6LSttBSGOt6Eg/5jn38jy3w1YjqdEBCRzsCWWWYsGAEJmEeIssbIbROVkK0nTtFmKLHzBm9xC9a5mjGeAIlTjiKE6g2Bb0fFoH20X+dZCKi9S8F2Wvszq4+V4AAA==);
+  }
 }
 
 /* Phones and reduced motion: the still, with the name and thesis laid over
