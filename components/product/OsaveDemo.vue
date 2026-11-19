@@ -191,7 +191,11 @@ const t = computed(() =>
 </script>
 
 <style scoped>
+/* The layout follows the card's own width, not the window's: the same demo
+   also runs inside the phone on the desk, a narrow card on a wide screen.
+   736px of content is where the card is when the window is 860px wide. */
 .os-card {
+  container: os / inline-size;
   --os-good: #24734a;
   --os-fair: #8a5c00;
   --os-poor: #c44a24;
@@ -248,7 +252,7 @@ const t = computed(() =>
   gap: var(--sp-7);
 }
 
-@media (min-width: 860px) {
+@container os (min-width: 736px) {
   .os-body {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
     align-items: center;
@@ -282,7 +286,7 @@ const t = computed(() =>
   color: var(--ink-2);
 }
 
-@media (min-width: 860px) {
+@container os (min-width: 736px) {
   .os-peek {
     display: none;
   }

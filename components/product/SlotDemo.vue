@@ -160,7 +160,10 @@ const gridLabel = computed(() =>
 </script>
 
 <style scoped>
+/* Follows the card's width, not the window's (it also runs on the desk's
+   tablet); 530px of content is the card in a 640px window. */
 .sd-card {
+  container: sd / inline-size;
   display: grid;
   gap: var(--sp-6);
   margin-top: var(--sp-6);
@@ -240,7 +243,7 @@ const gridLabel = computed(() =>
   color: var(--ink-3);
 }
 
-@media (max-width: 640px) {
+@container sd (max-width: 530px) {
   .sd-swipe {
     display: block;
   }

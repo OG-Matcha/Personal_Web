@@ -154,14 +154,12 @@ const t = computed(() => (E.value ? { close: 'Close', source: 'Announcement' } :
 const c = computed(() => {
   const n = { a: awards.value.length, g: grants.value.length, top: awards.value.filter((a) => a.top).length }
   const zh = {
-    phone: { thing: '手機 · 財伴 oSave', title: '幫自己做一次財務健檢', lede: '拉拉看收入和支出，雷達圖會跟著變。這是財伴首頁那張健康度的簡化版，門檻是示意。', href: '/work/osave/', cta: '看財伴怎麼做的' },
-    tablet: { thing: '平板 · 醫數行銷 MedaLink', title: '幫診所排一個療程', lede: '一個療程有好幾個步驟，每一步要的人、診間、儀器都要同時有空，才排得進去。', href: '/work/medalink/', cta: '看診所系統' },
+    ...DESK_DEMOS.zh,
     shelf: { thing: '獎盃架', title: `${n.a} 個競賽獎項`, lede: `由新到舊，${n.top} 個全國首獎標了色。有公告的都附上連結。`, href: '/resume/', cta: '看完整年表' },
     reports: { thing: '一疊報告', title: `${n.g} 個國科會計畫`, lede: '大學部的國科會大專學生研究計畫，每一個都是我主持。', href: '/resume/', cta: '看完整年表' },
   }
   const en_ = {
-    phone: { thing: 'Phone · oSave', title: 'Give yourself a financial check-up', lede: 'Move income and spending and watch the radar change. A simpler version of the health score on oSave’s home screen; the thresholds are illustrative.', href: '/work/osave/', cta: 'How oSave was built' },
-    tablet: { thing: 'Tablet · MedaLink', title: 'Book a treatment for a clinic', lede: 'A treatment is a chain of steps, and each step needs its people, room and machine free at the same time.', href: '/work/medalink/', cta: 'See the clinic system' },
+    ...DESK_DEMOS.en,
     shelf: { thing: 'The shelf', title: `${n.a} competition awards`, lede: `Newest first; the ${n.top} national first prizes are marked. Each announcement is linked where one exists.`, href: '/resume/', cta: 'See the full record' },
     reports: { thing: 'A stack of reports', title: `${n.g} NSTC research grants`, lede: 'Undergraduate research grants from Taiwan’s National Science and Technology Council, each one led by me.', href: '/resume/', cta: 'See the full record' },
   }

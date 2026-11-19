@@ -119,7 +119,8 @@
         </p>
       </li>
     </ol>
-    <DeskDrawer :id="drawer" :origin="origin" :delay="origin ? 380 : 0" @close="closeDrawer" />
+    <DeskDrawer :id="screen ? null : drawer" :origin="origin" :delay="origin ? 380 : 0" @close="closeDrawer" />
+    <DeskScreen ref="scr" :screen="screen" @close="closeDrawer" />
   </section>
 </template>
 
@@ -129,6 +130,32 @@
 // one more round trip before the buffer and pictures could even be requested,
 // and Cloudflare does not cache .gltf, so every visit went back to the origin.
 import deskGltf from '~/public/desk/model/desk.gltf?raw'
+
+// The CSS matrix3d that maps a w x h box (transform-origin at its top left) onto
+// the quadrilateral p = [top left, top right, bottom right, bottom left] in
+// page pixels: the square-to-quad projective map (Heckbert 1989), scaled to the box.
+function quadMatrix(w, h, p) {
+  const [[x0, y0], [x1, y1], [x2, y2], [x3, y3]] = p
+  const sx = x0 - x1 + x2 - x3
+  const sy = y0 - y1 + y2 - y3
+  let g = 0
+  let k = 0
+  if (Math.abs(sx) > 1e-9 || Math.abs(sy) > 1e-9) {
+    const dx1 = x1 - x2
+    const dx2 = x3 - x2
+    const dy1 = y1 - y2
+    const dy2 = y3 - y2
+    const den = dx1 * dy2 - dx2 * dy1
+    g = (sx * dy2 - dx2 * sy) / den
+    k = (dx1 * sy - sx * dy1) / den
+  }
+  const a = x1 - x0 + g * x1
+  const b = x3 - x0 + k * x3
+  const d = y1 - y0 + g * y1
+  const e = y3 - y0 + k * y3
+  const m = [a / w, d / w, 0, g / w, b / h, e / h, 0, k / h, 0, 0, 1, 0, x0, y0, 0, 1]
+  return `matrix3d(${m.map((v) => +v.toFixed(9)).join(',')})`
+}
 const { site } = useContent()
 const { locale } = useLocale()
 const isEn = computed(() => locale.value === 'en')
@@ -232,7 +259,37 @@ let onWalk = null
 // null). Returns where that thing sits on screen, for the drawer to grow from.
 let onFocus = null
 const origin = ref(null)
+// Set by the 3D scene too: the phone and the tablet are not opened in the
+// drawer but picked up, the camera facing the screen and the demo running on
+// it (DeskScreen). Returns the size the demo lays out at, or null when the 3D
+// desk is not running (phones, reduced motion), and the drawer opens instead.
+let onScreen = null
+const screen = ref(null)
+const TALL = '(min-width: 900px) and (min-height: 560px) and (prefers-reduced-motion: no-preference)'
+const scr = ref(null)
+let backTimer = 0
+// Which thing was picked up last: a window shrunk below the 3D desk puts it
+// down before the dialog closes, and focus still has to go back to its button.
+let lastScreen = null
 watch(drawer, (id) => {
+  if (screen.value && !id) {
+    onScreen?.(null)
+    screen.value = null
+    const html = document.documentElement
+    html.classList.remove('ds-back')
+    void html.offsetWidth
+    html.classList.add('ds-back')
+    clearTimeout(backTimer)
+    backTimer = setTimeout(() => html.classList.remove('ds-back'), 1200)
+    return
+  }
+  const s = id === 'phone' || id === 'tablet' ? onScreen?.(id) : null
+  if (s) {
+    screen.value = s
+    lastScreen = s.id
+    origin.value = null
+    return
+  }
   origin.value = onFocus?.(id) ?? null
 })
 function readScroll() {
@@ -280,7 +337,7 @@ function scrollToStop(i) {
 // when it was opened by clicking the 3D desk; Tab would then start from the
 // hero and scroll back up. Put focus on the visible button for this object.
 function closeDrawer() {
-  const id = drawer.value
+  const id = drawer.value ?? lastScreen
   drawer.value = null
   const all = [...(root.value?.querySelectorAll(`.dk-open[data-stop="${id}"]`) ?? [])].filter((b) => b.offsetParent && !b.closest('[inert]'))
   const btn = all.find((b) => b.closest('.is-on')) ?? all[0]
@@ -296,7 +353,7 @@ watch(on, async (i) => {
 })
 
 onMounted(() => {
-  const tall = matchMedia('(min-width: 900px) and (min-height: 560px) and (prefers-reduced-motion: no-preference)').matches
+  const tall = matchMedia(TALL).matches
   if (!tall) return
   readScroll()
   addEventListener('scroll', readScroll, { passive: true })
@@ -582,7 +639,7 @@ async function start() {
   // The stops were framed at 1440x900. On a narrower or shorter window the
   // caption card takes more of the picture, so the picture slides away from it
   // (a shifted view window, the camera itself stays put): px per unit of side.
-  const view = { w: 1, h: 1, shift: 0, want: 0, reach: 0 }
+  const view = { w: 1, h: 1, shift: 0, shiftY: 0, want: 0, reach: 0 }
   const want = { cam: path[0].cam.clone(), at: path[0].at.clone() }
   // Close and nearly straight down, so the frame is the open notebook alone:
   // the mug and the tablet stay outside it.
@@ -621,6 +678,11 @@ async function start() {
     // Keep the 16:9 framing of the Blender camera; narrower windows widen the view instead of cropping.
     camera.fov = camera.aspect < 16 / 9 ? THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(36) / 2) * (16 / 9) / camera.aspect)) : 36
     camera.updateProjectionMatrix()
+    if (sf.on) {
+      // Too small for the 3D desk now (the page below takes over): put it down.
+      if (!matchMedia(TALL).matches) drawer.value = null
+      else screen.value = layout(pose())
+    }
     kick()
   }
 
@@ -667,6 +729,82 @@ async function start() {
     const v = path[i].spot.clone().project(camera)
     return { x: Math.round(r.left + ((v.x + 1) / 2) * r.width), y: Math.round(r.top + ((1 - v.y) / 2) * r.height) }
   }
+  // Picking up the phone or the tablet: the camera turns square to its screen,
+  // close enough that the screen fills the window above the bar, and the demo
+  // (DeskScreen's .ds-device) is laid over the screen every frame.
+  // px kept free under the screen for DeskScreen's bar; the phone has its bar
+  // beside it instead and takes the full height.
+  const bar = () => (sf.id === 'phone' ? 24 : 128)
+  const sf = { on: false, id: null, c: new Vector3(), n: new Vector3(), u: new Vector3(), cam: new Vector3(), corners: [], aspect: 1, hWorld: 1, offY: 0, shown: false }
+  const worldUp = new Vector3(0, 1, 0)
+  cur.up = worldUp.clone()
+  const pose = () => {
+    const availH = view.h - bar() - 24
+    const fitH = Math.min(availH * (sf.id === 'phone' ? 0.97 : 0.94), ((view.w - 48) * 0.94) / sf.aspect)
+    const d = (sf.hWorld * view.h) / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2) * fitH)
+    sf.cam.copy(sf.c).addScaledVector(sf.n, d)
+    // The screen centred in the space above the bar, not in the window.
+    sf.offY = (bar() - 24) / 2
+    return fitH
+  }
+  // Laid out at the size it shows at once the camera has arrived, so the text
+  // ends up at 1:1 and sharp; the phone never narrower than 300 px of layout.
+  const layout = (fitH) => {
+    const w = sf.id === 'phone' ? Math.max(300, Math.round(fitH * sf.aspect)) : Math.min(1400, Math.max(640, Math.round(fitH * sf.aspect)))
+    return { id: sf.id, w, h: Math.round(w / sf.aspect) }
+  }
+  // The demo from last time is still in the (closed) dialog: hide it, so it
+  // does not show for a frame where it was before the camera has moved.
+  const reset = () => {
+    const dev = scr.value?.device
+    if (dev) {
+      dev.classList.remove('is-on')
+      dev.style.transform = ''
+    }
+  }
+  onScreen = (id) => {
+    reset()
+    if (!id) {
+      sf.on = false
+      sf.shown = false
+      kick()
+      return null
+    }
+    const mesh = gltf.scene.getObjectByName(`screen_${id}`)
+    if (!mesh) return null
+    mesh.updateWorldMatrix(true, false)
+    const g = mesh.geometry
+    if (!g.boundingBox) g.computeBoundingBox()
+    const hx = g.boundingBox.max.x
+    const hz = g.boundingBox.max.z
+    // The screen is a plane in its own x/z; uv (0,0), the picture's top left, is at (-x, -z).
+    sf.corners = [[-hx, -hz], [hx, -hz], [hx, hz], [-hx, hz]].map(([x, z]) => new Vector3(x, 0, z).applyMatrix4(mesh.matrixWorld))
+    sf.c.copy(sf.corners[0]).add(sf.corners[2]).multiplyScalar(0.5)
+    const e = mesh.matrixWorld.elements
+    sf.n.set(e[4], e[5], e[6]).normalize()
+    if (sf.n.dot(camera.position.clone().sub(sf.c)) < 0) sf.n.negate()
+    sf.u.set(-e[8], -e[9], -e[10]).normalize()
+    sf.hWorld = sf.corners[0].distanceTo(sf.corners[3])
+    sf.aspect = sf.corners[0].distanceTo(sf.corners[1]) / sf.hWorld
+    sf.id = id
+    sf.on = true
+    sf.shown = false
+    hover.value = null
+    const fitH = pose()
+    kick()
+    return layout(fitH)
+  }
+  // Lay the demo over the screen: the projective map that takes the element's
+  // own rectangle onto the screen's four corners as they are drawn right now.
+  const q = new Vector3()
+  const place = (el) => {
+    const r = canvas.value.getBoundingClientRect()
+    const p = sf.corners.map((v) => {
+      q.copy(v).project(camera)
+      return [r.left + ((q.x + 1) / 2) * r.width, r.top + ((1 - q.y) / 2) * r.height]
+    })
+    el.style.transform = quadMatrix(el.offsetWidth, el.offsetHeight, p)
+  }
   const onClick = () => {
     if (hover.value?.here) drawer.value = stops.value[hover.value.i].id
     else if (hover.value) scrollToStop(hover.value.i)
@@ -691,42 +829,74 @@ async function start() {
   })
   io.observe(el)
 
-  function frame() {
+  // Each easing below was tuned per frame at 60 Hz; `ease(k)` gives the same
+  // feel per unit of time, so a 144 Hz screen does not move twice as fast.
+  let last = 0
+  let dt = 1
+  const ease = (k) => 1 - Math.pow(1 - k, dt)
+  function frame(now) {
     raf = 0
     if (!visible || gone) return
-    mouse.sx += (mouse.x - mouse.sx) * 0.05
-    mouse.sy += (mouse.y - mouse.sy) * 0.05
+    dt = last ? Math.min(4, (now - last) / (1000 / 60)) : 1
+    last = now
+    mouse.sx += (mouse.x - mouse.sx) * ease(0.05)
+    mouse.sy += (mouse.y - mouse.sy) * ease(0.05)
     let tc = want.cam
     let ta = want.at
-    if (focus.on) {
+    const tu = sf.on ? sf.u : worldUp
+    if (sf.on) {
+      tc = sf.cam
+      ta = sf.c
+    } else if (focus.on) {
       const spot = path[focus.i].spot
       tc = pc.copy(want.cam).lerp(spot, 0.4)
       ta = pa.copy(want.at).lerp(spot, 0.85)
     }
-    cur.cam.lerp(tc, 0.09)
-    cur.at.lerp(ta, 0.09)
-    const shiftTo = view.want * view.reach
-    view.shift += (shiftTo - view.shift) * 0.09
+    cur.cam.lerp(tc, ease(0.09))
+    cur.at.lerp(ta, ease(0.09))
+    cur.up.lerp(tu, ease(0.09)).normalize()
+    const shiftTo = sf.on ? 0 : view.want * view.reach
+    const shiftYTo = sf.on ? sf.offY : 0
+    view.shiftY += (shiftYTo - view.shiftY) * ease(0.09)
+    if (Math.abs(shiftYTo - view.shiftY) < 0.25) view.shiftY = shiftYTo
+    view.shift += (shiftTo - view.shift) * ease(0.09)
     if (Math.abs(shiftTo - view.shift) < 0.25) view.shift = shiftTo
-    if (Math.abs(view.shift) > 0.25) camera.setViewOffset(view.w, view.h, view.shift, 0, view.w, view.h)
+    if (Math.abs(view.shift) > 0.25 || Math.abs(view.shiftY) > 0.25) camera.setViewOffset(view.w, view.h, view.shift, view.shiftY, view.w, view.h)
     else if (camera.view?.enabled) camera.clearViewOffset()
     camera.position.copy(cur.cam)
     // The camera sways with the pointer: a couple of centimetres, enough to feel present.
-    camera.position.x += mouse.sx * 0.03
-    camera.position.y -= mouse.sy * 0.018
+    // (Not while holding a screen: it would slide under the pointer.)
+    const sway = sf.on ? 0 : 1
+    camera.position.x += mouse.sx * 0.03 * sway
+    camera.position.y -= mouse.sy * 0.018 * sway
+    camera.up.copy(cur.up)
     camera.lookAt(cur.at)
     if (Math.abs(night.value - target) > 0.001) {
-      night.value += (target - night.value) * 0.06
+      night.value += (target - night.value) * ease(0.06)
       applyMood()
     }
     renderer.render(scene, camera)
+    const dev = sf.on && scr.value?.device
+    if (dev) {
+      camera.updateMatrixWorld()
+      place(dev)
+      // The demo fades in over the screen once the camera has all but arrived.
+      if (!sf.shown && cur.cam.distanceTo(tc) < 0.004) {
+        sf.shown = true
+        dev.classList.add('is-on')
+      }
+    }
     const settled =
       cur.cam.distanceToSquared(tc) < 1e-9 &&
       cur.at.distanceToSquared(ta) < 1e-9 &&
       Math.abs(mouse.x - mouse.sx) + Math.abs(mouse.y - mouse.sy) < 1e-3 &&
       Math.abs(night.value - target) <= 0.001 &&
-      view.shift === shiftTo
+      cur.up.distanceToSquared(tu) < 1e-9 &&
+      view.shift === shiftTo &&
+      view.shiftY === shiftYTo &&
+      (!sf.on || sf.shown)
     if (!settled) raf = requestAnimationFrame(frame)
+    else last = 0
   }
 
   size()
@@ -751,6 +921,7 @@ async function start() {
   teardown = () => {
     onWalk = null
     onFocus = null
+    onScreen = null
     io.disconnect()
     mo.disconnect()
     removeEventListener('resize', size)
