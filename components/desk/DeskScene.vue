@@ -1275,7 +1275,8 @@ async function start() {
 }
 
 /* Wide screens with motion: the section is tall and the stage sticks, so scrolling is walking.
-   One 55svh slice per stop, plus a window so the last stop can be held. */
+   One 80svh slice per stop, plus a window so the last stop can be held. At
+   55svh a light trackpad flick went past two stops before the camera arrived. */
 .dk-stills {
   display: none;
 }
@@ -1300,7 +1301,7 @@ async function start() {
   }
 
   .dk {
-    height: calc(var(--stops) * 55svh + 100svh);
+    height: calc(var(--stops) * 80svh + 100svh);
     /* Up under the floating header, so the room reaches the top of the
        window instead of starting below a band of page colour. */
     margin-top: calc(-1 * var(--header-h));
