@@ -1134,34 +1134,108 @@ async function startWalk() {
   font-weight: 600;
 }
 
-/* Three equal columns at every width: never two and a stray one. */
+/* The tally: a slip of paper taped to the desk, each count a red seal pressed
+   on it. Three equal columns at every width: never two and a stray one. */
 .pp-counts {
+  --card: #fffdf8;
+  --tape: rgb(232 222 196 / 0.8);
+  position: relative;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--sp-5) var(--sp-4);
+  gap: var(--sp-4);
+  max-width: 34rem;
   margin-top: var(--sp-8);
+  padding: var(--sp-6) var(--sp-5) var(--sp-5);
+  border-radius: 3px;
+  background: var(--card);
+  box-shadow: var(--shadow-2);
+  rotate: -0.7deg;
+}
+
+/* Masking tape holding it down. */
+.pp-counts::before {
+  content: '';
+  position: absolute;
+  top: -0.7rem;
+  left: 50%;
+  width: 6rem;
+  height: 1.4rem;
+  translate: -50% 0;
+  rotate: 2.5deg;
+  background: var(--tape);
+  box-shadow: 0 1px 2px rgb(var(--shadow-rgb) / 0.08);
+}
+
+:root[data-theme='dark'] .pp-counts {
+  --card: #232633;
+  --tape: rgb(150 150 165 / 0.35);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .pp-counts {
+    --card: #232633;
+    --tape: rgb(150 150 165 / 0.35);
+  }
 }
 
 .pp-counts div {
   display: flex;
   flex-direction: column-reverse;
-  /* Reversed, flex-end is the top: the figures share one line however many
+  /* Reversed, flex-end is the top: the seals share one line however many
      lines their labels take. */
   justify-content: flex-end;
+  align-items: flex-start;
 }
 
+/* A seal: the figure inside a double ring, pressed a little crooked. */
 .pp-counts dd {
+  min-width: 1.7em;
+  padding: 0.12em 0.2em 0.08em;
+  border: 4px double currentColor;
+  border-radius: 0.2em;
   font-family: var(--font-display);
   font-size: var(--step-4);
   font-weight: 900;
   line-height: 1;
+  text-align: center;
   color: var(--pop-ink);
+  rotate: -4deg;
+}
+
+.pp-counts div:nth-child(2) dd {
+  rotate: 3deg;
+}
+
+.pp-counts div:nth-child(3) dd {
+  rotate: -1.5deg;
 }
 
 .pp-counts dt {
-  margin-top: var(--sp-2);
+  margin-top: var(--sp-3);
   font-size: var(--step--1);
-  color: var(--ink-3);
+  color: var(--ink-2);
+  text-wrap: balance; /* 國科會研究計畫 on a phone: two even lines, not one character left alone */
+}
+
+/* Reached: the slip settles, then the seals go down one after another. */
+.pp-counts.reveal.is-waiting:not(.is-in) dd {
+  opacity: 0;
+  scale: 1.4;
+}
+
+.pp-counts.reveal.is-in dd {
+  transition:
+    opacity 90ms linear,
+    scale 240ms cubic-bezier(0.3, 1.5, 0.55, 1);
+  transition-delay: 380ms;
+}
+
+.pp-counts.reveal.is-in div:nth-child(2) dd {
+  transition-delay: 560ms;
+}
+
+.pp-counts.reveal.is-in div:nth-child(3) dd {
+  transition-delay: 740ms;
 }
 
 .pp-act {
