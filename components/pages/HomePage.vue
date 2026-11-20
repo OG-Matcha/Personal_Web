@@ -535,6 +535,21 @@ onMounted(() => {
     })
   }
 })
+// Kept alive when the reader leaves (app.vue): the year walk and the scroll
+// listener stop while away and start again on the way back.
+let away = false
+onDeactivated(() => {
+  away = true
+  walk?.revert()
+  walk = null
+  removeEventListener('scroll', atEnd)
+})
+onActivated(() => {
+  if (!away) return
+  away = false
+  addEventListener('scroll', atEnd, { passive: true })
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) startWalk()
+})
 onBeforeUnmount(() => {
   io?.disconnect()
   ro?.disconnect()

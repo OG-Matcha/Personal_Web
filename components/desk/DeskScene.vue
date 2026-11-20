@@ -253,6 +253,11 @@ const drawer = ref(null)
 
 let dispose = null
 let alive = true
+// The home page is kept when the reader leaves it (app.vue), so coming back
+// finds the room already built. While away it listens to nothing and draws
+// nothing; `wake` (set by the 3D scene) picks up the window it returns to.
+let away = false
+let wake = null
 
 /*
   Scroll position -> stop. Each stop owns one equal slice of the section;
@@ -305,7 +310,7 @@ watch(drawer, (id) => {
 })
 function readScroll() {
   const el = root.value
-  if (!el) return
+  if (!el || away) return
   const span = el.offsetHeight - innerHeight
   const p = Math.min(1, Math.max(0, -el.getBoundingClientRect().top / Math.max(1, span)))
   const f = Math.min(N - 1, Math.max(0, p * N - 0.5))
@@ -449,6 +454,20 @@ function pocketOff() {
   dispose?.()
 }
 
+onDeactivated(() => {
+  away = true
+  drawer.value = null
+  clearTimeout(settle)
+  document.documentElement.classList.remove('is-over-desk')
+})
+onActivated(() => {
+  if (!away) return // also called right after the first mount
+  away = false
+  if (pocket.value) pocketOff() // the window may have grown into the big layout meanwhile
+  if (tallMq?.matches) readScroll()
+  wake?.()
+})
+
 onBeforeUnmount(() => {
   alive = false
   tallMq?.removeEventListener('change', keepFocus)
@@ -469,14 +488,11 @@ function warm() {
   const th = document.documentElement.dataset.theme
   const mood = (th ? th === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches) ? 'night' : 'day'
   import('three').catch(() => {})
-  for (const g of ['desk', 'room']) {
-    const img = new Image()
-    img.crossOrigin = 'anonymous' // as three's TextureLoader asks, so the cached copy matches
-    img.src = `/desk/${g}_${mood}.webp`
-  }
+  // Read with fetch, the way tex() reads them, so the cached copy is the one it asks for.
+  for (const g of ['desk', 'room']) fetch(`/desk/${g}_${mood}.webp`).then((r) => r.blob()).catch(() => {})
   const j = JSON.parse(deskGltf)
   for (const x of [...(j.buffers ?? []), ...(j.images ?? [])])
-    if (x.uri && !x.uri.startsWith('data:')) fetch(`/desk/model/${x.uri}`).catch(() => {})
+    if (x.uri && !x.uri.startsWith('data:')) fetch(`/desk/model/${x.uri}`).then((r) => r.blob()).catch(() => {})
 }
 
 function softwareGL() {
@@ -505,6 +521,9 @@ async function start(small = false) {
   // freezing the page for a second or more; without the check, compileAsync
   // below links them off the main thread.
   renderer.debug.checkShaderErrors = !!import.meta.dev
+  // Asked now, while the GPU has nothing queued: asked later, the answer waits
+  // for every upload and compile in flight (0.2 s).
+  const maxAniso = renderer.capabilities.getMaxAnisotropy()
   // Pixels drawn per frame, capped by total count and not just by density: a
   // 1920x1080 window at 2x was 6.4 million pixels a frame and ran at 28 fps on
   // integrated graphics. `prCap` drops a step when frames keep running slow.
@@ -591,7 +610,6 @@ async function start(small = false) {
   }
   // Screens and the desk are seen at a slant; without the most anisotropic
   // filtering the GPU offers, a 1900 px screenshot smears into a grey blur.
-  const maxAniso = renderer.capabilities.getMaxAnisotropy()
   const sharpen = (map) => {
     if (!map) return
     map.colorSpace = THREE.SRGBColorSpace
@@ -608,6 +626,44 @@ async function start(small = false) {
     owned.push(x)
     return x
   }
+  // Sent to the GPU in one call, a 3072 px bake holds the main thread about
+  // 0.8 s. Instead its storage is set aside empty and the picture goes up in
+  // bands of rows, one band a frame, mipmaps made once after the last.
+  // Straight WebGL calls, not three's copyTextureToTexture: that one reads the
+  // unpack settings back from the GPU each call, and every read waits for all
+  // the work queued before it (0.36 s in all while the room was loading).
+  const BANDS = 8
+  const gl = renderer.getContext()
+  const st = renderer.state
+  const upload = async (bmp) => {
+    const { width: w, height: h } = bmp
+    const x = done(new THREE.DataTexture(null, w, h))
+    x.source.dataReady = false
+    x.magFilter = THREE.LinearFilter
+    x.minFilter = THREE.LinearMipmapLinearFilter
+    x.generateMipmaps = true // sets aside the mip levels
+    x.needsUpdate = true
+    renderer.initTexture(x)
+    const step = Math.ceil(h / BANDS)
+    for (let y = 0; y < h; y += step) {
+      await new Promise((r) => requestAnimationFrame(r))
+      if (gone) break
+      const y1 = Math.min(h, y + step)
+      st.bindTexture(gl.TEXTURE_2D, renderer.properties.get(x).__webglTexture, gl.TEXTURE0)
+      st.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false)
+      st.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false)
+      st.pixelStorei(gl.UNPACK_ALIGNMENT, 4)
+      st.pixelStorei(gl.UNPACK_ROW_LENGTH, w)
+      st.pixelStorei(gl.UNPACK_SKIP_ROWS, y)
+      gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, y, w, y1 - y, gl.RGBA, gl.UNSIGNED_BYTE, bmp)
+      st.pixelStorei(gl.UNPACK_ROW_LENGTH, 0)
+      st.pixelStorei(gl.UNPACK_SKIP_ROWS, 0)
+      if (y1 === h) gl.generateMipmap(gl.TEXTURE_2D)
+      st.unbindTexture()
+    }
+    bmp.close?.()
+    return x
+  }
   // The bakes are decoded off the main thread (an <img> is decoded inside the
   // upload, about 0.4 s for the 3072 px desk), and for the phone's small
   // picture halved on the way: `px` is the bake's width.
@@ -616,9 +672,7 @@ async function start(small = false) {
     const blob = await (await fetch(url)).blob()
     const opts = { imageOrientation: 'none', premultiplyAlpha: 'none', colorSpaceConversion: 'none' }
     const bmp = await createImageBitmap(blob, small ? { ...opts, resizeWidth: px / 2, resizeHeight: px / 2, resizeQuality: 'high' } : opts)
-    const x = new THREE.Texture(bmp)
-    x.needsUpdate = true
-    return done(x)
+    return upload(bmp)
   }
   const SIZE = { desk: 3072, room: 2048 }
 
@@ -667,21 +721,17 @@ async function start(small = false) {
   baked.room.uniforms[key].value = r1
   baked.desk.uniforms[first === 'day' ? 'uNight' : 'uDay'].value = d1
   baked.room.uniforms[first === 'day' ? 'uNight' : 'uDay'].value = r1
-  // The other mood arrives later; until then both slots hold the first. Each
-  // is sent to the GPU in a frame of its own before it is used, not all inside
-  // the next draw. The phone fetches it only when the theme is switched.
+  // The other mood arrives later (in bands, like the first), once the room is
+  // showing; until then both slots hold the first. The phone fetches it only
+  // when the theme is switched.
   let otherAsked = false
   let otherReady = false
   const loadOther = () => {
     if (otherAsked) return
     otherAsked = true
     Promise.all([tex(`/desk/desk_${other}.webp`, SIZE.desk), tex(`/desk/room_${other}.webp`, SIZE.room)])
-      .then(async ([d2, r2]) => {
-        for (const x of [d2, r2]) {
-          await new Promise((r) => requestAnimationFrame(r))
-          if (gone) return
-          renderer.initTexture(x)
-        }
+      .then(([d2, r2]) => {
+        if (gone) return
         const k2 = other === 'day' ? 'uDay' : 'uNight'
         baked.desk.uniforms[k2].value = d2
         baked.room.uniforms[k2].value = r2
@@ -696,7 +746,6 @@ async function start(small = false) {
       })
       .catch(() => {}) // the theme switch then keeps the first mood; nothing else breaks
   }
-  if (!small) loadOther()
 
   const glow = []
   const shiny = []
@@ -866,6 +915,7 @@ async function start(small = false) {
   }
 
   const size = () => {
+    if (away) return
     const w = canvas.value.clientWidth
     const h = canvas.value.clientHeight
     renderer.setPixelRatio(pixelRatio(w, h))
@@ -1066,6 +1116,7 @@ async function start(small = false) {
   // The scroll that takes the picture away leans the camera toward the open
   // notebook, the first card in the row coming up underneath.
   const onPocketScroll = () => {
+    if (away) return
     const r = canvas.value.getBoundingClientRect()
     const p = Math.min(1, Math.max(0, -r.top / Math.max(1, r.height)))
     const o = 0.45 * p * p * (3 - 2 * p)
@@ -1092,7 +1143,7 @@ async function start(small = false) {
   // the day/night fade have settled, the loop stops until the next change.
   let visible = true
   function kick() {
-    if (!raf && visible && !gone) raf = requestAnimationFrame(frame)
+    if (!raf && visible && !gone && !away) raf = requestAnimationFrame(frame)
   }
   const io = new IntersectionObserver(([e]) => {
     visible = e.isIntersecting
@@ -1109,7 +1160,7 @@ async function start(small = false) {
   const ease = (k) => 1 - Math.pow(1 - k, dt)
   function frame(now) {
     raf = 0
-    if (!visible || gone) return
+    if (!visible || gone || away) return
     dt = last ? Math.min(4, (now - last) / (1000 / 60)) : 1
     last = now
     // Over 21 ms a frame for most of the last 45 while moving: draw fewer pixels.
@@ -1220,6 +1271,11 @@ async function start(small = false) {
   cur.cam.copy(want.cam)
   cur.at.copy(want.at)
   addEventListener('resize', size)
+  wake = () => {
+    size()
+    if (small) onPocketScroll()
+    kick()
+  }
   canvas.value.addEventListener('pointermove', onMove)
   canvas.value.addEventListener('pointerleave', onLeave)
   canvas.value.addEventListener('click', onClick)
@@ -1228,12 +1284,16 @@ async function start(small = false) {
   requestAnimationFrame(() =>
     requestAnimationFrame(() => {
       ready.value = true
+      // Only now the other mood: its bands queued on the GPU while the first
+      // frame was drawn made that frame wait for them (0.3 s).
+      if (!small) loadOther()
     })
   )
 
   // Leaving the homepage inside the app keeps the tab alive; dispose() frees
   // everything in `owned` and the WebGL context itself.
   teardown = () => {
+    wake = null
     onWalk = null
     onFocus = null
     onScreen = null

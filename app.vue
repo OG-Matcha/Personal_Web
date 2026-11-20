@@ -2,7 +2,9 @@
   <!-- Says the new page's title to screen readers after each page change. -->
   <NuxtRouteAnnouncer />
   <NuxtLayout>
-    <NuxtPage />
+    <!-- The home page stays built when the reader leaves it (one at a time), so
+         coming back shows the 3D room at once instead of rebuilding it. -->
+    <NuxtPage :keepalive="{ include: ['HomeRoute'], max: 1 }" />
   </NuxtLayout>
 </template>
 

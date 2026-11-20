@@ -3,6 +3,8 @@
 </template>
 
 <script setup>
+// Named for app.vue's keepalive: the home page is kept when the reader leaves it.
+defineOptions({ name: 'HomeRoute' })
 import HomePage from '~/components/pages/HomePage.vue'
 
 const { about, site } = useContent()
