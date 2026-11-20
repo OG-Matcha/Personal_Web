@@ -11,7 +11,7 @@
   <div class="pp-desk">
   <!-- Things left on the desk, rendered from the same 3D models (studio/desk/render_props.py) -->
   <div class="pp-props" aria-hidden="true">
-    <img v-for="p in props" :key="p.n" :class="`pp-prop pp-prop--${p.n}`" :src="`/images/desk-prop-${p.n}.webp`" :width="p.w" :height="p.h" alt="" loading="lazy" decoding="async" />
+    <img v-for="p in props" :key="p.n" :class="`pp-prop pp-prop--${p.n}`" :src="`/images/desk-prop-${p.n}.webp?v=${p.v}`" :width="p.w" :height="p.h" alt="" loading="lazy" decoding="async" />
   </div>
   <div class="pp">
     <aside class="pp-me" :aria-label="c.meLabel">
@@ -193,6 +193,7 @@
 import { nextTick, resolveComponent } from 'vue'
 import { ArrowUpRight, FileText, Github, Instagram, Linkedin, Mail } from 'lucide-vue-next'
 import DeskScene from '~/components/desk/DeskScene.vue'
+import deskProps from '~/components/pages/desk-props.json'
 
 const NuxtLinkC = resolveComponent('NuxtLink')
 const { site, en, beats, works, alsoBuilt } = useContent()
@@ -202,13 +203,10 @@ const pre = computed(() => (isEn.value ? '/en' : ''))
 const cvHref = computed(() => (isEn.value ? site.contact.cv.hrefEn : site.contact.cv.href))
 const work = Object.fromEntries(works.map((w) => [w.slug, w]))
 const repo = (n) => alsoBuilt.find((a) => a.name === n)
-// Desk props for the right margin (studio/desk/ship_props.py prints the sizes;
-// they show at half size, sharp on a 2x screen). Same scale for all three.
-const props = [
-  { n: 'mug', w: 275, h: 207 },
-  { n: 'kuaikuai', w: 276, h: 265 },
-  { n: 'plant', w: 384, h: 304 },
-]
+// Desk props for the right margin. Sizes and a hash of each image come from
+// studio/desk/ship_props.py; the hash in the URL makes a re-render show at once.
+// Same scale for all three.
+const props = ['mug', 'kuaikuai', 'plant'].map((n) => ({ n, ...deskProps[n] }))
 
 // The paragraphs under 我怎麼想 are a first-person draft written from the
 // case studies and the five questions; every claim in them is checkable in

@@ -47,6 +47,12 @@ for m in kk.data.materials:
     nt.links.new(tex.outputs['Alpha'], nt.nodes['Principled BSDF'].inputs['Alpha'])
 
 
+# The handle's ring runs through the cup wall into the cup, out of sight in the
+# room but, seen from straight above, a white lump over the rim and the coffee.
+# Here it is narrowed and moved out so its ends stop inside the wall.
+hd = bpy.data.objects['mug_handle']
+hd.matrix_world = Matrix.Translation((0.012, 0, 0)) @ hd.matrix_world @ Matrix.Diagonal((0.75, 1, 1, 1))
+
 def lin(h):
     """'#rrggbb' (sRGB) to linear RGBA for colour ramps."""
     c = [int(h[i:i + 2], 16) / 255 for i in (1, 3, 5)]
