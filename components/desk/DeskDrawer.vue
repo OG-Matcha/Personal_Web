@@ -67,11 +67,21 @@ const tr = (e) => (E.value ? en.timeline?.[`${e.date} ${e.title}`] ?? {} : {})
 const dlg = ref(null)
 // The last thing opened stays rendered while the sheet fades out.
 const shown = ref(null)
+// Opening or closing a modal restyles the whole page (everything else turns
+// inert and back): on a phone 0.2-0.4 s in the tap's own frame, so the tap
+// showed nothing until it was done. Let that frame paint first.
+const afterPaint = () => new Promise((r) => requestAnimationFrame(() => setTimeout(r, 0)))
 
 watch(
   () => props.id,
   async (id) => {
-    if (id) shown.value = id
+    if (id) {
+      // The phone's sheet holds the whole oSave demo: building it took 0.4 s
+      // of the tap's frame too.
+      await afterPaint()
+      if (props.id !== id) return
+      shown.value = id
+    }
     // Let the sheet's content render first, so the dialog focuses its first control.
     await nextTick()
     const d = dlg.value
@@ -89,7 +99,7 @@ watch(
 )
 
 function close() {
-  dlg.value?.close()
+  afterPaint().then(() => dlg.value?.close())
 }
 // A click on the dimmed page around the sheet closes it.
 function onBackdrop(ev) {

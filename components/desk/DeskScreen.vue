@@ -98,7 +98,14 @@ const c = computed(() => {
 watch(
   () => props.screen,
   async (s) => {
-    if (s) shown.value = s
+    if (s) {
+      // Mounting the demo and showModal() (which restyles the whole page) took
+      // 0.5 s on a phone inside the tap's frame: the camera only started moving
+      // after it. Let the tap's frame paint first; the device lands a frame later.
+      await new Promise((r) => requestAnimationFrame(() => setTimeout(r, 0)))
+      if (props.screen !== s) return
+      shown.value = s
+    }
     await nextTick()
     const d = dlg.value
     if (!d) return
