@@ -948,6 +948,8 @@ async function start(small = false) {
   }
 
   const ray = new THREE.Raycaster()
+  // Metres from each thing's spot that still count as on it: about its half size.
+  const REACH = { notebook: 0.2, laptop: 0.2, phone: 0.1, tablet: 0.17, reports: 0.18, shelf: 0.45, kuaikuai: 0.1 }
   const onMove = (ev) => {
     const r = canvas.value.getBoundingClientRect()
     mouse.x = ((ev.clientX - r.left) / r.width) * 2 - 1
@@ -964,12 +966,24 @@ async function start(small = false) {
     })
     near.sort((a, b) => a.d - b.d)
     let best = near[0] ?? null
-    // Two things close on screen (the phone stands in front of the reports):
-    // what the pointer is actually on decides, the thing nearest the surface hit.
-    if (near.length > 1) {
-      ray.setFromCamera(new THREE.Vector2(mouse.x, -mouse.y), camera)
-      const hit = ray.intersectObject(gltf.scene, true)[0]
-      if (hit) best = near.reduce((a, c) => (path[c.i].spot.distanceTo(hit.point) < path[a.i].spot.distanceTo(hit.point) ? c : a))
+    // What the pointer is actually on comes first: the thing whose spot is
+    // nearest the surface hit. Close to the phone, the reports' spot (behind
+    // it) lands on the phone's screen while the phone's own is far away.
+    ray.setFromCamera(new THREE.Vector2(mouse.x, -mouse.y), camera)
+    const hit = ray.intersectObject(gltf.scene, true)[0]
+    if (hit) {
+      // Each thing counts out to about its own size from its spot (REACH),
+      // and the one the hit is nearest in proportion to that size wins.
+      let k = -1
+      let kd = 1
+      path.forEach((p, i) => {
+        const d = p.spot ? p.spot.distanceTo(hit.point) / (REACH[STOPS[i].id] ?? 0.15) : Infinity
+        if (d < kd) (k = i), (kd = d)
+      })
+      if (k >= 0) {
+        const v = path[k].spot.clone().project(camera)
+        best = { i: k, d: 0, x: ((v.x + 1) / 2) * r.width, y: ((1 - v.y) / 2) * r.height }
+      }
     }
     // The thing you are standing at opens; any other thing walks you to it.
     const st = best && stops.value[best.i]
