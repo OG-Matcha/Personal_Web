@@ -197,10 +197,10 @@ const t = computed(() =>
 */
 const STOPS = [
   { id: 'hero', cam: [0.78, -1.42, 1.4], at: [-0.02, 0.12, 0.92] },
-  { id: 'notebook', side: 'right', cam: [-0.06, -0.66, 1.16], at: [-0.2, -0.19, 0.76], spot: [-0.2, -0.22, 0.77] },
+  { id: 'notebook', side: 'right', cam: [-0.06, -0.66, 1.16], at: [-0.23, -0.24, 0.72], spot: [-0.2, -0.22, 0.77] },
   { id: 'laptop', cam: [0.1, -0.5, 1.03], at: [0.0, 0.1, 0.85], spot: [0.0, 0.12, 0.86] },
   { id: 'phone', cam: [0.33, -0.36, 0.93], at: [0.43, -0.02, 0.83], spot: [0.43, -0.03, 0.83] },
-  { id: 'tablet', side: 'right', cam: [-0.3, -0.38, 0.99], at: [-0.45, 0.09, 0.84], spot: [-0.45, 0.09, 0.84] },
+  { id: 'tablet', side: 'right', cam: [-0.3, -0.38, 0.99], at: [-0.48, 0.09, 0.84], spot: [-0.45, 0.09, 0.84] },
   { id: 'reports', cam: [0.48, -0.25, 1.15], at: [0.5, 0.18, 0.78], spot: [0.52, 0.2, 0.79] },
   { id: 'shelf', side: 'right', cam: [0.25, -0.45, 1.5], at: [0.12, 0.52, 1.32], spot: [0.05, 0.52, 1.32] }, // from the right, so the lamp head stays out of frame
   { id: 'kuaikuai', cam: [0.32, -0.24, 0.98], at: [0.25, 0.13, 0.84], spot: [0.25, 0.12, 0.84] }, // from the right: the laptop beside it whole, not its screen cut mid-sentence
