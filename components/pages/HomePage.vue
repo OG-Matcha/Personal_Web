@@ -31,12 +31,6 @@
           </p>
         </div>
 
-        <p class="pp-role">
-          <template v-for="(r, i) in c.role.split(' · ')" :key="r"
-            ><span v-if="i" aria-hidden="true"> · </span
-            ><span class="pp-role-part">{{ r }}</span></template
-          >
-        </p>
         </div>
 
         <div class="pp-now">
@@ -228,7 +222,6 @@ const c = computed(() =>
         altName: `${site.person.nameZh} · OG_Matcha`,
         photoAlt: 'Ju-Shen Huang',
         thesis: 'I take AI from demo to something people still use three months later.',
-        role: 'CTO at Finctory · forward-deployed engineer at MedaLink · master’s student in Information Management, NCU',
         nowH: 'Now',
         now: [
           { what: 'Co-founder & CTO', where: 'Finctory' },
@@ -263,7 +256,6 @@ const c = computed(() =>
         altName: `${site.person.nameEn} · OG_Matcha`,
         photoAlt: '黃鉅燊',
         thesis: '我把 AI 從展示品，​做到三個月後還有人在用。',
-        role: '斐闊 Finctory 技術長 · 醫數行銷 MedaLink 前線部署工程師 · 中央資管碩士生',
         nowH: '現在',
         now: [
           { what: '共同創辦人暨技術長', where: '斐闊 Finctory' },
@@ -742,24 +734,6 @@ async function startWalk() {
   font-weight: 800;
   line-height: 1.35;
   text-wrap: balance;
-}
-
-.pp-role {
-  margin-top: var(--sp-3);
-  max-width: 26em;
-  color: var(--ink-2);
-  font-size: var(--step--1);
-  line-height: 1.7;
-}
-
-.pp-role-part {
-  white-space: nowrap;
-}
-
-@media (max-width: 380px) {
-  .pp-role-part {
-    white-space: normal;
-  }
 }
 
 .pp-now {
