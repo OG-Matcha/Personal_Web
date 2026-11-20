@@ -149,8 +149,8 @@ export default defineNuxtConfig({
         // The basic-Latin slice is needed on every page; fetch it with the
         // HTML instead of after the stylesheet, so headings don't reflow.
         { rel: 'preload', as: 'font', type: 'font/woff2', href: '/fonts/archivo-var-002.woff2', crossorigin: '' },
-        // The CJK sheet is ~100 kB gzipped of unicode-range declarations for
-        // 213 sliced faces. Loaded async so it never blocks first paint; the
+        // The CJK sheet: two subset faces: what the English pages show, and the rest
+        // (scripts/subset-cjk.py). Loaded async so it never blocks first paint; the
         // fallback stack (PingFang TC / 微軟正黑) carries the text until it lands.
         { rel: 'preload', as: 'style', href: '/fonts/cjk.css', onload: "this.rel='stylesheet'" },
       ],

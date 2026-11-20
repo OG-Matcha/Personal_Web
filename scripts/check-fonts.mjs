@@ -3,7 +3,7 @@
  *
  *   npm run check:fonts
  *
- * public/fonts/notosanstc-sub.woff2 holds only the characters that were in
+ * public/fonts/notosanstc-{0,1}.woff2 hold only the characters that were in
  * the sources when scripts/subset-cjk.py last ran (listed in cjk-chars.txt).
  * A character added since then still shows, in the visitor's system font,
  * which looks like a typo in the middle of a heading. This lists them;
