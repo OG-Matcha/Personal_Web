@@ -205,8 +205,8 @@ const repo = (n) => alsoBuilt.find((a) => a.name === n)
 // Desk props for the right margin (studio/desk/ship_props.py prints the sizes;
 // they show at half size, sharp on a 2x screen). Same scale for all three.
 const props = [
-  { n: 'mug', w: 276, h: 207 },
-  { n: 'kuaikuai', w: 285, h: 276 },
+  { n: 'mug', w: 275, h: 207 },
+  { n: 'kuaikuai', w: 276, h: 265 },
   { n: 'plant', w: 384, h: 304 },
 ]
 

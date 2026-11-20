@@ -203,7 +203,7 @@ const STOPS = [
   { id: 'tablet', side: 'right', cam: [-0.3, -0.38, 0.99], at: [-0.45, 0.09, 0.84], spot: [-0.45, 0.09, 0.84] },
   { id: 'reports', cam: [0.48, -0.25, 1.15], at: [0.5, 0.18, 0.78], spot: [0.52, 0.2, 0.79] },
   { id: 'shelf', side: 'right', cam: [0.25, -0.45, 1.5], at: [0.12, 0.52, 1.32], spot: [0.05, 0.52, 1.32] }, // from the right, so the lamp head stays out of frame
-  { id: 'kuaikuai', cam: [0.08, -0.26, 0.98], at: [0.25, 0.13, 0.84], spot: [0.25, 0.12, 0.84] },
+  { id: 'kuaikuai', cam: [0.32, -0.24, 0.98], at: [0.25, 0.13, 0.84], spot: [0.25, 0.12, 0.84] }, // from the right: the laptop beside it whole, not its screen cut mid-sentence
 ]
 
 const stops = computed(() => {
@@ -947,20 +947,30 @@ async function start(small = false) {
     kick()
   }
 
+  const ray = new THREE.Raycaster()
   const onMove = (ev) => {
     const r = canvas.value.getBoundingClientRect()
     mouse.x = ((ev.clientX - r.left) / r.width) * 2 - 1
     mouse.y = ((ev.clientY - r.top) / r.height) * 2 - 1
     // Hover: the nearest stop whose spot is within reach of the pointer.
-    let best = null
+    const near = []
     path.forEach((p, i) => {
       if (!p.spot) return
       const v = p.spot.clone().project(camera)
       const x = ((v.x + 1) / 2) * r.width
       const y = ((1 - v.y) / 2) * r.height
       const d = Math.hypot(x - (ev.clientX - r.left), y - (ev.clientY - r.top))
-      if (v.z < 1 && d < 70 && (!best || d < best.d)) best = { i, d, x, y }
+      if (v.z < 1 && d < 70) near.push({ i, d, x, y })
     })
+    near.sort((a, b) => a.d - b.d)
+    let best = near[0] ?? null
+    // Two things close on screen (the phone stands in front of the reports):
+    // what the pointer is actually on decides, the thing nearest the surface hit.
+    if (near.length > 1) {
+      ray.setFromCamera(new THREE.Vector2(mouse.x, -mouse.y), camera)
+      const hit = ray.intersectObject(gltf.scene, true)[0]
+      if (hit) best = near.reduce((a, c) => (path[c.i].spot.distanceTo(hit.point) < path[a.i].spot.distanceTo(hit.point) ? c : a))
+    }
     // The thing you are standing at opens; any other thing walks you to it.
     const st = best && stops.value[best.i]
     const here = best && best.i === on.value && !moving.value && st.open

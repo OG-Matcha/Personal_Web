@@ -39,6 +39,58 @@ kk = bpy.data.objects['kuaikuai']
 loc = kk.matrix_world.translation.copy()
 kk.matrix_world = Matrix.Translation((loc.x, loc.y, TOP + 0.03)) @ Euler((-math.pi / 2, 0, math.radians(-18))).to_matrix().to_4x4()
 
+# The bag's texture carries its true outline in alpha. Unconnected, the clear
+# margin rendered black around the bag; connected, it cuts the shape and its shadow.
+for m in kk.data.materials:
+    nt = m.node_tree
+    tex = next(n for n in nt.nodes if n.type == 'TEX_IMAGE')
+    nt.links.new(tex.outputs['Alpha'], nt.nodes['Principled BSDF'].inputs['Alpha'])
+
+
+def lin(h):
+    """'#rrggbb' (sRGB) to linear RGBA for colour ramps."""
+    c = [int(h[i:i + 2], 16) / 255 for i in (1, 3, 5)]
+    return [x / 12.92 if x <= 0.04045 else ((x + 0.055) / 1.055) ** 2.4 for x in c] + [1]
+
+
+# Seen from straight above, flat dark coffee read as a hole in the cup. Crema
+# gathers at the rim, mottled, and the surface is glossy enough to catch the window.
+cf = bpy.data.materials['coffee']
+nt = cf.node_tree
+bsdf = nt.nodes['Principled BSDF']
+tc = nt.nodes.new('ShaderNodeTexCoord')
+sep = nt.nodes.new('ShaderNodeSeparateXYZ')
+comb = nt.nodes.new('ShaderNodeCombineXYZ')
+rad = nt.nodes.new('ShaderNodeVectorMath')
+rad.operation = 'LENGTH'
+noise = nt.nodes.new('ShaderNodeTexNoise')
+noise.inputs['Scale'].default_value = 900
+wob = nt.nodes.new('ShaderNodeMath')
+wob.operation = 'MULTIPLY_ADD'
+wob.inputs[1].default_value = 0.005
+rng = nt.nodes.new('ShaderNodeMapRange')
+rng.inputs['From Min'].default_value = 0
+rng.inputs['From Max'].default_value = 0.0375
+ramp = nt.nodes.new('ShaderNodeValToRGB')
+el = ramp.color_ramp.elements
+el[0].position, el[0].color = 0.0, lin('#26120a')
+el[1].position, el[1].color = 1.0, lin('#a26f42')
+for pos, col in ((0.62, '#331a0b'), (0.86, '#6e4220')):
+    e = el.new(pos)
+    e.color = lin(col)
+L = nt.links.new
+L(tc.outputs['Object'], sep.inputs[0])
+L(sep.outputs['X'], comb.inputs['X'])
+L(sep.outputs['Y'], comb.inputs['Y'])
+L(comb.outputs[0], rad.inputs[0])
+L(tc.outputs['Object'], noise.inputs['Vector'])
+L(noise.outputs['Fac'], wob.inputs[0])
+L(rad.outputs['Value'], wob.inputs[2])
+L(wob.outputs[0], rng.inputs['Value'])
+L(rng.outputs['Result'], ramp.inputs['Fac'])
+L(ramp.outputs['Color'], bsdf.inputs['Base Color'])
+bsdf.inputs['Roughness'].default_value = 0.16
+
 cam = bpy.data.cameras.new('top')
 cam.type = 'ORTHO'
 cam.dof.use_dof = False
