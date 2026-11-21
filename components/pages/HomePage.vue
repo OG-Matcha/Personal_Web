@@ -147,7 +147,7 @@
               v-bind="w.internal ? { to: w.href } : { href: w.href, ...linkAttrs(w.href) }"
               class="pp-work-link"
             >
-              <span class="pp-device"><SiteShot class="pp-work-shot" fit="cover" sizes="(min-width: 1024px) 50vw, 100vw" :src="w.img" :width="w.w" :height="w.h" /></span>
+              <span class="pp-print"><SiteShot class="pp-work-shot" fit="cover" sizes="(min-width: 1024px) 50vw, 100vw" :src="w.img" :width="w.w" :height="w.h" /></span>
               <div class="pp-work-body">
                 <p class="pp-work-meta">
                   <span>{{ w.when }}</span>
@@ -1256,49 +1256,52 @@ async function startWalk() {
   text-decoration: none;
 }
 
-/* No card behind it on hover: the laptop's base is wider than its screen
-   and would stick out of one. The laptop itself lifts off the desk instead. */
-.pp-device {
+/* Each product as a print lying on the desk: white border, a slight tilt
+   (alternating, as prints dropped one after another), a real shadow. It
+   replaced a flat CSS laptop that looked nothing like the 3D one above.
+   On hover the print is picked up: straightened and lifted. */
+.pp-print {
+  display: block;
+  padding: 12px 12px 14px;
+  border-radius: 3px;
+  background: #fbfaf7;
+  box-shadow:
+    0 1px 1px rgb(var(--shadow-rgb) / 0.12),
+    0 18px 28px -16px rgb(var(--shadow-rgb) / 0.45);
+  rotate: -0.8deg;
   transition:
+    rotate 260ms var(--ease-entrance),
     transform 260ms var(--ease-entrance),
     box-shadow 260ms var(--ease-entrance);
 }
 
-.pp-work-link:hover .pp-device,
-.pp-work-link:focus-visible .pp-device {
+.pp-work:nth-child(even) .pp-print {
+  rotate: 0.9deg;
+}
+
+.pp-work-link:hover .pp-print,
+.pp-work-link:focus-visible .pp-print {
+  rotate: 0deg;
   transform: translateY(-6px);
   box-shadow:
-    0 0 0 1px rgb(255 255 255 / 0.06) inset,
-    0 28px 40px -22px rgb(var(--shadow-rgb) / 0.55);
+    0 1px 1px rgb(var(--shadow-rgb) / 0.12),
+    0 30px 40px -20px rgb(var(--shadow-rgb) / 0.55);
+}
+
+/* At night the paper is lamp-lit, not glowing white. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .pp-print {
+    background: #dcd6cb;
+  }
+}
+
+:root[data-theme='dark'] .pp-print {
+  background: #dcd6cb;
 }
 
 .pp-work-link:focus-visible {
   outline: 2px solid var(--pop);
   outline-offset: 4px;
-}
-
-/* Each product on the laptop from the desk: a black bezel and the silver
-   base under it, as on the 3D desk. */
-.pp-device {
-  position: relative;
-  display: block;
-  padding: 3.2% 3.2% 4%;
-  border-radius: var(--r-2) var(--r-2) 6px 6px;
-  margin-bottom: 18px;
-  background: #16181d;
-  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.06) inset;
-}
-
-.pp-device::after {
-  content: '';
-  position: absolute;
-  left: -6%;
-  right: -6%;
-  bottom: -10px;
-  height: 10px;
-  border-radius: 0 0 14px 14px / 0 0 10px 10px;
-  background: linear-gradient(#d9dce2, #a9aeb8);
-  box-shadow: 0 8px 16px -8px rgb(var(--shadow-rgb) / 0.5);
 }
 
 .pp-work-shot {
@@ -1727,14 +1730,15 @@ async function startWalk() {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .pp-device,
+  .pp-print,
   .pp-arrow,
   .pp-nav-line {
     transition: none;
   }
 
-  .pp-work-link:hover .pp-device,
-  .pp-work-link:focus-visible .pp-device {
+  .pp-work-link:hover .pp-print,
+  .pp-work-link:focus-visible .pp-print {
+    rotate: 0deg;
     transform: none;
   }
 }
