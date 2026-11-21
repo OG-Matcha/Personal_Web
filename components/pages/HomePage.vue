@@ -11,11 +11,11 @@
   <div class="pp-desk" :style="grain">
   <!-- Things left on the desk, rendered from the same 3D models (studio/desk/render_props.py) -->
   <div class="pp-props" aria-hidden="true">
-    <img v-for="p in props" :key="p.n" :class="`pp-prop pp-prop--${p.n}`" :src="asset(`/images/desk-prop-${p.n}.webp`)" :width="p.w" :height="p.h" :style="{ width: `min(${p.w}px, (100vw - var(--page-w)) * ${(p.w / 700).toFixed(3)})` }" alt="" loading="lazy" decoding="async" />
+    <img v-for="p in props" :key="p.n" :class="`pp-prop pp-prop--${p.n}`" :src="asset(`/images/desk-prop-${p.n}.webp`)" :width="p.w" :height="p.h" :style="{ width: `min(${p.w}px, (100vw - var(--col-w)) * ${(p.w / 800).toFixed(3)})` }" alt="" loading="lazy" decoding="async" />
   </div>
   <div class="pp">
     <aside class="pp-me" :aria-label="c.meLabel">
-      <div ref="meIn" class="pp-me-in">
+      <div class="pp-me-in">
         <div class="pp-badge">
         <div class="pp-id">
           <img
@@ -43,43 +43,12 @@
           </ul>
         </div>
 
-        <nav class="pp-nav" :aria-label="c.navLabel">
-          <a
-            v-for="s in sections"
-            :key="s.id"
-            :href="`#${s.id}`"
-            :class="{ 'is-on': active === s.id }"
-            :aria-current="active === s.id ? 'true' : undefined"
-          >
-            <span class="pp-nav-line" aria-hidden="true" />
-            {{ s.label }}
-            <span v-if="s.id === 'record' && active === 'record' && year" class="pp-nav-year figures" aria-hidden="true">
-              <Transition name="pp-roll" mode="out-in"
-                ><span :key="year">{{ year }}</span></Transition
-              >
-            </span>
-          </a>
-        </nav>
-
-        <ul class="pp-links">
-          <li v-for="l in links" :key="l.label">
-            <a :href="l.href" v-bind="l.attrs" :aria-label="l.label">
-              <component :is="l.icon" :size="20" :stroke-width="1.9" aria-hidden="true" />
-            </a>
-          </li>
-          <li>
-            <a :href="cvHref" class="pp-cv" download>
-              <FileText :size="18" :stroke-width="1.9" aria-hidden="true" />
-              {{ c.cv }}
-            </a>
-          </li>
-        </ul>
       </div>
     </aside>
 
     <div class="pp-flow">
       <!-- What I think -->
-      <section id="about" class="pp-sec" aria-labelledby="about-h" data-spy>
+      <section id="about" class="pp-sec" aria-labelledby="about-h">
         <h2 id="about-h" class="pp-h">{{ c.aboutH }}</h2>
         <div class="pp-prose">
           <p v-for="(p, i) in c.about" :key="i">{{ p }}</p>
@@ -87,7 +56,7 @@
       </section>
 
       <!-- The road -->
-      <section id="record" class="pp-sec" aria-labelledby="record-h" data-spy>
+      <section id="record" class="pp-sec" aria-labelledby="record-h">
         <h2 id="record-h" class="pp-h">{{ c.pathH }}</h2>
         <p class="pp-lede">{{ c.pathLede }}</p>
         <div ref="roadEl" class="pp-road-wrap" :class="{ 'is-live': live }">
@@ -137,7 +106,7 @@
       </section>
 
       <!-- The things built along it -->
-      <section id="work" class="pp-sec" aria-labelledby="work-h" data-spy>
+      <section id="work" class="pp-sec" aria-labelledby="work-h">
         <h2 id="work-h" class="pp-h">{{ c.workH }}</h2>
         <p class="pp-lede">{{ c.workLede }}</p>
         <ul class="pp-works">
@@ -178,7 +147,7 @@
     the walk began at the desk in daylight and ends there with the lamp on,
     the note stuck on the desk top. It is the same still the room opens on.
   -->
-  <section id="contact" class="pp-end" aria-labelledby="contact-h" data-spy>
+  <section id="contact" class="pp-end" aria-labelledby="contact-h">
     <h2 id="contact-h" class="pp-h pp-end-h">{{ c.contactH }}</h2>
     <div class="pp-end-scene">
       <img class="pp-end-desk" :src="asset('/desk/poster-night.webp')" :srcset="srcset('/desk/poster-night.webp')" sizes="100vw" alt="" width="1600" height="1000" loading="lazy" decoding="async" />
@@ -190,6 +159,19 @@
             >{{ site.contact.email.split('@')[0] }}<wbr />@{{ site.contact.email.split('@')[1] }}</a
           >
         </p>
+        <ul class="pp-links">
+          <li v-for="l in links" :key="l.label">
+            <a :href="l.href" v-bind="l.attrs" :aria-label="l.label">
+              <component :is="l.icon" :size="20" :stroke-width="1.9" aria-hidden="true" />
+            </a>
+          </li>
+          <li>
+            <a :href="cvHref" class="pp-cv" download>
+              <FileText :size="18" :stroke-width="1.9" aria-hidden="true" />
+              {{ c.cv }}
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
   </section>
@@ -198,7 +180,7 @@
 
 <script setup>
 import { nextTick, resolveComponent } from 'vue'
-import { ArrowUpRight, FileText, Github, Instagram, Linkedin, Mail } from 'lucide-vue-next'
+import { ArrowUpRight, FileText, Github, Instagram, Linkedin } from 'lucide-vue-next'
 import DeskScene from '~/components/desk/DeskScene.vue'
 import deskProps from '~/components/pages/desk-props.json'
 
@@ -235,7 +217,6 @@ const c = computed(() =>
           { what: 'AI intern', where: 'ITRI ISTI' },
           { what: 'Master’s student, since Sep 2026', where: 'NCU Information Management' },
         ],
-        navLabel: 'Sections',
         cv: 'CV',
         aboutH: 'How I think',
         about: [
@@ -269,7 +250,6 @@ const c = computed(() =>
           { what: 'AI Intern', where: '工研院 產科國際所' },
           { what: '碩士班在學，2026.09 起', where: '中央大學 資訊管理學系' },
         ],
-        navLabel: '本頁段落',
         cv: '履歷 PDF',
         aboutH: '我怎麼想',
         about: [
@@ -288,22 +268,6 @@ const c = computed(() =>
         contactH: '聯絡',
         contactLede: `${site.open.join('、')}。寫信最快。`,
       }
-)
-
-const sections = computed(() =>
-  isEn.value
-    ? [
-        { id: 'about', label: 'How I think' },
-        { id: 'record', label: 'The road' },
-        { id: 'work', label: 'Things I built' },
-        { id: 'contact', label: 'Contact' },
-      ]
-    : [
-        { id: 'about', label: '我怎麼想' },
-        { id: 'record', label: '我走的路' },
-        { id: 'work', label: '做出來的東西' },
-        { id: 'contact', label: '聯絡' },
-      ]
 )
 
 const links = [
@@ -325,7 +289,6 @@ const links = [
     icon: Instagram,
     attrs: linkAttrs(site.contact.instagram, { me: true }),
   },
-  { label: 'Email', href: `mailto:${site.contact.email}`, icon: Mail, attrs: {} },
 ]
 
 const SHOW = 5
@@ -470,47 +433,19 @@ const workList = computed(() => {
   ]
 })
 
-/* Which section is being read: the left column's nav follows it. */
-const active = ref('about')
-let io = null
 let ro = null
-let fit = null
-const meIn = ref(null)
 
 /* The road walk. A line is drawn down the road as it is scrolled, a dot
-   walks at its tip, and each stop lights up as the dot reaches it; the
-   left column's nav shows the year the dot is in. Only when motion is
-   welcome; otherwise every stop is simply lit. */
+   walks at its tip, and each stop lights up as the dot reaches it. Only
+   when motion is welcome; otherwise every stop is simply lit. */
 const roadEl = ref(null)
 const trailEl = ref(null)
 const walkerEl = ref(null)
 const live = ref(false)
 const reached = ref(-1)
-const year = computed(() =>
-  live.value && reached.value >= 0 ? road.value[reached.value]?.year : ''
-)
 let walk = null
 onMounted(() => {
-  // The left column stays put while the right one scrolls. When it is taller
-  // than the window it scrolls with the page first, then holds at its bottom
-  // edge, so nothing in it is ever out of reach.
   if (!matchMedia('(prefers-reduced-motion: reduce)').matches) startWalk()
-
-  fit = new ResizeObserver(([e]) =>
-    meIn.value?.style.setProperty('--me-h', `${Math.ceil(e.target.offsetHeight)}px`)
-  )
-  if (meIn.value) fit.observe(meIn.value)
-
-  const els = [...document.querySelectorAll('[data-spy]')]
-  io = new IntersectionObserver(
-    (entries) => {
-      for (const e of entries) if (e.isIntersecting) active.value = bottom() ? 'contact' : e.target.id
-    },
-    { rootMargin: '-35% 0px -60% 0px' }
-  )
-  els.forEach((el) => io.observe(el))
-  // Contact is short and never reaches the reading line; at the very bottom it is the one being read.
-  addEventListener('scroll', atEnd, { passive: true })
 
   // Each block settles in once, as it is reached. Skipped under reduced motion.
   if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -533,33 +468,23 @@ onMounted(() => {
     })
   }
 })
-// Kept alive when the reader leaves (app.vue): the year walk and the scroll
-// listener stop while away and start again on the way back.
+// Kept alive when the reader leaves (app.vue): the road walk stops while
+// away and starts again on the way back.
 let away = false
 onDeactivated(() => {
   away = true
   walk?.revert()
   walk = null
-  removeEventListener('scroll', atEnd)
 })
 onActivated(() => {
   if (!away) return
   away = false
-  addEventListener('scroll', atEnd, { passive: true })
   if (!matchMedia('(prefers-reduced-motion: reduce)').matches) startWalk()
 })
 onBeforeUnmount(() => {
-  io?.disconnect()
   ro?.disconnect()
-  fit?.disconnect()
   walk?.revert()
-  removeEventListener('scroll', atEnd)
 })
-
-const bottom = () => innerHeight + scrollY >= document.documentElement.scrollHeight - 4
-function atEnd() {
-  if (bottom()) active.value = 'contact'
-}
 
 async function startWalk() {
   const [{ gsap }, { ScrollTrigger }] = await Promise.all([
@@ -617,14 +542,15 @@ async function startWalk() {
   overflow-x: clip; /* props hang off the window's edge; clip, not hidden, keeps the column sticky */
 }
 
-/* Things left on the desk, in the right margin only. The room's sun throws
-   every shadow up and to the right, so each thing sits just past the column
-   and its shadow runs off the window: nothing ever darkens the text. */
+/* Things left on the desk, in the margins either side of the column. The
+   room's sun throws every shadow up and to the right: on the right each
+   thing's shadow runs off the window, and the one on the left sits far
+   enough out that its shadow ends before the text. */
 .pp-props {
   display: none;
 }
 
-@media (min-width: 1440px) {
+@media (min-width: 1280px) {
   .pp-props {
     display: block;
     position: absolute;
@@ -633,12 +559,12 @@ async function startWalk() {
   }
 
   /* Each keeps its size relative to the others, but all of them shrink with
-     the margin: at 1440 px the margin is 130 px and the mug at full size ran
-     off the window's edge, cut in half. The width is set inline from the
+     the margin: when the page was two columns the margin at 1440 px was 130 px
+     and the mug at full size ran off the window, cut in half. The width is set inline from the
      picture's own (desk-props.json). */
   .pp-prop {
     position: absolute;
-    left: calc(50% + var(--page-w) / 2 - 1.25rem);
+    left: calc(50% + var(--col-w) / 2 + 1rem);
     height: auto;
   }
 
@@ -647,8 +573,10 @@ async function startWalk() {
   }
 
   .pp-prop--kuaikuai {
-    top: 47%;
-    rotate: 6deg;
+    left: auto;
+    right: calc(50% + var(--col-w) / 2 + 2.5rem);
+    top: 44%;
+    rotate: -8deg;
   }
 
   .pp-prop--plant {
@@ -778,6 +706,7 @@ async function startWalk() {
 
 .pp-now li {
   display: grid;
+  align-content: start;
 }
 
 .pp-now-what {
@@ -787,10 +716,6 @@ async function startWalk() {
 
 .pp-now-where {
   color: var(--ink-3);
-}
-
-.pp-nav {
-  display: none;
 }
 
 .pp-links {
@@ -1429,7 +1354,10 @@ async function startWalk() {
   container-type: inline-size;
   width: min(36rem, calc(100% - 2 * var(--page-gut)));
   margin: 0;
-  transform: translate(-14%, -50%) rotate(-2.2deg);
+  /* translate and rotate, not transform: the entrance (.reveal) animates
+     transform and would otherwise wipe the placement when it ends. */
+  translate: -14% -50%;
+  rotate: -2.2deg;
 }
 
 @media (max-width: 640px) {
@@ -1446,7 +1374,8 @@ async function startWalk() {
     top: auto;
     margin: -3.5rem var(--page-gut) 0;
     width: auto;
-    transform: rotate(-1.2deg);
+    translate: none;
+    rotate: -1.2deg;
   }
 }
 
@@ -1462,7 +1391,7 @@ async function startWalk() {
   box-shadow:
     0 1px 1px rgb(64 44 24 / 0.1),
     0 22px 30px -18px rgb(64 44 24 / 0.45);
-  transform: rotate(0.6deg);
+  rotate: 0.6deg;
 }
 
 .pp-note::before {
@@ -1485,6 +1414,20 @@ async function startWalk() {
 .pp-note .pp-mail a {
   color: #1e1b18;
   text-decoration-color: #c44a24;
+}
+
+/* Everywhere else to find me, on the same note: the paper is the same
+   yellow in both themes, so the ink is too. */
+.pp-note .pp-links {
+  margin-top: var(--sp-5);
+}
+
+.pp-note .pp-links a {
+  color: #4b453f;
+}
+
+.pp-note .pp-links a:hover {
+  color: #a83c1c;
 }
 
 /* The badge on its lanyard: the name and role on a card with a slot. */
@@ -1604,24 +1547,30 @@ async function startWalk() {
     transform 600ms var(--ease-entrance);
 }
 
-/* ---- Two columns ------------------------------------------------- */
+/* ---- One column ------------------------------------------------- */
 
+/* On a wide screen the page is one column down the middle of the desk, the
+   way a sheet is read: who I am and what I am doing now laid side by side at
+   the top, then the rest. The desk shows in both margins. */
 @media (min-width: 1024px) {
+  .pp-desk {
+    --col-w: 46rem;
+  }
+
   .pp {
-    display: grid;
-    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-    gap: var(--sp-9);
+    max-width: calc(var(--col-w) + 2 * var(--gut));
   }
 
   .pp-me-in {
-    position: sticky;
-    top: min(var(--header-h), 100svh - var(--me-h, 0px));
-    display: flex;
-    flex-direction: column;
-    /* Less the footer's height: at the end of the page the footer lifts the
-       grid, and a full-height column would be pushed up under the header. */
-    min-height: calc(100svh - var(--header-h) - 6rem);
-    padding-block: var(--sp-7) var(--sp-6);
+    display: grid;
+    grid-template-columns: 20rem minmax(0, 1fr);
+    gap: var(--sp-6);
+    align-items: center;
+    padding-block: var(--sp-8) var(--sp-6);
+  }
+
+  .pp-badge {
+    transform: rotate(-1.2deg);
   }
 
   .pp-face {
@@ -1629,11 +1578,15 @@ async function startWalk() {
     height: 4.5rem;
   }
 
-  /* Two by two, so the whole column fits a laptop screen under the header
-     and the face is never tucked behind it. */
+  .pp-now {
+    margin-top: 0;
+  }
+
+  /* Each column as wide as its longest title, so none of them wraps. */
   .pp-now ul {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--sp-3) var(--sp-5);
+    grid-template-columns: repeat(2, auto);
+    justify-content: start;
+    gap: var(--sp-3) var(--sp-6);
   }
 
   .pp-thesis {
@@ -1643,77 +1596,6 @@ async function startWalk() {
 
   .pp-thesis:lang(en) {
     font-size: clamp(1.375rem, 0.85rem + 1vw, 2rem);
-  }
-
-  .pp-nav {
-    display: grid;
-    gap: var(--sp-1);
-    margin-top: var(--sp-6);
-  }
-
-  .pp-nav a {
-    display: flex;
-    align-items: center;
-    gap: var(--sp-3);
-    width: fit-content;
-    padding-block: var(--sp-1);
-    font-size: var(--step--1);
-    font-weight: 700;
-    color: var(--ink-3);
-    text-decoration: none;
-    transition: color 200ms var(--ease-entrance);
-  }
-
-  .pp-nav-line {
-    display: block;
-    width: 2rem;
-    height: 1px;
-    background: currentColor;
-    transition: width 250ms var(--ease-entrance);
-  }
-
-  .pp-nav a:hover,
-  .pp-nav a.is-on {
-    color: var(--ink);
-  }
-
-  .pp-nav-year {
-    display: inline-block;
-    overflow: hidden;
-    vertical-align: bottom;
-    color: var(--pop-ink);
-    font-weight: 700;
-  }
-
-  .pp-nav-year > span {
-    display: inline-block;
-  }
-
-  .pp-roll-enter-active,
-  .pp-roll-leave-active {
-    transition:
-      transform 260ms var(--ease-entrance),
-      opacity 260ms var(--ease-entrance);
-  }
-
-  .pp-roll-enter-from {
-    transform: translateY(100%);
-    opacity: 0;
-  }
-
-  .pp-roll-leave-to {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
-
-  .pp-nav a:hover .pp-nav-line,
-  .pp-nav a.is-on .pp-nav-line {
-    width: 4rem;
-  }
-
-  .pp-links {
-    margin-top: auto;
-    padding-top: var(--sp-6);
   }
 
   .pp-flow {
@@ -1731,8 +1613,7 @@ async function startWalk() {
 
 @media (prefers-reduced-motion: reduce) {
   .pp-print,
-  .pp-arrow,
-  .pp-nav-line {
+  .pp-arrow {
     transition: none;
   }
 
