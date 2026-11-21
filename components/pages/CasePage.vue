@@ -303,11 +303,17 @@ function goBack() {
   color: var(--ink-2);
 }
 
+/* The print from the homepage's desk, now picked up: same paper border,
+   held almost straight. */
 .case-cover {
   overflow: hidden;
-  border-radius: var(--r-3);
-  background: var(--surface-2);
-  box-shadow: var(--shadow-2);
+  padding: 14px 14px 16px;
+  border-radius: 3px;
+  background: var(--print);
+  box-shadow:
+    0 1px 1px rgb(var(--shadow-rgb) / 0.12),
+    0 24px 36px -18px rgb(var(--shadow-rgb) / 0.45);
+  rotate: 0.6deg;
 }
 
 .case-cover img {
@@ -318,8 +324,10 @@ function goBack() {
 
 .case-cover--card {
   overflow: visible;
+  padding: 0;
   background: none;
   box-shadow: none;
+  rotate: none;
 }
 
 .pill {

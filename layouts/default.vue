@@ -13,7 +13,7 @@
     <SiteHeader />
 
     <!-- tabindex -1 so the skip link moves focus here, not just the view. -->
-    <main id="main" class="flex-1" tabindex="-1">
+    <main id="main" class="flex-1" :class="{ 'on-desk': onDesk }" :style="onDesk ? grain : null" tabindex="-1">
       <slot />
     </main>
 
@@ -26,11 +26,32 @@ import SiteHeader from '~/components/site/SiteHeader.vue'
 import SiteFooter from '~/components/site/SiteFooter.vue'
 
 const { locale } = useLocale()
+
+// The work pages are laid on the same desk as the homepage's lower half:
+// its wood grain behind them, so clicking a print does not change rooms.
+// (The homepage draws its own, faded in under the 3D scene.)
+const router = useRouter()
+const onDesk = computed(() => /^(\/en)?\/(portfolio|work)\//.test(router.currentRoute.value.path))
+const grain = { '--grain-day': `url(${asset('/images/desk-grain-day.webp')})`, '--grain-night': `url(${asset('/images/desk-grain-night.webp')})` }
 </script>
 
 <style>
 #main:focus {
   outline: none;
+}
+
+.on-desk {
+  background: var(--grain-day) center top / max(100%, 1024px) auto repeat-y;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .on-desk {
+    background-image: var(--grain-night);
+  }
+}
+
+:root[data-theme='dark'] .on-desk {
+  background-image: var(--grain-night);
 }
 
 .sr-only {

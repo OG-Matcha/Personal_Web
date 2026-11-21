@@ -1189,7 +1189,7 @@ async function startWalk() {
   display: block;
   padding: 12px 12px 14px;
   border-radius: 3px;
-  background: #fbfaf7;
+  background: var(--print);
   box-shadow:
     0 1px 1px rgb(var(--shadow-rgb) / 0.12),
     0 18px 28px -16px rgb(var(--shadow-rgb) / 0.45);
@@ -1211,17 +1211,6 @@ async function startWalk() {
   box-shadow:
     0 1px 1px rgb(var(--shadow-rgb) / 0.12),
     0 30px 40px -20px rgb(var(--shadow-rgb) / 0.55);
-}
-
-/* At night the paper is lamp-lit, not glowing white. */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) .pp-print {
-    background: #dcd6cb;
-  }
-}
-
-:root[data-theme='dark'] .pp-print {
-  background: #dcd6cb;
 }
 
 .pp-work-link:focus-visible {
@@ -1323,7 +1312,8 @@ async function startWalk() {
 }
 
 .pp-end-h {
-  max-width: var(--page-w);
+  /* On the column's left edge, like every heading above it. */
+  max-width: calc(var(--col-w, var(--page-w)) + 2 * var(--page-gut));
   margin-inline: auto;
   padding-inline: var(--page-gut);
 }

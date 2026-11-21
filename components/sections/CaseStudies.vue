@@ -91,36 +91,45 @@ const items = computed(() =>
   }
 }
 
+/* The same prints as on the homepage's desk: photo paper with a white
+   border, laid down a little crooked; picked up and straightened on hover. */
 .cs-shot {
   position: relative;
   display: block;
   aspect-ratio: 16 / 10;
   overflow: hidden;
-  border-radius: var(--r-3);
-  background: var(--surface-2);
-  box-shadow: var(--shadow-2);
+  padding: 12px 12px 14px;
+  border-radius: 3px;
+  background: var(--print);
+  box-shadow:
+    0 1px 1px rgb(var(--shadow-rgb) / 0.12),
+    0 18px 28px -16px rgb(var(--shadow-rgb) / 0.45);
+  rotate: -0.8deg;
   transition:
+    rotate var(--dur-3) var(--ease-entrance),
     transform var(--dur-3) var(--ease-entrance),
     box-shadow var(--dur-3) var(--ease-entrance);
 }
 
-a.cs-shot:hover,
-a.cs-shot:focus-visible {
-  transform: translateY(-4px) rotate(-0.4deg);
-  box-shadow:
-    0 4px 8px rgb(var(--shadow-rgb) / 0.06),
-    0 36px 64px -20px rgb(var(--shadow-rgb) / 0.34);
+.cs-item--flip .cs-shot {
+  rotate: 0.9deg;
 }
 
-.cs-item--flip a.cs-shot:hover,
-.cs-item--flip a.cs-shot:focus-visible {
-  transform: translateY(-4px) rotate(0.4deg);
+a.cs-shot:hover,
+a.cs-shot:focus-visible {
+  rotate: 0deg;
+  transform: translateY(-6px);
+  box-shadow:
+    0 2px 4px rgb(var(--shadow-rgb) / 0.08),
+    0 32px 44px -18px rgb(var(--shadow-rgb) / 0.4);
 }
 
 .cs-shot--card {
   overflow: visible;
+  padding: 0;
   background: none;
   box-shadow: none;
+  rotate: none;
 }
 
 .cs-title {

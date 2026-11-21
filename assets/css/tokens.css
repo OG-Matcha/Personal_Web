@@ -18,6 +18,7 @@
 
   --bg: #efe9e0; /* studio wall, day */
   --surface: #fbf8f3; /* a card propped in front of the plinth */
+  --print: #fbfaf7; /* photo paper: the white border round a screenshot */
   --surface-2: #f5f0e8;
   --ink: #1e1b18; /* 16.2:1 on --surface */
   --ink-2: #4b453f; /* 8.9:1 */
@@ -109,6 +110,7 @@
     --on-pop: #1a0f0a;
     --select: #6c5bd4;
     --shadow-rgb: 0 0 0;
+    --print: #dcd6cb; /* lamp-lit, not glowing white */
   }
 }
 
@@ -127,6 +129,7 @@
   --on-pop: #1a0f0a;
   --select: #6c5bd4;
   --shadow-rgb: 0 0 0;
+  --print: #dcd6cb;
 }
 
 /* ---------------------------------------------------------------------------
