@@ -1452,13 +1452,23 @@ async function start(small = false) {
   position: relative;
 }
 
+/* The fade at the still's foot. Long enough that the name starts on a light
+   floor, and eased: a straight ramp stops abruptly at the bottom and the eye
+   reads that stop as a line across the page. */
 .dk-poster::after {
   content: '';
   position: absolute;
-  inset: auto 0 0;
-  height: 5rem;
-  background: linear-gradient(transparent, var(--bg));
+  /* 2px past the foot: the still's height is rarely a whole device pixel,
+     and its last row showed through as a thin line under the fade. */
+  inset: auto 0 -2px;
+  height: calc(var(--dk-fade) + 2px);
+  background: linear-gradient(var(--dk-fade-bg));
   pointer-events: none;
+}
+
+.dk {
+  --dk-fade: 8rem;
+  --dk-fade-bg: transparent, color-mix(in srgb, var(--bg) 30%, transparent) 30%, color-mix(in srgb, var(--bg) 66%, transparent) 55%, color-mix(in srgb, var(--bg) 90%, transparent) 78%, var(--bg) 96%;
 }
 
 .dk-caps .dk-title > span {
@@ -1493,7 +1503,8 @@ async function start(small = false) {
   opacity: 0;
   touch-action: pan-y;
   -webkit-tap-highlight-color: transparent;
-  mask-image: linear-gradient(#000 calc(100% - 5rem), transparent);
+  /* The same eased fade as the still's (.dk-poster::after), as a mask. */
+  mask-image: linear-gradient(#000 calc(100% - 8rem), rgb(0 0 0 / 0.7) calc(100% - 5.6rem), rgb(0 0 0 / 0.34) calc(100% - 3.6rem), rgb(0 0 0 / 0.1) calc(100% - 1.8rem), transparent calc(100% - 0.3rem));
   transition: opacity 900ms var(--ease-entrance);
 }
 

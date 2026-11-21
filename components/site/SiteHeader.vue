@@ -10,7 +10,7 @@
       </NuxtLink>
 
       <nav :aria-label="t.navLabel" class="scroll-x hd-nav">
-        <NuxtLink v-for="l in t.links" :key="l.href" :to="l.href" class="hd-link" :aria-label="l.short ? l.label : undefined" v-bind="l.href.includes('#') ? { 'aria-current': false } : {}">
+        <NuxtLink v-for="l in t.links" :key="l.href" :to="l.href" class="hd-link" :aria-label="l.short ? l.label : undefined" :class="{ 'is-here': l.section?.test(route.path) }" v-bind="l.href.includes('#') ? { 'aria-current': l.section?.test(route.path) ? 'page' : false } : {}">
           <template v-if="l.short"><span class="hd-link-full">{{ l.label }}</span><span class="hd-link-short" aria-hidden="true">{{ l.short }}</span></template>
           <template v-else>{{ l.label }}</template>
         </NuxtLink>
@@ -34,6 +34,7 @@ import ThemeToggle from '~/components/site/ThemeToggle.vue'
 
 const { locale, altPath } = useLocale()
 const { site } = useContent()
+const route = useRoute()
 
 const t = computed(() =>
   locale.value === 'en'
@@ -43,7 +44,7 @@ const t = computed(() =>
         short: 'J. Huang',
         navLabel: 'Main',
         links: [
-          { href: '/en/#work', label: 'Work' },
+          { href: '/en/#work', label: 'Work', section: /^\/en\/(portfolio|work)\// },
           { href: '/en/#record', label: 'Record' },
           { href: '/en/resume/', label: 'Résumé', short: 'CV' },
         ],
@@ -57,7 +58,7 @@ const t = computed(() =>
         name: '黃鉅燊',
         navLabel: '主要導覽',
         links: [
-          { href: '/#work', label: '作品' },
+          { href: '/#work', label: '作品', section: /^\/(portfolio|work)\// },
           { href: '/#record', label: '年表' },
           { href: '/resume/', label: '履歷' },
         ],
@@ -161,7 +162,9 @@ const t = computed(() =>
 
 .hd-link:hover,
 .hd-lang:hover,
-.hd-link.router-link-exact-active:not([href*='#']) {
+.hd-link.router-link-exact-active:not([href*='#']),
+/* 作品 links to the homepage's list; on the portfolio and the case pages it is where you are. */
+.hd-link.is-here {
   color: var(--ink);
   text-decoration: underline;
   text-decoration-color: var(--pop-ink);
