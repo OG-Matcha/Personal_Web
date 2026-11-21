@@ -784,9 +784,12 @@ async function startWalk() {
 
 .pp-h {
   font-family: var(--font-display);
-  font-size: var(--step-3);
+  /* Section heads at poster size, so the page keeps the opening's voice
+     after the desk instead of dropping to body-copy scale. */
+  font-size: var(--step-4);
   font-weight: 900;
-  line-height: 1.15;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
 }
 
 .pp-lede {
