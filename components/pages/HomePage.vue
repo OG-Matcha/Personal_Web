@@ -75,15 +75,20 @@
               <div class="pp-stop-body">
                 <h3 class="pp-q">{{ b.title }}</h3>
                 <p v-if="b.lede" class="pp-stop-text">{{ b.lede }}</p>
-                <ul class="pp-events">
-                  <li v-for="e in b.shown" :key="e.date + e.title">
-                    <time class="figures" :datetime="e.date">{{ formatDate(e.date) }}</time>
-                    <span>{{ e.title }}</span>
-                  </li>
-                </ul>
-                <p v-if="b.more" class="pp-more">
-                  <NuxtLink :to="`${pre}/resume/`">{{ c.more(b.more) }}</NuxtLink>
-                </p>
+                <!-- The year's events fold away: the road reads as questions and
+                     answers, and the record is one tap away, not in the way. -->
+                <details class="pp-ev" @toggle="refreshWalk">
+                  <summary class="pp-ev-sum">{{ c.events(b.shown.length + b.more) }}</summary>
+                  <ul class="pp-events">
+                    <li v-for="e in b.shown" :key="e.date + e.title">
+                      <time class="figures" :datetime="e.date">{{ formatDate(e.date) }}</time>
+                      <span>{{ e.title }}</span>
+                    </li>
+                  </ul>
+                  <p v-if="b.more" class="pp-more">
+                    <NuxtLink :to="`${pre}/resume/`">{{ c.more(b.more) }}</NuxtLink>
+                  </p>
+                </details>
               </div>
               <span
                 class="pp-dot"
@@ -110,13 +115,13 @@
         <h2 id="work-h" class="pp-h">{{ c.workH }}</h2>
         <p class="pp-lede">{{ c.workLede }}</p>
         <ul class="pp-works">
-          <li v-for="w in workList" :key="w.title" class="pp-work reveal">
+          <li v-for="(w, i) in workList" :key="w.title" class="pp-work reveal" :class="{ 'pp-work--small': i >= BIG }">
             <component
               :is="w.internal ? NuxtLinkC : 'a'"
               v-bind="w.internal ? { to: w.href } : { href: w.href, ...linkAttrs(w.href) }"
               class="pp-work-link"
             >
-              <span class="pp-print"><SiteShot class="pp-work-shot" fit="cover" sizes="(min-width: 1024px) 50vw, 100vw" :src="w.img" :width="w.w" :height="w.h" /></span>
+              <span class="pp-print"><SiteShot class="pp-work-shot" fit="cover" sizes="(min-width: 1024px) 46rem, 100vw" :src="w.img" :width="w.w" :height="w.h" /></span>
               <div class="pp-work-body">
                 <p class="pp-work-meta">
                   <span>{{ w.when }}</span>
@@ -127,8 +132,8 @@
                   <ArrowUpRight :size="18" :stroke-width="2" class="pp-arrow" aria-hidden="true" />
                 </h3>
                 <p class="pp-work-role">{{ w.role }}</p>
-                <p class="pp-work-line">{{ w.line }}</p>
-                <ul v-if="w.tags" class="pp-tags">
+                <p v-if="i < BIG" class="pp-work-line">{{ w.line }}</p>
+                <ul v-if="w.tags && i < BIG" class="pp-tags">
                   <li v-for="t in w.tags" :key="t">{{ t }}</li>
                 </ul>
               </div>
@@ -228,6 +233,7 @@ const c = computed(() =>
         pathH: 'The road so far',
         pathLede: 'Five questions I had to answer, in order, each with what actually happened.',
         more: (n) => `${n} more in the full record`,
+        events: (n) => `${n} things that year`,
         resume: 'Full record and skills',
         workH: 'Things I built',
         workLede: 'What each one is, the part that was mine, and where it stands now.',
@@ -261,6 +267,7 @@ const c = computed(() =>
         pathH: '我走的路',
         pathLede: '五個我得回答的問題，依序排下來，每一個後面接著當時實際發生的事。',
         more: (n) => `還有 ${n} 筆，見完整年表`,
+        events: (n) => `這段路上的 ${n} 件事`,
         resume: '完整年表與能力',
         workH: '做出來的東西',
         workLede: '每一件是什麼、哪一部分是我做的，以及它現在的狀態。',
@@ -444,6 +451,10 @@ const walkerEl = ref(null)
 const live = ref(false)
 const reached = ref(-1)
 let walk = null
+// Opening or closing a year's events moves every dot below it.
+let refreshWalk = () => {}
+// The first two works as large prints; the other four small, two by two.
+const BIG = 2
 onMounted(() => {
   if (!matchMedia('(prefers-reduced-motion: reduce)').matches) startWalk()
 
@@ -492,6 +503,7 @@ async function startWalk() {
     import('gsap/ScrollTrigger'),
   ])
   gsap.registerPlugin(ScrollTrigger)
+  refreshWalk = () => ScrollTrigger.refresh()
   const el = roadEl.value
   if (!el) return
   live.value = true
@@ -970,6 +982,49 @@ async function startWalk() {
   color: var(--ink-2);
 }
 
+.pp-ev-sum {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-top: var(--sp-3);
+  padding-block: 10px;
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--pop-ink);
+  cursor: pointer;
+  list-style: none;
+}
+
+.pp-ev-sum::-webkit-details-marker {
+  display: none;
+}
+
+.pp-ev-sum::after {
+  content: '';
+  width: 0.45em;
+  height: 0.45em;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  rotate: 45deg;
+  translate: 0 -0.15em;
+  transition: rotate 200ms var(--ease-entrance), translate 200ms var(--ease-entrance);
+}
+
+.pp-ev[open] > .pp-ev-sum::after {
+  rotate: 225deg;
+  translate: 0 0.1em;
+}
+
+.pp-ev-sum:focus-visible {
+  outline: 2px solid var(--pop);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.pp-ev .pp-events {
+  margin-top: var(--sp-2);
+}
+
 /* Each stop's events on an index card: one ruled line per row (a wrapped
    title gets a second line, still on the rules), the red head line, and the
    cards tipped a little either way, as if dealt onto the desk. */
@@ -1156,9 +1211,50 @@ async function startWalk() {
   display: grid;
   /* Far more air between works than inside one, so each picture reads as
      belonging to the title under it, not to the one above. */
-  gap: var(--sp-7);
+  gap: var(--sp-7) var(--sp-5);
   margin-top: var(--sp-6);
   list-style: none;
+}
+
+/* After the first two, the rest are small prints two to a row, phones
+   too: the same things, less of the scroll. */
+.pp-works {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.pp-work:not(.pp-work--small) {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 559px) {
+  .pp-works {
+    column-gap: var(--sp-3);
+  }
+
+  .pp-work--small .pp-print {
+    padding: 5px 5px 7px;
+  }
+
+  .pp-work--small .pp-work-link {
+    padding: 0;
+  }
+
+  .pp-work--small .pp-work-role {
+    display: none;
+  }
+}
+
+.pp-work--small .pp-print {
+  padding: 8px 8px 10px;
+}
+
+.pp-work--small .pp-work-link {
+  gap: var(--sp-3);
+  padding: var(--sp-2);
+}
+
+.pp-work--small .pp-work-title {
+  font-size: var(--step-0);
 }
 
 /* A work's picture uncovers upward the first time it is reached. */
