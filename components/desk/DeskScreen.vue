@@ -39,7 +39,7 @@
         </button>
       </div>
 
-      <div ref="device" class="ds-device" :class="`ds-device--${shown.id}`" :style="{ width: `${shown.w}px`, height: `${shown.h}px`, backgroundImage: `url(/desk/model/${shown.id}.webp)` }">
+      <div ref="device" class="ds-device" :class="`ds-device--${shown.id}`" :style="{ width: `${shown.w}px`, height: `${shown.h}px`, backgroundImage: `url(${asset(`/desk/model/${shown.id}.webp`)})` }">
         <div class="ds-scrim" aria-hidden="true" />
         <div class="ds-sheet">
           <span v-if="shown.id === 'phone'" class="ds-grab" aria-hidden="true" />

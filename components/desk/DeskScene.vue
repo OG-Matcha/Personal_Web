@@ -25,10 +25,10 @@
       <div class="dk-poster" aria-hidden="true">
         <picture class="dk-poster-auto">
           <source media="(prefers-color-scheme: dark)" :srcset="srcset('/desk/poster-night.webp')" sizes="100vw" />
-          <img src="/desk/poster-day.webp" :srcset="srcset('/desk/poster-day.webp')" sizes="100vw" alt="" width="1600" height="1000" fetchpriority="high" />
+          <img :src="asset('/desk/poster-day.webp')" :srcset="srcset('/desk/poster-day.webp')" sizes="100vw" alt="" width="1600" height="1000" fetchpriority="high" />
         </picture>
-        <img class="dk-forced dk-forced-day" src="/desk/poster-day.webp" :srcset="srcset('/desk/poster-day.webp')" sizes="100vw" alt="" width="1600" height="1000" loading="lazy" />
-        <img class="dk-forced dk-forced-night" src="/desk/poster-night.webp" :srcset="srcset('/desk/poster-night.webp')" sizes="100vw" alt="" width="1600" height="1000" loading="lazy" />
+        <img class="dk-forced dk-forced-day" :src="asset('/desk/poster-day.webp')" :srcset="srcset('/desk/poster-day.webp')" sizes="100vw" alt="" width="1600" height="1000" loading="lazy" />
+        <img class="dk-forced dk-forced-night" :src="asset('/desk/poster-night.webp')" :srcset="srcset('/desk/poster-night.webp')" sizes="100vw" alt="" width="1600" height="1000" loading="lazy" />
       </div>
       <!--
         Until the 3D is ready (several seconds on a cold load), scrolling
@@ -38,8 +38,8 @@
       <div v-if="stillsOn" class="dk-stills" aria-hidden="true">
         <template v-for="(s, i) in stops" :key="s.id">
           <div v-if="i > 0 && on === i" class="dk-still">
-            <img class="dk-poster-day" :src="`/desk/stops/${s.id}-day.webp`" alt="" width="1200" height="800" decoding="async" />
-            <img class="dk-poster-night" :src="`/desk/stops/${s.id}-night.webp`" alt="" width="1200" height="800" decoding="async" />
+            <img class="dk-poster-day" :src="asset(`/desk/stops/${s.id}-day.webp`)" alt="" width="1200" height="800" decoding="async" />
+            <img class="dk-poster-night" :src="asset(`/desk/stops/${s.id}-night.webp`)" alt="" width="1200" height="800" decoding="async" />
           </div>
         </template>
       </div>
@@ -112,8 +112,8 @@
     <ol class="dk-tour" :aria-label="t.tour">
       <li v-for="(s, i) in stops.slice(1)" :key="s.id" class="dk-stop" :data-stop="s.id">
         <div class="dk-stop-pic">
-          <img class="dk-poster-day" :src="`/desk/stops/${s.id}-day.webp`" :srcset="srcset(`/desk/stops/${s.id}-day.webp`)" sizes="(min-width: 900px) 25vw, 82vw" alt="" width="1200" height="800" loading="lazy" decoding="async" />
-          <img class="dk-poster-night" :src="`/desk/stops/${s.id}-night.webp`" :srcset="srcset(`/desk/stops/${s.id}-night.webp`)" sizes="(min-width: 900px) 25vw, 82vw" alt="" width="1200" height="800" loading="lazy" decoding="async" />
+          <img class="dk-poster-day" :src="asset(`/desk/stops/${s.id}-day.webp`)" :srcset="srcset(`/desk/stops/${s.id}-day.webp`)" sizes="(min-width: 900px) 25vw, 82vw" alt="" width="1200" height="800" loading="lazy" decoding="async" />
+          <img class="dk-poster-night" :src="asset(`/desk/stops/${s.id}-night.webp`)" :srcset="srcset(`/desk/stops/${s.id}-night.webp`)" sizes="(min-width: 900px) 25vw, 82vw" alt="" width="1200" height="800" loading="lazy" decoding="async" />
           <span class="dk-stop-n figures" aria-hidden="true">{{ String(i + 1).padStart(2, '0') }}<span class="dk-stop-of"> / {{ String(stops.length - 1).padStart(2, '0') }}</span> · {{ s.thing }}</span>
         </div>
         <h2 class="dk-h">{{ s.title }}</h2>
@@ -134,7 +134,14 @@
 // The model's 5 kB of JSON ships inside the page code. As its own file it was
 // one more round trip before the buffer and pictures could even be requested,
 // and Cloudflare does not cache .gltf, so every visit went back to the origin.
-import deskGltf from '~/public/desk/model/desk.gltf?raw'
+import deskGltfRaw from '~/public/desk/model/desk.gltf?raw'
+// The model's buffer and textures, each with its content hash in the URL (utils/asset.ts).
+const deskGltf = (() => {
+  const j = JSON.parse(deskGltfRaw)
+  for (const x of [...(j.buffers ?? []), ...(j.images ?? [])])
+    if (x.uri && !x.uri.startsWith('data:')) x.uri = asset(`/desk/model/${x.uri}`).slice('/desk/model/'.length)
+  return JSON.stringify(j)
+})()
 
 // The CSS matrix3d that maps a w x h box (transform-origin at its top left) onto
 // the quadrilateral p = [top left, top right, bottom right, bottom left] in
@@ -489,7 +496,7 @@ function warm() {
   const mood = (th ? th === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches) ? 'night' : 'day'
   import('three').catch(() => {})
   // Read with fetch, the way tex() reads them, so the cached copy is the one it asks for.
-  for (const g of ['desk', 'room']) fetch(`/desk/${g}_${mood}.webp`).then((r) => r.blob()).catch(() => {})
+  for (const g of ['desk', 'room']) fetch(asset(`/desk/${g}_${mood}.webp`)).then((r) => r.blob()).catch(() => {})
   const j = JSON.parse(deskGltf)
   for (const x of [...(j.buffers ?? []), ...(j.images ?? [])])
     if (x.uri && !x.uri.startsWith('data:')) fetch(`/desk/model/${x.uri}`).then((r) => r.blob()).catch(() => {})
@@ -706,8 +713,8 @@ async function start(small = false) {
   const loader = new GLTFLoader()
   const [gltf, d1, r1] = await Promise.all([
     loader.parseAsync(deskGltf, '/desk/model/'),
-    tex(`/desk/desk_${first}.webp`, SIZE.desk),
-    tex(`/desk/room_${first}.webp`, SIZE.room),
+    tex(asset(`/desk/desk_${first}.webp`), SIZE.desk),
+    tex(asset(`/desk/room_${first}.webp`), SIZE.room),
   ])
   gltf.scene.traverse((o) => {
     if (!o.isMesh) return
@@ -729,7 +736,7 @@ async function start(small = false) {
   const loadOther = () => {
     if (otherAsked) return
     otherAsked = true
-    Promise.all([tex(`/desk/desk_${other}.webp`, SIZE.desk), tex(`/desk/room_${other}.webp`, SIZE.room)])
+    Promise.all([tex(asset(`/desk/desk_${other}.webp`), SIZE.desk), tex(asset(`/desk/room_${other}.webp`), SIZE.room)])
       .then(([d2, r2]) => {
         if (gone) return
         const k2 = other === 'day' ? 'uDay' : 'uNight'

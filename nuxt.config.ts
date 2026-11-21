@@ -1,7 +1,14 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import fs from 'node:fs'
+import path from 'node:path'
 import yaml from '@rollup/plugin-yaml'
+import { assetVersions, versionCss } from './scripts/asset-v.mjs'
 
 const SITE_URL = 'https://www.ogmatcha.com'
+// Content hashes of public/desk and public/fonts, so their URLs change only
+// when the file does and can be cached for a year (scripts/asset-v.mjs).
+const ASSET_V = assetVersions(process.cwd())
+const v = (u: string) => (ASSET_V[u] ? `${u}?v=${ASSET_V[u]}` : u)
 // Just the name. A tab strip full of open pages shows about 20 characters,
 // and a job title spends all of them saying something the page says better.
 const TITLE = '黃鉅燊 Ju-Shen Huang'
@@ -35,6 +42,8 @@ export default defineNuxtConfig({
   // YAML content is resolved at build time — no runtime dependency, no CMS.
   vite: {
     plugins: [yaml()],
+    // utils/asset.ts
+    define: { __ASSET_V__: JSON.stringify(ASSET_V) },
     build: {
       rollupOptions: {
         output: {
@@ -49,6 +58,15 @@ export default defineNuxtConfig({
   },
 
   hooks: {
+    // The font stylesheets are copied as they are; point their url()s at the
+    // versioned fonts in the copy that ships.
+    'nitro:build:public-assets': (nitro) => {
+      const dir = path.join(nitro.options.output.publicDir, 'fonts')
+      for (const f of fs.readdirSync(dir).filter((n) => n.endsWith('.css'))) {
+        const file = path.join(dir, f)
+        fs.writeFileSync(file, versionCss(fs.readFileSync(file, 'utf8'), ASSET_V))
+      }
+    },
     // The 3D layer is desktop-only and behind a dynamic import, but Nuxt still
     // emits a prefetch link for its chunk - which hands every phone a 137 kB
     // download it will never execute. Load it only when the film asks for it.
@@ -145,16 +163,16 @@ export default defineNuxtConfig({
         { rel: 'canonical', href: SITE_URL },
 
         // Latin faces are 0.8 kB gzipped — cheap enough to block on.
-        { rel: 'stylesheet', href: '/fonts/latin.css' },
+        { rel: 'stylesheet', href: v('/fonts/latin.css') },
         // The basic-Latin slice is needed on every page; fetch it with the
         // HTML instead of after the stylesheet, so headings don't reflow.
-        { rel: 'preload', as: 'font', type: 'font/woff2', href: '/fonts/archivo-var-002.woff2', crossorigin: '' },
+        { rel: 'preload', as: 'font', type: 'font/woff2', href: v('/fonts/archivo-var-002.woff2'), crossorigin: '' },
         // The CJK sheet: two subset faces: what the English pages show, and the rest
         // (scripts/subset-cjk.py). Loaded async so it never blocks first paint; the
         // fallback stack (PingFang TC / 微軟正黑) carries the text until it lands.
-        { rel: 'preload', as: 'style', href: '/fonts/cjk.css', onload: "this.rel='stylesheet'" },
+        { rel: 'preload', as: 'style', href: v('/fonts/cjk.css'), onload: "this.rel='stylesheet'" },
       ],
-      noscript: [{ innerHTML: '<link rel="stylesheet" href="/fonts/cjk.css">' }],
+      noscript: [{ innerHTML: `<link rel="stylesheet" href="${v('/fonts/cjk.css')}">` }],
       script: [
         {
           // Runs before first paint: applies the reader's stored day/night

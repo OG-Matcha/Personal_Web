@@ -1,4 +1,5 @@
 import table from './responsive-images.json'
+import { asset } from './asset'
 
 const sizes = table as Record<string, [number, string][]>
 
@@ -8,5 +9,5 @@ const sizes = table as Record<string, [number, string][]>
  */
 export function srcset(src?: string | null) {
   const set = src ? sizes[src] : undefined
-  return set ? set.map(([w, url]) => `${url} ${w}w`).join(', ') : undefined
+  return set ? set.map(([w, url]) => `${asset(url)} ${w}w`).join(', ') : undefined
 }
