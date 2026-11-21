@@ -9,7 +9,7 @@
       <div class="case-intro">
         <p class="case-eyebrow">{{ work.org || work.role }}</p>
         <h1 class="case-title">{{ work.title }}</h1>
-        <p v-if="work.tagline" class="case-tagline">{{ work.tagline }}</p>
+        <p v-if="work.tagline" class="case-tagline" :class="{ 'is-long': work.tagline.length > 16 && /[一-鿿]/.test(work.tagline) && !/[，、「]/.test(work.tagline) }">{{ work.tagline }}</p>
         <p class="case-summary">{{ work.summary }}</p>
         <p class="case-meta">
           <span class="pill">{{ work.status }}</span>
@@ -271,6 +271,12 @@ function goBack() {
   font-size: var(--step-2);
   font-weight: 700;
   line-height: 1.35;
+}
+
+/* A long line with no comma to break at would leave its last word alone on
+   a line of its own (Finctory's 「…金融科技新／創。」): one size down keeps it whole. */
+.case-tagline.is-long {
+  font-size: var(--step-1);
 }
 
 .case-summary {

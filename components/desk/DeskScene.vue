@@ -54,6 +54,24 @@
         {{ hover.label }}
       </p>
 
+      <!-- The stops as buttons: jump straight to one, by mouse or keyboard.
+           First in the tab order, before the captions, so a keyboard reaches
+           the way around before walking every stop's links. -->
+      <nav class="dk-dots" :class="{ 'is-gone': leaving }" :aria-label="t.stopsLabel">
+        <button
+          v-for="(s, i) in stops"
+          :key="s.id"
+          type="button"
+          :class="{ 'is-on': on === i }"
+          :aria-label="s.thing ?? t.name"
+          :aria-current="on === i ? 'step' : undefined"
+          @click="scrollToStop(i)"
+        >
+          <span class="dk-dot" />
+          <span class="dk-dot-label" aria-hidden="true">{{ s.thing ?? t.name }}</span>
+        </button>
+      </nav>
+
       <!--
         One caption per stop. In 3D only the current one shows, and none while
         the camera is between stops, so a card never names the wrong thing.
@@ -87,21 +105,6 @@
         </li>
       </ol>
 
-      <!-- The stops as buttons: jump straight to one, by mouse or keyboard. -->
-      <nav class="dk-dots" :class="{ 'is-gone': leaving }" :aria-label="t.stopsLabel">
-        <button
-          v-for="(s, i) in stops"
-          :key="s.id"
-          type="button"
-          :class="{ 'is-on': on === i }"
-          :aria-label="s.thing ?? t.name"
-          :aria-current="on === i ? 'step' : undefined"
-          @click="scrollToStop(i)"
-        >
-          <span class="dk-dot" />
-          <span class="dk-dot-label" aria-hidden="true">{{ s.thing ?? t.name }}</span>
-        </button>
-      </nav>
     </div>
 
     <!--
@@ -1650,6 +1653,23 @@ async function start(small = false) {
   box-shadow: var(--shadow-1);
 }
 
+/* With the small 3D desk running above, each card's picture would show the
+   same thing the camera is looking at: the cards keep only their words. */
+.dk.is-pocket.is-ready .dk-stop-pic {
+  overflow: visible;
+  margin-bottom: var(--sp-3);
+  box-shadow: none;
+}
+
+.dk.is-pocket.is-ready .dk-stop-pic img {
+  display: none;
+}
+
+.dk.is-pocket.is-ready .dk-stop-n {
+  position: static;
+  display: inline-block;
+}
+
 .dk-stop-pic img {
   width: 100%;
   height: auto;
@@ -1991,6 +2011,7 @@ async function start(small = false) {
 .dk-text {
   margin-top: var(--sp-3);
   color: var(--ink-2);
+  font-size: var(--step-0);
   line-height: 1.75;
 }
 
@@ -2063,8 +2084,9 @@ async function start(small = false) {
   position: relative;
   display: grid;
   place-items: center;
-  width: 24px;
-  height: 24px;
+  /* Bigger than the dot: an easier target for a finger or a shaky hand. */
+  width: 40px;
+  height: 32px;
   padding: 0;
   border: 0;
   border-radius: 50%;

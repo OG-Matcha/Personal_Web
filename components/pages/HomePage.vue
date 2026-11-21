@@ -78,7 +78,7 @@
                 <!-- The year's events fold away: the road reads as questions and
                      answers, and the record is one tap away, not in the way. -->
                 <details class="pp-ev" @toggle="refreshWalk">
-                  <summary class="pp-ev-sum">{{ c.events(b.shown.length + b.more) }}</summary>
+                  <summary class="pp-ev-sum"><span class="pp-ev-top">{{ b.top }}</span><span class="pp-ev-n">{{ c.events(b.shown.length + b.more - 1) }}</span></summary>
                   <ul class="pp-events">
                     <li v-for="e in b.shown" :key="e.date + e.title">
                       <time class="figures" :datetime="e.date">{{ formatDate(e.date) }}</time>
@@ -233,7 +233,7 @@ const c = computed(() =>
         pathH: 'The road so far',
         pathLede: 'Five questions I had to answer, in order, each with what actually happened.',
         more: (n) => `${n} more in the full record`,
-        events: (n) => `${n} things that year`,
+        events: (n) => `and ${n} more`,
         resume: 'Full record and skills',
         workH: 'Things I built',
         workLede: 'What each one is, the part that was mine, and where it stands now.',
@@ -267,7 +267,7 @@ const c = computed(() =>
         pathH: '我走的路',
         pathLede: '五個我得回答的問題，依序排下來，每一個後面接著當時實際發生的事。',
         more: (n) => `還有 ${n} 筆，見完整年表`,
-        events: (n) => `這段路上的 ${n} 件事`,
+        events: (n) => `和另外 ${n} 件事`,
         resume: '完整年表與能力',
         workH: '做出來的東西',
         workLede: '每一件是什麼、哪一部分是我做的，以及它現在的狀態。',
@@ -299,6 +299,7 @@ const links = [
 ]
 
 const SHOW = 5
+const TOP = /第一名|金獎|首獎|冠軍|1st|First Prize|Gold|Champion/i
 const road = computed(() =>
   beats.map((b) => {
     const tr = isEn.value ? (en.beats?.[b.id] ?? {}) : {}
@@ -316,6 +317,9 @@ const road = computed(() =>
       lede: tr.lede ?? b.lede,
       shown,
       more: events.length - shown.length,
+      // The one that stands for the stretch: its first prize if it has one,
+      // else the latest thing in it. Shown on the folded list as a teaser.
+      top: (events.find((e) => TOP.test(e.title)) ?? events[events.length - 1])?.title,
       year: b.from.slice(0, 4),
     }
   })
@@ -983,9 +987,10 @@ async function startWalk() {
 }
 
 .pp-ev-sum {
-  display: inline-flex;
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: var(--sp-2);
+  gap: var(--sp-1) var(--sp-2);
   margin-top: var(--sp-3);
   padding-block: 10px;
   font-size: var(--step--1);
@@ -993,6 +998,20 @@ async function startWalk() {
   color: var(--pop-ink);
   cursor: pointer;
   list-style: none;
+}
+
+/* The stretch's best moment, as a ticket stub: the rest fold under it. */
+.pp-ev-top {
+  padding: 2px 10px;
+  border-radius: 3px;
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.pp-ev-n {
+  white-space: nowrap;
 }
 
 .pp-ev-sum::-webkit-details-marker {
