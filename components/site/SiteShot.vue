@@ -6,7 +6,7 @@
     for the frame's own shape pass fit="cover" and fill it edge to edge.
   -->
   <span class="shot" :class="`shot--${fit}`" :style="focus ? { '--shot-focus': focus } : null">
-    <img class="shot-img" :src="src" :srcset="srcset(src)" :sizes="sizes" :alt="alt" :width="width" :height="height" :loading="eager ? 'eager' : 'lazy'" :fetchpriority="eager ? 'high' : undefined" decoding="async" />
+    <img class="shot-img" :src="asset(src)" :srcset="srcset(src)" :sizes="sizes" :alt="alt" :width="width" :height="height" :loading="eager ? 'eager' : 'lazy'" :fetchpriority="eager ? 'high' : undefined" decoding="async" />
   </span>
 </template>
 

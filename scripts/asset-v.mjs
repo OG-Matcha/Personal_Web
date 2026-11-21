@@ -1,5 +1,5 @@
 /**
- * Content versions for the files under public/desk and public/fonts.
+ * Content versions for the files under public/desk, fonts, images and media.
  *
  * GitHub Pages stamps every file with the deploy time, so after each deploy a
  * returning visitor re-downloaded all 3.8 MB even when nothing in them had
@@ -29,7 +29,7 @@ export function versionCss(css, table) {
 export function assetVersions(root) {
   const pub = path.join(root, 'public')
   const table = {}
-  for (const dir of ['desk', 'fonts']) {
+  for (const dir of ['desk', 'fonts', 'images', 'media']) {
     for (const f of walk(path.join(pub, dir))) {
       if (f.endsWith('.css')) continue
       table['/' + path.relative(pub, f).split(path.sep).join('/')] = hash(fs.readFileSync(f))

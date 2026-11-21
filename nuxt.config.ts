@@ -5,7 +5,7 @@ import yaml from '@rollup/plugin-yaml'
 import { assetVersions, versionCss } from './scripts/asset-v.mjs'
 
 const SITE_URL = 'https://www.ogmatcha.com'
-// Content hashes of public/desk and public/fonts, so their URLs change only
+// Content hashes of public/desk, fonts, images and media, so their URLs change only
 // when the file does and can be cached for a year (scripts/asset-v.mjs).
 const ASSET_V = assetVersions(process.cwd())
 const v = (u: string) => (ASSET_V[u] ? `${u}?v=${ASSET_V[u]}` : u)

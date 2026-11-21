@@ -92,7 +92,7 @@
           v-if="b.shot"
           class="pl-shot"
           :class="`pl-shot--${b.shot.shape ?? 'wide'}`"
-          :src="b.shot.src"
+          :src="asset(b.shot.src)"
           :alt="b.shot.alt"
           :width="b.shot.w"
           :height="b.shot.h"
@@ -599,12 +599,13 @@ async function boot() {
     stage = createStage(canvas.value, {
       dark: isDark(),
       onLost: fail,
-      devices: {
+      // Each screen's file with its content hash in the URL (utils/asset.ts).
+      devices: Object.fromEntries(Object.entries({
         monitor: ['/images/finctory-site.webp', { video: '/media/tessera-demo.mp4', fit: 'contain', bg: '#0c0c0c' }, { video: '/media/puff-pet-throw.mp4', fit: 'contain', bg: '#1b1d24' }],
         laptop: ['/images/phishforge-1.png', '/images/phishforge-2.png', '/images/phishforge-3.png'],
         tablet: ['/images/medalink-2.jpg', '/images/medalink-1.jpg', '/images/medalink-3.jpg'],
         phone: ['/images/osave-2.webp', oldScreen(), '/images/osave-3.webp', '/images/osave-4.webp'],
-      },
+      }).map(([k, list]) => [k, list.map((s) => (typeof s === 'string' ? asset(s) : s?.video ? { ...s, video: asset(s.video) } : s))])),
     })
     build()
 

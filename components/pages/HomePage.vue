@@ -8,10 +8,10 @@
   -->
   <DeskScene />
   <!-- The walk ends looking down at the desk; the page is laid out on it. -->
-  <div class="pp-desk">
+  <div class="pp-desk" :style="grain">
   <!-- Things left on the desk, rendered from the same 3D models (studio/desk/render_props.py) -->
   <div class="pp-props" aria-hidden="true">
-    <img v-for="p in props" :key="p.n" :class="`pp-prop pp-prop--${p.n}`" :src="`/images/desk-prop-${p.n}.webp?v=${p.v}`" :width="p.w" :height="p.h" alt="" loading="lazy" decoding="async" />
+    <img v-for="p in props" :key="p.n" :class="`pp-prop pp-prop--${p.n}`" :src="asset(`/images/desk-prop-${p.n}.webp`)" :width="p.w" :height="p.h" alt="" loading="lazy" decoding="async" />
   </div>
   <div class="pp">
     <aside class="pp-me" :aria-label="c.meLabel">
@@ -20,7 +20,7 @@
         <div class="pp-id">
           <img
             class="pp-face"
-            src="/images/avatar-face.webp"
+            :src="asset('/images/avatar-face.webp')"
             :alt="c.photoAlt"
             width="320"
             height="320"
@@ -203,10 +203,11 @@ const pre = computed(() => (isEn.value ? '/en' : ''))
 const cvHref = computed(() => (isEn.value ? site.contact.cv.hrefEn : site.contact.cv.href))
 const work = Object.fromEntries(works.map((w) => [w.slug, w]))
 const repo = (n) => alsoBuilt.find((a) => a.name === n)
-// Desk props for the right margin. Sizes and a hash of each image come from
-// studio/desk/ship_props.py; the hash in the URL makes a re-render show at once.
+// Desk props for the right margin, sized by studio/desk/ship_props.py.
 // Same scale for all three.
 const props = ['mug', 'kuaikuai', 'plant'].map((n) => ({ n, ...deskProps[n] }))
+// The grain tiles' URLs carry their content hash (utils/asset.ts), so they are set here, not in the CSS.
+const grain = { '--grain-day': `url(${asset('/images/desk-grain-day.webp')})`, '--grain-night': `url(${asset('/images/desk-grain-night.webp')})` }
 
 // The paragraphs under 我怎麼想 are a first-person draft written from the
 // case studies and the five questions; every claim in them is checkable in
@@ -662,7 +663,7 @@ async function startWalk() {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: url('/images/desk-grain-day.webp') center top / max(100%, 1024px) auto repeat-y;
+  background: var(--grain-day) center top / max(100%, 1024px) auto repeat-y;
   -webkit-mask-image: linear-gradient(transparent, #000 32rem);
   mask-image: linear-gradient(transparent, #000 32rem);
   pointer-events: none;
@@ -670,12 +671,12 @@ async function startWalk() {
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) .pp-desk::before {
-    background-image: url('/images/desk-grain-night.webp');
+    background-image: var(--grain-night);
   }
 }
 
 :root[data-theme='dark'] .pp-desk::before {
-  background-image: url('/images/desk-grain-night.webp');
+  background-image: var(--grain-night);
 }
 
 .pp {

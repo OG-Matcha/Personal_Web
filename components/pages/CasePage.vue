@@ -20,7 +20,7 @@
         </p>
       </div>
       <figure v-if="work.hero ?? work.cover" class="case-cover" :style="{ viewTransitionName: `cover-${work.slug}` }">
-        <img :src="work.hero ?? work.cover" :srcset="srcset(work.hero ?? work.cover)" sizes="(min-width: 1024px) 55vw, 100vw" :alt="work.title" width="1600" height="1000" fetchpriority="high" />
+        <img :src="asset(work.hero ?? work.cover)" :srcset="srcset(work.hero ?? work.cover)" sizes="(min-width: 1024px) 55vw, 100vw" :alt="work.title" width="1600" height="1000" fetchpriority="high" />
       </figure>
       <div v-else class="case-cover case-cover--card"><SiteBizCard /></div>
     </header>
@@ -41,7 +41,7 @@
       <ol class="hl" :class="{ 'hl--phone': phoneShots || storeShots }">
         <li v-for="h in highlights" :key="h.title" class="hl-item" :class="{ 'hl-item--text': !h.shot }">
           <div v-if="h.shot" :class="storeShots ? 'store' : phoneShots ? 'device' : 'screen'">
-            <img :src="h.shot" :srcset="srcset(h.shot)" sizes="(min-width: 1024px) 60vw, 100vw" :alt="h.title" loading="lazy" />
+            <img :src="asset(h.shot)" :srcset="srcset(h.shot)" sizes="(min-width: 1024px) 60vw, 100vw" :alt="h.title" loading="lazy" />
           </div>
           <div class="hl-text">
             <h3>
@@ -85,7 +85,7 @@
     <section v-else-if="!highlights.length && work.screenshots?.length" class="shell case-block">
       <div class="grid gap-5" :class="phoneShots ? 'sm:grid-cols-3' : 'sm:grid-cols-2'">
         <div v-for="(src, i) in work.screenshots" :key="src" :class="phoneShots ? 'device' : 'screen'">
-          <img :src="src" :alt="`${work.title} ${t.screen} ${i + 1}`" loading="lazy" />
+          <img :src="asset(src)" :alt="`${work.title} ${t.screen} ${i + 1}`" loading="lazy" />
         </div>
       </div>
     </section>
@@ -97,7 +97,7 @@
           <p v-for="(p, i) in paragraphs(work.turn.text)" :key="i" class="turn-text">{{ p }}</p>
         </div>
         <figure v-if="work.turn.image" class="screen">
-          <img :src="work.turn.image" :alt="work.turn.title" loading="lazy" />
+          <img :src="asset(work.turn.image)" :alt="work.turn.title" loading="lazy" />
         </figure>
       </div>
     </section>
@@ -139,7 +139,7 @@
           <span class="next-title">{{ next.title }}</span>
           <span class="next-tag">{{ next.tagline }}</span>
         </span>
-        <span class="next-pic" :style="{ viewTransitionName: `cover-${next.slug}` }"><img :style="next.focus ? { objectPosition: next.focus } : null" :src="next.cover" :srcset="srcset(next.cover)" sizes="(min-width: 768px) 50vw, 100vw" alt="" width="1600" height="900" loading="lazy" decoding="async" /></span>
+        <span class="next-pic" :style="{ viewTransitionName: `cover-${next.slug}` }"><img :style="next.focus ? { objectPosition: next.focus } : null" :src="asset(next.cover)" :srcset="srcset(next.cover)" sizes="(min-width: 768px) 50vw, 100vw" alt="" width="1600" height="900" loading="lazy" decoding="async" /></span>
       </NuxtLink>
       <p class="mt-6">
         <button type="button" class="back mono text-2xs" @click="goBack">← {{ backLabel }}</button>
