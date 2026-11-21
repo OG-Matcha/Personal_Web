@@ -13,7 +13,7 @@
     On phones and under reduced motion the still shows with the name and
     thesis over it, followed by the walk as a row of picture cards.
   -->
-  <section ref="root" class="dk" :class="{ 'is-ready': ready, 'is-pocket': pocket }" :style="{ '--stops': stops.length }" :aria-label="t.label">
+  <section ref="root" class="dk" :class="{ 'is-ready': ready, 'is-pocket': pocket, 'is-walked': walked }" :style="{ '--stops': stops.length }" :aria-label="t.label">
     <div class="dk-stage">
       <!--
         One still downloads, not two: <picture> picks day or night from the
@@ -241,9 +241,13 @@ const root = ref(null)
 const canvas = ref(null)
 const ready = ref(false)
 // Phones (below the tall layout, motion allowed): the room runs as a small
-// 3D picture in place of the still at the top; no walk, drag to look around.
+// 3D picture in place of the still at the top; drag to look around, and
+// swiping the row of cards below walks its camera from thing to thing.
 const pocket = ref(false)
 const touched = ref(false)
+// The small desk's camera has left the room view (the card row was swiped):
+// the still under the canvas's faded foot no longer matches, so it goes.
+const walked = ref(false)
 // The stills stay under the canvas until its 900 ms fade-in has finished.
 const stillsOn = ref(true)
 watch(ready, (r) => {
@@ -1144,6 +1148,19 @@ async function start(small = false) {
     drag.x = 0
     kick()
   }
+  // Swiping the row of cards below walks the small desk's camera with it:
+  // card by card, from one thing to the next, the way the big desk walks on
+  // scroll. Until the row is first swiped the picture stays on the room.
+  const tour = root.value?.querySelector('.dk-tour')
+  let at = -1
+  const onTour = () => {
+    const cards = tour.children
+    if (cards.length < 2) return
+    const step = cards[1].offsetLeft - cards[0].offsetLeft || 1
+    at = 1 + Math.min(cards.length - 1, Math.max(0, tour.scrollLeft / step))
+    touched.value = walked.value = true
+    onPocketScroll()
+  }
   // The scroll that takes the picture away leans the camera toward the open
   // notebook, the first card in the row coming up underneath.
   const onPocketScroll = () => {
@@ -1151,8 +1168,25 @@ async function start(small = false) {
     const r = canvas.value.getBoundingClientRect()
     const p = Math.min(1, Math.max(0, -r.top / Math.max(1, r.height)))
     const o = 0.45 * p * p * (3 - 2 * p)
-    want.cam.copy(path[0].cam).lerp(exit.cam, o)
-    want.at.copy(path[0].at).lerp(exit.at, o)
+    if (at < 0) {
+      want.cam.copy(path[0].cam)
+      want.at.copy(path[0].at)
+    } else {
+      const i = Math.min(N - 1, Math.floor(at))
+      const e = i === N - 1 ? 0 : at - i
+      const b = path[Math.min(N - 1, i + 1)]
+      want.cam.lerpVectors(path[i].cam, b.cam, e)
+      want.at.lerpVectors(path[i].at, b.at, e)
+      want.cam.y += 0.06 * Math.sin(Math.PI * e)
+      // The name sits over the picture's lower third: aim a little lower so
+      // each thing stands in the upper part, clear of it. The same angle for
+      // every stop, so less for the close ones (the phone, a hand away).
+      want.at.y -= 0.11 * want.cam.distanceTo(want.at) * Math.min(1, at)
+    }
+    if (at < 0) {
+      want.cam.lerp(exit.cam, o)
+      want.at.lerp(exit.at, o)
+    }
     kick()
   }
 
@@ -1291,6 +1325,7 @@ async function start(small = false) {
   if (small) {
     onPocketScroll()
     addEventListener('scroll', onPocketScroll, { passive: true })
+    tour?.addEventListener('scroll', onTour, { passive: true })
     canvas.value.addEventListener('pointerdown', onDown)
     addEventListener('pointermove', onDrag, { passive: true })
     addEventListener('pointerup', onUp)
@@ -1332,6 +1367,7 @@ async function start(small = false) {
     mo.disconnect()
     removeEventListener('resize', size)
     removeEventListener('scroll', onPocketScroll)
+    tour?.removeEventListener('scroll', onTour)
     removeEventListener('pointermove', onDrag)
     removeEventListener('pointerup', onUp)
     removeEventListener('pointercancel', onUp)
@@ -1482,6 +1518,13 @@ async function start(small = false) {
 .dk-caps .dk-thesis {
   margin-top: var(--sp-2);
   font-size: var(--step-1);
+}
+
+/* Walked away from the room view: the still under the canvas's faded foot
+   would show through as a ghost of the room, so it fades out. */
+.dk.is-pocket.is-walked .dk-poster {
+  opacity: 0;
+  transition: opacity 600ms var(--ease-entrance);
 }
 
 /* Phones with the small 3D desk: the canvas takes exactly the still's box
