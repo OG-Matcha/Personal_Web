@@ -11,7 +11,7 @@
   <div class="pp-desk" :style="grain">
   <!-- Things left on the desk, rendered from the same 3D models (studio/desk/render_props.py) -->
   <div class="pp-props" aria-hidden="true">
-    <img v-for="p in props" :key="p.n" :class="`pp-prop pp-prop--${p.n}`" :src="asset(`/images/desk-prop-${p.n}.webp`)" :width="p.w" :height="p.h" alt="" loading="lazy" decoding="async" />
+    <img v-for="p in props" :key="p.n" :class="`pp-prop pp-prop--${p.n}`" :src="asset(`/images/desk-prop-${p.n}.webp`)" :width="p.w" :height="p.h" :style="{ width: `min(${p.w}px, (100vw - var(--page-w)) * ${(p.w / 700).toFixed(3)})` }" alt="" loading="lazy" decoding="async" />
   </div>
   <div class="pp">
     <aside class="pp-me" :aria-label="c.meLabel">
@@ -171,10 +171,18 @@
         </p>
       </section>
 
-      <!-- Contact -->
-      <section id="contact" class="pp-sec pp-contact" aria-labelledby="contact-h" data-spy>
-        <h2 id="contact-h" class="pp-h">{{ c.contactH }}</h2>
-        <div class="pp-note reveal">
+    </div>
+  </div>
+  <!--
+    Contact closes the page as a scene, not as one more block in the column:
+    the walk began at the desk in daylight and ends there with the lamp on,
+    the note stuck on the desk top. It is the same still the room opens on.
+  -->
+  <section id="contact" class="pp-end" aria-labelledby="contact-h" data-spy>
+    <h2 id="contact-h" class="pp-h pp-end-h">{{ c.contactH }}</h2>
+    <div class="pp-end-scene">
+      <img class="pp-end-desk" :src="asset('/desk/poster-night.webp')" :srcset="srcset('/desk/poster-night.webp')" sizes="100vw" alt="" width="1600" height="1000" loading="lazy" decoding="async" />
+      <div class="pp-note reveal">
         <p class="pp-lede">{{ c.contactLede }}</p>
         <p class="pp-mail">
           <!-- If it has to wrap, it wraps before the @, never inside a word. -->
@@ -182,10 +190,9 @@
             >{{ site.contact.email.split('@')[0] }}<wbr />@{{ site.contact.email.split('@')[1] }}</a
           >
         </p>
-        </div>
-      </section>
+      </div>
     </div>
-  </div>
+  </section>
   </div>
 </template>
 
@@ -507,7 +514,7 @@ onMounted(() => {
 
   // Each block settles in once, as it is reached. Skipped under reduced motion.
   if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    const items = document.querySelectorAll('.pp .reveal')
+    const items = document.querySelectorAll('.pp .reveal, .pp-end .reveal')
     ro = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
@@ -625,6 +632,10 @@ async function startWalk() {
     pointer-events: none;
   }
 
+  /* Each keeps its size relative to the others, but all of them shrink with
+     the margin: at 1440 px the margin is 130 px and the mug at full size ran
+     off the window's edge, cut in half. The width is set inline from the
+     picture's own (desk-props.json). */
   .pp-prop {
     position: absolute;
     left: calc(50% + var(--page-w) / 2 - 1.25rem);
@@ -1376,10 +1387,67 @@ async function startWalk() {
   font-weight: 600;
 }
 
-.pp-contact {
-  padding-bottom: var(--sp-9);
-  container-type: inline-size;
+/* ---- The end: the desk at night, the note on it ----------------- */
+
+.pp-end {
+  padding-block: var(--sp-8) var(--sp-7);
+  scroll-margin-top: calc(var(--header-h) + var(--sp-5));
 }
+
+.pp-end-h {
+  max-width: var(--page-w);
+  margin-inline: auto;
+  padding-inline: var(--page-gut);
+}
+
+.pp-end-scene {
+  position: relative;
+  margin-top: var(--sp-6);
+}
+
+/* Full width, cropped to the desk; its top and bottom fade into the page
+   so the scene sits in the paper rather than on it. */
+.pp-end-desk {
+  display: block;
+  width: 100%;
+  height: clamp(22rem, 56vw, 44rem);
+  object-fit: cover;
+  object-position: 50% 62%;
+  -webkit-mask-image: linear-gradient(transparent, #000 18%, #000 78%, transparent);
+  mask-image: linear-gradient(transparent, #000 18%, #000 78%, transparent);
+}
+
+/* On the desk top, right of the laptop, where the light falls. */
+.pp-end .pp-note {
+  position: absolute;
+  left: 50%;
+  top: 56%;
+  /* The address is sized to the note (cqi), so the note is its container. */
+  container-type: inline-size;
+  width: min(36rem, calc(100% - 2 * var(--page-gut)));
+  margin: 0;
+  transform: translate(-14%, -50%) rotate(-2.2deg);
+}
+
+@media (max-width: 640px) {
+  /* Too narrow for the note to sit on the desk: it hangs off the picture's foot. */
+  .pp-end-desk {
+    height: 16rem;
+    -webkit-mask-image: linear-gradient(transparent, #000 20%, #000 72%, transparent);
+    mask-image: linear-gradient(transparent, #000 20%, #000 72%, transparent);
+  }
+
+  .pp-end .pp-note {
+    position: relative;
+    left: auto;
+    top: auto;
+    margin: -3.5rem var(--page-gut) 0;
+    width: auto;
+    transform: rotate(-1.2deg);
+  }
+}
+
+
 
 /* A note stuck on the edge of the screen: butter paper, a strip of tape. */
 .pp-note {

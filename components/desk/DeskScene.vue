@@ -209,7 +209,7 @@ const STOPS = [
   { id: 'phone', cam: [0.33, -0.36, 0.93], at: [0.43, -0.02, 0.83], spot: [0.43, -0.03, 0.83] },
   { id: 'tablet', side: 'right', cam: [-0.3, -0.38, 0.99], at: [-0.48, 0.09, 0.84], spot: [-0.45, 0.09, 0.84] },
   { id: 'reports', cam: [0.48, -0.25, 1.15], at: [0.5, 0.18, 0.78], spot: [0.52, 0.2, 0.79] },
-  { id: 'shelf', side: 'right', cam: [0.25, -0.45, 1.5], at: [0.12, 0.52, 1.32], spot: [0.05, 0.52, 1.32] }, // from the right, so the lamp head stays out of frame
+  { id: 'shelf', cam: [0.25, -0.45, 1.5], at: [0.12, 0.52, 1.32], spot: [0.05, 0.52, 1.32] }, // from the right, so the lamp head stays out of frame
   { id: 'kuaikuai', cam: [0.32, -0.24, 0.98], at: [0.25, 0.13, 0.84], spot: [0.25, 0.12, 0.84] }, // from the right: the laptop beside it whole, not its screen cut mid-sentence
 ]
 
@@ -1895,26 +1895,39 @@ async function start(small = false) {
 }
 
 .dk-hint::after {
+  /* A faint track that is always there, with a short stroke running down it:
+     a frame caught mid-way still reads as "scroll", not as a stray hairline. */
   content: '';
   display: block;
-  width: 1px;
-  height: 2.5rem;
+  width: 2px;
+  height: 2.75rem;
   margin: var(--sp-3) 0 0 0.5rem;
-  background: currentColor;
+  border-radius: 1px;
+  background:
+    linear-gradient(currentColor, currentColor) 0 var(--drip, 0%) / 100% 40% no-repeat,
+    color-mix(in srgb, currentColor 22%, transparent);
   animation: dk-drip 1.8s var(--ease-inout) infinite;
-  transform-origin: top;
+}
+
+@property --drip {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
 }
 
 @keyframes dk-drip {
   0% {
-    transform: scaleY(0);
-  }
-  50% {
-    transform: scaleY(1);
+    --drip: -70%;
   }
   100% {
-    transform: scaleY(1);
-    opacity: 0;
+    --drip: 170%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dk-hint::after {
+    animation: none;
+    --drip: 100%;
   }
 }
 

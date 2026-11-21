@@ -1,8 +1,8 @@
 <template>
   <!--
     What a thing on the desk opens when you pick it up: the phone runs the
-    oSave check-up, the tablet the MedaLink scheduler, the shelf lists every
-    award with its announcement, the reports list the NSTC grants. A native
+    oSave check-up, the tablet the MedaLink scheduler, the shelf stacks every
+    award by year (ShelfDemo), the reports fan out the NSTC grants (ReportsDemo). A native
     modal <dialog>: Esc closes it, focus stays inside and returns to whatever
     opened it, and the page behind does not scroll.
   -->
@@ -22,27 +22,8 @@
         <p v-if="c.lede" class="dd-lede">{{ c.lede }}</p>
         <ProductOsaveDemo v-if="shown === 'phone'" />
         <ProductSlotDemo v-else-if="shown === 'tablet'" />
-        <ol v-else-if="shown === 'shelf'" class="dd-list">
-          <li v-for="a in awards" :key="a.key" class="dd-row" :class="{ 'is-top': a.top }">
-            <span class="dd-year figures">{{ a.date.slice(0, 4) }}</span>
-            <span class="dd-main">
-              <strong>{{ a.prize || a.comp }}</strong>
-              <span v-if="a.prize">{{ a.comp }}</span>
-              <span v-if="a.org" class="dd-org">{{ a.org }}</span>
-            </span>
-            <a v-if="a.evidence" :href="a.evidence" class="dd-src" target="_blank" rel="noopener" :aria-label="E ? `${a.comp}: announcement (opens in a new tab)` : `${a.comp}公告（另開新分頁）`">{{ t.source }} <span aria-hidden="true">↗</span></a>
-          </li>
-        </ol>
-        <ol v-else-if="shown === 'reports'" class="dd-list">
-          <li v-for="g in grants" :key="g.key" class="dd-row">
-            <span class="dd-year figures">{{ g.date.slice(0, 4) }}</span>
-            <span class="dd-main">
-              <strong>{{ g.title }}</strong>
-              <span>{{ g.publication }}</span>
-              <span v-if="g.detail" class="dd-org">{{ g.detail }}</span>
-            </span>
-          </li>
-        </ol>
+        <DeskShelfDemo v-else-if="shown === 'shelf'" :awards="awards" :en="E" />
+        <DeskReportsDemo v-else-if="shown === 'reports'" :grants="grants" :en="E" />
       </div>
     </div>
   </dialog>
@@ -159,18 +140,18 @@ const grants = computed(() =>
     })
 )
 
-const t = computed(() => (E.value ? { close: 'Close', source: 'Announcement' } : { close: '關閉', source: '公告' }))
+const t = computed(() => (E.value ? { close: 'Close' } : { close: '關閉' }))
 
 const c = computed(() => {
   const n = { a: awards.value.length, g: grants.value.length, top: awards.value.filter((a) => a.top).length }
   const zh = {
     ...DESK_DEMOS.zh,
-    shelf: { thing: '獎盃架', title: `${n.a} 個競賽獎項`, lede: `由新到舊，${n.top} 個全國首獎標了色。有公告的都附上連結。`, href: '/resume/', cta: '看完整年表' },
+    shelf: { thing: '獎盃架', title: `${n.a} 個競賽獎項`, lede: `依年份疊起來，金色的是 ${n.top} 個全國首獎。點一個，看它是哪一場、誰辦的。`, href: '/resume/', cta: '看完整年表' },
     reports: { thing: '一疊報告', title: `${n.g} 個國科會計畫`, lede: '大學部的國科會大專學生研究計畫，每一個都是我主持。', href: '/resume/', cta: '看完整年表' },
   }
   const en_ = {
     ...DESK_DEMOS.en,
-    shelf: { thing: 'The shelf', title: `${n.a} competition awards`, lede: `Newest first; the ${n.top} national first prizes are marked. Each announcement is linked where one exists.`, href: '/resume/', cta: 'See the full record' },
+    shelf: { thing: 'The shelf', title: `${n.a} competition awards`, lede: `Stacked by year; the ${n.top} gold ones are national first prizes. Pick one to see which competition and who ran it.`, href: '/resume/', cta: 'See the full record' },
     reports: { thing: 'A stack of reports', title: `${n.g} NSTC research grants`, lede: 'Undergraduate research grants from Taiwan’s National Science and Technology Council, each one led by me.', href: '/resume/', cta: 'See the full record' },
   }
   const x = (E.value ? en_ : zh)[shown.value] ?? zh.phone
@@ -332,55 +313,6 @@ const c = computed(() => {
   color: var(--ink-2);
 }
 
-.dd-list {
-  display: grid;
-  margin-top: var(--sp-4);
-}
-
-.dd-row {
-  display: grid;
-  grid-template-columns: 3.2rem minmax(0, 1fr) auto;
-  gap: var(--sp-3);
-  align-items: baseline;
-  padding-block: var(--sp-3);
-  border-top: 1px solid var(--rule);
-}
-
-.dd-row.is-top .dd-main strong {
-  box-shadow: inset 0 -0.42em 0 color-mix(in srgb, var(--pop) 38%, transparent);
-}
-
-.dd-year {
-  color: var(--ink-3);
-  font-weight: 700;
-}
-
-.dd-main {
-  display: grid;
-  gap: 2px;
-}
-
-.dd-main strong {
-  justify-self: start;
-  font-weight: 800;
-}
-
-.dd-org {
-  font-size: var(--step--1);
-  color: var(--ink-3);
-}
-
-.dd-src {
-  font-size: var(--step--1);
-  font-weight: 700;
-  color: var(--ink-2);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  white-space: nowrap;
-  padding-block: 10px;
-  margin-block: -10px;
-}
-
 .dd-more {
   display: inline-block;
   padding-block: 10px;
@@ -392,7 +324,7 @@ const c = computed(() => {
 }
 
 /* The demos bring their own top margin for the case page; in here the lede is enough. */
-.dd-body :deep(> div:not(.dd-list)) {
+.dd-body :deep(> div) {
   margin-top: var(--sp-4);
 }
 
@@ -449,15 +381,6 @@ const c = computed(() => {
     margin-left: -20px;
     border-radius: 2px;
     background: var(--rule-strong);
-  }
-
-  .dd-row {
-    grid-template-columns: 2.8rem minmax(0, 1fr);
-  }
-
-  .dd-src {
-    grid-column: 2;
-    justify-self: start;
   }
 }
 </style>
