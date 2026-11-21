@@ -7,11 +7,15 @@
   <div class="sh">
     <div class="sh-plaque" aria-live="polite">
       <span class="sh-medal sh-medal--big" :class="{ 'is-top': cur.top }" aria-hidden="true">{{ cur.top ? '1' : '' }}</span>
-      <div class="sh-plaque-text">
-        <p class="sh-when figures">{{ cur.date.slice(0, 4) }}<template v-if="cur.org"> · {{ cur.org }}</template></p>
-        <p class="sh-prize">{{ cur.prize || cur.comp }}</p>
-        <p v-if="cur.prize" class="sh-comp">{{ cur.comp }}</p>
-        <a v-if="cur.evidence" :href="cur.evidence" class="sh-src" target="_blank" rel="noopener">{{ t.source }} <span aria-hidden="true">↗</span></a>
+      <!-- Every award's text sits in the same cell and only the picked one shows, so the
+           plaque is always as tall as the longest award and the shelf below never jumps. -->
+      <div class="sh-plaque-texts">
+        <div v-for="a in awards" :key="a.key" class="sh-plaque-text" :class="{ 'is-on': a.key === cur.key }" :aria-hidden="a.key !== cur.key">
+          <p class="sh-when figures">{{ a.date.slice(0, 4) }}<template v-if="a.org"> · {{ a.org }}</template></p>
+          <p class="sh-prize">{{ a.prize || a.comp }}</p>
+          <p v-if="a.prize" class="sh-comp">{{ a.comp }}</p>
+          <a v-if="a.evidence" :href="a.evidence" class="sh-src" target="_blank" rel="noopener" :tabindex="a.key === cur.key ? null : -1">{{ t.source }} <span aria-hidden="true">↗</span></a>
+        </div>
       </div>
     </div>
 
@@ -87,15 +91,33 @@ const t = computed(() =>
   display: flex;
   gap: var(--sp-4);
   align-items: flex-start;
-  min-height: 8.5rem;
   padding: var(--sp-5);
   border-radius: var(--r-2);
   background: var(--surface);
   box-shadow: var(--shadow-1);
 }
 
-.sh-plaque-text {
+.sh-plaque-texts {
+  display: grid;
+  flex: 1;
   min-width: 0;
+}
+
+.sh-plaque-text {
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 180ms var(--ease-entrance), visibility 0s 180ms;
+}
+
+.sh-plaque-text.is-on {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 220ms var(--ease-entrance);
 }
 
 .sh-when {
@@ -119,7 +141,9 @@ const t = computed(() =>
 
 .sh-src {
   display: inline-block;
-  margin-top: var(--sp-3);
+  /* Always on the plaque's bottom line, wherever the award's text ends. */
+  margin-top: auto;
+  padding-top: var(--sp-3);
   font-size: var(--step--1);
   font-weight: 600;
   color: var(--pop-ink);
@@ -254,7 +278,9 @@ button.sh-medal:not(.is-top).is-on {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sh-medal {
+  .sh-medal,
+  .sh-plaque-text,
+  .sh-plaque-text.is-on {
     transition: none;
   }
 

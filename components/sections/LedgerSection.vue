@@ -189,16 +189,18 @@ const oldestYear = computed(() => yearOf(entries.value[entries.value.length - 1]
   line-height: 1.4;
 }
 
+/* What is read, at reading size; only the labels (date, kind, links) are small. */
 .lg-org {
   margin-top: var(--sp-1);
-  font-size: var(--step--1);
+  font-size: var(--step-0);
   color: var(--ink-2);
 }
 
 .lg-detail {
   margin-top: var(--sp-2);
-  font-size: var(--step--1);
-  max-width: var(--measure-han);
+  font-size: var(--step-0);
+  line-height: 1.75;
+  max-width: 40em;
 }
 
 .lg-links {
