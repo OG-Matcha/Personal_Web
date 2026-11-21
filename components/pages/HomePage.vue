@@ -77,8 +77,8 @@
                 <p v-if="b.lede" class="pp-stop-text">{{ b.lede }}</p>
                 <!-- The year's events fold away: the road reads as questions and
                      answers, and the record is one tap away, not in the way. -->
-                <details class="pp-ev" @toggle="refreshWalk">
-                  <summary class="pp-ev-sum"><span class="pp-ev-top">{{ b.top }}</span><span class="pp-ev-n">{{ c.events(b.shown.length + b.more - 1) }}</span></summary>
+                <details v-if="b.count" class="pp-ev" @toggle="onFold">
+                  <summary class="pp-ev-sum"><span class="pp-ev-top">{{ b.top }}</span><span class="pp-ev-n">{{ c.events(b.count) }}</span></summary>
                   <ul class="pp-events">
                     <li v-for="e in b.shown" :key="e.date + e.title">
                       <time class="figures" :datetime="e.date">{{ formatDate(e.date) }}</time>
@@ -307,7 +307,12 @@ const road = computed(() =>
       date: e.date,
       title: isEn.value ? (en.timeline?.[`${e.date} ${e.title}`]?.title ?? e.title) : e.title,
     }))
-    const shown = events.length > SHOW ? events.slice(-SHOW) : events
+    // The one that stands for the stretch: its first prize if it has one,
+    // else the latest thing in it. It is the fold's label, so the list
+    // under it holds only the others.
+    const top = events.find((e) => TOP.test(e.title)) ?? events[events.length - 1]
+    const rest = events.filter((e) => e !== top)
+    const shown = rest.length > SHOW ? rest.slice(-SHOW) : rest
     const sameYear =
       b.from.slice(0, 4) === b.to.slice(0, 4) && b.from.endsWith('-01') && b.to.endsWith('-12')
     return {
@@ -316,10 +321,9 @@ const road = computed(() =>
       title: tr.title ?? b.title,
       lede: tr.lede ?? b.lede,
       shown,
-      more: events.length - shown.length,
-      // The one that stands for the stretch: its first prize if it has one,
-      // else the latest thing in it. Shown on the folded list as a teaser.
-      top: (events.find((e) => TOP.test(e.title)) ?? events[events.length - 1])?.title,
+      more: rest.length - shown.length,
+      count: rest.length,
+      top: top?.title,
       year: b.from.slice(0, 4),
     }
   })
@@ -457,6 +461,11 @@ const reached = ref(-1)
 let walk = null
 // Opening or closing a year's events moves every dot below it.
 let refreshWalk = () => {}
+// The fold opens over 240ms; the scroll-linked road has to measure again once it has.
+function onFold() {
+  refreshWalk()
+  setTimeout(() => refreshWalk(), 300)
+}
 // The first two works as large prints; the other four small, two by two.
 const BIG = 2
 onMounted(() => {
@@ -1044,6 +1053,30 @@ async function startWalk() {
   margin-top: var(--sp-2);
 }
 
+/* The fold slides open instead of pushing the page down in one frame
+   (where the browser can animate to an auto height; elsewhere it snaps). */
+.pp-ev {
+  interpolate-size: allow-keywords;
+}
+
+.pp-ev::details-content {
+  block-size: 0;
+  overflow: hidden;
+  transition:
+    block-size 240ms var(--ease-entrance),
+    content-visibility 240ms allow-discrete;
+}
+
+.pp-ev[open]::details-content {
+  block-size: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pp-ev::details-content {
+    transition: none;
+  }
+}
+
 /* Each stop's events on an index card: one ruled line per row (a wrapped
    title gets a second line, still on the rules), the red head line, and the
    cards tipped a little either way, as if dealt onto the desk. */
@@ -1063,7 +1096,7 @@ async function startWalk() {
     var(--card);
   box-shadow: var(--shadow-2);
   list-style: none;
-  font-size: var(--step--1);
+  font-size: var(--step-0);
   line-height: var(--rule-h);
   rotate: 0.5deg;
 }
@@ -1396,7 +1429,7 @@ async function startWalk() {
 
 .pp-work-line {
   margin-top: var(--sp-2);
-  font-size: var(--step--1);
+  font-size: var(--step-0);
   line-height: 1.75;
   color: var(--ink-2);
 }

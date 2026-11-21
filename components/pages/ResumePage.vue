@@ -146,7 +146,7 @@ const t = computed(() =>
 }
 
 .cv-btn small {
-  font-size: 0.75rem;
+  font-size: var(--step--1);
   opacity: 0.72;
 }
 
@@ -167,6 +167,14 @@ const t = computed(() =>
   color: var(--ink-2);
   text-decoration-color: var(--pop-ink);
   text-underline-offset: 0.2em;
+  position: relative;
+}
+
+/* A thumb-sized target around a short word, without moving the text. */
+.cv-other::after {
+  content: '';
+  position: absolute;
+  inset: -10px -8px;
 }
 
 </style>

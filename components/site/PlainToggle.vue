@@ -46,8 +46,8 @@ function flip() {
 .pt {
   display: inline-grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   color: var(--ink-2);
   background: transparent;

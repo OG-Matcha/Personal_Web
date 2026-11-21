@@ -49,7 +49,7 @@
   --font-body: 'Archivo', 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
   --font-mono: 'Archivo', 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
 
-  --step--1: clamp(0.8125rem, 0.79rem + 0.11vw, 0.875rem);
+  --step--1: clamp(0.875rem, 0.85rem + 0.11vw, 0.9375rem);
   --step-0: clamp(1rem, 0.97rem + 0.15vw, 1.0625rem);
   --step-1: clamp(1.125rem, 1.08rem + 0.23vw, 1.25rem);
   --step-2: clamp(1.375rem, 1.28rem + 0.48vw, 1.75rem);

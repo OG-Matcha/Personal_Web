@@ -126,7 +126,7 @@ a.ab-link:hover .ab-name {
 
 .ab-line {
   margin-top: var(--sp-1);
-  font-size: var(--step--1);
+  font-size: var(--step-0);
   color: var(--ink-2);
 }
 </style>

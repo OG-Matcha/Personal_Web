@@ -325,6 +325,8 @@ watch(drawer, (id) => {
 function readScroll() {
   const el = root.value
   if (!el || away) return
+  if (scrollY !== lastY) dir = scrollY > lastY ? 1 : -1
+  lastY = scrollY
   const span = el.offsetHeight - innerHeight
   const p = Math.min(1, Math.max(0, -el.getBoundingClientRect().top / Math.max(1, span)))
   const f = Math.min(N - 1, Math.max(0, p * N - 0.5))
@@ -351,12 +353,15 @@ function readScroll() {
   else if (e > 0.92) on.value = i + 1
   onWalk?.()
   // Left between two stops, the room has no words on it. Once the reader
-  // stops scrolling, walk the rest of the way to the nearer stop.
+  // stops scrolling, walk on to the stop they were heading for: never back
+  // against the way they scrolled, which reads as the page fighting them.
   clearTimeout(settle)
   const inside = box.top <= 1 && box.bottom >= innerHeight - 1
-  if (inside && e > 0.1 && e < 0.9) settle = setTimeout(() => scrollToStop(e < 0.5 ? i : i + 1), 220)
+  if (inside && e > 0.1 && e < 0.9) settle = setTimeout(() => scrollToStop(dir > 0 ? i + 1 : i), 300)
 }
 let settle = 0
+let lastY = 0
+let dir = 1
 function scrollToStop(i) {
   const el = root.value
   const span = el.offsetHeight - innerHeight
@@ -1605,6 +1610,14 @@ async function start(small = false) {
   display: none;
 }
 
+/* The card swiped past fades out at the window edge instead of leaving a
+   cut word there; the next one still peeks in on the right. */
+@media (max-width: 899.98px) {
+  .dk-tour {
+    mask-image: linear-gradient(to right, transparent, #000 var(--page-gut), #000 calc(100% - var(--page-gut)), transparent);
+  }
+}
+
 /* Wide screens under reduced motion: room for all of them, no swiping.
    Seven stops never fill rows evenly, so the first (the notebook, where the
    walk starts) takes two columns with a wide picture: eight cells, two rows
@@ -1698,7 +1711,7 @@ async function start(small = false) {
 }
 
 .dk-stop .dk-text {
-  font-size: var(--step--1);
+  font-size: var(--step-0);
 }
 
 .dk-stop .dk-acts {
@@ -1882,7 +1895,7 @@ async function start(small = false) {
 
     .dk-cap:not(.dk-cap--hero) .dk-text {
       margin-top: var(--sp-2);
-      font-size: var(--step--1);
+      font-size: var(--step-0);
       line-height: 1.65;
     }
 

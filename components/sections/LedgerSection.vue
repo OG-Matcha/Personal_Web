@@ -217,6 +217,14 @@ const oldestYear = computed(() => yearOf(entries.value[entries.value.length - 1]
   text-decoration-line: underline;
   text-decoration-color: var(--pop-ink);
   text-decoration-thickness: 1.5px;
+  position: relative;
+}
+
+/* A thumb-sized target around a short word, without moving the text. */
+.lg-links a::after {
+  content: '';
+  position: absolute;
+  inset: -10px -8px;
 }
 
 .lg-links a:hover {

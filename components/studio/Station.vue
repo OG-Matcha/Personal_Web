@@ -72,6 +72,7 @@ defineProps({
   max-width: var(--measure-han);
   color: var(--ink-2);
   font-size: var(--step-1);
+  text-wrap: balance;
 }
 
 .st-meta {

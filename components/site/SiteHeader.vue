@@ -116,7 +116,7 @@ const t = computed(() =>
   font-size: var(--step-0);
   text-decoration: none;
   white-space: nowrap;
-  min-height: 40px;
+  min-height: 44px;
 }
 
 /* A lump of terracotta: the studio's one signature colour. */
@@ -152,15 +152,15 @@ const t = computed(() =>
   text-decoration: none;
   color: var(--ink-2);
   white-space: nowrap;
-  /* 40px tall hit area: thumbs miss 18px-tall text links. */
+  /* 44px tall hit area: thumbs miss 18px-tall text links. */
   display: inline-flex;
   align-items: center;
-  min-height: 40px;
+  min-height: 44px;
 }
 
 .hd-lang {
   justify-content: center;
-  min-width: 40px;
+  min-width: 44px;
 }
 
 .hd-link:hover,
@@ -184,7 +184,7 @@ const t = computed(() =>
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  height: 40px;
+  height: 44px;
   padding-inline: var(--sp-4);
   border-radius: var(--r-full);
   background: var(--pop);
@@ -215,7 +215,7 @@ const t = computed(() =>
   }
   .hd-link {
     justify-content: center;
-    min-width: 40px;
+    min-width: 44px;
     padding-inline: 6px;
   }
   .hd-tools {
@@ -238,15 +238,15 @@ const t = computed(() =>
     display: inline;
   }
   .hd-mark {
-    min-width: 40px;
+    min-width: 44px;
     justify-content: center;
   }
   .hd-lang {
-    min-width: 40px;
+    min-width: 44px;
     justify-content: center;
   }
   .hd-mail {
-    width: 40px;
+    width: 44px;
     padding: 0;
     justify-content: center;
   }
