@@ -4,7 +4,10 @@
     the person using it, what happened to it, and what I did. Internal
     decisions and line counts were cut on purpose - visitors do not care.
   -->
-  <article class="case">
+  <article class="case" :style="{ '--accent': accent }">
+    <!-- Each product opens in its own colour: the band behind the opening is
+         washed with it, so six case pages are six rooms, not one template. -->
+    <div class="case-band">
     <header class="shell case-hero">
       <div class="case-intro">
         <p class="case-eyebrow">{{ work.org || work.role }}</p>
@@ -24,6 +27,7 @@
       </figure>
       <div v-else class="case-cover case-cover--card"><SiteBizCard /></div>
     </header>
+    </div>
 
     <section v-if="outcomes.length" class="shell">
       <dl class="case-outcomes">
@@ -190,6 +194,10 @@ function ok(v) {
 }
 
 const work = computed(() => props.work)
+// Each product's own colour, sampled from its cover (or its brand, where the
+// cover is a card): used only for the opening's wash and the title's rule.
+const ACCENT = { finctory: '#3a4fa8', medalink: '#2f6fd6', osave: '#3b8fe8', phishforge: '#6b5bd6', surprice: '#22a194', taobao: '#f07a22' }
+const accent = computed(() => ACCENT[work.value.slug] ?? 'var(--pop)')
 const outcomes = computed(() => (work.value.outcomes ?? []).filter((o) => ok(o.value)))
 const highlights = computed(() => (work.value.highlights ?? []).filter((h) => ok(h.title)))
 const phoneShots = computed(() => work.value.screenshotShape === 'phone')
@@ -220,8 +228,29 @@ function goBack() {
 
 <style scoped>
 .case {
-  padding-top: var(--sp-8);
   padding-bottom: var(--sp-9);
+}
+
+.case-band {
+  padding-top: var(--sp-8);
+  padding-bottom: var(--sp-7);
+  background:
+    radial-gradient(60% 70% at 78% 40%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%),
+    linear-gradient(color-mix(in srgb, var(--accent) 10%, transparent), transparent);
+}
+
+:root[data-theme='dark'] .case-band {
+  background:
+    radial-gradient(60% 70% at 78% 40%, color-mix(in srgb, var(--accent) 30%, transparent), transparent 70%),
+    linear-gradient(color-mix(in srgb, var(--accent) 16%, transparent), transparent);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .case-band {
+    background:
+      radial-gradient(60% 70% at 78% 40%, color-mix(in srgb, var(--accent) 30%, transparent), transparent 70%),
+      linear-gradient(color-mix(in srgb, var(--accent) 16%, transparent), transparent);
+  }
 }
 
 .case-block {
@@ -256,6 +285,8 @@ function goBack() {
    always fits whole: a word is never broken, only the space between words. */
 .case-title {
   margin-top: var(--sp-2);
+  padding-bottom: var(--sp-3);
+  background: linear-gradient(var(--accent), var(--accent)) left bottom / 3.5rem 5px no-repeat;
   font-size: min(var(--step-5), 15cqi);
   overflow-wrap: normal;
   font-weight: 900;
