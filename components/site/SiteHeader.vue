@@ -10,7 +10,7 @@
       </NuxtLink>
 
       <nav :aria-label="t.navLabel" class="scroll-x hd-nav">
-        <NuxtLink v-for="l in t.links" :key="l.href" :to="l.href" class="hd-link" :aria-label="l.short ? l.label : undefined" :class="{ 'is-here': l.section?.test(route.path) }" v-bind="l.href.includes('#') ? { 'aria-current': l.section?.test(route.path) ? 'page' : false } : {}">
+        <NuxtLink v-for="l in t.links" :key="l.href" :to="l.href" class="hd-link" :aria-label="l.short ? l.label : undefined" :class="{ 'is-here': here(l) }" v-bind="l.href.includes('#') ? { 'aria-current': here(l) ? 'page' : false } : {}">
           <template v-if="l.short"><span class="hd-link-full">{{ l.label }}</span><span class="hd-link-short" aria-hidden="true">{{ l.short }}</span></template>
           <template v-else>{{ l.label }}</template>
         </NuxtLink>
@@ -34,7 +34,10 @@ import ThemeToggle from '~/components/site/ThemeToggle.vue'
 
 const { locale, altPath } = useLocale()
 const { site } = useContent()
-const route = useRoute()
+// The router's own route, not useRoute(): in this always-mounted header
+// useRoute() hydrated /portfolio/ as some other path and dropped the mark.
+const router = useRouter()
+const here = (l) => !!l.section?.test(router.currentRoute.value.path)
 
 const t = computed(() =>
   locale.value === 'en'
