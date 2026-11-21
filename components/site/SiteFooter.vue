@@ -14,6 +14,9 @@
         <li>
           <NuxtLink :to="en ? '/en/resume/' : '/resume/'">{{ en ? 'Résumé' : '履歷' }}</NuxtLink>
         </li>
+        <li>
+          <NuxtLink :to="en ? '/en/contact/' : '/contact/'">{{ en ? 'Contact' : '聯絡' }}</NuxtLink>
+        </li>
         <li v-for="l in links" :key="l.label">
           <a :href="l.href" v-bind="l.attrs">{{ l.label }}</a>
         </li>
@@ -28,7 +31,6 @@ const { locale } = useLocale()
 const en = computed(() => locale.value === 'en')
 
 const links = [
-  { label: 'Email', href: `mailto:${site.contact.email}` },
   { label: 'GitHub', href: site.contact.github, attrs: linkAttrs(site.contact.github, { me: true }) },
   { label: 'LinkedIn', href: site.contact.linkedin, attrs: linkAttrs(site.contact.linkedin, { me: true }) },
 ]

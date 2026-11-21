@@ -1,0 +1,11 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "ogmatcha-contact",
+  "main": "index.js",
+  "compatibility_date": "2026-11-19",
+  "observability": { "enabled": true },
+  // Only this path on the site runs the Worker; every other request goes to the static site.
+  "routes": [{ "pattern": "www.ogmatcha.com/api/contact", "zone_name": "ogmatcha.com" }],
+  // Five messages a minute per IP.
+  "ratelimits": [{ "name": "LIMIT", "namespace_id": "4101", "simple": { "limit": 5, "period": 60 } }]
+}

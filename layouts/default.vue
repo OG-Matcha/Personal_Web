@@ -31,7 +31,9 @@ const { locale } = useLocale()
 // its wood grain behind them, so clicking a print does not change rooms.
 // (The homepage draws its own, faded in under the 3D scene.)
 const router = useRouter()
-const onDesk = computed(() => /^(\/en)?\/(portfolio|work)\//.test(router.currentRoute.value.path))
+// Every page past the home desk lies on the same wood: the portfolio, each case and the
+// resume and contact. The path may come with or without its trailing slash.
+const onDesk = computed(() => /^(\/en)?\/(portfolio|work|resume|contact)(\/|$)/.test(router.currentRoute.value.path))
 const grain = { '--grain-day': `url(${asset('/images/desk-grain-day.webp')})`, '--grain-night': `url(${asset('/images/desk-grain-night.webp')})` }
 </script>
 

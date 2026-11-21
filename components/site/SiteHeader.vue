@@ -19,10 +19,10 @@
       <div class="hd-tools">
         <NuxtLink :to="t.altHref" class="hd-lang" :hreflang="t.altLang" :lang="t.altLang">{{ t.altLabel }}</NuxtLink>
         <ThemeToggle />
-        <a :href="`mailto:${site.contact.email}`" class="hd-mail" :aria-label="`${t.mail} ${site.contact.email}`">
+        <NuxtLink :to="t.contact" class="hd-mail" :aria-label="t.mailLabel">
           <Mail :size="16" :stroke-width="2.2" aria-hidden="true" />
           <span class="hd-mail-text">{{ t.mail }}</span>
-        </a>
+        </NuxtLink>
       </div>
     </div>
   </header>
@@ -33,7 +33,6 @@ import { Mail } from 'lucide-vue-next'
 import ThemeToggle from '~/components/site/ThemeToggle.vue'
 
 const { locale, altPath } = useLocale()
-const { site } = useContent()
 // The router's own route, not useRoute(): in this always-mounted header
 // useRoute() hydrated /portfolio/ as some other path and dropped the mark.
 const router = useRouter()
@@ -54,7 +53,9 @@ const t = computed(() =>
         altHref: altPath.value,
         altLang: 'zh-Hant-TW',
         altLabel: '中文',
-        mail: 'Email',
+        mail: 'Contact',
+        mailLabel: 'Contact: leave a message or email',
+        contact: '/en/contact/',
       }
     : {
         home: '/',
@@ -68,7 +69,9 @@ const t = computed(() =>
         altHref: altPath.value,
         altLang: 'en',
         altLabel: 'EN',
-        mail: '寫信',
+        mail: '聯絡',
+        mailLabel: '聯絡我：留言或寫信',
+        contact: '/contact/',
       }
 )
 </script>

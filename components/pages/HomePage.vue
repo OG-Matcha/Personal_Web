@@ -164,6 +164,9 @@
             >{{ site.contact.email.split('@')[0] }}<wbr />@{{ site.contact.email.split('@')[1] }}</a
           >
         </p>
+        <p class="pp-form-link">
+          <NuxtLink :to="c.formHref">{{ c.form }}<ArrowUpRight :size="16" :stroke-width="2" aria-hidden="true" /></NuxtLink>
+        </p>
         <ul class="pp-links">
           <li v-for="l in links" :key="l.label">
             <a :href="l.href" v-bind="l.attrs" :aria-label="l.label">
@@ -239,6 +242,8 @@ const c = computed(() =>
         workLede: 'What each one is, the part that was mine, and where it stands now.',
         all: 'Everything I have built',
         contactH: 'Get in touch',
+        form: 'Or leave a message here',
+        formHref: '/en/contact/',
         contactLede:
           'Generative-AI and agent architecture, early-stage technical partnerships, talks and workshops. Email reaches me fastest.',
       }
@@ -273,6 +278,8 @@ const c = computed(() =>
         workLede: '每一件是什麼、哪一部分是我做的，以及它現在的狀態。',
         all: '看全部作品',
         contactH: '聯絡',
+        form: '或直接在網頁上留言',
+        formHref: '/contact/',
         contactLede: `${site.open.join('、')}。寫信最快。`,
       }
 )
@@ -1550,6 +1557,25 @@ async function startWalk() {
 .pp-note .pp-lede {
   margin-top: 0;
   color: #4b453f;
+}
+
+.pp-note .pp-form-link {
+  margin-top: var(--sp-2);
+}
+
+.pp-note .pp-form-link a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 44px;
+  color: #4b453f;
+  font-weight: 700;
+  text-decoration-color: #c44a24;
+  text-underline-offset: 4px;
+}
+
+.pp-note .pp-form-link a:hover {
+  color: #a83c1c;
 }
 
 .pp-note .pp-mail a {

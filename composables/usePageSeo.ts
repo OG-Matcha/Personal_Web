@@ -12,7 +12,7 @@ export function usePageSeo(opts: {
   lang: 'zh' | 'en'
   title: string
   description: string
-  type: 'ProfilePage' | 'WebPage' | 'CollectionPage'
+  type: 'ProfilePage' | 'WebPage' | 'CollectionPage' | 'ContactPage'
   dateModified?: string
   ogType?: string
 }) {
