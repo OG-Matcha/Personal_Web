@@ -349,8 +349,10 @@ function readScroll() {
   const gone = (innerHeight - box.bottom) / (innerHeight * 0.5)
   walk.out = Math.min(1, Math.max(0, gone))
   el.style.setProperty('--out', walk.out.toFixed(3))
-  if (e < 0.08) on.value = i
-  else if (e > 0.92) on.value = i + 1
+  // The caption follows the camera's nearer stop. It used to change only below
+  // 0.08 or above 0.92 while the move (and the hidden caption) ran 0.1-0.9, so
+  // between 0.9 and 0.92 the last caption came back over the next thing.
+  on.value = e < 0.5 ? i : i + 1
   onWalk?.()
   // Left between two stops, the room has no words on it. Once the reader
   // stops scrolling, walk on to the stop they were heading for: never back
@@ -1563,13 +1565,14 @@ async function start(small = false) {
   opacity: 1;
 }
 
-/* How to use it: on the fade at the picture's foot, right of the name, clear of
-   the things on the desk; gone once it has been used. */
+/* How to use it: at the top of the picture, just under the header, on the
+   wall above the desk; gone once it has been used. It sat at the foot, where
+   the name comes in, and covered the top of "Ju-Shen". */
 .dk-touch {
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   justify-content: flex-end;
-  padding: 0 var(--page-gut) 2.4rem;
+  padding: 5rem var(--page-gut) 0;
   opacity: 0;
   pointer-events: none;
   transition: opacity 400ms var(--ease-entrance);

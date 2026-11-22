@@ -180,8 +180,8 @@ onBeforeUnmount(() => {
 }
 
 .sr-q {
-  word-break: keep-all;
-  overflow-wrap: anywhere;
+  word-break: normal;
+  overflow-wrap: break-word;
   margin-top: var(--sp-4);
   font-family: var(--font-display);
   font-size: var(--step-3);

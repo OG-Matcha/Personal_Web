@@ -199,10 +199,18 @@ h4:lang(zh-Hant),
 .display:lang(zh-Hant) {
   letter-spacing: 0;
   line-height: var(--lh-display-han);
-  /* Break Chinese headings only at spaces and punctuation, never inside a
-     word or a name (醫數行／銷). overflow-wrap: anywhere above still breaks
-     a run that would not fit at all. */
-  word-break: keep-all;
+  /* Chinese headings break between characters under the strict line-break
+     rules, so a line never opens on 。，？ and balance keeps the last line
+     from being one character. (keep-all made a whole sentence one unbreakable
+     word; when it did not fit, overflow-wrap: anywhere cut it wherever it
+     liked, punctuation rules and all.) A name that must stay whole is
+     wrapped in .nowrap where it is written. */
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+.nowrap {
+  white-space: nowrap;
 }
 
 /* No one-character last line (做完。) in running text. */
