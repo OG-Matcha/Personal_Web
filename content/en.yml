@@ -399,8 +399,8 @@ timeline:
   '2024-11 第 29 屆大專校院資訊應用服務創新競賽 資安應用組 - 第一名':
     title: 29th Information Application Service Innovation Contest, Security track – 1st place
     org: Ministry of Digital Affairs · Ministry of Education · Chinese Society for Management of Information Systems
-  '2024-11 第 29 屆大專校院資訊應用服務創新競賽 資訊應用組 IP-06 - 佳作':
-    title: 29th Information Application Service Innovation Contest, Applications track IP-06 – Honourable Mention
+  '2024-11 第 29 屆大專校院資訊應用服務創新競賽 資訊應用組 IP6 - 佳作':
+    title: 29th Information Application Service Innovation Contest, Applications track IP6 – Honourable Mention
     org: Ministry of Digital Affairs · Ministry of Education · Chinese Society for Management of Information Systems
   '2024-11 臺灣數創大賞 數位＋組 - 金獎':
     title: Taiwan Digital Innovation Awards, Digital+ track – Gold
@@ -415,9 +415,6 @@ timeline:
     title: GenAI Stars, Creative Maker track – Merit
     org: National Science and Technology Council · Taipei Computer Association
     detail: Entry – Ched.AI, automated financial-statement analysis and credit-risk assessment
-  '2024-09 桃園新創之星 X 創天下競賽 - 入圍決賽（前 10）':
-    title: Taoyuan Startup Star competition – finalist (top 10)
-    org: Chung Yuan Christian University · Taoyuan Youth Affairs Bureau
   '2024-07 發票醫生 Invoice Doctor':
     title: Invoice Doctor
     org: Finctory

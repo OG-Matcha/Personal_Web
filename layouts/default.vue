@@ -26,6 +26,20 @@ import SiteHeader from '~/components/site/SiteHeader.vue'
 import SiteFooter from '~/components/site/SiteFooter.vue'
 
 const { locale } = useLocale()
+
+// Headings carry invisible word joiners (utils/keepWords.ts) so they break
+// between phrases. Copied text leaves without them: someone copying a contest
+// name to search for it must get the plain words.
+const WJ = new RegExp(String.fromCharCode(0x2060), 'g')
+function onCopy(e) {
+  const text = String(getSelection() ?? '')
+  if (!WJ.test(text)) return
+  WJ.lastIndex = 0
+  e.clipboardData?.setData('text/plain', text.replace(WJ, ''))
+  e.preventDefault()
+}
+onMounted(() => document.addEventListener('copy', onCopy))
+onBeforeUnmount(() => document.removeEventListener('copy', onCopy))
 // <html lang> follows the page on every route, including the client-side hop
 // from /en/ back to Chinese, where pages that set no lang left none at all.
 useHead({ htmlAttrs: { lang: computed(() => (locale.value === 'en' ? 'en' : 'zh-Hant-TW')) } })

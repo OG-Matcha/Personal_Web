@@ -152,10 +152,32 @@
    The résumé is printed and saved as PDF from the browser too: on paper there
    is no bar to navigate with, no wood under the page and no button to press,
    and a link is only useful if its address is printed beside it. */
+/* Only on paper: a note on the printed résumé pointing to the short PDF. */
+.print-only {
+  display: none;
+}
+
 @media print {
-  :root {
-    --bg: #fff;
-    --surface: #fff;
+  /* Paper is white whichever theme is on screen: in the dark theme a printed
+     card kept its dark ground under black headings. */
+  :root,
+  :root[data-theme='dark'],
+  :root:not([data-theme='light']) {
+    color-scheme: light;
+    --bg: #fff !important;
+    --surface: #fff !important;
+    --ink: #111 !important;
+    --ink-2: #333 !important;
+    --ink-3: #555 !important;
+  }
+  .print-only {
+    display: block;
+    margin: 0 0 1rem;
+    font-size: 0.85rem;
+  }
+  /* Controls do nothing on paper. */
+  main button {
+    display: none !important;
   }
   .hd,
   .ft,

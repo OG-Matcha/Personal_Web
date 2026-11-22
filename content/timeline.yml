@@ -192,7 +192,8 @@
   org: 社團法人台灣永續典範永續發展協會
   project: osave
   note: 訴求 SDGs 1.4 普惠金融與 SDGs 3.4 心理健康
-  evidence: null
+  # 獎狀掃描，隊友姓名已模糊
+  evidence: /proof/asset-2025-social-enterprise.webp
 
 - date: 2025-02
   kind: research
@@ -267,6 +268,8 @@
   detail: >-
     帶領企劃、程式、設計、影音四組共 30 人，交付新生資訊平台，
     含像素風校園地圖與 AI 客服；服務 1,000 名以上新生。
+  # 團隊做的網站仍在線上；執行組頁面列了 Matcha
+  evidence: https://ncufresh.ncu.edu.tw/24/about/Introduce?group=executive
 
 - date: 2024-11
   kind: award
@@ -274,15 +277,17 @@
   title: 第 29 屆大專校院資訊應用服務創新競賽 資安應用組 - 第一名
   org: 數位發展部 · 教育部 · 中華民國資訊管理學會
   project: phishforge
-  evidence: null
+  # 獎狀掃描，隊友姓名已模糊
+  evidence: /proof/innoserve-2024-security-1st.webp
 
 - date: 2024-11
   kind: award
   lane: contest
-  title: 第 29 屆大專校院資訊應用服務創新競賽 資訊應用組 IP-06 - 佳作
+  title: 第 29 屆大專校院資訊應用服務創新競賽 資訊應用組 IP6 - 佳作
   org: 數位發展部 · 教育部 · 中華民國資訊管理學會
   project: phishforge
-  evidence: null
+  # 獎狀掃描，隊友姓名已模糊
+  evidence: /proof/innoserve-2024-ip6-merit.webp
 
 - date: 2024-11
   kind: award
@@ -317,14 +322,6 @@
   detail: 參賽作品 Ched.AI —— 自動化財務報表分析與徵信風險評估
   evidence: https://github.com/OG-Matcha/Credit-Report
 
-- date: 2024-09
-  kind: award
-  lane: contest
-  title: 桃園新創之星 X 創天下競賽 - 入圍決賽（前 10）
-  org: 中原大學 · 桃園市政府青年事務局
-  project: osave
-  evidence: null
-
 - date: 2024-07
   kind: product
   lane: venture
@@ -354,7 +351,8 @@
   title: 桃園青創力學生創業競賽 - 佳作
   org: 龍華科技大學 · 桃園市政府青年事務局
   project: osave
-  evidence: null
+  # 獎狀掃描，隊友姓名已模糊
+  evidence: /proof/lhu-2024-taoyuan-youth.webp
 
 - date: 2024-06
   kind: honor
@@ -376,7 +374,8 @@
   title: 第七屆致青春・創未來全國選拔大賽 科技應用組 - 優等獎
   org: 致理科技大學
   project: osave
-  evidence: null
+  # 獎狀掃描，隊友姓名已模糊
+  evidence: /proof/chihlee-2024-youth-startup.webp
 
 - date: 2024-04
   kind: role
@@ -411,13 +410,16 @@
   title: 中央新創擂台賽 - 優選
   org: 國立中央大學
   project: osave
-  evidence: null
+  # 獎狀掃描，隊友姓名已模糊
+  evidence: /proof/ncu-2024-startup-arena.webp
 
 - date: 2023-10
   kind: role
   lane: practice
   title: 2024 新生知訊網 副執行長（就任）
   org: 國立中央大學諮商中心
+  # 團隊做的網站仍在線上；執行組頁面列了 Matcha
+  evidence: https://ncufresh.ncu.edu.tw/24/about/Introduce?group=executive
 
 - date: 2023-09
   kind: role
@@ -439,7 +441,8 @@
   lane: contest
   title: 金匠獎程式競賽 Python 個人組 - 優獎
   org: 巨匠電腦 · 神通資科
-  evidence: null
+  # 獎狀掃描，隊友姓名已模糊
+  evidence: /proof/pcschool-2023-python.webp
 
 - date: 2023-07
   kind: role

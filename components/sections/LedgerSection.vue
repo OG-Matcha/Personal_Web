@@ -81,7 +81,7 @@ const c = computed(() =>
         advisor: 'Advisor: ',
         case: 'The product',
         sep: ': ',
-        proof: { site: 'Website', source: 'Source', store: 'Store listing', notice: 'Announcement' },
+        proof: { site: 'Website', source: 'Source', store: 'Store listing', cert: 'Certificate', live: 'The site', notice: 'Announcement' },
         shortlisted: 'Shortlist',
         fold: (n) => `Fold ${n} entries`,
         unfold: (n, a, b) => `Show ${n} more (${a}–${b})`,
@@ -93,7 +93,7 @@ const c = computed(() =>
         advisor: '指導教授：',
         case: '產品介紹',
         sep: '：',
-        proof: { site: '官網', source: '原始碼', store: '商店頁', notice: '公告' },
+        proof: { site: '官網', source: '原始碼', store: '商店頁', cert: '獎狀', live: '網站', notice: '公告' },
         shortlisted: '入圍',
         fold: (n) => `收合 ${n} 筆`,
         unfold: (n, a, b) => `展開其餘 ${n} 筆（${a} – ${b}）`,
@@ -123,9 +123,12 @@ const OWN_SITE = /(^|\.)(ogmatcha\.com|finctory\.com|medalink\.ai)$/
 function proofLabel(url) {
   let u
   try { u = new URL(url, 'https://www.ogmatcha.com') } catch { return c.value.proof.notice }
+  if (u.pathname.startsWith('/proof/')) return c.value.proof.cert
   if (u.hostname === 'github.com' && /^\/OG-Matcha\//i.test(u.pathname)) return c.value.proof.source
   if (OWN_SITE.test(u.hostname)) return c.value.proof.site
   if (u.hostname === 'chromewebstore.google.com') return c.value.proof.store
+  // A site the entry's team built, still online.
+  if (u.hostname === 'ncufresh.ncu.edu.tw') return c.value.proof.live
   return c.value.proof.notice
 }
 

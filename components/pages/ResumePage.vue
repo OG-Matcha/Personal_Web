@@ -1,5 +1,6 @@
 <template>
   <div>
+    <p class="print-only">{{ t.printNote }} https://www.ogmatcha.com{{ cv.mine }}</p>
     <Station id="record" wide :title="t.title" :lede="t.lede" heading-tag="h1">
       <template #meta>
         <dl class="counts figures">
@@ -65,6 +66,7 @@ const t = computed(() =>
         top: 'Top prizes',
         grants: 'NSTC grants',
         cv: 'Download CV',
+        printNote: 'The full record, as printed from the web. The two-page CV:',
         cvNote: `PDF · 2 pages · updated ${formatDate(site.contact.cv.updated)}`,
         cvOther: '中文版',
         skills: en.sheets.skills,
@@ -79,6 +81,7 @@ const t = computed(() =>
         top: '全國首獎',
         grants: '國科會計畫',
         cv: '下載履歷',
+        printNote: '這是網頁上的完整年表。兩頁的精簡履歷：',
         cvNote: `PDF · 2 頁 · ${formatDate(site.contact.cv.updated)} 更新`,
         cvOther: 'English',
         skills: '能力斷面',

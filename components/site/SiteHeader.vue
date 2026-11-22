@@ -243,6 +243,12 @@ const t = computed(() =>
   .hd-mark .hd-name-short {
     display: inline;
   }
+  /* "J. Huang" a size smaller below 380px, so it fits beside the links at 360. */
+  @media (max-width: 380px) {
+    .hd-mark .hd-name-short {
+      font-size: 0.76em;
+    }
+  }
   /* "Résumé" is the widest word in the bar; a phone gets the short form. */
   .hd-link-full {
     display: none;
@@ -289,8 +295,9 @@ const t = computed(() =>
   }
 }
 
-/* Below this the shortened English name crowds the links; the dot stays. */
-@media (max-width: 380px) {
+/* Below this the shortened English name crowds the links; the dot stays.
+   360px, the commonest Android width, still shows "J. Huang". */
+@media (max-width: 359px) {
   .hd-mark .hd-name-short {
     display: none;
   }
