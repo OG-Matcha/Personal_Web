@@ -24,7 +24,7 @@ const seoTitle = `${work.seoTitle ?? work.title} | 黃鉅燊 Ju-Shen Huang`
 const seoDescription = work.seoDescription ?? work.summary
 
 // The products with a share picture of their own (public/images/og/, cut from the hero).
-const OG_WORKS = new Set(['medalink', 'osave', 'phishforge', 'surprice', 'taobao'])
+const OG_WORKS = new Set(['finctory', 'medalink', 'osave', 'phishforge', 'surprice', 'taobao'])
 
 useSeoMeta({
   title: seoTitle,

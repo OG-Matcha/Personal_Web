@@ -41,8 +41,9 @@
               </div>
               <div class="ct-field">
                 <label class="ct-label" for="ct-contact">{{ t.contact }} <small>{{ t.optional }}</small></label>
-                <input id="ct-contact" v-model="contact" type="text" maxlength="160" autocomplete="email" inputmode="email" aria-describedby="ct-contact-hint" />
+                <input id="ct-contact" v-model="contact" type="text" maxlength="160" autocomplete="email" inputmode="email" aria-describedby="ct-contact-hint ct-contact-nudge" />
                 <p id="ct-contact-hint" class="ct-hint">{{ t.contactHint }}</p>
+                <p id="ct-contact-nudge" class="ct-nudge" aria-live="polite"><template v-if="nudge">{{ t.nudge }}</template></p>
               </div>
             </div>
 
@@ -57,7 +58,7 @@
                 <Send :size="18" aria-hidden="true" />
                 <span>{{ busy ? t.sending : t.send }}</span>
               </button>
-              <p class="ct-status" :class="{ 'is-empty': !status }" role="status" aria-live="polite">
+              <p ref="statusEl" class="ct-status" :class="{ 'is-empty': !status, 'is-warn': !!status }" role="status" aria-live="polite" tabindex="-1">
                 <template v-if="failedSend">{{ t.failedLead }}<a :href="`mailto:${site.contact.email}`">{{ site.contact.email }}</a></template>
                 <template v-else>{{ status }}</template>
               </p>
@@ -116,6 +117,7 @@ const t = computed(() =>
         name: 'Your name',
         contact: 'How do I reply?',
         contactHint: 'An email address, or any way you would like me to reach you.',
+        nudge: 'For work, leave an email or another way to reach you, or I cannot write back.',
         optional: '(optional)',
         send: 'Send',
         sending: 'Sending…',
@@ -142,6 +144,7 @@ const t = computed(() =>
         name: '你的名字',
         contact: '怎麼回覆你？',
         contactHint: 'Email，或任何你希望我聯絡你的方式。',
+        nudge: '談合作或工作的話，留個 email 或其他聯絡方式，我才回得了你。',
         optional: '（可不填）',
         send: '送出',
         sending: '送出中…',
@@ -167,6 +170,10 @@ const status = ref('')
 // The failure line names the address as a mailto link, not text to copy by hand.
 const failedSend = computed(() => !!status.value && status.value === t.value.failed(site.contact.email))
 const doneEl = ref(null)
+const statusEl = ref(null)
+// A work enquiry with no way to reply is a dead end: say so once they have
+// written something, without stopping them from sending.
+const nudge = computed(() => topic.value === 'work' && message.value.trim().length >= 2 && !contact.value.trim())
 let loadedAt = 0
 onMounted(() => (loadedAt = Date.now()))
 
@@ -206,6 +213,11 @@ async function send() {
     status.value = t.value.failed(site.contact.email)
   } finally {
     busy.value = false
+  }
+  // The send button is still under the finger; the reason it failed is next to it.
+  if (status.value) {
+    await nextTick()
+    statusEl.value?.focus()
   }
 }
 </script>
@@ -383,6 +395,48 @@ async function send() {
 .ct-status {
   margin: 0;
   color: var(--ink-2);
+}
+
+.ct-status.is-warn {
+  flex: 1 1 18rem;
+  padding: var(--sp-3) var(--sp-4);
+  border-left: 3px solid var(--pop);
+  border-radius: var(--r-2);
+  background: var(--surface-2);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.ct-status.is-warn:focus {
+  outline: none;
+}
+
+.ct-status.is-warn:focus-visible {
+  outline: 2px solid var(--pop);
+  outline-offset: 2px;
+}
+
+.ct-status a {
+  display: inline-block;
+  min-height: 44px;
+  line-height: 44px;
+  color: var(--pop);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+}
+
+.ct-nudge {
+  margin: 0;
+  text-wrap: pretty;
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--pop);
+}
+
+.ct-nudge:empty {
+  display: none;
 }
 
 .ct-status:empty,

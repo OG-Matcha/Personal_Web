@@ -49,7 +49,7 @@ usePageSeo({
   ogType: 'article',
   title: `${e.seoTitle ?? work.title} | Ju-Shen Huang`,
   description: e.seoDescription ?? e.summary ?? zh.summary,
-  image: zh.slug === 'finctory' ? undefined : `https://www.ogmatcha.com/images/og/${zh.slug}.jpg`,
+  image: `https://www.ogmatcha.com/images/og/${zh.slug}.jpg`,
 })
 </script>
 

@@ -754,7 +754,12 @@ function goBack() {
   background: var(--surface-2);
 }
 
+/* A finger-sized target (44px) without moving the heading: the padding is
+   taken back by the negative margin. */
 .hl-text h3 a {
+  display: inline-block;
+  padding-block: 0.75em;
+  margin-block: -0.75em;
   text-decoration: none;
 }
 
