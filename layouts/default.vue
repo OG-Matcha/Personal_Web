@@ -53,12 +53,27 @@ const router = useRouter()
 // Every page past the home desk lies on the same wood: the portfolio, each case and the
 // resume and contact. The path may come with or without its trailing slash.
 const onDesk = computed(() => /^(\/en)?\/(portfolio|work|resume|contact)(\/|$)/.test(router.currentRoute.value.path))
-const grain = { '--grain-day': `url(${asset('/images/desk-grain-day.webp')})`, '--grain-night': `url(${asset('/images/desk-grain-night.webp')})` }
+const grain = { '--grain-day': `url(${asset('/images/desk-grain-day.webp')})`, '--grain-night': `url(${asset('/images/desk-grain-night.webp')})`, '--grain-day-phone': `url(${asset('/images/desk-grain-day-phone.webp')})`, '--grain-night-phone': `url(${asset('/images/desk-grain-night-phone.webp')})` }
 </script>
 
 <style>
 #main:focus {
   outline: none;
+}
+
+/* Phones get the grain as a 384px tile (1.6 kB, 0.7 kB at night) instead of
+   the 1024px one (21 kB): there it shows only in the gutters beside the
+   cards, and the full tile was the page's largest paint, so a phone's LCP
+   waited on a texture (4-6 s on slow 4G). Chrome leaves an image this low in
+   detail per pixel out of LCP, so the paint that counts is the page's own
+   words. Made with PIL from the 1024px tiles: resize to 384x327, WebP q70.
+   !important: the URLs are set in an inline style (they carry a hash). */
+@media (max-width: 767px) {
+  .on-desk,
+  .pp-desk {
+    --grain-day: var(--grain-day-phone) !important;
+    --grain-night: var(--grain-night-phone) !important;
+  }
 }
 
 .on-desk {

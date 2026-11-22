@@ -207,7 +207,7 @@ const repo = (n) => alsoBuilt.find((a) => a.name === n)
 // Same scale for all three.
 const props = ['mug', 'kuaikuai', 'plant'].map((n) => ({ n, ...deskProps[n] }))
 // The grain tiles' URLs carry their content hash (utils/asset.ts), so they are set here, not in the CSS.
-const grain = { '--grain-day': `url(${asset('/images/desk-grain-day.webp')})`, '--grain-night': `url(${asset('/images/desk-grain-night.webp')})` }
+const grain = { '--grain-day': `url(${asset('/images/desk-grain-day.webp')})`, '--grain-night': `url(${asset('/images/desk-grain-night.webp')})`, '--grain-day-phone': `url(${asset('/images/desk-grain-day-phone.webp')})`, '--grain-night-phone': `url(${asset('/images/desk-grain-night-phone.webp')})` }
 
 // The paragraphs under 我怎麼想 are a first-person draft written from the
 // case studies and the five questions; every claim in them is checkable in
