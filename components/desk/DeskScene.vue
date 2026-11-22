@@ -90,6 +90,9 @@
             <h1 class="dk-title">
               <span class="dk-name">{{ t.name }}</span>{{ ' ' }}<span class="dk-thesis">{{ t.thesis }}</span>
             </h1>
+            <!-- Who, in one line, for the reader deciding whether to read on:
+                 the first screen used to hold only a name and a sentence. -->
+            <p class="dk-role"><template v-for="(r, i) in t.role" :key="i"><template v-if="i"> · </template><span>{{ r }}</span></template></p>
             <p class="dk-hint">{{ t.hint }}</p>
             <a href="#about" class="dk-skip">{{ t.skip }}</a>
           </template>
@@ -181,6 +184,7 @@ const t = computed(() =>
         label: 'My desk',
         name: 'Ju-Shen Huang',
         thesis: 'I take AI from demo to something people still use three months later.',
+        role: ['Co-founder & CTO, Finctory', 'Co-founder, MedaLink', `${site.counts.awards} competition awards`],
         hint: 'Scroll to walk across my desk',
         touch: 'Drag to look around · tap a thing',
         tour: 'Things on my desk',
@@ -192,6 +196,7 @@ const t = computed(() =>
         label: '我的桌子',
         name: '黃鉅燊',
         thesis: '我把 AI 從展示品，​做到三個月後還有人在用。',
+        role: ['斐闊 Finctory 共同創辦人暨技術長', '醫數行銷 MedaLink 共同創辦人', `${site.counts.awards} 項競賽獎`],
         hint: '往下捲，走過我的桌子',
         touch: '左右拖曳看看 · 點桌上的東西',
         tour: '桌上的東西',
@@ -1978,6 +1983,21 @@ async function start(small = false) {
 
 .dk-skip:hover {
   color: var(--ink);
+}
+
+.dk-role {
+  margin-top: var(--sp-4);
+  max-width: 40rem;
+  font-size: var(--step-0);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+
+/* Each role is one unit: lines break at the dots, never inside a role. */
+.dk-role span {
+  white-space: nowrap;
 }
 
 .dk-hint {

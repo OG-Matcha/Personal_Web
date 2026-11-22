@@ -410,8 +410,7 @@
   title: 中央新創擂台賽 - 優選
   org: 國立中央大學
   project: osave
-  # 獎狀掃描，隊友姓名已模糊
-  evidence: /proof/ncu-2024-startup-arena.webp
+  evidence: null
 
 - date: 2023-10
   kind: role
