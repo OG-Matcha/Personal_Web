@@ -57,7 +57,10 @@
                 <Send :size="18" aria-hidden="true" />
                 <span>{{ busy ? t.sending : t.send }}</span>
               </button>
-              <p class="ct-status" role="status" aria-live="polite">{{ status }}</p>
+              <p class="ct-status" :class="{ 'is-empty': !status }" role="status" aria-live="polite">
+                <template v-if="failedSend">{{ t.failedLead }}<a :href="`mailto:${site.contact.email}`">{{ site.contact.email }}</a></template>
+                <template v-else>{{ status }}</template>
+              </p>
             </div>
           </form>
         </div>
@@ -119,6 +122,7 @@ const t = computed(() =>
         done: 'Sent. Thank you, I read every message myself.',
         slow: 'That was quick. Please wait a minute and try again.',
         failed: (m) => `It did not go through. Please email me instead: ${m}`,
+        failedLead: 'It did not go through. Please email me instead: ',
         sideLabel: 'Other ways to reach me',
         direct: 'Or write directly',
         what: 'I never share what you send.',
@@ -144,6 +148,7 @@ const t = computed(() =>
         done: '送出了，謝謝你。每一則我都會自己看。',
         slow: '送得有點快，等一分鐘再試一次。',
         failed: (m) => `沒有送出去，請改寄 email：${m}`,
+        failedLead: '沒有送出去，請改寄 email：',
         sideLabel: '其他聯絡方式',
         direct: '也可以直接寫信',
         what: '你寄來的內容不會給任何人。',
@@ -159,6 +164,8 @@ const busy = ref(false)
 const sent = ref(false)
 const err = ref('')
 const status = ref('')
+// The failure line names the address as a mailto link, not text to copy by hand.
+const failedSend = computed(() => !!status.value && status.value === t.value.failed(site.contact.email))
 const doneEl = ref(null)
 let loadedAt = 0
 onMounted(() => (loadedAt = Date.now()))
@@ -378,7 +385,8 @@ async function send() {
   color: var(--ink-2);
 }
 
-.ct-status:empty {
+.ct-status:empty,
+.ct-status.is-empty {
   display: none;
 }
 

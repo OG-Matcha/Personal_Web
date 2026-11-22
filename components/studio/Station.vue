@@ -75,6 +75,14 @@ defineProps({
   text-wrap: balance;
 }
 
+/* Balancing a four-line lede on a phone makes every line short and leaves a
+   third of the column empty; there, only keep the last line from being a word. */
+@media (max-width: 640px) {
+  .st-lede {
+    text-wrap: pretty;
+  }
+}
+
 .st-meta {
   display: flex;
   flex-wrap: wrap;

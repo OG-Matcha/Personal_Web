@@ -10,7 +10,7 @@
       </NuxtLink>
 
       <nav :aria-label="t.navLabel" class="scroll-x hd-nav">
-        <NuxtLink v-for="l in t.links" :key="l.href" :to="l.href" class="hd-link" :aria-label="l.short ? l.label : undefined" :class="{ 'is-here': here(l) }" v-bind="l.href.includes('#') ? { 'aria-current': here(l) ? 'page' : false } : {}">
+        <NuxtLink v-for="l in t.links" :key="l.href" :to="l.href" class="hd-link" :aria-label="l.short ? l.label : undefined" :class="{ 'is-here': here(l), 'hd-link--wide': l.wide }" v-bind="l.href.includes('#') ? { 'aria-current': here(l) ? 'page' : false } : {}">
           <template v-if="l.short"><span class="hd-link-full">{{ l.label }}</span><span class="hd-link-short" aria-hidden="true">{{ l.short }}</span></template>
           <template v-else>{{ l.label }}</template>
         </NuxtLink>
@@ -47,7 +47,7 @@ const t = computed(() =>
         navLabel: 'Main',
         links: [
           { href: '/en/#work', label: 'Work', section: /^\/en\/(portfolio|work)\// },
-          { href: '/en/#record', label: 'Record' },
+          { href: '/en/#record', label: 'Record', wide: true },
           { href: '/en/resume/', label: 'Résumé', short: 'CV' },
         ],
         altHref: altPath.value,
@@ -63,7 +63,7 @@ const t = computed(() =>
         navLabel: '主要導覽',
         links: [
           { href: '/#work', label: '作品', section: /^\/(portfolio|work)\// },
-          { href: '/#record', label: '年表' },
+          { href: '/#record', label: '年表', wide: true },
           { href: '/resume/', label: '履歷' },
         ],
         altHref: altPath.value,
@@ -216,10 +216,20 @@ const t = computed(() =>
   .hd-nav {
     gap: 4px;
   }
+  /* The bar is 30-40px short of three links on a phone. The record is a
+     section of the homepage and the whole of the résumé page, so it is the
+     one to go; the work and the résumé stay. */
+  .hd-link--wide {
+    display: none;
+  }
+  /* Never squeezed below its word: the nav shrank each link to its 44px
+     minimum, two pixels short of 「履歷」 with its padding, and clipped the
+     last character (and left "CV" as "C"). */
   .hd-link {
+    flex: none;
     justify-content: center;
     min-width: 44px;
-    padding-inline: 6px;
+    padding-inline: 5px;
   }
   .hd-tools {
     gap: var(--sp-1);

@@ -118,7 +118,7 @@ const c = computed(() =>
     ? {
         name: site.person.nameEn,
         nameLang: 'en',
-        altName: `${site.person.nameZh} · OG_Matcha`,
+        altName: `${site.person.nameZh} · OG_Matcha`,
         thesisLines: en.thesisLines,
         thesisSub: en.thesisSub,
         indexLabel: 'On this page',
@@ -128,7 +128,7 @@ const c = computed(() =>
     : {
         name: site.person.nameZh,
         nameLang: 'zh-Hant',
-        altName: `${site.person.nameEn} · OG_Matcha`,
+        altName: `${site.person.nameEn} · OG_Matcha`,
         thesisLines: about.thesisLines,
         thesisSub: about.thesisSub,
         indexLabel: '這一頁有什麼',

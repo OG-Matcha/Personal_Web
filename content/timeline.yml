@@ -227,7 +227,8 @@
   org: 教育部
   project: osave
   # 青年署公告的獲補助團隊名單，「創新服務」類、國立中央大學，隊名「斐闊．Finctory」
-  evidence: https://ustart.yda.gov.tw/p/405-1000-2128,c82.php?Lang=zh-tw
+  # U-start 網站改版，舊網址（/p/405-1000-2128,c82.php）已 404；這是新站的同一份公告（2026-11-22 確認名單上有）。
+  evidence: https://ustart.yda.gov.tw/historical-grants/1730
 
 - date: 2025-09
   kind: award

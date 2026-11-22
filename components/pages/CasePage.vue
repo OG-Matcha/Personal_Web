@@ -10,11 +10,13 @@
     <div class="case-band">
     <header class="shell case-hero">
       <div class="case-intro">
-        <p class="case-eyebrow">{{ work.org || work.role }}</p>
+        <!-- What he did first, where second: the reader came to see his part. -->
+        <p class="case-eyebrow">{{ work.role || work.org }}</p>
         <h1 class="case-title">{{ work.title }}</h1>
         <p v-if="work.tagline" class="case-tagline" :class="{ 'is-long': work.tagline.length > 16 && /[一-鿿]/.test(work.tagline) && !/[，、「]/.test(work.tagline) }">{{ work.tagline }}</p>
         <p class="case-summary">{{ work.summary }}</p>
         <p class="case-meta">
+          <span v-if="work.role && work.org" class="case-org">{{ work.org }}</span>
           <span class="pill">{{ work.status }}</span>
           <span class="figures">{{ formatDate(work.period.start) }} – {{ work.period.end ? formatDate(work.period.end) : t.now }}</span>
         </p>
@@ -329,6 +331,13 @@ function goBack() {
   margin-top: var(--sp-5);
   font-size: var(--step--1);
   color: var(--ink-3);
+}
+
+/* The organisation gets a line of its own, above the status and dates. */
+.case-org {
+  flex-basis: 100%;
+  font-weight: 600;
+  color: var(--ink-2);
 }
 
 .case-links {

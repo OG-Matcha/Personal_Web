@@ -24,10 +24,10 @@
               class="node"
               :data-tier="n.tier"
             >
-              <span class="dot" /><span class="sr-only">{{ tierLabel({ id: n.tier, label: labelOf[n.tier] }) }}：</span>{{ (en && n.name_en) || n.name }}
+              <span class="dot" /><span class="sr-only">{{ tierLabel({ id: n.tier, label: labelOf[n.tier] }) }}{{ en ? ': ' : '：' }}</span>{{ (en && n.name_en) || n.name }}
             </a>
             <span v-else class="node" :data-tier="n.tier">
-              <span class="dot" /><span class="sr-only">{{ tierLabel({ id: n.tier, label: labelOf[n.tier] }) }}：</span>{{ (en && n.name_en) || n.name }}
+              <span class="dot" /><span class="sr-only">{{ tierLabel({ id: n.tier, label: labelOf[n.tier] }) }}{{ en ? ': ' : '：' }}</span>{{ (en && n.name_en) || n.name }}
             </span>
           </li>
         </ul>
