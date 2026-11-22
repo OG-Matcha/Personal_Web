@@ -17,6 +17,16 @@
   repo: https://github.com/OG-Matcha/jieban
   award: 臺北秋季程式設計節 城市通微服務大黑客松 佳作
 
+- name: 推し看板 oshi
+  thumbnail: /images/oshi-1.webp
+  year: 2026
+  line: 把台灣和日本的動漫快閃店、原畫展、同人市集、主題咖啡廳整理成一頁：每天早上自動抓官方公告和官方 X，由 AI 讀成日期、地點和商品價格，同一場活動的多則消息併在一起。關注推的作品，有新消息、通販補貨就推播通知。
+  stack: [Python, Scrapling, Claude Code, Cloudflare Workers, Web Push]
+  # repo 是私有的；連到正式站。
+  url: https://oshi.ogmatcha.com/
+  repo: null
+  award: null
+
 - name: tessera
   thumbnail: /images/tessera-1.png
   thumbFit: contain # 2:1, too wide to crop

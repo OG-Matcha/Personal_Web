@@ -268,6 +268,9 @@ alsoBuilt:
     name: Jieban
     award: Taipei Autumn Coding Festival, Town Pass Microservice Hackathon, Honourable Mention
     line: A Taipei MRT companion for older, blind and wheelchair riders - it routes around lifts under maintenance using city open data, picks one exit with a lift map, then talks you out of the station step by step. Speech recognition and intent matching run on the phone, so it works in airplane mode.
+  推し看板 oshi:
+    name: Oshi Board
+    line: Anime pop-up shops, art exhibitions, doujin markets and collab cafés in Taiwan and Japan on one page. Every morning it collects official announcements and official X posts, has AI read out dates, venues and prices, and folds several posts about one event together. Follow your series and get a push when there's news or an online restock.
   tessera:
     line: A Claude Code mod, Windows and CJK first - pasted images and text previewed in any terminal, CJK-correct tables, long diffs folded, and guards for multi-agent runs and Traditional Chinese writing.
   orca-companion-kit:

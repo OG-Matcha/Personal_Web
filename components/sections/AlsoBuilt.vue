@@ -2,7 +2,8 @@
   <!-- Contact sheet: the smaller jobs, printed small, many to a sheet. -->
   <ol class="ab">
     <li v-for="p in ordered" :key="p.name" class="ab-item">
-      <component :is="p.repo ? 'a' : 'div'" :href="p.repo || undefined" v-bind="linkAttrs(p.repo)" class="ab-link">
+      <!-- A live site wins over the source: it's what the project is for. -->
+      <component :is="p.url || p.repo ? 'a' : 'div'" :href="p.url || p.repo || undefined" v-bind="linkAttrs(p.url || p.repo)" class="ab-link">
         <div class="ab-media">
           <SiteShot v-if="p.thumbnail" :src="p.thumbnail" :fit="p.thumbFit ?? 'cover'" :focus="p.thumbFocus ?? 'center'" sizes="(min-width: 1024px) 24vw, (min-width: 640px) 45vw, 100vw" width="600" height="375" />
           <span v-else class="ab-blank">{{ p.stack?.[0] }}</span>

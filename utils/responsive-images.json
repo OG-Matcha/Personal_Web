@@ -209,6 +209,16 @@
    "/images/osave-1.webp"
   ]
  ],
+ "/images/oshi-1.webp": [
+  [
+   800,
+   "/images/oshi-1-800w.webp"
+  ],
+  [
+   1600,
+   "/images/oshi-1.webp"
+  ]
+ ],
  "/images/phishforge-1.png": [
   [
    800,
