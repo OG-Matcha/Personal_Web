@@ -42,7 +42,15 @@ onMounted(() => document.addEventListener('copy', onCopy))
 onBeforeUnmount(() => document.removeEventListener('copy', onCopy))
 // <html lang> follows the page on every route, including the client-side hop
 // from /en/ back to Chinese, where pages that set no lang left none at all.
-useHead({ htmlAttrs: { lang: computed(() => (locale.value === 'en' ? 'en' : 'zh-Hant-TW')) } })
+const cjkFont = useRuntimeConfig().public.cjkFont
+useHead({
+  htmlAttrs: { lang: computed(() => (locale.value === 'en' ? 'en' : 'zh-Hant-TW')) },
+  // Chinese pages fetch the large Noto file with the HTML: its face is
+  // font-display: optional (see nuxt.config), used only if in by first paint.
+  link: computed(() =>
+    locale.value === 'en' ? [] : [{ rel: 'preload', as: 'font', type: 'font/woff2', href: cjkFont, crossorigin: '', fetchpriority: 'low', key: 'cjk-1' }]
+  ),
+})
 
 // The work pages are laid on the same desk as the homepage's lower half:
 // its wood grain behind them, so clicking a print does not change rooms.

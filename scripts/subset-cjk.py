@@ -116,7 +116,9 @@ def main():
         print(f'  {i}: {len(g)} characters, {os.path.getsize(out) // 1024} KB')
         css.append(
             "@font-face {\n  font-family: 'Noto Sans TC';\n  font-style: normal;\n  font-weight: 400 900;\n"
-            f"  font-display: swap;\n  src: url(/fonts/notosanstc-{i}.woff2) format('woff2');\n"
+            # optional, not swap: a late swap re-lays every Chinese line (3 s
+            # on a mid-range phone). layouts/default.vue preloads both files.
+            f"  font-display: optional;\n  src: url(/fonts/notosanstc-{i}.woff2) format('woff2');\n"
             f"  unicode-range: {ranges(g)};\n}}\n"
         )
     open(os.path.join(ROOT, 'public/fonts/cjk.css'), 'w', encoding='utf-8').write(''.join(css))
