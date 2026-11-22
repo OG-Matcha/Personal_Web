@@ -288,10 +288,10 @@ const t = computed(() =>
   }
 }
 
-/* A 320px phone cannot fit every control: the address stays in the footer
-   and on the résumé, so the mail button goes before the links are clipped. */
+/* A 320px phone cannot fit every control. Contact is what the site is for,
+   so it stays; the day/night switch moves to the footer (SiteFooter). */
 @media (max-width: 359px) {
-  .hd-mail {
+  .hd-tools :deep(.tg) {
     display: none;
   }
 }

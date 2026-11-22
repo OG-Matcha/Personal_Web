@@ -33,8 +33,10 @@ onMounted(() => {
   night.value = current()
 })
 
+// From the page, not this button's own state: the header and footer each
+// have a toggle, and either may have been used last.
 function apply() {
-  night.value = !night.value
+  night.value = !current()
   const v = night.value ? 'dark' : 'light'
   document.documentElement.dataset.theme = v
   try {

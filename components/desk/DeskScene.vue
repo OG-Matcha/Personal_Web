@@ -92,7 +92,7 @@
             </h1>
             <!-- Who, in one line, for the reader deciding whether to read on:
                  the first screen used to hold only a name and a sentence. -->
-            <p class="dk-role"><template v-for="(r, i) in t.role" :key="i"><template v-if="i"> · </template><span>{{ r }}</span></template></p>
+            <p class="dk-role"><span v-for="r in t.role" :key="r">{{ r }}</span></p>
             <p class="dk-hint">{{ t.hint }}</p>
             <a href="#about" class="dk-skip">{{ t.skip }}</a>
           </template>
@@ -1995,9 +1995,13 @@ async function start(small = false) {
   text-wrap: pretty;
 }
 
-/* Each role is one unit: lines break at the dots, never inside a role. */
+/* One role to a line: the column stays narrow enough to clear the props on
+   the desk (a long line ran into the tablet and the lamp), and a halo in the
+   page colour keeps the words readable where they do cross the scene. */
 .dk-role span {
+  display: block;
   white-space: nowrap;
+  text-shadow: 0 0 3px var(--bg), 0 0 8px var(--bg);
 }
 
 .dk-hint {

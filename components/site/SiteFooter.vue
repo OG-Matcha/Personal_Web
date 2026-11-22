@@ -21,11 +21,14 @@
           <a :href="l.href" v-bind="l.attrs">{{ l.label }}</a>
         </li>
       </ul>
+      <!-- Below 360px the header has no room for it. -->
+      <div class="ft-theme"><ThemeToggle /></div>
     </div>
   </footer>
 </template>
 
 <script setup>
+import ThemeToggle from '~/components/site/ThemeToggle.vue'
 const { site } = useContent()
 const { locale } = useLocale()
 const en = computed(() => locale.value === 'en')
@@ -37,6 +40,16 @@ const links = [
 </script>
 
 <style scoped>
+.ft-theme {
+  display: none;
+}
+
+@media (max-width: 359px) {
+  .ft-theme {
+    display: block;
+  }
+}
+
 .ft {
   position: relative;
   z-index: 1;

@@ -1435,7 +1435,9 @@ async function startWalk() {
 .pp-work-title.is-token span {
   min-width: 0;
   white-space: nowrap;
-  font-size: min(1em, 8.5cqi);
+  /* Shrinks to fit a narrow card, but never below the date line above it
+     (14px): the name is what the card is for. */
+  font-size: max(15px, min(1em, 8.5cqi));
 }
 
 .pp-arrow {
