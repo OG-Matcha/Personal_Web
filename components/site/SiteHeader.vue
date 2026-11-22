@@ -272,8 +272,8 @@ const t = computed(() =>
   }
 }
 
-/* The three-character Chinese name fits down to 360px (the commonest
-   Android width); only below that is the dot left alone. */
+/* The name (黃鉅燊, or "J. Huang") shows at every width: at 320px, with the
+   day/night switch moved to the footer, it still clears the links by ~20px. */
 /* 360-370px: the name costs the nav 3px, given back by tighter gaps. */
 @media (max-width: 370px) {
   .hd-bar {
@@ -282,24 +282,11 @@ const t = computed(() =>
   }
 }
 
-@media (max-width: 359px) {
-  .hd-mark .hd-name {
-    display: none;
-  }
-}
-
 /* A 320px phone cannot fit every control. Contact is what the site is for,
-   so it stays; the day/night switch moves to the footer (SiteFooter). */
+   and the name says whose site it is, so both stay; the day/night switch
+   moves to the footer (SiteFooter). */
 @media (max-width: 359px) {
   .hd-tools :deep(.tg) {
-    display: none;
-  }
-}
-
-/* Below this the shortened English name crowds the links; the dot stays.
-   360px, the commonest Android width, still shows "J. Huang". */
-@media (max-width: 359px) {
-  .hd-mark .hd-name-short {
     display: none;
   }
 }

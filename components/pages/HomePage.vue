@@ -1598,7 +1598,7 @@ async function startWalk() {
 }
 
 .pp-note .pp-form-link a:hover {
-  color: #a83c1c;
+  color: #8c2d12;
 }
 
 .pp-note .pp-mail a {
@@ -1606,8 +1606,29 @@ async function startWalk() {
   text-decoration-color: #c44a24;
 }
 
-/* Everywhere else to find me, on the same note: the paper is the same
-   yellow in both themes, so the ink is too. */
+/* At night the note is paper under the desk lamp, a step down from daylight
+   yellow: it was the one thing on the dark page that did not dim. The ink
+   below still reads at 4.5:1 or more on it. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .pp-note {
+    background: #dcc27f;
+  }
+
+  :root:not([data-theme='light']) .pp-note::before {
+    background: rgb(255 255 255 / 0.32);
+  }
+}
+
+:root[data-theme='dark'] .pp-note {
+  background: #dcc27f;
+}
+
+:root[data-theme='dark'] .pp-note::before {
+  background: rgb(255 255 255 / 0.32);
+}
+
+/* Everywhere else to find me, on the same note: the ink is the
+   same in both themes. */
 .pp-note .pp-links {
   margin-top: var(--sp-5);
 }
@@ -1617,7 +1638,7 @@ async function startWalk() {
 }
 
 .pp-note .pp-links a:hover {
-  color: #a83c1c;
+  color: #8c2d12;
 }
 
 /* The badge on its lanyard: the name and role on a card with a slot. */
