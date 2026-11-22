@@ -19,7 +19,7 @@
             <span class="sr-num">{{ String(i + 1).padStart(2, '0') }}</span>
             {{ range(b) }}
           </p>
-          <h3 class="sr-q">{{ b.title }}</h3>
+          <h3 class="sr-q">{{ keep(b.title) }}</h3>
           <p v-if="b.lede" class="sr-text">{{ b.lede }}</p>
           <ul class="sr-events">
             <li v-for="e in b.shown" :key="e.date + e.title">

@@ -10,7 +10,7 @@
         </div>
         <div class="ab-head">
           <span class="ab-year figures">{{ p.year }}</span>
-          <h3 class="ab-name">{{ p.name }}</h3>
+          <h3 class="ab-name" :class="{ 'is-token': !/\s/.test(p.name) }">{{ p.name }}</h3>
         </div>
         <p v-if="p.award" class="ab-award">{{ p.award }}</p>
         <p class="ab-line">{{ p.line }}</p>
@@ -105,6 +105,12 @@ a.ab-link:hover .ab-media .shot {
   min-width: 0;
   font-size: var(--step-1);
   font-weight: 700;
+}
+
+/* A repo name is one word: broken at its hyphens it stood as three lines
+   ("orca- / companion- / kit"). It fits every column at this size. */
+.ab-name.is-token {
+  white-space: nowrap;
 }
 
 a.ab-link:hover .ab-name {

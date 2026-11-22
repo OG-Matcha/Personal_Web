@@ -11,14 +11,16 @@
  * nothing at all.
  */
 
-const SITE_HOST = 'ogmatcha.com'
+// This site only. The subdomains (oshi., the podcast) are other apps: leaving
+// for them is leaving the page, so they open in a new tab like any other site.
+const SITE_HOSTS = new Set(['ogmatcha.com', 'www.ogmatcha.com'])
 
 /** True for an absolute URL pointing somewhere that is not this site. */
 export function isExternal(href?: string | null): boolean {
   if (!href) return false
   if (!/^https?:\/\//i.test(href)) return false
   try {
-    return !new URL(href).hostname.endsWith(SITE_HOST)
+    return !SITE_HOSTS.has(new URL(href).hostname)
   } catch {
     return false
   }

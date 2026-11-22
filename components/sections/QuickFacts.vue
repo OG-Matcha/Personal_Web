@@ -9,7 +9,12 @@
   <dl class="qf">
     <div v-for="q in faqs" :key="q.q" class="qf-item">
       <dt class="qf-q">{{ q.q }}</dt>
-      <dd class="qf-a">{{ q.a }}</dd>
+      <dd class="qf-a">
+        <template v-for="(s, k) in linkify(q.a)" :key="k">
+          <a v-if="s.href" :href="s.href" v-bind="linkAttrs(s.href)">{{ s.t }}</a>
+          <template v-else>{{ s.t }}</template>
+        </template>
+      </dd>
     </div>
   </dl>
 </template>
@@ -18,6 +23,21 @@
 const { site, about, en, works, timeline } = useContent()
 const { locale } = useLocale()
 const E = computed(() => locale.value === 'en')
+
+// The answers name addresses as text (they are quoted whole by answer
+// engines); on the page those addresses are links, so nobody copies a URL.
+const LINKABLE = /(https?:\/\/[^\s，。；、）)]+[^\s，。；、）).]|[\w.+-]+@[\w-]+(?:\.[\w-]+)+)/g
+function linkify(text) {
+  const out = []
+  let at = 0
+  for (const m of String(text).matchAll(LINKABLE)) {
+    if (m.index > at) out.push({ t: text.slice(at, m.index) })
+    out.push({ t: m[0], href: m[0].includes('@') && !m[0].startsWith('http') ? `mailto:${m[0]}` : m[0] })
+    at = m.index + m[0].length
+  }
+  if (at < text.length) out.push({ t: text.slice(at) })
+  return out
+}
 
 const SHORTLISTED = /入圍/
 const TOP_PRIZE = /第一名|冠軍|金獎|最佳創新創業大獎/

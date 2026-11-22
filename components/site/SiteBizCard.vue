@@ -40,6 +40,9 @@
     </div>
     <!-- The name comes from the face showing, so it matches what is seen (WCAG 2.5.3); how to flip is a description. -->
     <p :id="hintId" class="bc-hint">{{ t.flip }}</p>
+    <!-- The back says "say hi": the way to do it appears with it, outside the
+         card (a link cannot sit inside the card's button). -->
+    <NuxtLink :to="t.contact" class="bc-hi" :class="{ 'is-on': back }" :tabindex="back ? undefined : -1" :aria-hidden="back ? undefined : 'true'">{{ t.hi }}</NuxtLink>
   </div>
 </template>
 
@@ -47,8 +50,8 @@
 const { locale } = useLocale()
 const t = computed(() =>
   locale.value === 'en'
-    ? { flip: 'Press to flip the card.', secret: 'You found the back. Say hi.' }
-    : { flip: '按一下翻面', secret: '你翻到背面了，來打聲招呼吧。' }
+    ? { flip: 'Press to flip the card.', secret: 'You found the back. Say hi.', hi: 'Say hi →', contact: '/en/contact/' }
+    : { flip: '按一下翻面', secret: '你翻到背面了，來打聲招呼吧。', hi: '打聲招呼 →', contact: '/contact/' }
 )
 
 const hintId = useId()
@@ -182,6 +185,39 @@ onBeforeUnmount(() => cancelAnimationFrame(raf))
   overflow: hidden;
   clip-path: inset(50%);
   white-space: nowrap;
+}
+
+.bc-hi {
+  position: absolute;
+  bottom: var(--sp-2);
+  left: 50%;
+  translate: -50% 0;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: var(--sp-4);
+  border-radius: var(--r-full);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+  font-size: var(--step--1);
+  font-weight: 700;
+  color: var(--ink);
+  text-decoration: none;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--dur-2), visibility 0s var(--dur-2);
+}
+
+.bc-hi.is-on {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity var(--dur-2);
+}
+
+.bc-hi:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--pop-ink);
 }
 
 .bc-stage {

@@ -73,7 +73,7 @@
             >
               <p class="pp-when figures">{{ b.when }}</p>
               <div class="pp-stop-body">
-                <h3 class="pp-q">{{ b.title }}</h3>
+                <h3 class="pp-q">{{ keep(b.title) }}</h3>
                 <p v-if="b.lede" class="pp-stop-text">{{ b.lede }}</p>
                 <!-- The year's events fold away: the road reads as questions and
                      answers, and the record is one tap away, not in the way. -->

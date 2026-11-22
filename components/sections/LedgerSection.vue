@@ -240,7 +240,11 @@ const oldestYear = computed(() => yearOf(entries.value[entries.value.length - 1]
 .lg-links a::after {
   content: '';
   position: absolute;
-  inset: -10px -8px;
+  left: -10px;
+  right: -10px;
+  top: 50%;
+  height: 44px;
+  translate: 0 -50%;
 }
 
 .lg-links a:hover {
