@@ -40,7 +40,7 @@
           </li>
         </ol>
       </section>
-      <LedgerSection />
+      <LedgerSection filter />
     </Station>
 
     <Station id="skills" wide :title="t.skills" :lede="t.skillsLede">

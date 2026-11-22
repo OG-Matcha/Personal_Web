@@ -5,10 +5,25 @@
     wins read down the left edge like the colour bar reads across a sheet.
   -->
   <div class="lg">
+    <!-- A reader after one thing (only the prizes, only the jobs) narrows the
+         list here; paper always gets every entry (see the print rules). -->
+    <div v-if="filter" class="lg-filter" role="group" :aria-label="c.filterLabel">
+      <button
+        v-for="g in groups"
+        :key="g.id"
+        type="button"
+        class="lg-chip"
+        :aria-pressed="kind === g.id"
+        @click="kind = g.id"
+      >
+        {{ g.label }}<span class="lg-chip-n figures">{{ g.n }}</span>
+      </button>
+      <p class="sr-only" aria-live="polite">{{ kind === 'all' ? '' : c.showing(shown) }}</p>
+    </div>
     <ol class="lg-list">
       <li
         v-for="(e, i) in entries"
-        v-show="expanded || i < foldAt"
+        v-show="(expanded || i < foldAt) && inKind(e)"
         :key="e.date + e.title"
         class="lg-row"
         :class="{ 'lg-row--win': e.kind === 'award', 'lg-row--soon': e.upcoming }"
@@ -55,6 +70,8 @@ const props = defineProps({
   foldYears: { type: Number, default: 0 },
   /** Index view: title, org, links; no prose. */
   compact: { type: Boolean, default: false },
+  /** A row of buttons above the list that narrows it to one kind of entry. */
+  filter: { type: Boolean, default: false },
 })
 
 const { timeline, works, en } = useContent()
@@ -86,6 +103,9 @@ const c = computed(() =>
         fold: (n) => `Fold ${n} entries`,
         unfold: (n, a, b) => `Show ${n} more (${a}–${b})`,
         all: (n) => `All ${n} entries`,
+        filterLabel: 'Show',
+        groups: { all: 'All', award: 'Competitions', role: 'Roles', product: 'Products', research: 'Research', education: 'Education', honor: 'Honours & grants' },
+        showing: (n) => `Showing ${n} entries`,
       }
     : {
         ongoing: '進行中',
@@ -98,6 +118,9 @@ const c = computed(() =>
         fold: (n) => `收合 ${n} 筆`,
         unfold: (n, a, b) => `展開其餘 ${n} 筆（${a} – ${b}）`,
         all: (n) => `全部 ${n} 筆紀錄`,
+        filterLabel: '只看',
+        groups: { all: '全部', award: '競賽', role: '職務', product: '產品', research: '研究', education: '學歷', honor: '榮譽與補助' },
+        showing: (n) => `顯示 ${n} 筆`,
       }
 )
 
@@ -144,10 +167,67 @@ const foldAt = computed(() => {
   return i === -1 ? entries.value.length : i
 })
 const hidden = computed(() => entries.value.length - foldAt.value)
+
+// Kinds with a handful of entries share a button: a grant is an honour too,
+// and a publication is research.
+const GROUP = { award: 'award', role: 'role', product: 'product', research: 'research', publication: 'research', education: 'education', honor: 'honor', grant: 'honor' }
+const kind = ref('all')
+const inKind = (e) => kind.value === 'all' || (GROUP[e.kind] ?? 'honor') === kind.value
+const groups = computed(() => {
+  const n = {}
+  for (const e of entries.value) n[GROUP[e.kind] ?? 'honor'] = (n[GROUP[e.kind] ?? 'honor'] ?? 0) + 1
+  return Object.entries(c.value.groups)
+    .map(([id, label]) => ({ id, label, n: id === 'all' ? entries.value.length : n[id] ?? 0 }))
+    .filter((g) => g.n)
+})
+const shown = computed(() => entries.value.filter(inKind).length)
 const oldestYear = computed(() => yearOf(entries.value[entries.value.length - 1]))
 </script>
 
 <style scoped>
+.lg-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  margin-top: var(--sp-6);
+}
+
+/* Pills like the site's buttons, but quieter: the chosen one is filled. */
+.lg-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  min-height: 44px;
+  padding-inline: var(--sp-4);
+  border-radius: var(--r-full);
+  border: 1.5px solid var(--rule-strong);
+  background: var(--surface);
+  color: var(--ink-2);
+  font-size: var(--step--1);
+  font-weight: 600;
+  transition: background-color var(--dur-1), border-color var(--dur-1), color var(--dur-1);
+}
+
+.lg-chip:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.lg-chip[aria-pressed='true'] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--bg);
+}
+
+.lg-chip-n {
+  font-weight: 500;
+  opacity: 0.7;
+}
+
+.lg-filter + .lg-list {
+  margin-top: var(--sp-5);
+}
+
 .lg-list {
   margin-top: var(--sp-7);
   border-top: 1px solid var(--rule);
