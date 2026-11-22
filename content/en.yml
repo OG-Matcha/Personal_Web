@@ -114,10 +114,12 @@ works:
     tagline: Shop Taobao and see NT$ right next to the price.
     summary: Shopping on Taobao and Tmall means multiplying every RMB price by the exchange rate yourself. With Taobao Exchange installed, prices on product pages, search results and the cart get their New Taiwan dollar figure right beside them, at a rate that updates itself every day.
     outcomes:
-      - value: '279'
+      - value: '278'
         label: Chrome Web Store users
+        live: users
       - value: 4.8 stars
         label: From 5 ratings
+        live: rating
       - value: No sign-in
         label: Everything is worked out in your browser
     highlights:

@@ -1,0 +1,9 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "ogmatcha-store",
+  "main": "index.js",
+  "compatibility_date": "2026-11-19",
+  "observability": { "enabled": true },
+  // Only these paths run the Worker; every other request goes to the static site.
+  "routes": [{ "pattern": "www.ogmatcha.com/api/store/*", "zone_name": "ogmatcha.com" }]
+}

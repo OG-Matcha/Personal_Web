@@ -45,8 +45,10 @@ const c = computed(() =>
 )
 
 /** Two short outcomes reach the index: what a visitor cares about, not line counts. */
+const store = useStoreStats(() => works.map((w) => w.liveStore))
 function facts(w) {
-  if (w.outcomes?.length) return w.outcomes.slice(0, 2).map((o) => ({ metric: o.label, value: o.value }))
+  const en = locale.value === 'en'
+  if (w.outcomes?.length) return w.outcomes.slice(0, 2).map((o) => liveOutcome(o, store[w.liveStore], en)).map((o) => ({ metric: o.label, value: o.value }))
   return (w.results ?? []).filter((r) => r.value && String(r.value).length <= 28).slice(0, 2)
 }
 

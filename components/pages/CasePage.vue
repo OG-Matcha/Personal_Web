@@ -198,7 +198,11 @@ const work = computed(() => props.work)
 // cover is a card): used only for the opening's wash and the title's rule.
 const ACCENT = { finctory: '#3a4fa8', medalink: '#2f6fd6', osave: '#3b8fe8', phishforge: '#6b5bd6', surprice: '#22a194', taobao: '#f07a22' }
 const accent = computed(() => ACCENT[work.value.slug] ?? 'var(--pop)')
-const outcomes = computed(() => (work.value.outcomes ?? []).filter((o) => ok(o.value)))
+// Store figures marked `live` are refreshed from the store once the page is up.
+const store = useStoreStats(() => [work.value.liveStore])
+const outcomes = computed(() =>
+  (work.value.outcomes ?? []).filter((o) => ok(o.value)).map((o) => liveOutcome(o, store[work.value.liveStore], props.locale === 'en'))
+)
 const highlights = computed(() => (work.value.highlights ?? []).filter((h) => ok(h.title)))
 const phoneShots = computed(() => work.value.screenshotShape === 'phone')
 // Store artwork already has its own phone and headline: shown as a card, not inside another phone frame.

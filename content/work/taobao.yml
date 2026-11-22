@@ -2,7 +2,8 @@
 # 產品頁：淘換算 Taobao Exchange（斐闊 Finctory）
 #
 # 照擴充套件的原始碼、README 和 Chrome 線上應用程式商店的公開頁寫。
-# 使用者數和評分是 2026-11-18 從商店頁抄的，會變；改數字時一起改這行日期。
+# 使用者數和評分：頁面載入後由 workers/store 從商店頁即時讀（快取 6 小時）；這裡寫的是
+# 沒讀到時的備用值，2026-11-22 從商店頁抄的。
 # Highlight 1 is a real capture: the extension's own content script injected into
 # world.taobao.com (no sign-in), only the rate stubbed at 4.38; sellers' photos and
 # product names are blurred the way the store image does. (.audit/tb/shot.mjs, 2026-11-18)
@@ -26,6 +27,8 @@ links:
     labelEn: Chrome Web Store
     href: https://chromewebstore.google.com/detail/neikbgpobachnkgcefcmedgojmedbfmk
 
+liveStore: taobao
+
 cover: /images/taobao-1.jpg
 thumbnail: /images/taobao-1.jpg
 hero: /images/taobao-1.jpg
@@ -40,10 +43,12 @@ summary: >-
   裝了淘換算，商品頁、搜尋結果和購物車上的價格旁邊會直接標出新台幣，匯率每天自己更新。
 
 outcomes:
-  - value: 279 位
+  - value: 278 位
     label: Chrome 商店使用者
+    live: users
   - value: 4.8 星
     label: 5 則評分
+    live: rating
   - value: 不用登入
     label: 全程在你的瀏覽器裡算
 
