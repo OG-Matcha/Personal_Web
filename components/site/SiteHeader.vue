@@ -17,7 +17,7 @@
       </nav>
 
       <div class="hd-tools">
-        <NuxtLink :to="t.altHref" class="hd-lang" :hreflang="t.altLang" :lang="t.altLang">{{ t.altLabel }}</NuxtLink>
+        <NuxtLink :to="t.altHref" class="hd-lang" :hreflang="t.altLang" :lang="t.altLang" @click="rememberLangScroll(t.altHref)">{{ t.altLabel }}</NuxtLink>
         <ThemeToggle />
         <NuxtLink :to="t.contact" class="hd-mail" :aria-label="t.mailLabel">
           <Mail :size="16" :stroke-width="2.2" aria-hidden="true" />
@@ -31,6 +31,7 @@
 <script setup>
 import { Mail } from 'lucide-vue-next'
 import ThemeToggle from '~/components/site/ThemeToggle.vue'
+import { rememberLangScroll } from '~/utils/langScroll'
 
 const { locale, altPath } = useLocale()
 // The router's own route, not useRoute(): in this always-mounted header
