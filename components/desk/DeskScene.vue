@@ -1672,6 +1672,55 @@ async function start(small = false) {
   }
 }
 
+/* The cards of one row line up part by part: picture, heading, words and
+   button each share a track (subgrid), so a shorter text no longer lifts its
+   button above its neighbour's. (.dk-tour in front: the plain .dk-stop rules
+   come later in this file.) */
+@media (min-width: 900px) {
+  .dk-tour {
+    row-gap: 0;
+  }
+
+  .dk-tour > .dk-stop {
+    display: grid;
+    grid-row: span 4;
+    grid-template-rows: subgrid;
+    align-items: start;
+    padding-bottom: var(--sp-7);
+  }
+
+  .dk-tour > .dk-stop .dk-acts {
+    margin-top: 0;
+  }
+}
+
+/* Four across, the wide first card shares its row with two others: its
+   picture fills the row's picture track instead of keeping a 3:1 shape that
+   stood shorter than its neighbours'. */
+@media (min-width: 1200px) {
+  .dk-tour > .dk-stop:first-child .dk-stop-pic {
+    align-self: stretch;
+    height: auto;
+    margin-bottom: var(--sp-4);
+  }
+
+  .dk-tour > .dk-stop:first-child .dk-stop-pic img {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    aspect-ratio: auto;
+  }
+}
+
+/* Where the tour is the page (reduced motion, or a window too short for the
+   walk), the name above it starts on the same left edge as the cards. */
+@media (min-width: 900px) and (prefers-reduced-motion: reduce), (min-width: 900px) and (max-height: 559.98px) {
+  .dk-caps {
+    max-width: var(--page-w);
+    margin-inline: auto;
+  }
+}
+
 .dk-stop {
   scroll-snap-align: start;
   display: flex;
