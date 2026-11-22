@@ -208,6 +208,18 @@ export default defineNuxtConfig({
             'document.head.appendChild(l)',
           tagPosition: 'head',
         },
+        {
+          // The desk grain under every page is the largest paint, but it is
+          // named in an inline style and found late, behind the fonts (on a
+          // slow phone the résumé's LCP slipped to 7 s). Fetch the one for
+          // this theme first.
+          innerHTML:
+            "var d=document.documentElement,n=d.dataset.theme?d.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches," +
+            "g=document.createElement('link');g.rel='preload';g.as='image';g.fetchPriority='high';" +
+            `g.href=n?'${v('/images/desk-grain-night.webp')}':'${v('/images/desk-grain-day.webp')}';` +
+            'document.head.appendChild(g)',
+          tagPosition: 'head',
+        },
         // The JSON-LD used to live here as a hand-written literal. It moved
         // to composables/useJsonLd.ts: this file is loaded by jiti, outside
         // Vite, so @rollup/plugin-yaml never applied here and every fact in
