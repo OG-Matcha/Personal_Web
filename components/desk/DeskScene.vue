@@ -1495,6 +1495,19 @@ async function start(small = false) {
   max-height: 80svh;
 }
 
+/* A wide window without the walk (reduced motion, or too short): at 80svh
+   the still filled the first screen and the name started at its foot (y=728
+   of 900), the role lines below the fold. A wide band of the room instead,
+   so the name, thesis and roles are all in the first screen. */
+@media (min-width: 900px) and (prefers-reduced-motion: reduce), (min-width: 900px) and (max-height: 559.98px) {
+  .dk-poster img {
+    aspect-ratio: auto;
+    height: 52svh;
+    max-height: none;
+    object-position: 50% 62%;
+  }
+}
+
 .dk-canvas,
 .dk-veil,
 .dk-dots,
@@ -1889,7 +1902,12 @@ async function start(small = false) {
     display: block;
     position: absolute;
     inset: 0;
-    background: radial-gradient(ellipse 52% 78% at 10% 32%, color-mix(in srgb, var(--bg) 80%, transparent), transparent 72%);
+    /* Down to the skip link and wide enough for the English name on a 1024px
+       window: the old ellipse stopped at the lamp, and the links under the
+       name sat on the desk's black legs at 1.6:1. */
+    background:
+      radial-gradient(ellipse 50% 70% at 8% 40%, color-mix(in srgb, var(--bg) 86%, transparent), transparent 78%),
+      linear-gradient(90deg, color-mix(in srgb, var(--bg) 84%, transparent) 0, color-mix(in srgb, var(--bg) 72%, transparent) clamp(18rem, 30vw, 30rem), transparent clamp(28rem, 48vw, 46rem));
     opacity: 0;
     pointer-events: none;
     transition: opacity 600ms var(--ease-entrance);
@@ -1897,6 +1915,15 @@ async function start(small = false) {
 
   .dk-veil.is-on {
     opacity: 1;
+  }
+
+  /* Narrower windows put the English lines lower, over the lamp-lit desk. */
+  @media (max-width: 1199px) {
+    .dk-veil {
+      background:
+        radial-gradient(ellipse 56% 80% at 8% 44%, color-mix(in srgb, var(--bg) 90%, transparent), transparent 80%),
+        linear-gradient(90deg, color-mix(in srgb, var(--bg) 88%, transparent) 0, color-mix(in srgb, var(--bg) 78%, transparent) 30rem, transparent 46rem);
+    }
   }
 
   .dk-caps {
