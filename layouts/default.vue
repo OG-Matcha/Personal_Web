@@ -48,7 +48,7 @@ useHead({
   // Chinese pages fetch the large Noto file with the HTML: its face is
   // font-display: optional (see nuxt.config), used only if in by first paint.
   link: computed(() =>
-    locale.value === 'en' ? [] : [{ rel: 'preload', as: 'font', type: 'font/woff2', href: cjkFont, crossorigin: '', fetchpriority: 'low', key: 'cjk-1' }]
+    locale.value === 'en' ? [] : [{ rel: 'preload', as: 'font', type: 'font/woff2', href: cjkFont, crossorigin: '', key: 'cjk-1' }]
   ),
 })
 
