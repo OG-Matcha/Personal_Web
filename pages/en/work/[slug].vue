@@ -38,8 +38,12 @@ const evidence = timeline
   .filter((t) => t.project === zh.slug && (t.kind === 'award' || t.kind === 'grant'))
   .map((t) => ({ ...t, ...(en.timeline?.[`${t.date} ${t.title}`] ?? {}) }))
 
+const schema = workSchema(zh, { lang: 'en', name: work.title, description: e.summary ?? zh.summary })
+
 usePageSeo({
   path: `/work/${zh.slug}/`,
+  graph: [schema.node, schema.crumbs],
+  mainEntity: schema.id,
   lang: 'en',
   type: 'WebPage',
   ogType: 'article',

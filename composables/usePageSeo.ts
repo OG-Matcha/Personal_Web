@@ -15,6 +15,9 @@ export function usePageSeo(opts: {
   type: 'ProfilePage' | 'WebPage' | 'CollectionPage' | 'ContactPage'
   dateModified?: string
   ogType?: string
+  /** More nodes for the page's graph (a product, a breadcrumb), and the one the page is about. */
+  graph?: Record<string, unknown>[]
+  mainEntity?: string
 }) {
   const zh = `${SITE}${opts.path}`
   const en = `${SITE}/en${opts.path}`
@@ -40,15 +43,22 @@ export function usePageSeo(opts: {
       { rel: 'alternate', hreflang: 'x-default', href: zh },
     ],
     script: [
-      jsonLdScript(
-        pageNode({
-          type: opts.type,
-          url,
-          name: opts.title,
-          dateModified: opts.dateModified,
-          lang: opts.lang === 'en' ? 'en' : 'zh-Hant-TW',
-        })
-      ),
+      jsonLdScript({
+        '@context': 'https://schema.org',
+        '@graph': [
+          {
+            ...pageNode({
+              type: opts.type as 'WebPage',
+              url,
+              name: opts.title,
+              dateModified: opts.dateModified,
+              lang: opts.lang === 'en' ? 'en' : 'zh-Hant-TW',
+            }),
+            ...(opts.mainEntity ? { mainEntity: { '@id': opts.mainEntity } } : {}),
+          },
+          ...(opts.graph ?? []),
+        ],
+      }),
     ],
   })
 }

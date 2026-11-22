@@ -11,6 +11,6 @@ usePageSeo({
   type: 'CollectionPage',
   title: 'Work | Ju-Shen Huang 黃鉅燊',
   description:
-    'What Ju-Shen Huang has built: oSave (a budgeting app that scores your financial health), MedaLink (an AI front desk for clinics), PhishForge (AI-written phishing drills), SurPrice (deals across every supermarket chain), Taobao Exchange (Taobao prices in NT$), and other web, AI and security projects.',
+    "Ju-Shen Huang's products: oSave, MedaLink, PhishForge, SurPrice, Taobao Exchange and Oshi Board, plus AI, web and security projects with source.",
 })
 </script>

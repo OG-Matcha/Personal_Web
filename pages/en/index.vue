@@ -10,7 +10,8 @@ import HomePage from '~/components/pages/HomePage.vue'
 const { en, site } = useContent()
 
 const TITLE = 'Ju-Shen Huang 黃鉅燊'
-const DESC = `${en.intro} Ships LLMs inside systems people use: oSave, PhishForge, a clinic operations system. ${site.counts.awards} competition awards including ${site.counts.topPrizes} national top prizes, ${site.counts.researchGrants} NSTC research grants.`
+// Under 160 characters, so search results show all of it (en.intro alone ran to 300).
+const DESC = `Ju-Shen Huang (OG Matcha), co-founder and CTO of Finctory, puts LLMs inside products people use. ${site.counts.awards} awards, ${site.counts.topPrizes} national top prizes.`
 
 useSeoMeta({
   title: TITLE,

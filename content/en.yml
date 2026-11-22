@@ -76,6 +76,7 @@ beats:
 works:
   surprice:
     title: SurPrice
+    seoDescription: "SurPrice finds deals across supermarkets, hypermarkets, drugstores and convenience stores in Taiwan, right in the browser. Ju-Shen Huang is lead developer."
     role: CTO · lead developer
     status: Live
     tagline: Supermarket deals across every chain, kept in your own deal book.
@@ -109,6 +110,7 @@ works:
         value: '{awards}'
   taobao:
     title: Taobao Exchange
+    seoDescription: "Taobao Exchange is a Chrome extension that shows New Taiwan dollar prices right next to RMB on Taobao and Tmall. Built solo by Ju-Shen Huang."
     role: Solo developer
     status: On the Chrome Web Store
     tagline: Shop Taobao and see NT$ right next to the price.
@@ -135,6 +137,7 @@ works:
       - Took it through Chrome Web Store review, and still maintain it
   osave:
     title: oSave
+    seoDescription: "oSave is a budgeting app that scores your financial health, on iOS and Android. Built at Finctory; Ju-Shen Huang leads its architecture and backend."
     role: CTO · architecture and backend
     status: Live
     tagline: A budgeting app that answers "am I actually financially healthy?"
@@ -175,6 +178,7 @@ works:
         value: '{awards}'
   phishforge:
     title: PhishForge
+    seoDescription: "PhishForge has AI write phishing emails tailored to each department, then reports who opened, clicked and submitted. Ju-Shen Huang built backend and AI."
     role: Backend · AI engineering
     status: Concluded
     tagline: AI-written phishing you cannot tell from the real thing - so security drills actually teach something.
@@ -202,7 +206,7 @@ works:
         value: Awarded 2024, completed
   finctory:
     title: Finctory
-    seoDescription: Finctory (斐闊有限公司) is a student-founded fintech company in Taiwan, registered in 2025, behind oSave, SurPrice and Taobao Exchange. Ju-Shen Huang is a co-founder and the CTO.
+    seoDescription: "Finctory is a student-founded fintech company in Taiwan behind oSave, SurPrice and Taobao Exchange. Ju-Shen Huang is a co-founder and the CTO."
     role: Co-founder · CTO
     status: Operating
     tagline: A fintech startup making every dollar count.
@@ -236,6 +240,7 @@ works:
         value: '4'
   medalink:
     title: MedaLink
+    seoDescription: "MedaLink is an AI front desk for clinics: four messaging channels in one inbox, replies, scheduling and follow-ups. Co-founded and built by Ju-Shen Huang."
     role: Co-founder · Forward-Deployed Engineer
     status: Live
     tagline: An AI front desk for clinics - replies, scheduling and recalls in one system.

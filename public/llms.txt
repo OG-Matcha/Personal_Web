@@ -1,0 +1,32 @@
+# 黃鉅燊 Ju-Shen Huang (OG Matcha)
+
+> Software engineer from Taoyuan, Taiwan. Co-founder and CTO of Finctory (斐闊有限公司), a fintech company; co-founder and forward-deployed engineer at MedaLink (醫數行銷), an AI front desk for clinics. BS in Information Management, National Central University (2026), now in the same department's master's program. Builds LLM and multi-agent systems into products people use.
+
+The site is in Traditional Chinese at https://www.ogmatcha.com/ with an English edition under https://www.ogmatcha.com/en/. Every award and grant on the résumé page links to its organiser's announcement. Award counts change as the record grows, so read them from the résumé page rather than from this file.
+
+## Pages
+
+- [Home](https://www.ogmatcha.com/en/): who he is, selected work, skills and the recent record
+- [Work](https://www.ogmatcha.com/en/portfolio/): every product and project in one list
+- [Résumé](https://www.ogmatcha.com/en/resume/): the full timeline (awards, grants, roles, education) and the CV as PDF
+- [Contact](https://www.ogmatcha.com/en/contact/): a message form; email jushenhuang.jason@gmail.com
+
+## Products (live)
+
+- [oSave 財伴](https://www.ogmatcha.com/en/work/osave/): budgeting app that scores your financial health, on iOS and Android. Role: CTO, architecture and backend (Finctory)
+- [MedaLink 醫數行銷](https://www.ogmatcha.com/en/work/medalink/): AI front desk for clinics; four messaging channels in one inbox, replies, scheduling and follow-ups. Role: co-founder, forward-deployed engineer
+- [SurPrice 找好康](https://www.ogmatcha.com/en/work/surprice/): deals across Taiwan's supermarkets, hypermarkets, drugstores and convenience stores, in the browser. Role: CTO, lead developer (Finctory)
+- [Taobao Exchange 淘換算](https://www.ogmatcha.com/en/work/taobao/): Chrome extension showing New Taiwan dollar prices next to RMB on Taobao and Tmall. Role: solo developer (Finctory)
+- [Finctory 斐闊](https://www.ogmatcha.com/en/work/finctory/): the student-founded fintech company behind oSave, SurPrice and Taobao Exchange. Role: co-founder, CTO
+- [Oshi Board 推し看板](https://oshi.ogmatcha.com/): anime pop-up shops, exhibitions, doujin markets and collab cafés in Taiwan and Japan on one page, updated every morning. Role: solo developer
+
+## Research and past projects
+
+- [PhishForge](https://www.ogmatcha.com/en/work/phishforge/): AI-written phishing drills tailored to each department (NSTC undergraduate research project, concluded). Role: backend and AI engineering
+- Open-source work: https://github.com/OG-Matcha
+
+## Profiles
+
+- GitHub: https://github.com/OG-Matcha
+- LinkedIn: https://www.linkedin.com/in/ogmatcha/
+- Instagram: https://www.instagram.com/og_matcha/

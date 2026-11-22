@@ -163,7 +163,14 @@ export function pageNode(opts: {
   }
 }
 
-/** `useHead` takes a string; keeping the serialisation in one place. */
+/**
+ * `useHead` takes a string; keeping the serialisation in one place. Each
+ * <script> block is parsed on its own, so a block without `@context` is not
+ * JSON-LD at all and Google drops it: the page nodes went out that way on
+ * fourteen pages. Every block gets one here, whoever built it.
+ */
 export function jsonLdScript(graph: unknown) {
-  return { type: 'application/ld+json', innerHTML: JSON.stringify(graph) }
+  const g = graph as Record<string, unknown>
+  const withCtx = g && typeof g === 'object' && !Array.isArray(g) && !g['@context'] ? { '@context': 'https://schema.org', ...g } : graph
+  return { type: 'application/ld+json', innerHTML: JSON.stringify(withCtx) }
 }

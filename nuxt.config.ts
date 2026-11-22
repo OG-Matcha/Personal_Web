@@ -1,10 +1,18 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import fs from 'node:fs'
+import { execSync } from 'node:child_process'
 import path from 'node:path'
 import yaml from '@rollup/plugin-yaml'
 import { assetVersions, versionCss } from './scripts/asset-v.mjs'
 
 const SITE_URL = 'https://www.ogmatcha.com'
+// The last commit's date stands as every page's <lastmod>: the content all
+// lives in one repo and a build ships every page together. (CI checks out one
+// commit, which is all `git log -1` needs.)
+let LASTMOD: string | undefined
+try {
+  LASTMOD = execSync('git log -1 --format=%cI', { encoding: 'utf8' }).trim() || undefined
+} catch {}
 // Content hashes of public/desk, fonts, images and media, so their URLs change only
 // when the file does and can be cached for a year (scripts/asset-v.mjs).
 const ASSET_V = assetVersions(process.cwd())
@@ -100,6 +108,10 @@ export default defineNuxtConfig({
     // page, so each one cost an extra crawl hop and Search Console filed them
     // as "Page with redirect".
     trailingSlash: true,
+  },
+
+  sitemap: {
+    defaults: LASTMOD ? { lastmod: LASTMOD } : {},
   },
 
   tailwindcss: {

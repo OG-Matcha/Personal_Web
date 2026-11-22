@@ -10,6 +10,6 @@ usePageSeo({
   lang: 'en',
   type: 'ContactPage',
   title: 'Contact Ju-Shen Huang: projects, talks and workshops | 黃鉅燊',
-  description: 'Write to Ju-Shen Huang (OG Matcha) about generative-AI and agent architecture, early-stage technical partnerships, talks and workshops. Leave a message on the page or send an email.',
+  description: 'Write to Ju-Shen Huang (OG Matcha) about generative-AI and agent architecture, technical partnerships, talks or workshops: leave a message or email.',
 })
 </script>
