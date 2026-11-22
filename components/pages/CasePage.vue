@@ -12,8 +12,8 @@
       <div class="case-intro">
         <!-- What he did first, where second: the reader came to see his part. -->
         <p class="case-eyebrow">{{ work.role || work.org }}</p>
-        <h1 class="case-title">{{ work.title }}</h1>
-        <p v-if="work.tagline" class="case-tagline" :class="{ 'is-long': work.tagline.length > 16 && /[一-鿿]/.test(work.tagline) && !/[，、「]/.test(work.tagline) }">{{ work.tagline }}</p>
+        <h1 class="case-title">{{ keep(work.title) }}</h1>
+        <p v-if="work.tagline" class="case-tagline" :class="{ 'is-long': work.tagline.length > 16 && /[一-鿿]/.test(work.tagline) && !/[，、「]/.test(work.tagline) }">{{ keep(work.tagline) }}</p>
         <p class="case-summary">{{ work.summary }}</p>
         <p class="case-meta">
           <span v-if="work.role && work.org" class="case-org">{{ work.org }}</span>
@@ -34,7 +34,7 @@
     <section v-if="outcomes.length" class="shell">
       <dl class="case-outcomes">
         <div v-for="o in outcomes" :key="o.label">
-          <dd>{{ o.value }}</dd>
+          <dd :class="{ 'is-phrase': String(o.value).length > 14 }">{{ o.value }}</dd>
           <dt>{{ o.label }}</dt>
         </div>
       </dl>
@@ -142,8 +142,8 @@
       <NuxtLink :to="next.href" class="next">
         <span class="next-text">
           <span class="next-eyebrow mono text-2xs">{{ t.next }}</span>
-          <span class="next-title">{{ next.title }}</span>
-          <span class="next-tag">{{ next.tagline }}</span>
+          <span class="next-title">{{ keep(next.title) }}</span>
+          <span class="next-tag">{{ keep(next.tagline) }}</span>
         </span>
         <span class="next-pic" :style="{ viewTransitionName: `cover-${next.slug}` }"><img :style="next.focus ? { objectPosition: next.focus } : null" :src="asset(next.cover)" :srcset="srcset(next.cover)" sizes="(min-width: 768px) 50vw, 100vw" alt="" width="1600" height="900" loading="lazy" decoding="async" /></span>
       </NuxtLink>
@@ -419,6 +419,14 @@ function goBack() {
   white-space: nowrap;
   font-weight: 800;
   line-height: 1.1;
+}
+
+/* A phrase ("No passwords kept") is words, not a figure: shrunk to one line
+   it would be unreadable, so it wraps between words at the figures' size. */
+.case-outcomes dd.is-phrase {
+  font-size: var(--step-2);
+  white-space: normal;
+  text-wrap: balance;
 }
 
 .case-outcomes dt {

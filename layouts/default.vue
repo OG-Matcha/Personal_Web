@@ -26,6 +26,9 @@ import SiteHeader from '~/components/site/SiteHeader.vue'
 import SiteFooter from '~/components/site/SiteFooter.vue'
 
 const { locale } = useLocale()
+// <html lang> follows the page on every route, including the client-side hop
+// from /en/ back to Chinese, where pages that set no lang left none at all.
+useHead({ htmlAttrs: { lang: computed(() => (locale.value === 'en' ? 'en' : 'zh-Hant-TW')) } })
 
 // The work pages are laid on the same desk as the homepage's lower half:
 // its wood grain behind them, so clicking a print does not change rooms.

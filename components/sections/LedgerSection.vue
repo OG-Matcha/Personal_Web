@@ -34,7 +34,7 @@
             <NuxtLink v-if="e.project && workSlugs.has(e.project)" :to="`${prefix}/work/${e.project}/`">
               {{ c.case }}
             </NuxtLink>
-            <a v-if="e.evidence" :href="e.evidence" v-bind="linkAttrs(e.evidence)">{{ c.proof }}</a>
+            <a v-if="e.evidence" :href="e.evidence" v-bind="linkAttrs(e.evidence)">{{ proofLabel(e.evidence) }}</a>
           </p>
         </div>
       </li>
@@ -80,7 +80,8 @@ const c = computed(() =>
         upcoming: 'upcoming',
         advisor: 'Advisor: ',
         case: 'The product',
-        proof: 'Announcement',
+        proof: { site: 'Website', source: 'Source', store: 'Store listing', notice: 'Announcement' },
+        shortlisted: 'Shortlist',
         fold: (n) => `Fold ${n} entries`,
         unfold: (n, a, b) => `Show ${n} more (${a}–${b})`,
         all: (n) => `All ${n} entries`,
@@ -90,7 +91,8 @@ const c = computed(() =>
         upcoming: '即將',
         advisor: '指導教授：',
         case: '產品介紹',
-        proof: '公告',
+        proof: { site: '官網', source: '原始碼', store: '商店頁', notice: '公告' },
+        shortlisted: '入圍',
         fold: (n) => `收合 ${n} 筆`,
         unfold: (n, a, b) => `展開其餘 ${n} 筆（${a} – ${b}）`,
         all: (n) => `全部 ${n} 筆紀錄`,
@@ -99,17 +101,31 @@ const c = computed(() =>
 
 const entries = computed(() =>
   timeline.map((e) => {
-    if (locale.value !== 'en') return { ...e, kindLabel: kindLabel(e.kind) }
+    // A shortlist is not a prize: the header counts only wins, so the row says so too.
+    const short = e.kind === 'award' && /入圍/.test(e.title)
+    if (locale.value !== 'en') return { ...e, kindLabel: short ? c.value.shortlisted : kindLabel(e.kind) }
     const t = en.timeline?.[`${e.date} ${e.title}`] ?? {}
     return {
       ...e,
       advisor: undefined,
       publication: t.publication ?? (e.publication ? e.publication : undefined),
       ...t,
-      kindLabel: KIND_EN[e.kind] ?? e.kind,
+      kindLabel: short ? c.value.shortlisted : KIND_EN[e.kind] ?? e.kind,
     }
   })
 )
+
+// The link says what the reader will land on: the product's own site, its
+// code, or a third party's announcement.
+const OWN_SITE = /(^|\.)(ogmatcha\.com|finctory\.com|medalink\.ai)$/
+function proofLabel(url) {
+  let u
+  try { u = new URL(url, 'https://www.ogmatcha.com') } catch { return c.value.proof.notice }
+  if (u.hostname === 'github.com' && /^\/OG-Matcha\//i.test(u.pathname)) return c.value.proof.source
+  if (OWN_SITE.test(u.hostname)) return c.value.proof.site
+  if (u.hostname === 'chromewebstore.google.com') return c.value.proof.store
+  return c.value.proof.notice
+}
 
 const expanded = ref(false)
 const yearOf = (e) => Number(String(e?.date ?? '').slice(0, 4)) || 0

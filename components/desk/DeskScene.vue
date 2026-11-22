@@ -95,7 +95,7 @@
           </template>
           <template v-else>
             <p class="dk-eyebrow figures">{{ String(i).padStart(2, '0') }} · {{ s.thing }}</p>
-            <h2 class="dk-h">{{ s.title }}</h2>
+            <h2 class="dk-h">{{ keep(s.title) }}</h2>
             <p class="dk-text">{{ s.text }}</p>
             <p class="dk-acts">
               <button v-if="s.open" type="button" class="dk-open" :data-stop="s.id" @click="drawer = s.id">{{ s.open }}</button>
@@ -119,7 +119,7 @@
           <img class="dk-poster-night" :src="asset(`/desk/stops/${s.id}-night.webp`)" :srcset="srcset(`/desk/stops/${s.id}-night.webp`)" sizes="(min-width: 900px) 25vw, 82vw" alt="" width="1200" height="800" loading="lazy" decoding="async" />
           <span class="dk-stop-n figures" aria-hidden="true">{{ String(i + 1).padStart(2, '0') }}<span class="dk-stop-of"> / {{ String(stops.length - 1).padStart(2, '0') }}</span> · {{ s.thing }}</span>
         </div>
-        <h2 class="dk-h">{{ s.title }}</h2>
+        <h2 class="dk-h">{{ keep(s.title) }}</h2>
         <p class="dk-text">{{ s.text }}</p>
         <p class="dk-acts">
           <button v-if="s.open" type="button" class="dk-open" :data-stop="s.id" @click="drawer = s.id">{{ s.open }}</button>
@@ -283,6 +283,21 @@ const hold = (t) => {
   const x = Math.min(1, Math.max(0, (t - 0.3) / 0.4))
   return x * x * (3 - 2 * x)
 }
+// Where the camera is for a scroll fraction p: between stop i and i+1, e of
+// the way. The first move starts as soon as the room is pinned: the room is
+// already on its first stop when it arrives, so holding there wasted the first
+// ~480px of scrolling on a picture that did not move. It runs from 0.15 to
+// 1.2 of a slice and lands where the old one did; the rest are unchanged.
+function stopAt(p) {
+  const r = p * N
+  if (r < 1.5) {
+    const x = Math.min(1, Math.max(0, (r - 0.15) / 1.05))
+    return { i: 0, e: x * x * (3 - 2 * x) }
+  }
+  const f = Math.min(N - 1, r - 0.5)
+  const i = Math.min(N - 2, Math.floor(f))
+  return { i, e: hold(f - i) }
+}
 const walk = { i: 0, e: 0, out: 0 }
 let onWalk = null
 // Set by the 3D scene: lean the camera in to a stop's thing (or back out with
@@ -329,9 +344,7 @@ function readScroll() {
   lastY = scrollY
   const span = el.offsetHeight - innerHeight
   const p = Math.min(1, Math.max(0, -el.getBoundingClientRect().top / Math.max(1, span)))
-  const f = Math.min(N - 1, Math.max(0, p * N - 0.5))
-  const i = Math.min(N - 2, Math.floor(f))
-  const e = hold(f - i)
+  const { i, e } = stopAt(p)
   walk.i = i
   walk.e = e
   moving.value = e > 0.1 && e < 0.9
@@ -367,7 +380,8 @@ let dir = 1
 function scrollToStop(i) {
   const el = root.value
   const span = el.offsetHeight - innerHeight
-  scrollTo({ top: el.getBoundingClientRect().top + scrollY + (span * (i + 0.5)) / N, behavior: 'smooth' })
+  // The first stop is the room as it arrives: the top of the section.
+  scrollTo({ top: el.getBoundingClientRect().top + scrollY + (i ? (span * (i + 0.5)) / N : 0), behavior: 'smooth' })
 }
 
 // The dialog hands focus back to whatever had it, which is the page itself

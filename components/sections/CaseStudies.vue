@@ -14,7 +14,7 @@
 
       <div class="cs-text">
         <h2 class="cs-title">
-          <NuxtLink :to="w.href">{{ w.title }}</NuxtLink>
+          <NuxtLink :to="w.href">{{ keep(w.title) }}</NuxtLink>
         </h2>
         <p class="cs-meta">
           <span class="cs-role">{{ w.role }}</span>

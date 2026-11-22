@@ -128,7 +128,7 @@
                   <span v-if="w.status" class="pp-status">{{ w.status }}</span>
                 </p>
                 <h3 class="pp-work-title">
-                  {{ w.title }}
+                  {{ keep(w.title) }}
                   <ArrowUpRight :size="18" :stroke-width="2" class="pp-arrow" aria-hidden="true" />
                 </h3>
                 <p class="pp-work-role">{{ w.role }}</p>

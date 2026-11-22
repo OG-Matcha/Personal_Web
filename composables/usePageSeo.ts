@@ -35,7 +35,9 @@ export function usePageSeo(opts: {
     twitterDescription: opts.description,
   })
   useHead({
-    ...(opts.lang === 'en' ? { htmlAttrs: { lang: 'en' } } : {}),
+    // Always set: a client-side hop from /en/ back to Chinese otherwise left
+    // the head entry's lang removed and <html> with none at all.
+    htmlAttrs: { lang: opts.lang === 'en' ? 'en' : 'zh-Hant-TW' },
     link: [
       { rel: 'canonical', href: url },
       { rel: 'alternate', hreflang: 'zh-Hant-TW', href: zh },
