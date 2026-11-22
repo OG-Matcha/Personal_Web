@@ -1,0 +1,47 @@
+<!doctype html>
+<!--
+  A product's share card: what it is and whose it is on the left, its own
+  screen on the right. Filled in by scripts/make-og.mjs from the query string
+  (title, tagline, who, role, shot, lang).
+-->
+<html lang="zh-Hant">
+<meta charset="utf-8" />
+<style>
+  @font-face { font-family: 'Archivo'; src: url(../../public/fonts/archivo-var-000.woff2) format('woff2'); font-weight: 100 900; font-stretch: 62% 125%; }
+  @font-face { font-family: 'Noto Sans TC'; src: url(../../public/fonts/notosanstc-0.woff2) format('woff2'); font-weight: 400 900; }
+  @font-face { font-family: 'Noto Sans TC'; src: url(../../public/fonts/notosanstc-1.woff2) format('woff2'); font-weight: 400 900; }
+  * { margin: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; background: #efe9e0; }
+  body { position: relative; font-family: 'Archivo', 'Noto Sans TC', sans-serif; color: #1e1b18; }
+  .txt { position: absolute; left: 56px; top: 0; bottom: 0; width: 400px; display: flex; flex-direction: column; justify-content: center; }
+  .kicker { font-size: 20px; font-weight: 700; color: #c44a24; letter-spacing: 0.02em; }
+  .title { margin-top: 16px; font-weight: 900; font-size: 52px; line-height: 1.08; text-wrap: balance; }
+  .tagline { margin-top: 22px; font-family: 'Noto Sans TC', sans-serif; font-size: 27px; font-weight: 700; line-height: 1.45; color: #3b3530; word-break: keep-all; }
+  :lang(en) .tagline { font-family: 'Archivo', sans-serif; font-weight: 600; font-size: 25px; line-height: 1.35; }
+  .by { margin-top: 34px; font-family: 'Noto Sans TC', sans-serif; font-size: 20px; line-height: 1.5; color: #5e554d; }
+  :lang(en) .by { font-family: 'Archivo', sans-serif; }
+  .by b { color: #1e1b18; font-weight: 700; }
+  .shot { position: absolute; left: 488px; top: 142px; width: 664px; height: 346px; border-radius: 14px; overflow: hidden; background: #fff; box-shadow: 0 24px 60px -18px rgb(60 40 20 / 0.45), 0 0 0 1px rgb(30 27 24 / 0.08); }
+  /* The shots are 1200x630 like the card, so this box shows all of each:
+     cropping cut a product's own slogan or logo in half. */
+  .shot img { width: 100%; height: 100%; object-fit: cover; }
+</style>
+<div class="txt">
+  <p class="kicker">ogmatcha.com</p>
+  <p class="title" id="title"></p>
+  <p class="tagline" id="tagline"></p>
+  <p class="by" id="by"></p>
+</div>
+<div class="shot"><img id="shot" src="shots/finctory.jpg" alt="" /></div>
+<script>
+  const q = new URLSearchParams(location.search)
+  if (q.get('lang') === 'en') document.documentElement.lang = 'en'
+  document.getElementById('title').textContent = q.get('title')
+  document.getElementById('tagline').textContent = q.get('tagline')
+  const by = document.getElementById('by')
+  const b = document.createElement('b')
+  b.textContent = q.get('who')
+  by.append(b, document.createElement('br'), q.get('role'))
+  document.getElementById('shot').src = 'shots/' + q.get('shot') + '.jpg'
+</script>
+</html>
