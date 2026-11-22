@@ -1,0 +1,36 @@
+<!doctype html>
+<!--
+  The site's share card (og:image for the pages without their own picture).
+  Rendered by scripts/make-og.mjs to public/images/og/site.jpg, 1200x630.
+  The same night desk, fonts and terracotta as the homepage, so a link
+  shared in a chat already looks like the page it opens.
+-->
+<html lang="zh-Hant">
+<meta charset="utf-8" />
+<style>
+  @font-face { font-family: 'Archivo'; src: url(../../public/fonts/archivo-var-000.woff2) format('woff2'); font-weight: 100 900; font-stretch: 62% 125%; }
+  @font-face { font-family: 'Noto Sans TC'; src: url(../../public/fonts/notosanstc-0.woff2) format('woff2'); font-weight: 400 900; }
+  @font-face { font-family: 'Noto Sans TC'; src: url(../../public/fonts/notosanstc-1.woff2) format('woff2'); font-weight: 400 900; }
+  * { margin: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; background: #12141c; }
+  body { position: relative; font-family: 'Archivo', 'Noto Sans TC', sans-serif; color: #efebe4; }
+  .bg { position: absolute; inset: 0 0 0 330px; width: 870px; height: 630px; object-fit: cover; object-position: 60% 60%; }
+  .fade { position: absolute; inset: 0; background: linear-gradient(90deg, #12141c 0, #12141c 330px, rgb(18 20 28 / 0.86) 470px, rgb(18 20 28 / 0.25) 660px, transparent 820px), linear-gradient(transparent 70%, rgb(18 20 28 / 0.7)); }
+  .txt { position: absolute; left: 72px; top: 0; bottom: 0; width: 600px; display: flex; flex-direction: column; justify-content: center; }
+  .site { font-size: 22px; font-weight: 700; letter-spacing: 0.02em; color: #ff8a5b; }
+  .name { margin-top: 18px; font-family: 'Noto Sans TC'; font-weight: 900; font-size: 112px; line-height: 1; letter-spacing: 0.02em; }
+  .alt { margin-top: 18px; font-size: 28px; font-weight: 600; color: #b9b2a8; }
+  .thesis { margin-top: 40px; font-family: 'Noto Sans TC'; font-size: 34px; font-weight: 800; line-height: 1.4; }
+  .roles { margin-top: 26px; font-size: 21px; line-height: 1.6; color: #b9b2a8; font-family: 'Noto Sans TC', sans-serif; }
+  .roles b { color: #efebe4; font-weight: 700; }
+</style>
+<img class="bg" src="../../public/desk/poster-night.webp" alt="" />
+<div class="fade"></div>
+<div class="txt">
+  <p class="site">ogmatcha.com</p>
+  <p class="name">黃鉅燊</p>
+  <p class="alt">Ju-Shen Huang · OG_Matcha</p>
+  <p class="thesis">我把 AI 從展示品，<br />做到三個月後還有人在用。</p>
+  <p class="roles"><b>斐闊 Finctory</b> 共同創辦人暨技術長<br /><b>醫數行銷 MedaLink</b> 共同創辦人</p>
+</div>
+</html>
