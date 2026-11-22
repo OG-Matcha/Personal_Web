@@ -28,6 +28,18 @@
           <a :href="cv.other" class="cv-other" :hreflang="isEn ? 'zh-Hant' : 'en'" download>{{ t.cvOther }}</a>
         </div>
       </template>
+      <!-- The strongest few first: the record below runs newest first, so it
+           opened on its weakest prize. -->
+      <section class="hl5" aria-labelledby="hl5-title">
+        <h2 id="hl5-title" class="hl5-h">{{ t.highlights }}</h2>
+        <ol class="hl5-list">
+          <li v-for="e in highlights" :key="e.date + e.title" class="hl5-item" :class="{ 'is-win': e.kind === 'award' }">
+            <time class="hl5-when figures" :datetime="e.date">{{ formatDate(e.date) }}</time>
+            <span class="hl5-what">{{ keep(e.title) }}</span>
+            <span v-if="e.org" class="hl5-org">{{ e.org }}</span>
+          </li>
+        </ol>
+      </section>
       <LedgerSection />
     </Station>
 
@@ -51,6 +63,10 @@ import QuickFacts from '~/components/sections/QuickFacts.vue'
 const { timeline, site, en } = useContent()
 const { locale } = useLocale()
 const isEn = computed(() => locale.value === 'en')
+// Entries marked highlight: true in content/timeline.yml, in the record's order.
+const highlights = computed(() =>
+  timeline.filter((e) => e.highlight).map((e) => (isEn.value ? { ...e, ...(en.timeline?.[`${e.date} ${e.title}`] ?? {}) } : e))
+)
 // Each language links its own CV first and the other one beside it.
 const cv = computed(() => {
   const { href, hrefEn } = site.contact.cv
@@ -69,6 +85,7 @@ const t = computed(() =>
         printNote: 'The full record, as printed from the web. The two-page CV:',
         cvNote: `PDF · 2 pages · updated ${formatDate(site.contact.cv.updated)}`,
         cvOther: '中文 PDF',
+        highlights: 'Highlights',
         skills: en.sheets.skills,
         skillsLede: en.sheets.skillsLede,
         faq: 'Quick answers',
@@ -84,6 +101,7 @@ const t = computed(() =>
         printNote: '這是網頁上的完整年表。兩頁的精簡履歷：',
         cvNote: `PDF · 2 頁 · ${formatDate(site.contact.cv.updated)} 更新`,
         cvOther: 'English PDF',
+        highlights: '重點',
         skills: '能力斷面',
         skillsLede: '量尺不是熟練度，是證據層級。每一項都連得到一個可以點開的東西；連不到的，這一頁就不列。',
         faq: '快速問答',
@@ -126,6 +144,68 @@ const t = computed(() =>
   font-size: var(--step-3);
   line-height: 1;
   color: var(--ink);
+}
+
+/* The highlights: five lines on a tinted card, two columns where there is room. */
+.hl5 {
+  margin-bottom: var(--sp-7);
+  padding: var(--sp-5);
+  border-radius: var(--r-3);
+  background: var(--surface-2);
+}
+
+.hl5-h {
+  font-size: var(--step--1);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--ink-3);
+}
+
+.hl5-list {
+  display: grid;
+  gap: var(--sp-4) var(--sp-7);
+  margin-top: var(--sp-3);
+}
+
+@media (min-width: 900px) {
+  .hl5-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.hl5-item {
+  display: grid;
+  gap: 2px;
+}
+
+.hl5-when {
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+/* Every line keeps the patch's place, so the dates align; wins fill it. */
+.hl5-when::before {
+  content: '';
+  display: inline-block;
+  width: 0.6em;
+  height: 0.6em;
+  margin-right: 0.45em;
+}
+
+.hl5-item.is-win .hl5-when::before {
+  background: var(--pop);
+}
+
+.hl5-what {
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.hl5-org {
+  font-size: var(--step--1);
+  color: var(--ink-3);
 }
 
 /* The CV: one real button, the other language as a quiet link beside it. */

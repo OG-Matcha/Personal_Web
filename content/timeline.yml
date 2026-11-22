@@ -180,6 +180,7 @@
   kind: award
   lane: contest
   title: 第六屆台積電校園黑客松（TSMC IT CareerHack）AI 維運懶人包組 - 第一名
+  highlight: true  # 履歷頁頂端的「重點」
   org: 台灣積體電路製造股份有限公司
   detail: 參賽作品 Catalyst —— Multi-Agent 軟體開發自動化平台，從需求分析、產生程式碼到測試部署全流程串接
   # 中央資管系公告：黃鉅燊、顏嘉緯，D 組第一名
@@ -275,6 +276,7 @@
   kind: award
   lane: contest
   title: 第 29 屆大專校院資訊應用服務創新競賽 資安應用組 - 第一名
+  highlight: true  # 履歷頁頂端的「重點」
   org: 數位發展部 · 教育部 · 中華民國資訊管理學會
   project: phishforge
   # 獎狀掃描，隊友姓名已模糊
@@ -293,6 +295,7 @@
   kind: award
   lane: contest
   title: 臺灣數創大賞 數位＋組 - 金獎
+  highlight: true  # 履歷頁頂端的「重點」
   org: 經濟部產業園區管理局 · 臺中軟體園區發展產學訓聯盟 · 東海大學
   project: osave
   note: 隊名「懂一點商」，oSave 當時的團隊名
@@ -339,6 +342,7 @@
   kind: award
   lane: contest
   title: 第六屆 Startup 創業競技場 國內組 - 第一名
+  highlight: true  # 履歷頁頂端的「重點」
   org: 國立臺灣師範大學 · 教育部
   project: osave
   note: 隊名「懂一點商」，oSave 當時的團隊名
@@ -382,6 +386,7 @@
   lane: venture
   strand: finctory
   title: 共同創辦 斐闊 Finctory，出任技術長
+  highlight: true  # 履歷頁頂端的「重點」
   org: 斐闊有限公司
   ongoing: true
   detail: >-
