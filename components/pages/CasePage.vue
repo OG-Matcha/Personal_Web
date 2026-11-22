@@ -377,6 +377,8 @@ function goBack() {
 }
 
 .case-cover--card {
+  /* A frame of its own size: the card's stage is sized by it. */
+  aspect-ratio: 16 / 11;
   overflow: visible;
   padding: 0;
   background: none;

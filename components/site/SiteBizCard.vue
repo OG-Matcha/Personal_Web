@@ -182,8 +182,8 @@ onBeforeUnmount(() => cancelAnimationFrame(raf))
    takes its place once it has. */
 .bc-hint {
   position: absolute;
-  bottom: calc(var(--sp-2) + 22px);
-  translate: -50% 50%;
+  bottom: var(--sp-2);
+  translate: -50% 0;
   left: 50%;
   margin: 0;
   font-size: var(--step--1);
@@ -235,9 +235,14 @@ onBeforeUnmount(() => cancelAnimationFrame(raf))
   display: grid;
   place-items: center;
   height: 100%;
-  /* Room under the card for the hint, and for the 44px "say hi" link that
-     replaces it, clear of the card's tilted corner. */
-  padding: var(--sp-5) var(--sp-5) calc(var(--sp-2) + 44px + var(--sp-4));
+  /* The stage is sized by its frame (the portfolio's 16:10 print, the case
+     page's cover); the card takes whichever of its width or height runs out
+     first, leaving a line under it for the hint. */
+  container-type: size;
+  --pad-x: var(--sp-4);
+  --pad-top: var(--sp-3);
+  --pad-foot: calc(var(--sp-2) + 1.75rem);
+  padding: var(--pad-top) var(--pad-x) var(--pad-foot);
   perspective: 1100px;
 }
 
@@ -245,7 +250,8 @@ onBeforeUnmount(() => cancelAnimationFrame(raf))
   --navy: #0d1730;
   --edge: rgb(140 170 255 / 0.35);
   position: relative;
-  width: min(100%, 26rem);
+  /* cq units measure the stage's content box: the padding is already out. */
+  width: min(26rem, 100cqw, 100cqh * 91 / 55);
   aspect-ratio: 91 / 55;
   transform-style: preserve-3d;
   transform: rotateX(var(--rx)) rotateY(var(--ry));
@@ -268,6 +274,11 @@ onBeforeUnmount(() => cancelAnimationFrame(raf))
 }
 
 .bc-face {
+  /* The card is printed, not typeset: every size on it is a share of its
+     width (cqi), so a small card is the same card made smaller. Sized in rem
+     the type stayed put while the card shrank (the portfolio's 240px card
+     piled the address onto the name). */
+  container-type: inline-size;
   position: absolute;
   inset: 0;
   overflow: hidden;
@@ -319,7 +330,7 @@ onBeforeUnmount(() => cancelAnimationFrame(raf))
   display: flex;
   align-items: baseline;
   gap: 0.5em;
-  font-size: clamp(0.9rem, 0.6rem + 1vw, 1.15rem);
+  font-size: 4.4cqi;
 }
 
 .bc-brand--big {
@@ -327,7 +338,7 @@ onBeforeUnmount(() => cancelAnimationFrame(raf))
   flex-direction: column;
   align-items: center;
   gap: 0.2em;
-  font-size: clamp(1.6rem, 1rem + 2.4vw, 2.4rem);
+  font-size: 9.3cqi;
 }
 
 .bc-word {
@@ -343,7 +354,7 @@ onBeforeUnmount(() => cancelAnimationFrame(raf))
 }
 
 .bc-secret {
-  font-size: 0.8125rem;
+  font-size: 3.2cqi;
   letter-spacing: 0.06em;
   color: rgb(200 212 255 / 0.7);
 }
@@ -352,7 +363,7 @@ onBeforeUnmount(() => cancelAnimationFrame(raf))
   position: absolute;
   bottom: 22%;
   right: 6%;
-  font-size: 0.75rem;
+  font-size: 3cqi;
   font-weight: 700;
   line-height: 1.5;
   text-align: right;
@@ -366,27 +377,27 @@ onBeforeUnmount(() => cancelAnimationFrame(raf))
 }
 
 .bc-role {
-  font-size: 0.72rem;
+  font-size: 2.9cqi;
   font-weight: 700;
   color: #8fb0ff;
 }
 
 .bc-role-en {
-  font-size: 0.6875rem;
+  font-size: 2.7cqi;
   letter-spacing: 0.18em;
   color: #6f8fe0;
 }
 
 .bc-name {
   margin-top: 0.3em;
-  font-size: clamp(1.4rem, 1rem + 1.4vw, 1.9rem);
+  font-size: 7.3cqi;
   font-weight: 800;
   line-height: 1.1;
   letter-spacing: 0.04em;
 }
 
 .bc-name-en {
-  font-size: 0.75rem;
+  font-size: 2.9cqi;
   letter-spacing: 0.08em;
   color: rgb(200 212 255 / 0.65);
 }
@@ -400,7 +411,7 @@ onBeforeUnmount(() => cancelAnimationFrame(raf))
   justify-content: space-between;
   padding-top: 0.55em;
   border-top: 1px solid rgb(120 150 255 / 0.35);
-  font-size: 0.75rem;
+  font-size: 2.9cqi;
   letter-spacing: 0.04em;
   color: rgb(200 212 255 / 0.75);
 }
