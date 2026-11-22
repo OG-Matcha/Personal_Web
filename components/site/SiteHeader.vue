@@ -47,7 +47,7 @@ const t = computed(() =>
         short: 'J. Huang',
         navLabel: 'Main',
         links: [
-          { href: '/en/#work', label: 'Work', section: /^\/en\/(portfolio|work)\// },
+          { href: '/en/#work', label: 'Work', section: /^\/en\/(portfolio|work)(\/|$)/ },
           { href: '/en/#record', label: 'Record', wide: true },
           { href: '/en/resume/', label: 'Résumé', short: 'CV' },
         ],
@@ -63,7 +63,7 @@ const t = computed(() =>
         name: '黃鉅燊',
         navLabel: '主要導覽',
         links: [
-          { href: '/#work', label: '作品', section: /^\/(portfolio|work)\// },
+          { href: '/#work', label: '作品', section: /^\/(portfolio|work)(\/|$)/ },
           { href: '/#record', label: '年表', wide: true },
           { href: '/resume/', label: '履歷' },
         ],

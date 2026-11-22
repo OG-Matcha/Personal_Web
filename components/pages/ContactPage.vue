@@ -43,7 +43,7 @@
                 <label class="ct-label" for="ct-contact">{{ t.contact }} <small>{{ t.optional }}</small></label>
                 <input id="ct-contact" v-model="contact" type="text" maxlength="160" autocomplete="email" inputmode="email" aria-describedby="ct-contact-hint ct-contact-nudge" />
                 <p id="ct-contact-hint" class="ct-hint">{{ t.contactHint }}</p>
-                <p id="ct-contact-nudge" class="ct-nudge" aria-live="polite"><template v-if="nudge">{{ t.nudge }}</template></p>
+                <p id="ct-contact-nudge" class="ct-nudge" aria-live="polite"><template v-if="nudge"><Info :size="15" :stroke-width="2.2" aria-hidden="true" /><span>{{ t.nudge }}</span></template></p>
               </div>
             </div>
 
@@ -59,7 +59,7 @@
                 <span>{{ busy ? t.sending : t.send }}</span>
               </button>
               <p ref="statusEl" class="ct-status" :class="{ 'is-empty': !status, 'is-warn': !!status }" role="status" aria-live="polite" tabindex="-1">
-                <template v-if="failedSend">{{ t.failedLead }}<a :href="`mailto:${site.contact.email}`">{{ site.contact.email }}</a></template>
+                <template v-if="failedSend">{{ t.failedLead }}<a :href="mailHref">{{ site.contact.email }}</a></template>
                 <template v-else>{{ status }}</template>
               </p>
             </div>
@@ -88,7 +88,7 @@
 </template>
 
 <script setup>
-import { CheckCircle2, Github, Instagram, Linkedin, Send } from 'lucide-vue-next'
+import { CheckCircle2, Github, Info, Instagram, Linkedin, Send } from 'lucide-vue-next'
 import Station from '~/components/studio/Station.vue'
 
 const { site } = useContent()
@@ -118,6 +118,7 @@ const t = computed(() =>
         contact: 'How do I reply?',
         contactHint: 'An email address, or any way you would like me to reach you.',
         nudge: 'For work, leave an email or another way to reach you, or I cannot write back.',
+        mailSubject: 'From ogmatcha.com',
         optional: '(optional)',
         send: 'Send',
         sending: 'Sending…',
@@ -145,6 +146,7 @@ const t = computed(() =>
         contact: '怎麼回覆你？',
         contactHint: 'Email，或任何你希望我聯絡你的方式。',
         nudge: '談合作或工作的話，留個 email 或其他聯絡方式，我才回得了你。',
+        mailSubject: '來自 ogmatcha.com 的訊息',
         optional: '（可不填）',
         send: '送出',
         sending: '送出中…',
@@ -171,6 +173,11 @@ const status = ref('')
 const failedSend = computed(() => !!status.value && status.value === t.value.failed(site.contact.email))
 const doneEl = ref(null)
 const statusEl = ref(null)
+// The fallback address opens a mail already holding what they wrote.
+const mailHref = computed(() => {
+  const body = [message.value.trim(), name.value.trim() && `— ${name.value.trim()}`, contact.value.trim()].filter(Boolean).join('\n\n')
+  return `mailto:${site.contact.email}?subject=${encodeURIComponent(t.value.mailSubject)}&body=${encodeURIComponent(body)}`
+})
 // A work enquiry with no way to reply is a dead end: say so once they have
 // written something, without stopping them from sending.
 const nudge = computed(() => topic.value === 'work' && message.value.trim().length >= 2 && !contact.value.trim())
@@ -428,11 +435,20 @@ async function send() {
 }
 
 .ct-nudge {
+  display: flex;
+  gap: var(--sp-2);
+  align-items: flex-start;
   margin: 0;
   text-wrap: pretty;
   font-size: var(--step--1);
-  font-weight: 600;
-  color: var(--pop);
+  color: var(--ink-2);
+}
+
+/* A hint, not an error: neutral ink, an (i) mark instead of the error colour. */
+.ct-nudge svg {
+  flex: none;
+  margin-top: 0.2em;
+  color: var(--ink-3);
 }
 
 .ct-nudge:empty {
