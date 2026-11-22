@@ -51,8 +51,8 @@
           </div>
           <div class="hl-text">
             <h3>
-              <NuxtLink v-if="h.href" :to="h.href">{{ h.title }} →</NuxtLink>
-              <template v-else>{{ h.title }}</template>
+              <NuxtLink v-if="h.href" :to="h.href">{{ keep(h.title) }} →</NuxtLink>
+              <template v-else>{{ keep(h.title) }}</template>
             </h3>
             <p>{{ h.text }}</p>
           </div>

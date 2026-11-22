@@ -18,6 +18,8 @@ export function usePageSeo(opts: {
   /** More nodes for the page's graph (a product, a breadcrumb), and the one the page is about. */
   graph?: Record<string, unknown>[]
   mainEntity?: string
+  /** Absolute URL of a share picture for this page; the site's own otherwise. */
+  image?: string
 }) {
   const zh = `${SITE}${opts.path}`
   const en = `${SITE}/en${opts.path}`
@@ -33,6 +35,7 @@ export function usePageSeo(opts: {
     ogLocale: opts.lang === 'en' ? 'en_US' : 'zh_TW',
     twitterTitle: opts.title,
     twitterDescription: opts.description,
+    ...(opts.image ? { ogImage: opts.image, twitterImage: opts.image } : {}),
   })
   useHead({
     // Always set: a client-side hop from /en/ back to Chinese otherwise left

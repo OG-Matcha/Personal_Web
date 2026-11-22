@@ -31,10 +31,10 @@
           <p v-if="e.note" class="lg-org">{{ e.note }}</p>
 
           <p v-if="(e.project && workSlugs.has(e.project)) || e.evidence" class="lg-links">
-            <NuxtLink v-if="e.project && workSlugs.has(e.project)" :to="`${prefix}/work/${e.project}/`">
+            <NuxtLink v-if="e.project && workSlugs.has(e.project)" :to="`${prefix}/work/${e.project}/`" :aria-label="`${c.case}${c.sep}${e.title}`">
               {{ c.case }}
             </NuxtLink>
-            <a v-if="e.evidence" :href="e.evidence" v-bind="linkAttrs(e.evidence)">{{ proofLabel(e.evidence) }}</a>
+            <a v-if="e.evidence" :href="e.evidence" v-bind="linkAttrs(e.evidence)" :aria-label="`${proofLabel(e.evidence)}${c.sep}${e.title}`">{{ proofLabel(e.evidence) }}</a>
           </p>
         </div>
       </li>
@@ -80,6 +80,7 @@ const c = computed(() =>
         upcoming: 'upcoming',
         advisor: 'Advisor: ',
         case: 'The product',
+        sep: ': ',
         proof: { site: 'Website', source: 'Source', store: 'Store listing', notice: 'Announcement' },
         shortlisted: 'Shortlist',
         fold: (n) => `Fold ${n} entries`,
@@ -91,6 +92,7 @@ const c = computed(() =>
         upcoming: '即將',
         advisor: '指導教授：',
         case: '產品介紹',
+        sep: '：',
         proof: { site: '官網', source: '原始碼', store: '商店頁', notice: '公告' },
         shortlisted: '入圍',
         fold: (n) => `收合 ${n} 筆`,

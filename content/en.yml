@@ -12,7 +12,7 @@ thesisLines:
   - Taking AI from demo
   - to something that runs.
 thesisSub: Demos are easy. The hard part is that someone is still using it three months later.
-intro: Ju-Shen Huang (黃鉅燊, OG_Matcha online), from Taoyuan, Taiwan. Co-founder and CTO of Finctory, co-founder and forward-deployed engineer at MedaLink. BS in Information Management from National Central University (2026), now in the same department's master's program.
+intro: Ju-Shen Huang (黃鉅燊, OG_Matcha online), from Taoyuan, Taiwan. Co-founder and CTO of Finctory, co-founder and forward-deployed engineer at MedaLink. BS in Information Management from National Central University (2026), now in the same department’s master’s program.
 lede: In a team of four or fewer there is no second person to hand anything to. That constraint made most of my technical decisions. At the other company, there is not even a first person besides me.
 portraitAlt: Photo of Ju-Shen Huang
 caption: Four-colour separation, screen angles 15° / 75° / 0° / 45°. The cursor is a loupe.
@@ -41,7 +41,7 @@ posts:
       - Division-wide GAI template and security workflow
 
 degree: BS, Information Management, National Central University, June 2026
-degreeDetail: GPA 4.19 / 4.3; credit programs in Business Intelligence & Analytics and Cross-domain Applications of AI; master's program in the same department from September 2026
+degreeDetail: GPA 4.19 / 4.3; credit programs in Business Intelligence & Analytics and Cross-domain Applications of AI; master’s program in the same department from September 2026
 open:
   - Generative-AI / agent architecture consulting
   - Early-stage technical partnerships
@@ -59,7 +59,7 @@ sheets:
 beats:
   ignite:
     title: How do you get people to let you do the work?
-    lede: In my first year I knew nothing, and nobody hands work to someone like that. So I took the jobs nobody wanted – fixing the department's computers, rebuilding a website too slow to use, joining up student groups that never talked. After that, people started asking whether I wanted to build something with them.
+    lede: In my first year I knew nothing, and nobody hands work to someone like that. So I took the jobs nobody wanted – fixing the department’s computers, rebuilding a website too slow to use, joining up student groups that never talked. After that, people started asking whether I wanted to build something with them.
   build:
     title: Can I do two hard things at once?
     lede: In March 2024 I started my capstone project and used it to apply for an NSTC undergraduate research grant; in April I became CTO of Finctory. One side owed research results, the other owed releases, and neither could slip. That quarter taught me trade-offs more than anything else.
@@ -71,7 +71,7 @@ beats:
     lede: In May 2025 we admitted Invoice Doctor had reached the point where we could no longer see its problems, and that testing it further was not worth it, so we started oSave from scratch. The same year the company was registered, we won the TSMC hackathon, two NSTC projects closed, and I joined ITRI.
   now:
     title: Graduated. Now what?
-    lede: In June 2026 I finished my bachelor's degree with two credit programs, and in September I moved straight into the master's program. I still run the technical side of both companies; November added a hackathon honourable mention, and there are two open-source projects.
+    lede: In June 2026 I finished my bachelor’s degree with two credit programs, and in September I moved straight into the master’s program. I still run the technical side of both companies; November added a hackathon honourable mention, and there are two open-source projects.
 
 works:
   surprice:
@@ -90,7 +90,7 @@ works:
         label: Competition awards
     highlights:
       - title: Every flyer on one page
-        text: No more leafing through flyers one by one. This week's deals from every chain sit together, sorted by ending soon, nearest, lowest price or biggest discount, and you can search by product or brand. Comparing prices in bed at night, the screen follows your phone into dark mode.
+        text: No more leafing through flyers one by one. This week’s deals from every chain sit together, sorted by ending soon, nearest, lowest price or biggest discount, and you can search by product or brand. Comparing prices in bed at night, the screen follows your phone into dark mode.
       - title: The maths done for you
         text: '“Buy one get one” and “two for” prices are the hardest to compare. Every deal is turned into an average price and a unit price (per 100 ml, say), with the days left beside it and a link to the flyer it came from, so you can check.'
       - title: Only the stores you go to
@@ -102,9 +102,9 @@ works:
       - title: Swipe to save, then get directions
         text: Once signed in, flick through deals like cards and swipe right to keep one in your deal book, with the ones ending soonest first. Under “Nearby”, see which stores honour the deals you kept and get directions in one tap.
     myPart:
-      - As Finctory's CTO, led product development and wrote most of the code
+      - As Finctory’s CTO, led product development and wrote most of the code
       - Rebuilt the prototype as a real web app – search, swipe deck, saved deals and nearby stores
-      - Turned flyers in every chain's own format into deals you can search, sort and compare by unit price
+      - Turned flyers in every chain’s own format into deals you can search, sort and compare by unit price
     results:
       - metric: Competition awards
         value: '{awards}'
@@ -133,7 +133,7 @@ works:
         text: All conversion happens in your own browser. No account, and it neither reads nor stores your shopping history; it never runs on checkout or sign-in pages at all.
     myPart:
       - Built it alone from nothing to the store – price detection, daily rates, the popup and the welcome page
-      - Made prices convert on Taobao's ever-shifting pages, through infinite scroll and in-page navigation
+      - Made prices convert on Taobao’s ever-shifting pages, through infinite scroll and in-page navigation
       - Took it through Chrome Web Store review, and still maintain it
   osave:
     title: oSave
@@ -168,7 +168,7 @@ works:
       title: From Invoice Doctor to oSave
       text: The first version, Invoice Doctor, read your receipts and sorted your spending automatically. The data was all there, yet people still could not answer “is this month better or worse?”. In May 2025 we changed course – instead of collecting more data, make every entry add up to a conclusion.
     myPart:
-      - As CTO, led the development team from Invoice Doctor all the way to oSave's launch
+      - As CTO, led the development team from Invoice Doctor all the way to oSave’s launch
       - Designed the system architecture and wrote the backend and the financial-indicator calculations
       - Built automatic item categorisation – rules first, AI only when rules miss, and a failed guess never blocks an entry
     results:
@@ -182,7 +182,7 @@ works:
     role: Backend · AI engineering
     status: Concluded
     tagline: AI-written phishing you cannot tell from the real thing – so security drills actually teach something.
-    summary: Template drills get recognised after a few rounds; staff learn to spot the company's test mail, not phishing. PhishForge has AI write tailored phishing mail and matching fake login pages for each department and situation, then shows the company how many people opened, clicked and filled in the form.
+    summary: Template drills get recognised after a few rounds; staff learn to spot the company’s test mail, not phishing. PhishForge has AI write tailored phishing mail and matching fake login pages for each department and situation, then shows the company how many people opened, clicked and filled in the form.
     outcomes:
       - value: 1st place
         label: Information Application Service Innovation Contest, security track
@@ -221,18 +221,18 @@ works:
       - title: oSave
         text: A budgeting app built on accounting logic that scores your financial health, live on iOS and Android.
       - title: SurPrice
-        text: A web app for deals across chains – every flyer's offers on one page, each worked out to a unit price and the days left.
+        text: A web app for deals across chains – every flyer’s offers on one page, each worked out to a unit price and the days left.
       - title: Taobao Exchange
-        text: A Chrome extension that shows Taobao's RMB prices in New Taiwan dollars, automatically.
+        text: A Chrome extension that shows Taobao’s RMB prices in New Taiwan dollars, automatically.
       - title: oSave Podcast
-        text: oSave's own show about budgeting and money, on air since November 2025 on Apple Podcasts and other platforms.
+        text: oSave’s own show about budgeting and money, on air since November 2025 on Apple Podcasts and other platforms.
     turn:
       title: Making the system outlive its authors
       text: In a team with no investors, where everyone is still a student and anyone can leave, the first question before writing code is “can the next person take this over?”. So all four product lines share one stack, and no one leaving takes a whole product with them.
     myPart:
       - CTO since the team formed, leading an engineering team of four or fewer
       - Unified the technology across four product lines so handovers hold
-      - Led oSave's system architecture and backend
+      - Led oSave’s system architecture and backend
     results:
       - metric: Incorporation
         value: Registered company
@@ -244,7 +244,7 @@ works:
     role: Co-founder · Forward-Deployed Engineer
     status: Live
     tagline: An AI front desk for clinics – replies, scheduling and recalls in one system.
-    summary: Messages from LINE, Facebook, Instagram and the website land in one inbox. The AI answers by each clinic's own rules, books people into slots where the doctor, room and equipment are all free, then takes over reminders, rescheduling, aftercare and six-month recalls.
+    summary: Messages from LINE, Facebook, Instagram and the website land in one inbox. The AI answers by each clinic’s own rules, books people into slots where the doctor, room and equipment are all free, then takes over reminders, rescheduling, aftercare and six-month recalls.
     outcomes:
       - value: 2 people
         label: Requirements to production
@@ -253,7 +253,7 @@ works:
     highlights:
       - title: Only bookable slots are offered
         text: A treatment is split into stages, and a slot only appears when every doctor, assistant, room and machine each stage needs is free. The front desk stops phoning people to fix bad bookings.
-      - title: Every patient's stage at a glance
+      - title: Every patient’s stage at a glance
         text: Bookings create a record automatically and move through a seven-stage pipeline; reminders, rescheduling, waitlist fills, aftercare and six-month recalls can each be switched on or off.
       - title: What must not be said, is not said
         text: Promises of results, comparative claims and post-treatment symptom advice are on a do-not-answer list – the AI stops and alerts the front desk. Wound and medical photos always go to a human.
@@ -262,7 +262,7 @@ works:
       text: A front desk can answer messages for about 176 hours a month; for the other 544, messages keep arriving. But auto-replies are not enough – once the question is answered, the person has to be booked into a slot that really works, followed by reminders, changes and recalls. MedaLink connects that whole chain.
     myPart:
       - The AI half of a two-person team, from the conversation engine to cloud deployment
-      - Made the AI answer by each clinic's own playbook, knowledge base and do-not-answer list, in the clinic's own voice
+      - Made the AI answer by each clinic’s own playbook, knowledge base and do-not-answer list, in the clinic’s own voice
       - Routed messages to different models by difficulty, so simple greetings use a cheaper model and save the clinic money
     results:
       - metric: Team
@@ -277,7 +277,7 @@ alsoBuilt:
     line: A Taipei MRT companion for older, blind and wheelchair riders – it routes around lifts under maintenance using city open data, picks one exit with a lift map, then talks you out of the station step by step. Speech recognition and intent matching run on the phone, so it works in airplane mode.
   推し看板 oshi:
     name: Oshi Board
-    line: Anime pop-up shops, art exhibitions, doujin markets and collab cafés in Taiwan and Japan on one page. Every morning it collects official announcements and official X posts, has AI read out dates, venues and prices, and folds several posts about one event together. Follow your series and get a push when there's news or an online restock.
+    line: Anime pop-up shops, art exhibitions, doujin markets and collab cafés in Taiwan and Japan on one page. Every morning it collects official announcements and official X posts, has AI read out dates, venues and prices, and folds several posts about one event together. Follow your series and get a push when there’s news or an online restock.
   tessera:
     line: A Claude Code mod, Windows and CJK first – pasted images and text previewed in any terminal, CJK-correct tables, long diffs folded, and guards for multi-agent runs and Traditional Chinese writing.
   orca-companion-kit:
@@ -306,7 +306,7 @@ timeline:
     org: Department of Information Technology, Taipei City Government
     note: Team 「得獎的是!?」; 85 teams applied, 40 reached the final
   '2026-09 國立中央大學 資訊管理學系 碩士班 入學':
-    title: Master's program, Information Management, National Central University
+    title: Master’s program, Information Management, National Central University
     detail: Full-time, enrolled since September 2026, expected to finish June 2028
   '2026-07 共同創辦 醫數行銷 MedaLink，任前線部署工程師（FDE）':
     title: Co-founded MedaLink as Forward-Deployed Engineer
@@ -337,7 +337,7 @@ timeline:
   '2025-07 工業技術研究院 產科國際所 - 暑期實習（資料科學家）':
     title: ITRI ISTI – Summer intern (data scientist)
     org: Innovation and Venture Strategy Division
-    detail: Built and standardised a database of Taiwan's startup ecosystem from government grants, incubators and investors, used for industry maps, quadrant analysis and investment decisions; designed and ran AI workshops for non-technical colleagues.
+    detail: Built and standardised a database of Taiwan’s startup ecosystem from government grants, incubators and investors, used for industry maps, quadrant analysis and investment decisions; designed and ran AI workshops for non-technical colleagues.
   '2025-06 113 學年度第 2 學期 學業成績優良書卷獎':
     title: Academic Excellence Award, spring 2025
     org: Department of Information Management, NCU
@@ -384,11 +384,11 @@ timeline:
   '2025-09 臺東創新創業大賽 - 最佳創新創業大獎':
     title: Taitung Innovation & Entrepreneurship Competition – Best Startup Award
     org: Taitung County Government · Taitung City Youth Work Association
-    detail: The county's first edition. 90 teams nationwide, 8 finalists; Finctory won the top award with oSave, NT$60,000
+    detail: The county’s first edition. 90 teams nationwide, 8 finalists; Finctory won the top award with oSave, NT$60,000
   '2025 臺灣數創大賞 - 銅獎':
     title: Taiwan Digital Innovation Awards – Bronze
     org: Industrial Park Administration, Ministry of Economic Affairs
-    note: Entered with Finctory's SurPrice
+    note: Entered with Finctory’s SurPrice
   '2024-12 臺北市智慧城市青年舉政徵件提案競賽 - 佳作（第四名）':
     title: Taipei Smart City Youth Policy Proposal Competition – Honourable Mention (4th)
     org: Department of Youth Affairs, Taipei City Government
@@ -405,12 +405,12 @@ timeline:
   '2024-11 臺灣數創大賞 數位＋組 - 金獎':
     title: Taiwan Digital Innovation Awards, Digital+ track – Gold
     org: Industrial Park Administration, MOEA · Taichung Software Park alliance · Tunghai University
-    note: Team 「懂一點商」, oSave's name at the time
+    note: Team 「懂一點商」, oSave’s name at the time
   '2024-11 運用知識圖譜與大型語言模型分析學習軌跡':
     title: Analysing learning trajectories with knowledge graphs and LLMs
     org: Center for General Education, National Central University
     publication: LAK 2025, International Learning Analytics & Knowledge Conference · Practitioner track
-    detail: An LLM turns course material into structured data to build a personal knowledge graph, then compares it against test results to find gaps in coverage; trialled in NCU's Python programming course.
+    detail: An LLM turns course material into structured data to build a personal knowledge graph, then compares it against test results to find gaps in coverage; trialled in NCU’s Python programming course.
   '2024-10 GenAI Stars 生成式 AI 百工百業應用選拔 創意創客組 - 優選':
     title: GenAI Stars, Creative Maker track – Merit
     org: National Science and Technology Council · Taipei Computer Association
@@ -425,7 +425,7 @@ timeline:
   '2024-06 第六屆 Startup 創業競技場 國內組 - 第一名':
     title: 6th Startup Arena, domestic track – 1st place
     org: National Taiwan Normal University · Ministry of Education
-    note: Team 「懂一點商」, oSave's name at the time
+    note: Team 「懂一點商」, oSave’s name at the time
   '2024-06 桃園青創力學生創業競賽 - 佳作':
     title: Taoyuan Youth Startup Competition – Honourable Mention
     org: Lunghwa University of Science and Technology · Taoyuan Youth Affairs Bureau
@@ -434,7 +434,7 @@ timeline:
     org: Department of Information Management, NCU
     detail: Two nominated per semester
   '2024-06 112 學年度 管理學院院長獎':
-    title: Dean's Award, School of Management, 2023–24
+    title: Dean’s Award, School of Management, 2023–24
     org: School of Management, NCU
     detail: Top 5 of the class for the year
   '2024-05 第七屆致青春・創未來全國選拔大賽 科技應用組 - 優等獎':
@@ -447,7 +447,7 @@ timeline:
   '2024-03 PhishForge 畢業專題開發':
     title: PhishForge, capstone project
     org: Department of Information Management, National Central University
-    detail: Generative-AI security-drill platform – custom phishing mail and lookalike sites generated and deployed to the cloud, with behaviour data to measure an organisation's awareness. The same topic became the 2024 NSTC grant “Generative AI in social engineering”.
+    detail: Generative-AI security-drill platform – custom phishing mail and lookalike sites generated and deployed to the cloud, with behaviour data to measure an organisation’s awareness. The same topic became the 2024 NSTC grant “Generative AI in social engineering”.
   '2024-01 中央新創擂台賽 - 優選':
     title: NCU Startup Arena – Merit
     org: National Central University
@@ -457,7 +457,7 @@ timeline:
   '2023-09 共同創辦 United Developer Club，任副召集人':
     title: Co-founded United Developer Club, vice convener
     org: Center for Teaching and Learning Development, NCU
-    detail: Ran a project-based course, Python Projects from Zero, and connected the campus's scattered developer communities
+    detail: Ran a project-based course, Python Projects from Zero, and connected the campus’s scattered developer communities
   '2023-09 網路管理工程師':
     title: Network administrator
     org: Graduate Institute of Learning and Instruction, NCU

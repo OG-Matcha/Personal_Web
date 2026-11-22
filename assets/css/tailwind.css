@@ -147,3 +147,45 @@
 :root[data-theme='dark'] .device > img {
   filter: brightness(0.88);
 }
+
+/* ---- print -----------------------------------------------------------------
+   The résumé is printed and saved as PDF from the browser too: on paper there
+   is no bar to navigate with, no wood under the page and no button to press,
+   and a link is only useful if its address is printed beside it. */
+@media print {
+  :root {
+    --bg: #fff;
+    --surface: #fff;
+  }
+  .hd,
+  .ft,
+  .cv,
+  .lg-foot,
+  .bc-hi {
+    display: none !important;
+  }
+  main.on-desk {
+    background: #fff !important;
+  }
+  body,
+  main {
+    color: #000;
+  }
+  .lg-row {
+    break-inside: avoid;
+  }
+  /* Every entry is shown, folded or not. */
+  .lg-row[style*='display: none'] {
+    display: grid !important;
+  }
+  /* !important: the evidence links' scoped ::after is their touch target. */
+  main a[href^='http']::after {
+    content: ' (' attr(href) ')' !important;
+    position: static !important;
+    height: auto !important;
+    translate: none !important;
+    font-weight: 400;
+    font-size: 0.85em;
+    word-break: break-all;
+  }
+}

@@ -32,7 +32,10 @@ function linkify(text) {
   let at = 0
   for (const m of String(text).matchAll(LINKABLE)) {
     if (m.index > at) out.push({ t: text.slice(at, m.index) })
-    out.push({ t: m[0], href: m[0].includes('@') && !m[0].startsWith('http') ? `mailto:${m[0]}` : m[0] })
+    const url = !m[0].includes('@') || m[0].startsWith('http')
+    // Shown without the scheme and www.: 「linkedin.com/in/ogmatcha」 fits a
+    // phone line where the full URL broke in two.
+    out.push({ t: url ? m[0].replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '') : m[0], href: url ? m[0] : `mailto:${m[0]}` })
     at = m.index + m[0].length
   }
   if (at < text.length) out.push({ t: text.slice(at) })

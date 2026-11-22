@@ -12,7 +12,7 @@
           <span class="ab-year figures">{{ p.year }}</span>
           <h3 class="ab-name" :class="{ 'is-token': !/\s/.test(p.name) }">{{ p.name }}</h3>
         </div>
-        <p v-if="p.award" class="ab-award">{{ p.award }}</p>
+        <p v-if="p.award" class="ab-award">{{ keep(p.award) }}</p>
         <p class="ab-line">{{ p.line }}</p>
       </component>
     </li>

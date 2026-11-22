@@ -13,6 +13,9 @@
  */
 import { spawnSync } from 'node:child_process'
 
+// Chinese headings' phrase breaks, from the content as it is now.
+spawnSync('node', ['scripts/make-keep.mjs'], { stdio: 'inherit' })
+
 const { status } = spawnSync('npx', ['nuxt', 'generate', ...process.argv.slice(2)], {
   stdio: 'inherit',
   shell: true,

@@ -23,6 +23,9 @@ const evidence = computed(() =>
 const seoTitle = `${work.seoTitle ?? work.title} | 黃鉅燊 Ju-Shen Huang`
 const seoDescription = work.seoDescription ?? work.summary
 
+// The products with a share picture of their own (public/images/og/, cut from the hero).
+const OG_WORKS = new Set(['medalink', 'osave', 'phishforge', 'surprice', 'taobao'])
+
 useSeoMeta({
   title: seoTitle,
   description: seoDescription,
@@ -34,6 +37,8 @@ useSeoMeta({
   ogType: 'article',
   twitterTitle: seoTitle,
   twitterDescription: seoDescription,
+  // Each product shared to LINE or LinkedIn shows its own picture, not the site's.
+  ...(OG_WORKS.has(work.slug) ? { ogImage: `https://www.ogmatcha.com/images/og/${work.slug}.jpg`, twitterImage: `https://www.ogmatcha.com/images/og/${work.slug}.jpg` } : {}),
 })
 
 // The product node and breadcrumb, shared with the English page.

@@ -127,8 +127,8 @@
                   <span>{{ w.when }}</span>
                   <span v-if="w.status" class="pp-status">{{ w.status }}</span>
                 </p>
-                <h3 class="pp-work-title">
-                  {{ keep(w.title) }}
+                <h3 class="pp-work-title" :class="{ 'is-token': !/\s/.test(w.title) }">
+                  <span>{{ keep(w.title) }}</span>
                   <ArrowUpRight :size="18" :stroke-width="2" class="pp-arrow" aria-hidden="true" />
                 </h3>
                 <p class="pp-work-role">{{ w.role }}</p>
@@ -315,12 +315,14 @@ const road = computed(() =>
     const tr = isEn.value ? (en.beats?.[b.id] ?? {}) : {}
     const events = b.events.map((e) => ({
       date: e.date,
+      zh: e.title,
       title: isEn.value ? (en.timeline?.[`${e.date} ${e.title}`]?.title ?? e.title) : e.title,
     }))
     // The one that stands for the stretch: its first prize if it has one,
     // else the latest thing in it. It is the fold's label, so the list
     // under it holds only the others.
-    const top = events.find((e) => TOP.test(e.title)) ?? events[events.length - 1]
+    // Chosen from the Chinese record, so both languages fold under the same prize.
+    const top = events.find((e) => TOP.test(e.zh)) ?? events[events.length - 1]
     const rest = events.filter((e) => e !== top)
     const shown = rest.length > SHOW ? rest.slice(-SHOW) : rest
     const sameYear =
@@ -546,9 +548,11 @@ async function startWalk() {
     const toWalker = gsap.quickTo(walkerEl.value, 'y', { duration: 0.4, ease: 'power2.out' })
     ScrollTrigger.create({
       trigger: el,
-      // The walker sits where the eye reads: a little above the middle.
-      start: 'top 55%',
-      end: 'bottom 55%',
+      // The walker sits where the eye reads: a little above the middle on a
+      // desk, lower on a phone, where a stop in the middle of the screen is
+      // the one being read and must not still be waiting, dimmed.
+      start: () => `top ${innerWidth < 700 ? 72 : 55}%`,
+      end: () => `bottom ${innerWidth < 700 ? 72 : 55}%`,
       invalidateOnRefresh: true,
       onRefresh: measure,
       onUpdate: (st) => {
@@ -925,8 +929,9 @@ async function startWalk() {
 }
 
 .pp-road-wrap.is-live .pp-stop:not(.is-lit) > :not(.pp-dot) {
-  /* Quieter, still readable: the text ahead keeps 4.5:1 in both themes. */
-  opacity: 0.72;
+  /* Quieter, still readable: at 0.72 the dates fell to 3:1 in the light
+     theme; 0.86 keeps every line of the text ahead above 4.5:1. */
+  opacity: 0.86;
   transform: translateY(10px);
 }
 
@@ -1418,6 +1423,19 @@ async function startWalk() {
   font-family: var(--font-display);
   font-size: var(--step-1);
   font-weight: 800;
+}
+
+/* A repo name is one word: at its hyphens it broke into three lines
+   (「orca- / companion- / kit」) and pushed the arrow to the edge. It stays on
+   one line and gets smaller to fit a narrow card. */
+.pp-work-body {
+  container-type: inline-size;
+}
+
+.pp-work-title.is-token span {
+  min-width: 0;
+  white-space: nowrap;
+  font-size: min(1em, 8.5cqi);
 }
 
 .pp-arrow {
