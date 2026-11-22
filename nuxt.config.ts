@@ -28,9 +28,6 @@ const DESCRIPTION =
   '黃鉅燊（Ju-Shen Huang / OG_Matcha），斐闊 Finctory 共同創辦人暨技術長、醫數行銷 MedaLink 共同創辦人暨前線部署工程師，中央大學資訊管理學系碩士班。把 LLM 放進會出貨的系統裡：財伴 oSave、PhishForge、診所營運系統，16 項競賽獎項含 5 座全國首獎，3 個國科會研究計畫。'
 
 export default defineNuxtConfig({
-  // The large Noto file's versioned URL (the one cjk.css asks for), preloaded
-  // on Chinese pages only by layouts/default.vue.
-  runtimeConfig: { public: { cjkFont: v('/fonts/notosanstc-1.woff2') } },
   devtools: { enabled: false },
   ssr: true,
   // Page changes run as view transitions: a product's cover carries over
@@ -183,15 +180,12 @@ export default defineNuxtConfig({
         // The basic-Latin slice is needed on every page; fetch it with the
         // HTML instead of after the stylesheet, so headings don't reflow.
         { rel: 'preload', as: 'font', type: 'font/woff2', href: v('/fonts/archivo-var-002.woff2'), crossorigin: '' },
-        // The CJK sheet: two subset faces: what the English pages show, and the rest
-        // (scripts/subset-cjk.py). It blocks first paint (8 kB of @font-face) so the
-        // faces are known before anything is drawn: they are font-display: optional,
-        // used only if in by the first paint. Swapping the Chinese font in later
-        // re-laid every line, three seconds on a mid-range phone. The small file
-        // is preloaded here; the large one on Chinese pages (layouts/default.vue).
-        { rel: 'stylesheet', href: v('/fonts/cjk.css') },
+        // The CJK sheet (two subset faces, scripts/subset-cjk.py) is linked by the
+        // script below, which picks one of two copies. The small face is needed
+        // on every page; fetch it with the HTML.
         { rel: 'preload', as: 'font', type: 'font/woff2', href: v('/fonts/notosanstc-0.woff2'), crossorigin: '' },
       ],
+      noscript: [{ innerHTML: `<link rel="stylesheet" href="${v('/fonts/cjk.css')}">` }],
       script: [
         {
           // Runs before first paint: applies the reader's stored day/night
@@ -200,6 +194,18 @@ export default defineNuxtConfig({
             "var d=document.documentElement;" +
             "try{var t=localStorage.getItem('theme');" +
             "if(t==='dark'||t==='light')d.dataset.theme=t}catch(e){}",
+          tagPosition: 'head',
+        },
+        {
+          // The Chinese font. With a mouse it swaps in when it arrives (one
+          // re-layout, quick on a desktop CPU). On touch devices a late swap
+          // re-laid every Chinese line, three seconds on a mid-range phone, so
+          // there it is used only if ready by first paint or cached
+          // (font-display: optional): from the next page load on.
+          innerHTML:
+            "var l=document.createElement('link');l.rel='stylesheet';" +
+            `l.href=matchMedia('(hover:hover) and (pointer:fine)').matches?'${v('/fonts/cjk.css')}':'${v('/fonts/cjk-touch.css')}';` +
+            'document.head.appendChild(l)',
           tagPosition: 'head',
         },
         // The JSON-LD used to live here as a hand-written literal. It moved

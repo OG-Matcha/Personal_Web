@@ -116,12 +116,16 @@ def main():
         print(f'  {i}: {len(g)} characters, {os.path.getsize(out) // 1024} KB')
         css.append(
             "@font-face {\n  font-family: 'Noto Sans TC';\n  font-style: normal;\n  font-weight: 400 900;\n"
-            # optional, not swap: a late swap re-lays every Chinese line (3 s
-            # on a mid-range phone). layouts/default.vue preloads both files.
-            f"  font-display: optional;\n  src: url(/fonts/notosanstc-{i}.woff2) format('woff2');\n"
+            f"  font-display: swap;\n  src: url(/fonts/notosanstc-{i}.woff2) format('woff2');\n"
             f"  unicode-range: {ranges(g)};\n}}\n"
         )
     open(os.path.join(ROOT, 'public/fonts/cjk.css'), 'w', encoding='utf-8').write(''.join(css))
+    # Touch devices get the same faces with font-display: optional (chosen by
+    # the inline script in nuxt.config): swapping the font in after first
+    # paint re-laid every Chinese line, three seconds on a mid-range phone.
+    # There the font is used once it is cached, from the next page load on.
+    open(os.path.join(ROOT, 'public/fonts/cjk-touch.css'), 'w', encoding='utf-8').write(
+        ''.join(css).replace('font-display: swap;', 'font-display: optional;'))
     with open(os.path.join(ROOT, 'public/fonts/cjk-chars.txt'), 'w', encoding='utf-8') as f:
         f.write(''.join(chars) + '\n' + ''.join(absent) + '\n')
     print(f'{len(chars)} characters in 2 files -> public/fonts/notosanstc-*.woff2')
