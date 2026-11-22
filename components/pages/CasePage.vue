@@ -754,6 +754,14 @@ function goBack() {
   background: var(--surface-2);
 }
 
+/* Three phones to a row on a tablet leave a column of ~210px; the card's own
+   padding would squeeze its words to six a line. */
+@media (min-width: 760px) and (max-width: 1023px) {
+  .hl--phone .hl-item--text {
+    padding: var(--sp-4);
+  }
+}
+
 /* A finger-sized target (44px) without moving the heading: the padding is
    taken back by the negative margin. */
 .hl-text h3 a {

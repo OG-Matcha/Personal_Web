@@ -196,6 +196,39 @@
   .lg-row {
     break-inside: avoid;
   }
+  /* Paper is read like a CV: tight rows in print sizes, not the screen's air.
+     The FAQ answers questions about the site, not the record; it stays on screen. */
+  @page {
+    margin: 14mm 14mm 16mm;
+  }
+  #faq {
+    display: none !important;
+  }
+  .lg-row {
+    grid-template-columns: 5.5rem minmax(0, 1fr) !important;
+    gap: 1pt 12pt !important;
+    padding-block: 5pt !important;
+  }
+  .lg-title {
+    font-size: 11pt !important;
+    line-height: 1.35 !important;
+  }
+  .lg-org,
+  .lg-detail,
+  .lg-links,
+  .lg-when {
+    font-size: 8.5pt !important;
+    line-height: 1.45 !important;
+  }
+  .lg-detail,
+  .lg-links {
+    margin-top: 1pt !important;
+  }
+  /* The date column wraps under the narrow width; its lines stay together at
+     the top instead of spreading down a tall row. */
+  .lg-when {
+    align-content: flex-start !important;
+  }
   /* Every entry is shown, folded or not. */
   .lg-row[style*='display: none'] {
     display: grid !important;
