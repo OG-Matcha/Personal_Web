@@ -29,7 +29,7 @@
             class="sh-medal"
             :class="{ 'is-top': a.top, 'is-on': a.key === cur.key }"
             :aria-pressed="a.key === cur.key"
-            :aria-label="`${a.date.slice(0, 4)} ${a.prize ? `${a.comp} ${a.prize}` : a.comp}`"
+            :aria-label="`${a.comp.startsWith(a.date.slice(0, 4)) ? '' : a.date.slice(0, 4) + ' '}${a.prize ? `${a.comp} ${a.prize}` : a.comp}`"
             @click="pick = a.key"
           >
             {{ a.top ? '1' : '' }}

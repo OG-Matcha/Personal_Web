@@ -105,6 +105,9 @@
 </template>
 
 <script setup>
+// The name is one unit on the nameplate: no break at its space or after its hyphen.
+const NBSP = String.fromCharCode(0xa0)
+const NBHY = '-' + String.fromCharCode(0x2060)
 const { site, about, en, works, alsoBuilt } = useContent()
 const { locale } = useLocale()
 const byslug = Object.fromEntries(works.map((w) => [w.slug, w]))
@@ -118,7 +121,7 @@ const c = computed(() =>
     ? {
         name: site.person.nameEn,
         nameLang: 'en',
-        altName: `${site.person.nameZh} · OG_Matcha`,
+        altName: `${site.person.nameZh} · OG_Matcha`,
         thesisLines: en.thesisLines,
         thesisSub: en.thesisSub,
         indexLabel: 'On this page',
@@ -128,7 +131,7 @@ const c = computed(() =>
     : {
         name: site.person.nameZh,
         nameLang: 'zh-Hant',
-        altName: `${site.person.nameEn} · OG_Matcha`,
+        altName: `${site.person.nameEn.replace(/ /g, NBSP).replace(/-/g, NBHY)} · OG_Matcha`,
         thesisLines: about.thesisLines,
         thesisSub: about.thesisSub,
         indexLabel: '這一頁有什麼',

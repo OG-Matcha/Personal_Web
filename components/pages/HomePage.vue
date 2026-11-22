@@ -82,7 +82,7 @@
                   <ul class="pp-events">
                     <li v-for="e in b.shown" :key="e.date + e.title">
                       <time class="figures" :datetime="e.date">{{ formatDate(e.date) }}</time>
-                      <span>{{ e.title }}</span>
+                      <span>{{ keep(e.title) }}</span>
                     </li>
                   </ul>
                   <p v-if="b.more" class="pp-more">
@@ -187,6 +187,9 @@
 </template>
 
 <script setup>
+// The name is one unit on the nameplate: no break at its space or after its hyphen.
+const NBSP = String.fromCharCode(0xa0)
+const NBHY = '-' + String.fromCharCode(0x2060)
 import { nextTick, resolveComponent } from 'vue'
 import { ArrowUpRight, FileText, Github, Instagram, Linkedin } from 'lucide-vue-next'
 import DeskScene from '~/components/desk/DeskScene.vue'
@@ -215,7 +218,7 @@ const c = computed(() =>
         meLabel: 'About me',
         name: site.person.nameEn,
         nameLang: 'en',
-        altName: `${site.person.nameZh} · OG_Matcha`,
+        altName: `${site.person.nameZh} · OG_Matcha`,
         photoAlt: 'Ju-Shen Huang',
         thesis: 'I take AI from demo to something people still use three months later.',
         nowH: 'Now',
@@ -251,7 +254,7 @@ const c = computed(() =>
         meLabel: '關於我',
         name: site.person.nameZh,
         nameLang: 'zh-Hant',
-        altName: `${site.person.nameEn} · OG_Matcha`,
+        altName: `${site.person.nameEn.replace(/ /g, NBSP).replace(/-/g, NBHY)} · OG_Matcha`,
         photoAlt: '黃鉅燊',
         thesis: '我把 AI 從展示品，​做到三個月後還有人在用。',
         nowH: '現在',

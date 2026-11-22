@@ -63,7 +63,7 @@ const awards = computed(() =>
     .filter((e) => e.kind === 'award' && !/入圍/.test(e.title))
     .map((e) => {
       const title = isEn.value ? en.timeline?.[`${e.date} ${e.title}`]?.title ?? e.title : e.title
-      const cut = title.lastIndexOf(' - ')
+      const cut = Math.max(title.lastIndexOf(' - '), title.lastIndexOf(' ' + String.fromCharCode(0x2013) + ' '))
       return { date: e.date, comp: cut > 0 ? title.slice(0, cut) : title, prize: cut > 0 ? title.slice(cut + 3) : '' }
     })
 )

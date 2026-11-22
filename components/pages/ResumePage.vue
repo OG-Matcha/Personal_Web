@@ -60,7 +60,7 @@ const t = computed(() =>
   locale.value === 'en'
     ? {
         title: 'Résumé',
-        lede: `The full record: ${timeline.length} entries, newest first. Data as of ${formatDate(site.asOf)}. Every entry is dated; announcements are linked where they exist.`,
+        lede: `The full record: ${timeline.length} entries, newest first. Data as of ${formatDate(site.asOf)}. Every entry is dated; each links to its source where one exists: an announcement, the product site or its code.`,
         awards: 'Awards',
         top: 'Top prizes',
         grants: 'NSTC grants',
@@ -74,7 +74,7 @@ const t = computed(() =>
       }
     : {
         title: '履歷',
-        lede: `完整年表，${timeline.length} 筆紀錄，逆時序。資料截至 ${formatDate(site.asOf)}。每一筆都有日期，有公告的附上連結。`,
+        lede: `完整年表，${timeline.length} 筆紀錄，逆時序。資料截至 ${formatDate(site.asOf)}。每一筆都有日期，有來源的附上連結：公告、官網或原始碼。`,
         awards: '競賽獎項',
         top: '全國首獎',
         grants: '國科會計畫',
@@ -94,6 +94,16 @@ const t = computed(() =>
   display: flex;
   flex-wrap: wrap;
   gap: var(--sp-4) var(--sp-7);
+}
+
+/* Three figures, one row: on a phone the third used to drop to a line of
+   its own (「16  5 / 3」), which reads as a different kind of number. */
+@media (max-width: 520px) {
+  .counts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--sp-4);
+  }
 }
 
 .counts div {

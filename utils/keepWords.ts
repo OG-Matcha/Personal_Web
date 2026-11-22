@@ -5,7 +5,11 @@
  * JSON-LD: the joiner is invisible on screen but not to a parser.
  */
 const WJ = String.fromCharCode(0x2060)
-const PHRASES = ['醫數行銷', '排時段', '回訊息', '追回診', '有意義', '收藏成', '優惠手冊']
+// Longest first: the regex takes the first alternative that matches.
+const PHRASES = [
+  '產科國際所', '健不健康', '醫數行銷', '優惠手冊', '資訊管理', '社交工程', '大型語言', '百工百業', '全國選拔',
+  '找好康', '排時段', '回訊息', '追回診', '有意義', '收藏成', '城市通', '旁邊', '學期', '願意',
+]
 const RE = new RegExp(PHRASES.join('|'), 'g')
 
 const NBSP = String.fromCharCode(0xa0)

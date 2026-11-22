@@ -58,7 +58,7 @@ const items = computed(() => [
 const t = computed(() =>
   E.value
     ? {
-        toggle: 'Taobao Exchange on',
+        toggle: 'Turn on Taobao Exchange',
         rate: '1 CNY =',
         note: 'Made-up listings and an example rate. The extension fetches the real rate every day.',
       }

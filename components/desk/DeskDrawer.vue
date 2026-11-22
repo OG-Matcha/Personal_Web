@@ -118,7 +118,7 @@ const awards = computed(() =>
     .map((e) => {
       const x = tr(e)
       const title = x.title ?? e.title
-      const cut = title.lastIndexOf(' - ')
+      const cut = Math.max(title.lastIndexOf(' - '), title.lastIndexOf(' ' + String.fromCharCode(0x2013) + ' '))
       return {
         key: `${e.date} ${e.title}`,
         date: String(e.date),

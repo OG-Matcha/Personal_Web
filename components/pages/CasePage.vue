@@ -129,12 +129,12 @@
       <!-- No awards: the stack takes the second column instead of leaving it empty. -->
       <div v-else-if="work.myPart?.length && flatStack.length">
         <h2 class="case-h2">{{ t.stack }}</h2>
-        <p class="stack-col">{{ flatStack.join(' · ') }}</p>
+        <p class="stack-col">{{ flatStack.join(STACK_SEP) }}</p>
       </div>
     </section>
 
     <section v-if="evidence.length || !work.myPart?.length" class="shell case-block">
-      <p class="stack"><span>{{ t.stack }}</span>{{ flatStack.join(' · ') }}</p>
+      <p class="stack"><span>{{ t.stack }}</span>{{ flatStack.join(STACK_SEP) }}</p>
     </section>
 
     <!-- The way on: the next product, large enough to be the obvious next step. -->
@@ -155,6 +155,8 @@
 </template>
 
 <script setup>
+// The dot stays at the end of the line it follows: a wrapped line never starts with 「·」.
+const STACK_SEP = String.fromCharCode(0xa0) + '· '
 /**
  * One case study, in either language. The page files own routing and SEO;
  * this owns what the reader sees, so the Chinese and English editions cannot

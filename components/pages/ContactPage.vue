@@ -66,7 +66,7 @@
         </div>
 
         <!-- The other ways in, for people who would rather not use a form. -->
-        <aside class="ct-side" :aria-label="t.sideLabel">
+        <section class="ct-side" :aria-label="t.sideLabel">
           <h2 class="ct-side-h">{{ t.direct }}</h2>
           <p class="ct-mail">
             <a :href="`mailto:${site.contact.email}`">{{ site.contact.email.split('@')[0] }}<wbr />@{{ site.contact.email.split('@')[1] }}</a>
@@ -80,7 +80,7 @@
             </li>
           </ul>
           <p class="ct-note">{{ t.what }}</p>
-        </aside>
+        </section>
       </div>
     </Station>
   </div>

@@ -265,7 +265,17 @@ const t = computed(() =>
   }
 }
 
+/* The three-character Chinese name fits down to 360px (the commonest
+   Android width); only below that is the dot left alone. */
+/* 360-370px: the name costs the nav 3px, given back by tighter gaps. */
 @media (max-width: 370px) {
+  .hd-bar {
+    gap: var(--sp-2);
+    padding-left: var(--sp-3);
+  }
+}
+
+@media (max-width: 359px) {
   .hd-mark .hd-name {
     display: none;
   }
