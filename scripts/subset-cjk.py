@@ -120,8 +120,8 @@ def main():
             f"  unicode-range: {ranges(g)};\n}}\n"
         )
     open(os.path.join(ROOT, 'public/fonts/cjk.css'), 'w', encoding='utf-8').write(''.join(css))
-    # Touch devices get the same faces with font-display: optional (chosen by
-    # the inline script in nuxt.config): swapping the font in after first
+    # Touch devices get the same faces with font-display: optional (picked by
+    # media query in nuxt.config): swapping the font in after first
     # paint re-laid every Chinese line, three seconds on a mid-range phone.
     # There the font is used once it is cached, from the next page load on.
     open(os.path.join(ROOT, 'public/fonts/cjk-touch.css'), 'w', encoding='utf-8').write(

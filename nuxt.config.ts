@@ -180,12 +180,18 @@ export default defineNuxtConfig({
         // The basic-Latin slice is needed on every page; fetch it with the
         // HTML instead of after the stylesheet, so headings don't reflow.
         { rel: 'preload', as: 'font', type: 'font/woff2', href: v('/fonts/archivo-var-002.woff2'), crossorigin: '' },
-        // The CJK sheet (two subset faces, scripts/subset-cjk.py) is linked by the
-        // script below, which picks one of two copies. The small face is needed
-        // on every page; fetch it with the HTML.
+        // The Chinese font (two subset faces, scripts/subset-cjk.py), in two copies
+        // picked by media query. With a mouse it swaps in when it arrives (one
+        // re-layout, quick on a desktop CPU). On touch devices a late swap re-laid
+        // every Chinese line, three seconds on a mid-range phone, so there it is
+        // font-display: optional: used if ready by first paint or cached, from the
+        // next page load on. Plain links, not a script: a script-inserted sheet
+        // held the page's largest paint back by three seconds on a slow phone.
+        { rel: 'stylesheet', href: v('/fonts/cjk.css'), media: '(hover: hover) and (pointer: fine)' },
+        { rel: 'stylesheet', href: v('/fonts/cjk-touch.css'), media: 'not all and (hover: hover) and (pointer: fine)' },
+        // The small face is needed on every page; fetch it with the HTML.
         { rel: 'preload', as: 'font', type: 'font/woff2', href: v('/fonts/notosanstc-0.woff2'), crossorigin: '' },
       ],
-      noscript: [{ innerHTML: `<link rel="stylesheet" href="${v('/fonts/cjk.css')}">` }],
       script: [
         {
           // Runs before first paint: applies the reader's stored day/night
@@ -194,30 +200,6 @@ export default defineNuxtConfig({
             "var d=document.documentElement;" +
             "try{var t=localStorage.getItem('theme');" +
             "if(t==='dark'||t==='light')d.dataset.theme=t}catch(e){}",
-          tagPosition: 'head',
-        },
-        {
-          // The Chinese font. With a mouse it swaps in when it arrives (one
-          // re-layout, quick on a desktop CPU). On touch devices a late swap
-          // re-laid every Chinese line, three seconds on a mid-range phone, so
-          // there it is used only if ready by first paint or cached
-          // (font-display: optional): from the next page load on.
-          innerHTML:
-            "var l=document.createElement('link');l.rel='stylesheet';" +
-            `l.href=matchMedia('(hover:hover) and (pointer:fine)').matches?'${v('/fonts/cjk.css')}':'${v('/fonts/cjk-touch.css')}';` +
-            'document.head.appendChild(l)',
-          tagPosition: 'head',
-        },
-        {
-          // The desk grain under every page is the largest paint, but it is
-          // named in an inline style and found late, behind the fonts (on a
-          // slow phone the résumé's LCP slipped to 7 s). Fetch the one for
-          // this theme first.
-          innerHTML:
-            "var d=document.documentElement,n=d.dataset.theme?d.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches," +
-            "g=document.createElement('link');g.rel='preload';g.as='image';g.fetchPriority='high';" +
-            `g.href=n?'${v('/images/desk-grain-night.webp')}':'${v('/images/desk-grain-day.webp')}';` +
-            'document.head.appendChild(g)',
           tagPosition: 'head',
         },
         // The JSON-LD used to live here as a hand-written literal. It moved
