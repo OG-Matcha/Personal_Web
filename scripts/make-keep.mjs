@@ -32,9 +32,15 @@ const files = [
   ...readdirSync('content/work').filter((f) => f.endsWith('.yml')).map((f) => join('content/work', f)),
 ]
 
+// The page sees each string after composables/useContent.ts has closed the
+// spaces a folded YAML scalar leaves between Chinese characters (closeCjkFolds);
+// keyed by the raw text, every multi-line summary missed the map. Only some
+// fields are closed, so both forms go in (a Set: most are the same string).
+const closeCjkFolds = (t) => t.replace(/([　-〿！-｠—])[ 	]+/g, '$1').replace(/([一-鿿])[ 	]+([一-鿿])/g, '$1$2')
+
 const strings = new Set()
 const walk = (v) => {
-  if (typeof v === 'string') { if (HAN.test(v) && [...v].length <= MAX) strings.add(v.trim()) }
+  if (typeof v === 'string') { if (HAN.test(v) && [...v].length <= MAX) { strings.add(v.trim()); strings.add(closeCjkFolds(v.trim())) } }
   else if (Array.isArray(v)) v.forEach(walk)
   else if (v && typeof v === 'object') Object.values(v).forEach(walk)
 }

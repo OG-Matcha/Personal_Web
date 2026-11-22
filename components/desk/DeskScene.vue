@@ -115,11 +115,12 @@
       stop, each with its caption. The pictures are frames of the 3D scene
       (scripts/make-desk-stills.mjs); CSS shows the day or night set.
     -->
+    <!-- sizes follow the grid below: the first card spans two columns. -->
     <ol class="dk-tour" :aria-label="t.tour">
       <li v-for="(s, i) in stops.slice(1)" :key="s.id" class="dk-stop" :data-stop="s.id">
         <div class="dk-stop-pic">
-          <img class="dk-poster-day" :src="asset(`/desk/stops/${s.id}-day.webp`)" :srcset="srcset(`/desk/stops/${s.id}-day.webp`)" sizes="(min-width: 900px) 25vw, 82vw" alt="" width="1200" height="800" loading="lazy" decoding="async" />
-          <img class="dk-poster-night" :src="asset(`/desk/stops/${s.id}-night.webp`)" :srcset="srcset(`/desk/stops/${s.id}-night.webp`)" sizes="(min-width: 900px) 25vw, 82vw" alt="" width="1200" height="800" loading="lazy" decoding="async" />
+          <img class="dk-poster-day" :src="asset(`/desk/stops/${s.id}-day.webp`)" :srcset="srcset(`/desk/stops/${s.id}-day.webp`)" :sizes="i === 0 ? '(min-width: 1200px) 540px, (min-width: 900px) 92vw, 82vw' : '(min-width: 1200px) 270px, (min-width: 900px) 46vw, 82vw'" alt="" width="1200" height="800" loading="lazy" decoding="async" />
+          <img class="dk-poster-night" :src="asset(`/desk/stops/${s.id}-night.webp`)" :srcset="srcset(`/desk/stops/${s.id}-night.webp`)" :sizes="i === 0 ? '(min-width: 1200px) 540px, (min-width: 900px) 92vw, 82vw' : '(min-width: 1200px) 270px, (min-width: 900px) 46vw, 82vw'" alt="" width="1200" height="800" loading="lazy" decoding="async" />
           <span class="dk-stop-n figures" aria-hidden="true">{{ String(i + 1).padStart(2, '0') }}<span class="dk-stop-of"> / {{ String(stops.length - 1).padStart(2, '0') }}</span> · {{ s.thing }}</span>
         </div>
         <h2 class="dk-h">{{ keep(s.title) }}</h2>
@@ -2128,7 +2129,7 @@ async function start(small = false) {
 }
 
 .dk-open {
-  min-height: 40px;
+  min-height: 44px;
   padding: 0 var(--sp-4);
   border: 0;
   border-radius: var(--r-full);

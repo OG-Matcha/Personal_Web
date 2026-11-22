@@ -304,7 +304,7 @@ const t = computed(() =>
 }
 
 .ph-choice {
-  min-height: 40px;
+  min-height: 44px;
   padding: 0 var(--sp-4);
   border: 0;
   border-radius: var(--r-full);

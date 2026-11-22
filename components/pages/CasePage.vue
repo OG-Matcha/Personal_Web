@@ -43,7 +43,7 @@
     <!-- What it does, each with the screen that does it. Phone screens sit
          three across; wide screens get a row each. -->
     <section v-if="highlights.length" class="shell case-block">
-      <h2 class="case-h2">{{ work.highlightsTitle || t.does }}</h2>
+      <h2 class="case-h2">{{ keep(work.highlightsTitle || t.does) }}</h2>
       <ol class="hl" :class="{ 'hl--phone': phoneShots || storeShots }">
         <li v-for="h in highlights" :key="h.title" class="hl-item" :class="{ 'hl-item--text': !h.shot }">
           <div v-if="h.shot" :class="storeShots ? 'store' : phoneShots ? 'device' : 'screen'">
@@ -62,27 +62,27 @@
 
     <!-- One thing to try with your own hands, where a product has one. -->
     <section v-if="work.demo === 'slots'" class="shell case-block">
-      <h2 class="case-h2">{{ t.demoH }}</h2>
+      <h2 class="case-h2">{{ keep(t.demoH) }}</h2>
       <p class="demo-lede">{{ t.demoLede }}</p>
       <ProductSlotDemo />
     </section>
     <section v-else-if="work.demo === 'fx'" class="shell case-block">
-      <h2 class="case-h2">{{ t.fxH }}</h2>
+      <h2 class="case-h2">{{ keep(t.fxH) }}</h2>
       <p class="demo-lede">{{ t.fxLede }}</p>
       <ProductFxDemo />
     </section>
     <section v-else-if="work.demo === 'health'" class="shell case-block">
-      <h2 class="case-h2">{{ t.healthH }}</h2>
+      <h2 class="case-h2">{{ keep(t.healthH) }}</h2>
       <p class="demo-lede">{{ t.healthLede }}</p>
       <ProductOsaveDemo />
     </section>
     <section v-else-if="work.demo === 'phish'" class="shell case-block">
-      <h2 class="case-h2">{{ t.phishH }}</h2>
+      <h2 class="case-h2">{{ keep(t.phishH) }}</h2>
       <p class="demo-lede">{{ t.phishLede }}</p>
       <ProductPhishDemo />
     </section>
     <section v-else-if="work.demo === 'unit'" class="shell case-block">
-      <h2 class="case-h2">{{ t.unitH }}</h2>
+      <h2 class="case-h2">{{ keep(t.unitH) }}</h2>
       <p class="demo-lede">{{ t.unitLede }}</p>
       <ProductUnitDemo />
     </section>
@@ -99,7 +99,7 @@
     <section v-if="work.turn" class="shell case-block">
       <div class="turn" :class="{ 'turn--solo': !work.turn.image }">
         <div>
-          <h2 class="case-h2">{{ work.turn.title }}</h2>
+          <h2 class="case-h2">{{ keep(work.turn.title) }}</h2>
           <p v-for="(p, i) in paragraphs(work.turn.text)" :key="i" class="turn-text">{{ p }}</p>
         </div>
         <figure v-if="work.turn.image" class="screen">
@@ -113,7 +113,7 @@
         <h2 class="case-h2">{{ t.mine }}</h2>
         <p class="case-role">{{ work.role }}</p>
         <ul class="mine">
-          <li v-for="m in work.myPart" :key="m">{{ m }}</li>
+          <li v-for="m in work.myPart" :key="m">{{ keep(m) }}</li>
         </ul>
       </div>
       <div v-if="evidence.length">
@@ -121,8 +121,8 @@
         <ul class="awards">
           <li v-for="e in evidence" :key="e.date + e.title">
             <span class="figures">{{ formatDate(e.date) }}</span>
-            <a v-if="e.evidence" :href="e.evidence" v-bind="linkAttrs(e.evidence)">{{ e.title }}</a>
-            <span v-else>{{ e.title }}</span>
+            <a v-if="e.evidence" :href="e.evidence" v-bind="linkAttrs(e.evidence)">{{ keep(e.title) }}</a>
+            <span v-else>{{ keep(e.title) }}</span>
           </li>
         </ul>
       </div>

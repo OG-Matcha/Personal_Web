@@ -243,4 +243,15 @@
     font-size: 0.85em;
     word-break: break-all;
   }
+  /* Skill names are labels, not citations: their addresses squeezed the
+     list into three extra pages and split words (Streamli / t). */
+  main a.node[href]::after {
+    content: none !important;
+  }
+  /* The evidence tiers are told apart by fill; printers drop backgrounds
+     by default, which left all four as the same empty square. */
+  .dot {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
 }

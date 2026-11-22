@@ -24,7 +24,7 @@ function hash(s: string): string {
 // Which gaps between characters are glued: BudouX's phrases from the map,
 // then a short list of words it splits (「有／意義」「排／時段」) or that are
 // written in components rather than content/.
-const PHRASES = ['城市儀表板', '語言模型', '醫數行銷', '資訊管理', '大型語', '知訊網', '收藏成', '找好康', '排時段', '有意義', '旁邊', '每一筆', '原始碼', '產品', '登記在案']
+const PHRASES = ['城市儀表板', '語言模型', '醫數行銷', '資訊管理', '大型語', '知訊網', '收藏成', '找好康', '排時段', '有意義', '旁邊', '每一筆', '原始碼', '產品', '登記在案', '一個月', '打分數', '釣魚信', '比較便宜', '排得出來', '人民幣', '新台幣', '優等獎', '一頁']
 
 // A figure and the Chinese word it counts ("30 行", "寫 30") are one unit: the
 // space between them never becomes a line break.

@@ -39,7 +39,7 @@
       </div>
     </div>
     <!-- The name comes from the face showing, so it matches what is seen (WCAG 2.5.3); how to flip is a description. -->
-    <p :id="hintId" class="bc-hint">{{ t.flip }}</p>
+    <p :id="hintId" class="bc-hint" :class="{ 'is-off': back }">{{ t.flip }}</p>
     <!-- The back says "say hi": the way to do it appears with it, outside the
          card (a link cannot sit inside the card's button). -->
     <NuxtLink :to="t.contact" class="bc-hi" :class="{ 'is-on': back }" :tabindex="back ? undefined : -1" :aria-hidden="back ? undefined : 'true'">{{ t.hi }}</NuxtLink>
@@ -50,8 +50,8 @@
 const { locale } = useLocale()
 const t = computed(() =>
   locale.value === 'en'
-    ? { flip: 'Press to flip the card.', secret: 'You found the back. Say hi.', hi: 'Say hi →', contact: '/en/contact/' }
-    : { flip: '按一下翻面', secret: '你翻到背面了，來打聲招呼吧。', hi: '打聲招呼 →', contact: '/contact/' }
+    ? { flip: 'Tap to flip the card ↻', secret: 'You found the back. Say hi.', hi: 'Say hi →', contact: '/en/contact/' }
+    : { flip: '點一下翻面 ↻', secret: '你翻到背面了，來打聲招呼吧。', hi: '打聲招呼 →', contact: '/contact/' }
 )
 
 const hintId = useId()
@@ -178,13 +178,23 @@ onBeforeUnmount(() => cancelAnimationFrame(raf))
 </script>
 
 <style scoped>
+/* Shown under the card, so a reader knows it turns over; the "say hi" link
+   takes its place once it has. */
 .bc-hint {
   position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
+  bottom: calc(var(--sp-2) + 22px);
+  translate: -50% 50%;
+  left: 50%;
+  margin: 0;
+  font-size: var(--step--1);
+  color: var(--ink-3);
   white-space: nowrap;
+  pointer-events: none;
+  transition: opacity var(--dur-2);
+}
+
+.bc-hint.is-off {
+  opacity: 0;
 }
 
 .bc-hi {
@@ -225,7 +235,9 @@ onBeforeUnmount(() => cancelAnimationFrame(raf))
   display: grid;
   place-items: center;
   height: 100%;
-  padding: var(--sp-5);
+  /* Room under the card for the hint, and for the 44px "say hi" link that
+     replaces it, clear of the card's tilted corner. */
+  padding: var(--sp-5) var(--sp-5) calc(var(--sp-2) + 44px + var(--sp-4));
   perspective: 1100px;
 }
 
@@ -251,7 +263,7 @@ onBeforeUnmount(() => cancelAnimationFrame(raf))
 .bc:focus-visible .bc-face {
   box-shadow:
     0 0 0 3px var(--bg),
-    0 0 0 5px var(--accent, #2b4fd8),
+    0 0 0 6px var(--pop-ink),
     0 30px 60px -20px rgb(0 0 0 / 0.55);
 }
 
@@ -331,7 +343,7 @@ onBeforeUnmount(() => cancelAnimationFrame(raf))
 }
 
 .bc-secret {
-  font-size: 0.72rem;
+  font-size: 0.8125rem;
   letter-spacing: 0.06em;
   color: rgb(200 212 255 / 0.7);
 }
@@ -340,7 +352,7 @@ onBeforeUnmount(() => cancelAnimationFrame(raf))
   position: absolute;
   bottom: 22%;
   right: 6%;
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   font-weight: 700;
   line-height: 1.5;
   text-align: right;
@@ -360,7 +372,7 @@ onBeforeUnmount(() => cancelAnimationFrame(raf))
 }
 
 .bc-role-en {
-  font-size: 0.5rem;
+  font-size: 0.6875rem;
   letter-spacing: 0.18em;
   color: #6f8fe0;
 }
@@ -374,7 +386,7 @@ onBeforeUnmount(() => cancelAnimationFrame(raf))
 }
 
 .bc-name-en {
-  font-size: 0.62rem;
+  font-size: 0.75rem;
   letter-spacing: 0.08em;
   color: rgb(200 212 255 / 0.65);
 }
@@ -388,7 +400,7 @@ onBeforeUnmount(() => cancelAnimationFrame(raf))
   justify-content: space-between;
   padding-top: 0.55em;
   border-top: 1px solid rgb(120 150 255 / 0.35);
-  font-size: 0.6rem;
+  font-size: 0.75rem;
   letter-spacing: 0.04em;
   color: rgb(200 212 255 / 0.75);
 }

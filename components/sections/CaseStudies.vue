@@ -21,7 +21,7 @@
           <span class="cs-status">{{ w.status }}</span>
           <span class="figures">{{ formatDate(w.period.start) }} – {{ w.period.end ? formatDate(w.period.end) : c.now }}</span>
         </p>
-        <p class="cs-summary">{{ w.summary }}</p>
+        <p class="cs-summary">{{ keep(w.summary) }}</p>
         <dl v-if="w.facts.length" class="cs-facts">
           <div v-for="r in w.facts" :key="r.metric">
             <dt>{{ r.metric }}</dt>

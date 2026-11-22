@@ -320,7 +320,7 @@ const t = computed(() =>
 
 .os-field input {
   width: 100%;
-  min-height: 32px;
+  min-height: 44px;
   accent-color: var(--pop);
   cursor: pointer;
 }
