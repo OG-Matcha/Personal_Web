@@ -1753,7 +1753,9 @@ async function startWalk() {
 
   .pp-me-in {
     display: grid;
-    grid-template-columns: 20rem minmax(0, 1fr);
+    /* 21rem: room on the badge for "Ju-Shen Huang · OG_Matcha" on one line
+       beside the photo (at 20rem it broke after the dot). */
+    grid-template-columns: 21rem minmax(0, 1fr);
     gap: var(--sp-6);
     align-items: center;
     padding-block: var(--sp-8) var(--sp-6);
@@ -1766,6 +1768,10 @@ async function startWalk() {
   .pp-face {
     width: 4.5rem;
     height: 4.5rem;
+  }
+
+  .pp-id {
+    gap: var(--sp-3);
   }
 
   .pp-now {
