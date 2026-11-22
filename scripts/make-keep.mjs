@@ -19,9 +19,10 @@ import { loadDefaultTraditionalChineseParser } from 'budoux'
 
 const WJ = String.fromCharCode(0x2060)
 const HAN = /[一-鿿]/
-// Headings and labels, not paragraphs: a paragraph breaks fine anywhere, and
-// the map would grow by the size of the copy.
-const MAX = 40
+// Headings, labels and the short ledes under them (a work's summary is up to
+// ~100 characters, and a phrase split there was the most visible break left).
+// Long body copy stays out: the map would grow by the size of the copy.
+const MAX = 120
 // A phrase longer than this may not fit a phone line; it is left breakable.
 const LONGEST = 8
 

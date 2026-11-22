@@ -14,7 +14,7 @@
         <p class="case-eyebrow">{{ work.role || work.org }}</p>
         <h1 class="case-title">{{ keep(work.title) }}</h1>
         <p v-if="work.tagline" class="case-tagline" :class="{ 'is-long': work.tagline.length > 16 && /[一-鿿]/.test(work.tagline) && !/[，、「]/.test(work.tagline) }">{{ keep(work.tagline) }}</p>
-        <p class="case-summary">{{ work.summary }}</p>
+        <p class="case-summary">{{ keep(work.summary) }}</p>
         <p class="case-meta">
           <span v-if="work.role && work.org" class="case-org">{{ work.org }}</span>
           <span class="pill">{{ work.status }}</span>

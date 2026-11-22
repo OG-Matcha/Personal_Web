@@ -24,14 +24,16 @@ function hash(s: string): string {
 // Which gaps between characters are glued: BudouX's phrases from the map,
 // then a short list of words it splits (「有／意義」「排／時段」) or that are
 // written in components rather than content/.
-const PHRASES = ['城市儀表板', '語言模型', '醫數行銷', '資訊管理', '大型語', '知訊網', '收藏成', '找好康', '排時段', '有意義', '旁邊']
+const PHRASES = ['城市儀表板', '語言模型', '醫數行銷', '資訊管理', '大型語', '知訊網', '收藏成', '找好康', '排時段', '有意義', '旁邊', '每一筆', '原始碼', '產品', '登記在案']
 
 // A figure and the Chinese word it counts ("30 行", "寫 30") are one unit: the
 // space between them never becomes a line break.
 const COUNT = /(\d) (?=[一-鿿])|([一-鿿]) (?=\d)/g
 
 export function keep(s: unknown): string {
-  const str = String(s ?? '')
+  // Trimmed: a folded YAML block ends in a newline, and the map is keyed by
+  // the trimmed text. Display only, so the edges do not matter.
+  const str = String(s ?? '').trim()
   const chars = [...str]
   const glued = new Array(chars.length).fill(false) // glued[i]: no break before chars[i]
   const runs = (MAP as Record<string, string>)[hash(str)]

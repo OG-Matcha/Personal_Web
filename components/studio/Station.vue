@@ -13,7 +13,7 @@
       <div class="st-card">
         <header v-if="title || $slots.meta" class="st-head">
           <component :is="headingTag" v-if="title" :id="`${id}-title`" class="st-title">{{ title }}</component>
-          <p v-if="lede" class="st-lede">{{ lede }}</p>
+          <p v-if="lede" class="st-lede">{{ keep(lede) }}</p>
           <div v-if="$slots.meta" class="st-meta">
             <slot name="meta" />
           </div>
