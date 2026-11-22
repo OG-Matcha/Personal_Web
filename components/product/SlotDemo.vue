@@ -11,7 +11,7 @@
         <label v-for="(tr, i) in treatments" :key="tr.id" class="sd-chip" :class="{ 'is-on': which === i }">
           <input v-model="which" type="radio" name="sd-treat" :value="i" />
           <span class="sd-chip-name">{{ tr.name }}</span>
-          <span class="sd-chip-steps">{{ tr.steps.map((s) => `${s.len * 30}′ ${s.need.map((r) => res[r].short).join('＋')}`).join(' → ') }}</span>
+          <span class="sd-chip-steps">{{ tr.steps.map((s) => `${s.len * 30}′ ${s.need.map((r) => res[r].short).join(E ? ' + ' : '＋')}`).join(' → ') }}</span>
         </label>
       </fieldset>
 

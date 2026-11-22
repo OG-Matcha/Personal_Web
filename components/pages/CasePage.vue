@@ -51,7 +51,8 @@
           </div>
           <div class="hl-text">
             <h3>
-              <NuxtLink v-if="h.href" :to="h.href">{{ keep(h.title) }} →</NuxtLink>
+              <a v-if="h.href && /^https?:/.test(h.href)" :href="h.href" v-bind="linkAttrs(h.href)">{{ keep(h.title) }} ↗</a>
+              <NuxtLink v-else-if="h.href" :to="h.href">{{ keep(h.title) }} →</NuxtLink>
               <template v-else>{{ keep(h.title) }}</template>
             </h3>
             <p>{{ h.text }}</p>
@@ -412,7 +413,7 @@ function goBack() {
 }
 
 /* Each figure stays on one line and shrinks to its column when it is long
-   ("iOS ＋ Android"), instead of breaking in two. */
+   ("iOS + Android"), instead of breaking in two. */
 .case-outcomes > div {
   container-type: inline-size;
 }

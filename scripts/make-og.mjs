@@ -3,8 +3,9 @@
  *
  *   node scripts/make-og.mjs
  *
- * - scripts/og/site.html -> public/images/og/site.jpg: the pages without a
- *   picture of their own (home, resume, portfolio, contact).
+ * - scripts/og/site.html -> public/images/og/site.jpg (and ?lang=en ->
+ *   site-en.jpg): the pages without a picture of their own (home, resume,
+ *   portfolio, contact).
  * - scripts/og/work.html, once per product and language ->
  *   public/images/og/<slug>-card.jpg and <slug>-card-en.jpg: the product's
  *   name, tagline and the owner's role beside its screen
@@ -28,7 +29,7 @@ const ROOT = resolve(HERE, '..')
 const OUT = join(ROOT, 'public', 'images', 'og')
 const en = parse(readFileSync(join(ROOT, 'content', 'en.yml'), 'utf8')).works ?? {}
 
-const jobs = [{ file: 'site.html', query: '', out: 'site.jpg' }]
+const jobs = [{ file: 'site.html', query: '', out: 'site.jpg' }, { file: 'site.html', query: '?lang=en', out: 'site-en.jpg' }]
 for (const slug of readdirSync(join(HERE, 'og', 'shots')).map((f) => f.replace(/\.jpg$/, ''))) {
   const w = parse(readFileSync(join(ROOT, 'content', 'work', `${slug}.yml`), 'utf8'))
   const e = en[slug] ?? {}

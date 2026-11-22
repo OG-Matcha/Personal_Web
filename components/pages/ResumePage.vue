@@ -31,7 +31,11 @@
       <!-- The strongest few first: the record below runs newest first, so it
            opened on its weakest prize. -->
       <section class="hl5" aria-labelledby="hl5-title">
-        <h2 id="hl5-title" class="hl5-h">{{ t.highlights }}</h2>
+        <div class="hl5-head">
+          <h2 id="hl5-title" class="hl5-h">{{ t.highlights }}</h2>
+          <!-- The patch means a prize: the rows without one (founding a company) are not missing it. -->
+          <p class="hl5-key"><span class="hl5-dot" aria-hidden="true" />{{ t.winKey }}</p>
+        </div>
         <ol class="hl5-list">
           <li v-for="e in highlights" :key="e.date + e.title" class="hl5-item" :class="{ 'is-win': e.kind === 'award' }">
             <time class="hl5-when figures" :datetime="e.date">{{ formatDate(e.date) }}</time>
@@ -86,6 +90,7 @@ const t = computed(() =>
         cvNote: `PDF · 2 pages · updated ${formatDate(site.contact.cv.updated)}`,
         cvOther: '中文 PDF',
         highlights: 'Highlights',
+        winKey: 'won a prize',
         skills: en.sheets.skills,
         skillsLede: en.sheets.skillsLede,
         faq: 'Quick answers',
@@ -102,6 +107,7 @@ const t = computed(() =>
         cvNote: `PDF · 2 頁 · ${formatDate(site.contact.cv.updated)} 更新`,
         cvOther: 'English PDF',
         highlights: '重點',
+        winKey: '得獎',
         skills: '能力斷面',
         skillsLede: '量尺不是熟練度，是證據層級。每一項都連得到一個可以點開的東西；連不到的，這一頁就不列。',
         faq: '快速問答',
@@ -152,6 +158,28 @@ const t = computed(() =>
   padding: var(--sp-5);
   border-radius: var(--r-3);
   background: var(--surface-2);
+}
+
+.hl5-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-1) var(--sp-4);
+}
+
+.hl5-key {
+  margin: 0;
+  font-size: var(--step--1);
+  color: var(--ink-3);
+}
+
+.hl5-dot {
+  display: inline-block;
+  width: 0.6em;
+  height: 0.6em;
+  margin-right: 0.45em;
+  background: var(--pop);
 }
 
 .hl5-h {

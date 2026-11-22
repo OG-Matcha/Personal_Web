@@ -7,10 +7,12 @@
 defineOptions({ name: 'HomeRoute' })
 import HomePage from '~/components/pages/HomePage.vue'
 
-const { about, site } = useContent()
+const { site } = useContent()
 
 // Counts come from the timeline (useContent), never from a remembered number.
-const DESC = `${about.intro}把 LLM 放進會出貨的系統裡：財伴 oSave、PhishForge、診所營運系統。${site.counts.awards} 項競賽獎項含 ${site.counts.topPrizes} 座全國首獎，${site.counts.researchGrants} 個國科會研究計畫。`
+// About 80 characters: LINE and Facebook cut a preview around there, and the
+// 188-character version lost the awards off its end.
+const DESC = `黃鉅燊（OG_Matcha），斐闊 Finctory 技術長、MedaLink 共同創辦人。把 AI 從展示品做到三個月後還有人在用；${site.counts.awards} 項競賽獎項，${site.counts.topPrizes} 座全國首獎。`
 
 useSeoMeta({
   description: DESC,

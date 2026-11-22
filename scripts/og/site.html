@@ -1,7 +1,8 @@
 <!doctype html>
 <!--
   The site's share card (og:image for the pages without their own picture).
-  Rendered by scripts/make-og.mjs to public/images/og/site.jpg, 1200x630.
+  Rendered by scripts/make-og.mjs to public/images/og/site.jpg, 1200x630,
+  and with ?lang=en to site-en.jpg for the English pages.
   The same night desk, fonts and terracotta as the homepage, so a link
   shared in a chat already looks like the page it opens.
 -->
@@ -23,6 +24,9 @@
   .thesis { margin-top: 40px; font-family: 'Noto Sans TC'; font-size: 34px; font-weight: 800; line-height: 1.4; }
   .roles { margin-top: 26px; font-size: 21px; line-height: 1.6; color: #b9b2a8; font-family: 'Noto Sans TC', sans-serif; }
   .roles b { color: #efebe4; font-weight: 700; }
+  :lang(en) .name { font-family: 'Archivo'; font-size: 92px; letter-spacing: -0.01em; }
+  :lang(en) .thesis { max-width: 480px; font-family: 'Archivo'; font-size: 34px; font-weight: 800; line-height: 1.25; }
+  :lang(en) .roles { font-family: 'Archivo'; }
 </style>
 <img class="bg" src="../../public/desk/poster-night.webp" alt="" />
 <div class="fade"></div>
@@ -33,4 +37,13 @@
   <p class="thesis">我把 AI 從展示品，<br />做到三個月後還有人在用。</p>
   <p class="roles"><b>斐闊 Finctory</b> 共同創辦人暨技術長<br /><b>醫數行銷 MedaLink</b> 共同創辦人</p>
 </div>
+<script>
+  if (new URLSearchParams(location.search).get('lang') === 'en') {
+    document.documentElement.lang = 'en'
+    document.querySelector('.name').textContent = 'Ju-Shen Huang'
+    document.querySelector('.alt').textContent = '黃鉅燊 · OG_Matcha'
+    document.querySelector('.thesis').textContent = 'I take AI from demo to something people still use three months later.'
+    document.querySelector('.roles').innerHTML = '<b>Finctory</b> Co-founder &amp; CTO<br /><b>MedaLink</b> Co-founder'
+  }
+</script>
 </html>

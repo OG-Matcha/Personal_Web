@@ -129,7 +129,8 @@
                 </p>
                 <h3 class="pp-work-title" :class="{ 'is-token': !/\s/.test(w.title) }">
                   <span>{{ keep(w.title) }}</span>
-                  <ArrowUpRight :size="18" :stroke-width="2" class="pp-arrow" aria-hidden="true" />
+                  <!-- One rule across the site: → stays here, ↗ leaves for another site. -->
+                  <component :is="w.internal ? ArrowRight : ArrowUpRight" :size="18" :stroke-width="2" class="pp-arrow" aria-hidden="true" />
                 </h3>
                 <p class="pp-work-role">{{ w.role }}</p>
                 <p v-if="i < BIG" class="pp-work-line">{{ w.line }}</p>
@@ -165,7 +166,7 @@
           >
         </p>
         <p class="pp-form-link">
-          <NuxtLink :to="c.formHref">{{ c.form }}<ArrowUpRight :size="16" :stroke-width="2" aria-hidden="true" /></NuxtLink>
+          <NuxtLink :to="c.formHref">{{ c.form }}<ArrowRight :size="16" :stroke-width="2" aria-hidden="true" /></NuxtLink>
         </p>
         <ul class="pp-links">
           <li v-for="l in links" :key="l.label">
@@ -191,7 +192,7 @@
 const NBSP = String.fromCharCode(0xa0)
 const NBHY = '-' + String.fromCharCode(0x2060)
 import { nextTick, resolveComponent } from 'vue'
-import { ArrowUpRight, FileText, Github, Instagram, Linkedin } from 'lucide-vue-next'
+import { ArrowRight, ArrowUpRight, FileText, Github, Instagram, Linkedin } from 'lucide-vue-next'
 import DeskScene from '~/components/desk/DeskScene.vue'
 import deskProps from '~/components/pages/desk-props.json'
 
@@ -1451,6 +1452,11 @@ async function startWalk() {
 .pp-work-link:hover .pp-arrow {
   color: var(--pop-ink);
   transform: translate(2px, -2px);
+}
+
+/* An arrow that stays on the site moves the way it points. */
+.pp-work-link:hover .pp-arrow.lucide-arrow-right {
+  transform: translateX(3px);
 }
 
 .pp-work-role {

@@ -24,6 +24,7 @@ export function usePageSeo(opts: {
   const zh = `${SITE}${opts.path}`
   const en = `${SITE}/en${opts.path}`
   const url = opts.lang === 'en' ? en : zh
+  const image = opts.image ?? (opts.lang === 'en' ? `${SITE}/images/og/site-en.jpg` : undefined)
 
   useSeoMeta({
     title: opts.title,
@@ -35,7 +36,9 @@ export function usePageSeo(opts: {
     ogLocale: opts.lang === 'en' ? 'en_US' : 'zh_TW',
     twitterTitle: opts.title,
     twitterDescription: opts.description,
-    ...(opts.image ? { ogImage: opts.image, twitterImage: opts.image } : {}),
+    // English pages share the English card; Chinese ones fall back to the
+    // site-wide card set in nuxt.config.
+    ...(image ? { ogImage: image, twitterImage: image } : {}),
   })
   useHead({
     // Always set: a client-side hop from /en/ back to Chinese otherwise left

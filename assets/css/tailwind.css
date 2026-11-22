@@ -250,7 +250,10 @@
   }
   /* The evidence tiers are told apart by fill; printers drop backgrounds
      by default, which left all four as the same empty square. */
-  .dot {
+  .dot,
+  .hl5-dot,
+  .hl5-when::before,
+  .lg-when time::before {
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
   }

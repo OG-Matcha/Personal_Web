@@ -22,6 +22,8 @@ useSeoMeta({
   ogLocale: 'en_US',
   twitterTitle: TITLE,
   twitterDescription: DESC,
+  ogImage: 'https://www.ogmatcha.com/images/og/site-en.jpg',
+  twitterImage: 'https://www.ogmatcha.com/images/og/site-en.jpg',
 })
 useHead({
   htmlAttrs: { lang: 'en' },

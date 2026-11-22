@@ -40,7 +40,7 @@
                 <input id="ct-name" v-model="name" type="text" maxlength="80" autocomplete="name" />
               </div>
               <div class="ct-field">
-                <label class="ct-label" for="ct-contact">{{ t.contact }} <small>{{ t.optional }}</small></label>
+                <label class="ct-label" for="ct-contact">{{ t.contact }} <small>{{ topic === 'work' ? t.forWork : t.optional }}</small></label>
                 <input id="ct-contact" v-model="contact" type="text" maxlength="160" autocomplete="email" inputmode="email" aria-describedby="ct-contact-hint ct-contact-nudge" />
                 <p id="ct-contact-hint" class="ct-hint">{{ t.contactHint }}</p>
                 <p id="ct-contact-nudge" class="ct-nudge" aria-live="polite"><template v-if="nudge"><Info :size="15" :stroke-width="2.2" aria-hidden="true" /><span>{{ t.nudge }}</span></template></p>
@@ -120,6 +120,8 @@ const t = computed(() =>
         nudge: 'For work, leave an email or another way to reach you, or I cannot write back.',
         mailSubject: 'From ogmatcha.com',
         optional: '(optional)',
+        forWork: '(needed for work)',
+        holdNoContact: 'No way to reply yet. Add an email above, or press Send again to send it as it is.',
         send: 'Send',
         sending: 'Sending…',
         done: 'Sent. Thank you, I read every message myself.',
@@ -148,6 +150,8 @@ const t = computed(() =>
         nudge: '談合作或工作的話，留個 email 或其他聯絡方式，我才回得了你。',
         mailSubject: '來自 ogmatcha.com 的訊息',
         optional: '（可不填）',
+        forWork: '（談工作請留）',
+        holdNoContact: '還沒留聯絡方式，我回不了你。在上面補個 email，或再按一次送出照樣寄出。',
         send: '送出',
         sending: '送出中…',
         done: '送出了，謝謝你。每一則我都會自己看。',
@@ -181,6 +185,11 @@ const mailHref = computed(() => {
 // A work enquiry with no way to reply is a dead end: say so once they have
 // written something, without stopping them from sending.
 const nudge = computed(() => topic.value === 'work' && message.value.trim().length >= 2 && !contact.value.trim())
+// A work message with no way back is stopped once, with the reason next to
+// the button; a second press sends it anyway (someone may only want to say
+// something). It used to go straight out while the nudge was still showing.
+const heldOnce = ref(false)
+watch([contact, topic], () => { if (status.value === t.value.holdNoContact && !nudge.value) status.value = '' })
 let loadedAt = 0
 onMounted(() => (loadedAt = Date.now()))
 
@@ -189,6 +198,13 @@ async function send() {
   if (message.value.trim().length < 2) {
     err.value = 'empty'
     document.getElementById('ct-message')?.focus()
+    return
+  }
+  if (nudge.value && !heldOnce.value) {
+    heldOnce.value = true
+    status.value = t.value.holdNoContact
+    await nextTick()
+    document.getElementById('ct-contact')?.focus()
     return
   }
   busy.value = true
@@ -387,7 +403,16 @@ async function send() {
   font: inherit;
   font-weight: 700;
   cursor: pointer;
-  transition: transform 120ms cubic-bezier(0.23, 1, 0.32, 1);
+  transition:
+    background-color var(--dur-1),
+    color var(--dur-1),
+    transform 120ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.ct-send:hover:not(:disabled) {
+  background: var(--pop);
+  color: var(--on-pop);
+  transform: translateY(-1px);
 }
 
 .ct-send:active {

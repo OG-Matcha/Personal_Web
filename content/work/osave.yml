@@ -54,7 +54,7 @@ summary: >-
 
 # 對使用者有意義的成果。總覽頁取前兩項。
 outcomes:
-  - value: iOS ＋ Android
+  - value: iOS + Android
     label: 雙平台上架
   - value: '{awards} 項'
     label: 競賽得獎
