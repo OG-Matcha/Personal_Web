@@ -173,6 +173,8 @@ export default defineNuxtConfig({
       link: [
         { rel: 'icon', type: 'image/png', sizes: '48x48', href: '/images/favicon-48.png' },
         { rel: 'apple-touch-icon', sizes: '180x180', href: '/images/apple-touch-icon.png' },
+        // Add to home screen (Android): the site's name and icon, not the URL and a letter.
+        { rel: 'manifest', href: '/site.webmanifest' },
         { rel: 'canonical', href: SITE_URL },
 
         // Latin faces are 0.8 kB gzipped — cheap enough to block on.
@@ -225,6 +227,22 @@ export default defineNuxtConfig({
       // "</html>>", a stray ">" at the bottom of /portfolio/. Render each page
       // once. /news stays: it is the redirect page for the old URL.
       ignore: [(p: string) => p !== '/news' && /^\/[^?]*[^/]$/.test(p) && !/\.[a-z0-9]+$/i.test(p.split('?')[0].split('/').pop() ?? '')],
+    },
+    hooks: {
+      // 404.html is the bare app shell, rendered before any error exists, so it
+      // carried the home page's title and `index, follow` until Vue ran.
+      // error.vue still sets the language-specific title once it does.
+      'prerender:generate'(route) {
+        if (typeof route.contents !== 'string' || !/\.html$|\/$/.test(route.route)) return
+        // The page's payload is already inline (#__NUXT_DATA__); preloading the
+        // same JSON and the build manifest cost a connection on a slow phone
+        // and Safari warned on every page that neither was used.
+        route.contents = route.contents.replace(/<link rel="preload" as="fetch"[^>]*href="[^"]*(?:_payload\.json|\/builds\/meta\/)[^"]*">/g, '')
+        if (route.route !== '/404.html') return
+        route.contents = route.contents
+          .replace(/<title>[^<]*<\/title>/, '<title>404 | 黃鉅燊 Ju-Shen Huang</title>')
+          .replace(/<meta name="robots" content="[^"]*">/, '<meta name="robots" content="noindex, follow">')
+      },
     },
   },
 

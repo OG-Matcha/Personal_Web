@@ -1,0 +1,12 @@
+{
+  "name": "黃鉅燊 Ju-Shen Huang",
+  "short_name": "黃鉅燊",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#efe9e0",
+  "theme_color": "#efe9e0",
+  "icons": [
+    { "src": "/images/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/images/favicon.png", "sizes": "381x381", "type": "image/png" }
+  ]
+}

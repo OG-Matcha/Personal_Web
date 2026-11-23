@@ -541,7 +541,12 @@ async function startWalk() {
     import('gsap/ScrollTrigger'),
   ])
   gsap.registerPlugin(ScrollTrigger)
+  gsap.ticker.lagSmoothing(0)
   refreshWalk = () => ScrollTrigger.refresh()
+  // Trigger positions measured before the Chinese font arrives are stale.
+  // (This page is the only one that animates on scroll; GSAP used to load on
+  // every page through a plugin that held hydration until it arrived.)
+  document.fonts?.ready.then(() => ScrollTrigger.refresh())
   const el = roadEl.value
   if (!el) return
   live.value = true

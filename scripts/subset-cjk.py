@@ -45,6 +45,10 @@ SOURCES = [
 # Punctuation and symbols an editor may type later, so a new sentence rarely
 # needs a rebuild: full-width marks, brackets, quotes.
 EXTRA = '，。、；：？！「」『』（）《》〈〉…—～・　＋－×÷％／＠＃＆＊０１２３４５６７８９'
+# Arrows: Archivo has none, so ← → ↗ ⋯ on buttons and links fell to each
+# system's own font (a different weight and baseline on Windows and on a Mac).
+# Noto Sans TC draws them; they sit in the small file every page loads.
+EXTRA += '←↑→↓↗↘⋯'
 
 
 def site_chars():

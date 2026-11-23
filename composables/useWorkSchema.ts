@@ -28,9 +28,12 @@ export function workSchema(zh: any, opts: { lang: 'zh' | 'en'; name: string; des
   const { team, ...base } = NODE_TYPE[zh.slug] ?? { '@type': 'CreativeWork' }
   // Finctory reuses the Organization @id the Person's worksFor declares, so the
   // two are one entity across the site; everything else gets a page-local id.
-  // The product is one thing in two languages: both pages point at the Chinese
-  // page's id rather than minting a second entity.
-  const id = (base['@id'] as string) ?? `${SITE}/work/${zh.slug}/#work`
+  // Each language's page is its own node (one @id carrying two different
+  // descriptions and urls read as one entity contradicting itself); the English
+  // one names the Chinese as what it translates.
+  const zhId = `${SITE}/work/${zh.slug}/#work`
+  const id = (base['@id'] as string) ?? (opts.lang === 'en' ? `${url}#work` : zhId)
+  const translation = !base['@id'] && opts.lang === 'en' ? { translationOfWork: { '@id': zhId }, inLanguage: 'en' } : !base['@id'] ? { inLanguage: 'zh-Hant-TW' } : {}
   const links = (zh.links ?? []).map((l: any) => l.href).filter(ok)
   // Only store listings are install URLs; the official site goes in sameAs.
   const install = links.filter((h: string) => /apps\.apple\.com|play\.google\.com|chromewebstore\.google\.com/.test(h))
@@ -42,6 +45,7 @@ export function workSchema(zh: any, opts: { lang: 'zh' | 'en'; name: string; des
     ...(zh.titleEn ? { alternateName: opts.lang === 'en' ? zh.title : zh.titleEn } : {}),
     description: opts.description,
     url,
+    ...translation,
     // finctory.yml has `cover: null`; an unguarded spread would emit "image": null.
     ...(zh.cover ? { image: `${SITE}${zh.cover}` } : {}),
     ...(zh.period?.start ? { datePublished: String(zh.period.start) } : {}),

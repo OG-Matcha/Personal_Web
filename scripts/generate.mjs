@@ -16,6 +16,12 @@ import { spawnSync } from 'node:child_process'
 // Chinese headings' phrase breaks, from the content as it is now.
 spawnSync('node', ['scripts/make-keep.mjs'], { stdio: 'inherit' })
 
+// Every Chinese character in the content must be in the webfont subset. New
+// copy (the Catalyst page, a homepage blurb) once shipped 11 characters drawn
+// in the system font mid-line, and nothing stopped the build.
+const fonts = spawnSync('node', ['scripts/check-fonts.mjs'], { stdio: 'inherit' })
+if (fonts.status !== 0) process.exit(1)
+
 const { status } = spawnSync('npx', ['nuxt', 'generate', ...process.argv.slice(2)], {
   stdio: 'inherit',
   shell: true,

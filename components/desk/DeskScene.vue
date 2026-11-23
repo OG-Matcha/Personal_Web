@@ -2410,4 +2410,23 @@ async function start(small = false) {
     border: 1px solid CanvasText;
   }
 }
+
+/* A phone on its side (844x390): at 4:3 the room took the whole first screen
+   and the name started at its foot, thesis and roles below the fold. A band of
+   the room instead, still and canvas the same box (the canvas crops a centred
+   band, so the still is centred too). Last in the file: it overrides the
+   4:3 boxes above. */
+@media (max-width: 899.98px) and (orientation: landscape) and (max-height: 559.98px) {
+  .dk-poster img,
+  .dk.is-pocket .dk-canvas,
+  .dk-touch {
+    aspect-ratio: auto;
+    height: 50svh;
+    max-height: none;
+  }
+  .dk-poster img {
+    object-position: 50% 50%;
+  }
+}
+
 </style>

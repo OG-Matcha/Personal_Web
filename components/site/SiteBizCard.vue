@@ -39,7 +39,8 @@
       </div>
     </div>
     <!-- The name comes from the face showing, so it matches what is seen (WCAG 2.5.3); how to flip is a description. -->
-    <p :id="hintId" class="bc-hint" :class="{ 'is-off': back }">{{ t.flip }}</p>
+    <!-- ↻ is in neither webfont (each system drew its own); an icon is the same everywhere. -->
+    <p :id="hintId" class="bc-hint" :class="{ 'is-off': back }">{{ t.flip }} <RotateCw :size="13" :stroke-width="2.2" class="bc-hint-icon" aria-hidden="true" /></p>
     <!-- The back says "say hi": the way to do it appears with it, outside the
          card (a link cannot sit inside the card's button). -->
     <NuxtLink :to="t.contact" class="bc-hi" :class="{ 'is-on': back }" :tabindex="back ? undefined : -1" :aria-hidden="back ? undefined : 'true'">{{ t.hi }}</NuxtLink>
@@ -47,11 +48,12 @@
 </template>
 
 <script setup>
+import { RotateCw } from 'lucide-vue-next'
 const { locale } = useLocale()
 const t = computed(() =>
   locale.value === 'en'
-    ? { flip: 'Tap to flip the card ↻', secret: 'You found the back. Say hi.', hi: 'Say hi →', contact: '/en/contact/' }
-    : { flip: '點一下翻面 ↻', secret: '你翻到背面了，來打聲招呼吧。', hi: '打聲招呼 →', contact: '/contact/' }
+    ? { flip: 'Tap to flip the card', secret: 'You found the back. Say hi.', hi: 'Say hi →', contact: '/en/contact/' }
+    : { flip: '點一下翻面', secret: '你翻到背面了，來打聲招呼吧。', hi: '打聲招呼 →', contact: '/contact/' }
 )
 
 const hintId = useId()
@@ -180,6 +182,11 @@ onBeforeUnmount(() => cancelAnimationFrame(raf))
 <style scoped>
 /* Shown under the card, so a reader knows it turns over; the "say hi" link
    takes its place once it has. */
+.bc-hint-icon {
+  display: inline;
+  vertical-align: -0.1em;
+}
+
 .bc-hint {
   position: absolute;
   bottom: var(--sp-2);
