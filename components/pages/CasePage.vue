@@ -64,27 +64,27 @@
     </section>
 
     <!-- One thing to try with your own hands, where a product has one. -->
-    <section v-if="work.demo === 'slots'" class="shell case-block">
+    <section v-if="work.demo === 'slots'" class="shell case-block case-demo">
       <h2 class="case-h2">{{ keep(t.demoH) }}</h2>
       <p class="demo-lede">{{ t.demoLede }}</p>
       <ProductSlotDemo />
     </section>
-    <section v-else-if="work.demo === 'fx'" class="shell case-block">
+    <section v-else-if="work.demo === 'fx'" class="shell case-block case-demo">
       <h2 class="case-h2">{{ keep(t.fxH) }}</h2>
       <p class="demo-lede">{{ t.fxLede }}</p>
       <ProductFxDemo />
     </section>
-    <section v-else-if="work.demo === 'health'" class="shell case-block">
+    <section v-else-if="work.demo === 'health'" class="shell case-block case-demo">
       <h2 class="case-h2">{{ keep(t.healthH) }}</h2>
       <p class="demo-lede">{{ t.healthLede }}</p>
       <ProductOsaveDemo />
     </section>
-    <section v-else-if="work.demo === 'phish'" class="shell case-block">
+    <section v-else-if="work.demo === 'phish'" class="shell case-block case-demo">
       <h2 class="case-h2">{{ keep(t.phishH) }}</h2>
       <p class="demo-lede">{{ t.phishLede }}</p>
       <ProductPhishDemo />
     </section>
-    <section v-else-if="work.demo === 'unit'" class="shell case-block">
+    <section v-else-if="work.demo === 'unit'" class="shell case-block case-demo">
       <h2 class="case-h2">{{ keep(t.unitH) }}</h2>
       <p class="demo-lede">{{ t.unitLede }}</p>
       <ProductUnitDemo />
@@ -143,14 +143,14 @@
     </section>
 
     <!-- The way on: the next product, large enough to be the obvious next step. -->
-    <nav class="shell case-block" :aria-label="t.nextLabel">
+    <nav class="shell case-block case-next" :aria-label="t.nextLabel" @click="morphFrom($event, '.next-pic', next.slug)">
       <NuxtLink :to="next.href" class="next">
         <span class="next-text">
           <span class="next-eyebrow mono text-2xs">{{ work.tier === 'case-only' ? t.nextAny : t.next }}</span>
           <span class="next-title">{{ keep(next.title) }}</span>
           <span class="next-tag">{{ keep(next.tagline) }}</span>
         </span>
-        <span class="next-pic" :style="{ viewTransitionName: `cover-${next.slug}` }"><img :style="next.focus ? { objectPosition: next.focus } : null" :src="asset(next.cover)" :srcset="srcset(next.cover)" sizes="(min-width: 768px) 50vw, 100vw" alt="" width="1600" height="900" loading="lazy" decoding="async" /></span>
+        <span class="next-pic"><img :style="next.focus ? { objectPosition: next.focus } : null" :src="asset(next.cover)" :srcset="srcset(next.cover)" sizes="(min-width: 768px) 50vw, 100vw" alt="" width="1600" height="900" loading="lazy" decoding="async" /></span>
       </NuxtLink>
       <p class="mt-6">
         <button type="button" class="back mono text-2xs" @click="goBack">← {{ backLabel }}</button>
@@ -706,6 +706,9 @@ function goBack() {
 
 .next {
   display: grid;
+  /* minmax(0, 1fr): a one-word title at a 32px default text size ("PhishForge"
+     at 72px) shrinks into the card instead of widening the column past it. */
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--sp-6);
   align-items: center;
   padding: var(--sp-6);
@@ -740,6 +743,7 @@ function goBack() {
   line-height: 1.1;
   color: var(--ink);
   word-break: keep-all;
+  overflow-wrap: anywhere;
 }
 
 .next-tag {
@@ -819,5 +823,32 @@ function goBack() {
 
 .turn--solo .turn-text {
   max-width: var(--measure-han);
+}
+
+/* Paper: the try-it demos (sliders, a radar) printed as two and a half pages of
+   controls and the next-product card as a page of its own; neither does
+   anything on paper. A heading stays with what follows it, and a link prints
+   its site, not a three-line percent-encoded address. */
+@media print {
+  .case-demo,
+  .case-next,
+  .back {
+    display: none !important;
+  }
+  .case-h2,
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+  /* The cover fits under the title on page one instead of moving to page two. */
+  .case-cover img {
+    max-height: 8cm;
+    width: 100%;
+    object-fit: cover;
+  }
+  .case a[data-host]::after {
+    content: ' (' attr(data-host) ')' !important;
+    word-break: normal !important;
+  }
 }
 </style>

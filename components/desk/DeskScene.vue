@@ -94,7 +94,7 @@
         >
           <template v-if="s.id === 'hero'">
             <h1 class="dk-title">
-              <span class="dk-name">{{ t.name }}</span>{{ ' ' }}<span class="dk-thesis">{{ t.thesis }}</span>
+              <span class="dk-name"><!-- Each word unbroken: at a large text size "Ju-Shen" broke at its hyphen. --><template v-for="(w, i) in t.name.split(' ')" :key="i">{{ i ? ' ' : '' }}<span class="dk-word">{{ w }}</span></template></span>{{ ' ' }}<span class="dk-thesis">{{ t.thesis }}</span>
             </h1>
             <!-- Who, in one line, for the reader deciding whether to read on:
                  the first screen used to hold only a name and a sentence. -->
@@ -1184,7 +1184,20 @@ async function start(small = false) {
       // Things with a drawer open it, growing out of the thing; the rest
       // bring their card in the row below into view.
       if (st.open) drawer.value = st.id
-      else root.value?.querySelector(`.dk-stop[data-stop="${st.id}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' })
+      else {
+        // Two scrolls, each on its own: one smooth scrollIntoView moving both the
+        // page and the card row let Chrome drop the row's half, so a tap on the
+        // tablet brought the page down to the row still showing the notebook.
+        const card = root.value?.querySelector(`li.dk-stop[data-stop="${st.id}"]`)
+        const row = card?.parentElement
+        if (card && row) {
+          const how = matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'
+          const cr = card.getBoundingClientRect()
+          const rr = row.getBoundingClientRect()
+          row.scrollTo({ left: row.scrollLeft + cr.left - rr.left - (rr.width - cr.width) / 2, behavior: how })
+          window.scrollTo({ top: scrollY + rr.top - Math.max(0, (innerHeight - rr.height) / 2), behavior: how })
+        }
+      }
       return
     }
     // Find what is under the pointer now, not what the tag said: the camera
@@ -1591,6 +1604,10 @@ async function start(small = false) {
 
 .dk-caps .dk-title > span {
   display: block;
+}
+
+.dk-word {
+  white-space: nowrap;
 }
 
 .dk-name {

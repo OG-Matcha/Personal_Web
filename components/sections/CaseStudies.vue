@@ -5,8 +5,10 @@
     side the screen sits on, so four of them read as a run, not a card grid.
   -->
   <ol class="cs-list">
-    <li v-for="(w, i) in items" :key="w.slug" class="cs-item" :class="{ 'cs-item--flip': i % 2 === 1 }">
-      <NuxtLink v-if="w.cover" :to="w.href" class="cs-shot" :aria-label="w.title" :style="{ viewTransitionName: `cover-${w.slug}` }">
+    <li v-for="(w, i) in items" :key="w.slug" class="cs-item" :class="{ 'cs-item--flip': i % 2 === 1 }" @click="morphFrom($event, '.cs-shot', w.slug)">
+      <!-- The picture repeats the title's link: out of the Tab order and hidden from
+           screen readers, so each product is two stops (title, button), not three. -->
+      <NuxtLink v-if="w.cover" :to="w.href" class="cs-shot" tabindex="-1" aria-hidden="true">
         <SiteShot :src="w.cover" width="1600" height="900" fit="cover" :focus="w.coverFocus" :eager="i === 0" />
       </NuxtLink>
       <!-- Finctory is a company, not a screen: its card, to pick up and turn over. -->

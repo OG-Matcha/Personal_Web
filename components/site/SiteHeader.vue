@@ -10,7 +10,7 @@
       </NuxtLink>
 
       <nav :aria-label="t.navLabel" class="scroll-x hd-nav">
-        <NuxtLink v-for="l in t.links" :key="l.href" :to="l.href" class="hd-link" :aria-label="l.short ? l.label : undefined" :class="{ 'is-here': here(l), 'hd-link--wide': l.wide }" v-bind="l.href.includes('#') ? { 'aria-current': here(l) ? 'page' : false } : {}">
+        <NuxtLink v-for="l in t.links" :key="l.href" :to="l.href" class="hd-link" :aria-label="l.short ? l.label : undefined" :class="{ 'is-here': here(l), 'hd-link--wide': l.wide }" v-bind="l.href.includes('#') ? { 'aria-current': current(l) } : {}">
           <template v-if="l.short"><span class="hd-link-full">{{ l.label }}</span><span class="hd-link-short" aria-hidden="true">{{ l.short }}</span></template>
           <template v-else>{{ l.label }}</template>
         </NuxtLink>
@@ -41,7 +41,31 @@ const alt = computed(() => (error.value ? (locale.value === 'en' ? '/' : '/en/')
 // The router's own route, not useRoute(): in this always-mounted header
 // useRoute() hydrated /portfolio/ as some other path and dropped the mark.
 const router = useRouter()
-const here = (l) => !!l.section?.test(router.currentRoute.value.path)
+// Two ways a link is "where you are": on a sub-page of its section (作品 on
+// /portfolio/ and /work/*), shown but not announced as the current page, since
+// the link itself goes to the homepage list; or, on the homepage, the section
+// now crossing the middle of the window.
+const spy = ref('')
+const isHome = () => /^\/(en\/)?$/.test(router.currentRoute.value.path)
+const sub = (l) => !!l.section?.test(router.currentRoute.value.path)
+const here = (l) => sub(l) || (isHome() && !!spy.value && l.href.endsWith('#' + spy.value))
+const current = (l) => (isHome() && spy.value && l.href.endsWith('#' + spy.value) ? 'location' : undefined)
+let io = null
+const watchSections = () => {
+  io?.disconnect(); io = null; spy.value = ''
+  if (!isHome() || typeof IntersectionObserver === 'undefined') return
+  const els = ['work', 'record'].map((id) => document.getElementById(id)).filter(Boolean)
+  if (!els.length) return
+  const seen = new Set()
+  io = new IntersectionObserver((es) => {
+    for (const e of es) e.isIntersecting ? seen.add(e.target.id) : seen.delete(e.target.id)
+    spy.value = ['record', 'work'].find((id) => seen.has(id)) ?? ''
+  }, { rootMargin: '-50% 0px -50% 0px' })
+  els.forEach((el) => io.observe(el))
+}
+onMounted(() => nextTick(watchSections))
+watch(() => router.currentRoute.value.path, () => setTimeout(watchSections, 300))
+onBeforeUnmount(() => io?.disconnect())
 
 const t = computed(() =>
   locale.value === 'en'
@@ -209,17 +233,20 @@ const t = computed(() =>
   color: var(--bg);
 }
 
+/* Breakpoints in em, not px: they follow the reader's default text size, so at
+   a 24 or 32px default the bar takes its compact form early instead of laying
+   "Résumé" over "Contact". */
 /* English between phone and desk (600-720px, or a 1280px window zoomed to
    200%): its three links need 53px more than the bar has, and "Résumé" was
    cut to "Résun". The contact pill keeps its envelope and its label. */
-@media (min-width: 561px) and (max-width: 760px) {
+@media (min-width: 35.0625em) and (max-width: 47.5em) {
   :root[lang|='en'] .hd-mail-text {
     display: none;
   }
 }
 
 /* And below 620px "Résumé" takes its phone form, "CV". */
-@media (min-width: 561px) and (max-width: 620px) {
+@media (min-width: 35.0625em) and (max-width: 38.75em) {
   :root[lang|='en'] .hd-link-full {
     display: none;
   }
@@ -228,7 +255,7 @@ const t = computed(() =>
   }
 }
 
-@media (max-width: 560px) {
+@media (max-width: 35em) {
   .hd {
     padding-inline: var(--sp-2);
   }
@@ -268,7 +295,7 @@ const t = computed(() =>
     display: inline;
   }
   /* "J. Huang" a size smaller below 380px, so it fits beside the links at 360. */
-  @media (max-width: 380px) {
+  @media (max-width: 23.75em) {
     .hd-mark .hd-name-short {
       font-size: 0.76em;
     }
@@ -298,7 +325,7 @@ const t = computed(() =>
 /* The name (黃鉅燊, or "J. Huang") shows at every width: at 320px, with the
    day/night switch moved to the footer, it still clears the links by ~20px. */
 /* 360-370px: the name costs the nav 3px, given back by tighter gaps. */
-@media (max-width: 370px) {
+@media (max-width: 23.125em) {
   .hd-bar {
     gap: var(--sp-2);
     padding-left: var(--sp-3);
@@ -308,7 +335,7 @@ const t = computed(() =>
 /* A 320px phone cannot fit every control. Contact is what the site is for,
    and the name says whose site it is, so both stay; the day/night switch
    moves to the footer (SiteFooter). */
-@media (max-width: 359px) {
+@media (max-width: 22.4375em) {
   .hd-tools :deep(.tg) {
     display: none;
   }

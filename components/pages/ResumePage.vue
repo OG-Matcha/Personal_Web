@@ -290,9 +290,18 @@ const t = computed(() =>
   font-size: var(--step--1);
   font-weight: 600;
   color: var(--ink-2);
+  text-decoration: underline;
   text-decoration-color: var(--pop-ink);
+  text-decoration-thickness: 1px;
   text-underline-offset: 0.2em;
   position: relative;
+  transition: color var(--dur-1), text-decoration-thickness var(--dur-1);
+}
+
+/* It is the second download beside the main button: hover has to show it is one. */
+.cv-other:hover {
+  color: var(--ink);
+  text-decoration-thickness: 2px;
 }
 
 /* A thumb-sized target around a short word, without moving the text. */

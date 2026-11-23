@@ -46,6 +46,9 @@ const ordered = computed(() =>
 <style scoped>
 .ab {
   display: grid;
+  /* minmax(0, 1fr) on a phone too: at a 32px default text size a long word in a
+     title widened the single column 11px past the window. */
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--sp-7) var(--sp-6);
   margin-top: var(--sp-7);
 }
@@ -115,6 +118,7 @@ a.ab-link:hover .ab-media .shot {
 
 .ab-name {
   min-width: 0;
+  overflow-wrap: anywhere;
   font-size: var(--step-1);
   font-weight: 700;
 }
@@ -123,6 +127,17 @@ a.ab-link:hover .ab-media .shot {
    ("orca- / companion- / kit"). It fits every column at this size. */
 .ab-name.is-token {
   white-space: nowrap;
+}
+
+/* ...except at a large default text size, where it ran 11px past a phone's
+   edge: kept on one line, it shrinks to the card's width (9.5cqi fits the
+   longest, the 18-letter "orca-companion-kit"). */
+.ab-head {
+  container-type: inline-size;
+}
+
+.ab-name.is-token {
+  font-size: min(var(--step-1), 9.5cqi);
 }
 
 a.ab-link:hover .ab-name {

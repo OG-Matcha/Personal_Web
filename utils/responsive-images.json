@@ -5,6 +5,10 @@
    "/images/catalyst-1-800w.webp"
   ],
   [
+   1200,
+   "/images/catalyst-1-1200w.webp"
+  ],
+  [
    1600,
    "/images/catalyst-1.png"
   ]
@@ -13,6 +17,10 @@
   [
    800,
    "/images/catalyst-2-800w.webp"
+  ],
+  [
+   1200,
+   "/images/catalyst-2-1200w.webp"
   ],
   [
    1536,
@@ -25,6 +33,10 @@
    "/images/catalyst-agents-800w.webp"
   ],
   [
+   1200,
+   "/images/catalyst-agents-1200w.webp"
+  ],
+  [
    2400,
    "/images/catalyst-agents.webp"
   ]
@@ -33,6 +45,10 @@
   [
    800,
    "/images/catalyst-deploy-800w.webp"
+  ],
+  [
+   1200,
+   "/images/catalyst-deploy-1200w.webp"
   ],
   [
    2400,
@@ -45,6 +61,10 @@
    "/images/chedai-1-800w.webp"
   ],
   [
+   1200,
+   "/images/chedai-1-1200w.webp"
+  ],
+  [
    1600,
    "/images/chedai-1.png"
   ]
@@ -53,6 +73,10 @@
   [
    800,
    "/images/chedai-2-800w.webp"
+  ],
+  [
+   1200,
+   "/images/chedai-2-1200w.webp"
   ],
   [
    1600,
@@ -65,6 +89,10 @@
    "/images/chedai-3-800w.webp"
   ],
   [
+   1200,
+   "/images/chedai-3-1200w.webp"
+  ],
+  [
    1600,
    "/images/chedai-3.png"
   ]
@@ -73,6 +101,10 @@
   [
    800,
    "/images/citydash-1-800w.webp"
+  ],
+  [
+   1200,
+   "/images/citydash-1-1200w.webp"
   ],
   [
    1600,
@@ -85,6 +117,10 @@
    "/images/cowofanswer-2-800w.webp"
   ],
   [
+   1200,
+   "/images/cowofanswer-2-1200w.webp"
+  ],
+  [
    1600,
    "/images/cowofanswer-2.png"
   ]
@@ -93,6 +129,10 @@
   [
    800,
    "/images/cowofanswer-3-800w.webp"
+  ],
+  [
+   1200,
+   "/images/cowofanswer-3-1200w.webp"
   ],
   [
    1600,
@@ -105,6 +145,10 @@
    "/images/finctory-site-800w.webp"
   ],
   [
+   1200,
+   "/images/finctory-site-1200w.webp"
+  ],
+  [
    1600,
    "/images/finctory-site.webp"
   ]
@@ -113,6 +157,10 @@
   [
    800,
    "/images/invoicedoctor-1-800w.webp"
+  ],
+  [
+   1200,
+   "/images/invoicedoctor-1-1200w.webp"
   ],
   [
    1600,
@@ -125,6 +173,10 @@
    "/images/jieban-1-800w.webp"
   ],
   [
+   1200,
+   "/images/jieban-1-1200w.webp"
+  ],
+  [
    1600,
    "/images/jieban-1.webp"
   ]
@@ -133,6 +185,10 @@
   [
    800,
    "/images/medalink-1-800w.webp"
+  ],
+  [
+   1200,
+   "/images/medalink-1-1200w.webp"
   ],
   [
    1900,
@@ -145,6 +201,10 @@
    "/images/medalink-2-800w.webp"
   ],
   [
+   1200,
+   "/images/medalink-2-1200w.webp"
+  ],
+  [
    1900,
    "/images/medalink-2.jpg"
   ]
@@ -153,6 +213,10 @@
   [
    800,
    "/images/medalink-3-800w.webp"
+  ],
+  [
+   1200,
+   "/images/medalink-3-1200w.webp"
   ],
   [
    1271,
@@ -165,6 +229,10 @@
    "/images/medalink-cover-800w.webp"
   ],
   [
+   1200,
+   "/images/medalink-cover-1200w.webp"
+  ],
+  [
    1600,
    "/images/medalink-cover.webp"
   ]
@@ -175,6 +243,10 @@
    "/images/medalink-hero-cover-800w.webp"
   ],
   [
+   1200,
+   "/images/medalink-hero-cover-1200w.webp"
+  ],
+  [
    1600,
    "/images/medalink-hero-cover.webp"
   ]
@@ -183,6 +255,10 @@
   [
    800,
    "/images/my-avatar-800w.webp"
+  ],
+  [
+   1200,
+   "/images/my-avatar-1200w.webp"
   ],
   [
    1600,
@@ -205,6 +281,10 @@
    "/images/orca-companion-kit-1-800w.webp"
   ],
   [
+   1200,
+   "/images/orca-companion-kit-1-1200w.webp"
+  ],
+  [
    1600,
    "/images/orca-companion-kit-1.png"
   ]
@@ -213,6 +293,10 @@
   [
    800,
    "/images/osave-1-800w.webp"
+  ],
+  [
+   1200,
+   "/images/osave-1-1200w.webp"
   ],
   [
    1800,
@@ -225,6 +309,10 @@
    "/images/oshi-1-800w.webp"
   ],
   [
+   1200,
+   "/images/oshi-1-1200w.webp"
+  ],
+  [
    1600,
    "/images/oshi-1.webp"
   ]
@@ -233,6 +321,10 @@
   [
    800,
    "/images/phishforge-1-800w.webp"
+  ],
+  [
+   1200,
+   "/images/phishforge-1-1200w.webp"
   ],
   [
    1600,
@@ -245,6 +337,10 @@
    "/images/surprice-cover-800w.webp"
   ],
   [
+   1200,
+   "/images/surprice-cover-1200w.webp"
+  ],
+  [
    1600,
    "/images/surprice-cover.webp"
   ]
@@ -253,6 +349,10 @@
   [
    800,
    "/images/taobao-1-800w.webp"
+  ],
+  [
+   1200,
+   "/images/taobao-1-1200w.webp"
   ],
   [
    1280,
@@ -265,6 +365,10 @@
    "/images/taobao-live-800w.webp"
   ],
   [
+   1200,
+   "/images/taobao-live-1200w.webp"
+  ],
+  [
    1550,
    "/images/taobao-live.webp"
   ]
@@ -275,6 +379,10 @@
    "/images/taobao-popup-800w.webp"
   ],
   [
+   1200,
+   "/images/taobao-popup-1200w.webp"
+  ],
+  [
    1600,
    "/images/taobao-popup.webp"
   ]
@@ -283,6 +391,10 @@
   [
    800,
    "/images/tessera-1-800w.webp"
+  ],
+  [
+   1200,
+   "/images/tessera-1-1200w.webp"
   ],
   [
    1280,
@@ -311,12 +423,12 @@
  ],
  "/desk/stops/hero-day.webp": [
   [
-   800,
-   "/desk/stops/hero-day-800w.webp"
-  ],
-  [
    600,
    "/desk/stops/hero-day-600w.webp"
+  ],
+  [
+   800,
+   "/desk/stops/hero-day-800w.webp"
   ],
   [
    1200,
@@ -325,12 +437,12 @@
  ],
  "/desk/stops/hero-night.webp": [
   [
-   800,
-   "/desk/stops/hero-night-800w.webp"
-  ],
-  [
    600,
    "/desk/stops/hero-night-600w.webp"
+  ],
+  [
+   800,
+   "/desk/stops/hero-night-800w.webp"
   ],
   [
    1200,
@@ -339,12 +451,12 @@
  ],
  "/desk/stops/kuaikuai-day.webp": [
   [
-   800,
-   "/desk/stops/kuaikuai-day-800w.webp"
-  ],
-  [
    600,
    "/desk/stops/kuaikuai-day-600w.webp"
+  ],
+  [
+   800,
+   "/desk/stops/kuaikuai-day-800w.webp"
   ],
   [
    1200,
@@ -353,12 +465,12 @@
  ],
  "/desk/stops/kuaikuai-night.webp": [
   [
-   800,
-   "/desk/stops/kuaikuai-night-800w.webp"
-  ],
-  [
    600,
    "/desk/stops/kuaikuai-night-600w.webp"
+  ],
+  [
+   800,
+   "/desk/stops/kuaikuai-night-800w.webp"
   ],
   [
    1200,
@@ -367,12 +479,12 @@
  ],
  "/desk/stops/laptop-day.webp": [
   [
-   800,
-   "/desk/stops/laptop-day-800w.webp"
-  ],
-  [
    600,
    "/desk/stops/laptop-day-600w.webp"
+  ],
+  [
+   800,
+   "/desk/stops/laptop-day-800w.webp"
   ],
   [
    1200,
@@ -381,12 +493,12 @@
  ],
  "/desk/stops/laptop-night.webp": [
   [
-   800,
-   "/desk/stops/laptop-night-800w.webp"
-  ],
-  [
    600,
    "/desk/stops/laptop-night-600w.webp"
+  ],
+  [
+   800,
+   "/desk/stops/laptop-night-800w.webp"
   ],
   [
    1200,
@@ -395,12 +507,12 @@
  ],
  "/desk/stops/notebook-day.webp": [
   [
-   800,
-   "/desk/stops/notebook-day-800w.webp"
-  ],
-  [
    600,
    "/desk/stops/notebook-day-600w.webp"
+  ],
+  [
+   800,
+   "/desk/stops/notebook-day-800w.webp"
   ],
   [
    1200,
@@ -409,12 +521,12 @@
  ],
  "/desk/stops/notebook-night.webp": [
   [
-   800,
-   "/desk/stops/notebook-night-800w.webp"
-  ],
-  [
    600,
    "/desk/stops/notebook-night-600w.webp"
+  ],
+  [
+   800,
+   "/desk/stops/notebook-night-800w.webp"
   ],
   [
    1200,
@@ -423,12 +535,12 @@
  ],
  "/desk/stops/phone-day.webp": [
   [
-   800,
-   "/desk/stops/phone-day-800w.webp"
-  ],
-  [
    600,
    "/desk/stops/phone-day-600w.webp"
+  ],
+  [
+   800,
+   "/desk/stops/phone-day-800w.webp"
   ],
   [
    1200,
@@ -437,12 +549,12 @@
  ],
  "/desk/stops/phone-night.webp": [
   [
-   800,
-   "/desk/stops/phone-night-800w.webp"
-  ],
-  [
    600,
    "/desk/stops/phone-night-600w.webp"
+  ],
+  [
+   800,
+   "/desk/stops/phone-night-800w.webp"
   ],
   [
    1200,
@@ -451,12 +563,12 @@
  ],
  "/desk/stops/reports-day.webp": [
   [
-   800,
-   "/desk/stops/reports-day-800w.webp"
-  ],
-  [
    600,
    "/desk/stops/reports-day-600w.webp"
+  ],
+  [
+   800,
+   "/desk/stops/reports-day-800w.webp"
   ],
   [
    1200,
@@ -465,12 +577,12 @@
  ],
  "/desk/stops/reports-night.webp": [
   [
-   800,
-   "/desk/stops/reports-night-800w.webp"
-  ],
-  [
    600,
    "/desk/stops/reports-night-600w.webp"
+  ],
+  [
+   800,
+   "/desk/stops/reports-night-800w.webp"
   ],
   [
    1200,
@@ -479,12 +591,12 @@
  ],
  "/desk/stops/shelf-day.webp": [
   [
-   800,
-   "/desk/stops/shelf-day-800w.webp"
-  ],
-  [
    600,
    "/desk/stops/shelf-day-600w.webp"
+  ],
+  [
+   800,
+   "/desk/stops/shelf-day-800w.webp"
   ],
   [
    1200,
@@ -493,12 +605,12 @@
  ],
  "/desk/stops/shelf-night.webp": [
   [
-   800,
-   "/desk/stops/shelf-night-800w.webp"
-  ],
-  [
    600,
    "/desk/stops/shelf-night-600w.webp"
+  ],
+  [
+   800,
+   "/desk/stops/shelf-night-800w.webp"
   ],
   [
    1200,
@@ -507,12 +619,12 @@
  ],
  "/desk/stops/tablet-day.webp": [
   [
-   800,
-   "/desk/stops/tablet-day-800w.webp"
-  ],
-  [
    600,
    "/desk/stops/tablet-day-600w.webp"
+  ],
+  [
+   800,
+   "/desk/stops/tablet-day-800w.webp"
   ],
   [
    1200,
@@ -521,12 +633,12 @@
  ],
  "/desk/stops/tablet-night.webp": [
   [
-   800,
-   "/desk/stops/tablet-night-800w.webp"
-  ],
-  [
    600,
    "/desk/stops/tablet-night-600w.webp"
+  ],
+  [
+   800,
+   "/desk/stops/tablet-night-800w.webp"
   ],
   [
    1200,

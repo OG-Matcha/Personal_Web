@@ -38,8 +38,13 @@ export function isExternal(href?: string | null): boolean {
  */
 export function linkAttrs(href?: string | null, { me = false } = {}) {
   if (!isExternal(href)) return me ? { rel: 'me' } : {}
+  // data-host: what a printed case page shows after the link (its site, not a
+  // three-line percent-encoded address); the résumé still prints the whole URL.
+  let host = ''
+  try { host = new URL(href as string).host.replace(/^www\./, '') } catch {}
   return {
     target: '_blank',
     rel: me ? 'me noopener noreferrer' : 'noopener noreferrer',
+    ...(host ? { 'data-host': host } : {}),
   }
 }

@@ -61,7 +61,7 @@
         <h2 id="work-h" class="pp-h">{{ c.workH }}</h2>
         <p class="pp-lede">{{ c.workLede }}</p>
         <ul class="pp-works">
-          <li v-for="(w, i) in workList" :key="w.title" class="pp-work reveal" :class="{ 'pp-work--small': i >= BIG }">
+          <li v-for="(w, i) in workList" :key="w.title" class="pp-work reveal" :class="{ 'pp-work--small': i >= BIG }" @click="morphFrom($event, '.pp-work-shot', w.internal ? w.href.match(/\/work\/([^/]+)/)?.[1] : undefined)">
             <component
               :is="w.internal ? NuxtLinkC : 'a'"
               v-bind="w.internal ? { to: w.href } : { href: w.href, ...linkAttrs(w.href) }"
@@ -370,9 +370,11 @@ const workList = computed(() => {
       title: E ? 'MedaLink clinic operations' : '醫數行銷 MedaLink 診所營運系統',
       when: E ? '2026 –' : '2026 起',
       status: E ? 'Live' : work.medalink.status,
+      // Role words as on the case page and the portfolio (same order, same ' · '),
+      // then what the card adds: the scope.
       role: E
-        ? 'Co-founder, forward-deployed engineer · the whole AI half'
-        : '共同創辦人、前線部署工程師 · AI 那一半全由我負責',
+        ? 'Co-founder · Forward-Deployed Engineer · the whole AI half'
+        : '共同創辦人 · 前線部署工程師 · AI 那一半全由我負責',
       line: E
         ? 'Answers patients on LINE, books them into slots where doctor, room and equipment are all free, then handles reminders, rescheduling and recalls.'
         : '在 LINE 上回病患訊息，把人約進醫師、診間、儀器同時空得出來的時段，再接手提醒、改約和回診召回。',
@@ -389,7 +391,7 @@ const workList = computed(() => {
       title: E ? 'oSave' : '財伴 oSave',
       when: E ? '2025 –' : '2025 起',
       status: E ? 'Live' : work.osave.status,
-      role: E ? 'CTO · system architecture and backend' : '技術長 · 系統架構與後端',
+      role: E ? 'CTO · architecture and backend' : '技術長 · 系統架構與後端',
       line: E
         ? 'A budgeting app that tells you whether your finances are healthy. Three questions become thirteen cash-flow directions and six health measures.'
         : '會告訴你財務健不健康的記帳 App。三個問題，翻成 13 項金流方向和六項健康指標。',
@@ -405,8 +407,8 @@ const workList = computed(() => {
       when: E ? '2024 –' : '2024 起',
       status: E ? 'Operating' : work.finctory.status,
       role: E
-        ? 'Co-founder, CTO · architecture, AI choices, engineering team'
-        : '共同創辦人、技術長 · 架構、AI 選型、工程團隊',
+        ? 'Co-founder · CTO · architecture, AI choices, engineering team'
+        : '共同創辦人 · 技術長 · 架構、AI 選型、工程團隊',
       line: E
         ? 'A student-run company, registered in 2025, with four product lines and no investors. Built so that anyone can leave and the system still runs.'
         : '學生創業，2025 年完成登記，四條產品線、沒有投資人。系統要做到任何一個人離開都還能運作。',
@@ -424,7 +426,7 @@ const workList = computed(() => {
       title: 'PhishForge',
       when: '2024',
       status: E ? 'Concluded' : work.phishforge.status,
-      role: E ? 'Backend and AI engineering' : '後端與 AI 工程',
+      role: E ? 'Backend · AI engineering' : '後端 · AI 工程',
       line: E
         ? 'Phishing drills where the AI writes emails staff cannot tell from real ones, and the company sees how many people clicked.'
         : '讓 AI 把演練信寫到員工分不出真假，再用點擊數據告訴企業有多少人上鉤。',
