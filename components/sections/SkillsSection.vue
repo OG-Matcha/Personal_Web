@@ -63,7 +63,9 @@ const LAYERS = [
   { id: 'infra', label: 'Infra', labelZh: '基礎設施' },
 ]
 
-const tiers = computed(() => [...skills.tiers].sort((a, b) => b.rank - a.rank))
+// Only the tiers something is in: the legend listed 研究原型 with nothing marked so.
+const used = new Set(skills.nodes.filter((n) => n.evidence).map((n) => n.tier))
+const tiers = computed(() => [...skills.tiers].filter((t) => used.has(t.id)).sort((a, b) => b.rank - a.rank))
 
 const rankOf = Object.fromEntries(skills.tiers.map((t) => [t.id, t.rank]))
 
@@ -174,8 +176,9 @@ a.node:hover {
   background: var(--ink);
 }
 
+/* Half filled, not 70% ink: at 10px the two filled squares read as one. */
 [data-tier='shipped-competition'] .dot {
-  background: color-mix(in srgb, var(--ink) 70%, transparent);
+  background: linear-gradient(135deg, var(--ink) 50%, transparent 50%);
 }
 
 [data-tier='research-prototype'] .dot {

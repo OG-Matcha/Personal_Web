@@ -104,7 +104,7 @@ const c = computed(() =>
         unfold: (n, a, b) => `Show ${n} more (${a}–${b})`,
         all: (n) => `All ${n} entries`,
         filterLabel: 'Show',
-        groups: { all: 'All', award: 'Competitions', role: 'Roles', product: 'Products', research: 'Research', education: 'Education', honor: 'Honours & grants' },
+        groups: { all: 'All', award: 'Awards', role: 'Roles', product: 'Products', research: 'Research', education: 'Education', honor: 'Honours & grants' },
         showing: (n) => `Showing ${n} entries`,
       }
     : {
@@ -119,7 +119,7 @@ const c = computed(() =>
         unfold: (n, a, b) => `展開其餘 ${n} 筆（${a} – ${b}）`,
         all: (n) => `全部 ${n} 筆紀錄`,
         filterLabel: '只看',
-        groups: { all: '全部', award: '競賽', role: '職務', product: '產品', research: '研究', education: '學歷', honor: '榮譽與補助' },
+        groups: { all: '全部', award: '獎項', role: '職務', product: '產品', research: '研究', education: '學歷', honor: '榮譽與補助' },
         showing: (n) => `顯示 ${n} 筆`,
       }
 )
@@ -250,6 +250,9 @@ const oldestYear = computed(() => yearOf(entries.value[entries.value.length - 1]
 .lg-when {
   display: flex;
   flex-wrap: wrap;
+  /* Wrapped lines stay under the date: stretched, "ongoing" floated mid-row
+     in a tall English row, 110px below the date it belongs to. */
+  align-content: flex-start;
   align-items: baseline;
   gap: var(--sp-1) var(--sp-3);
   font-size: var(--step--1);

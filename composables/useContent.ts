@@ -51,7 +51,7 @@ export interface TimelineEntry {
 }
 
 const KIND_LABEL: Record<TimelineKind, string> = {
-  role: '經歷',
+  role: '職務',
   education: '學歷',
   award: '獎項',
   research: '研究',

@@ -8,10 +8,18 @@
                A plain <p> hidden by html[data-js] (set in the head), not a <noscript>: Vue reads a
                <noscript>'s children as text and reports a hydration mismatch on every load. -->
           <p class="ct-noscript">{{ t.noScript }}<a :href="`mailto:${site.contact.email}`">{{ site.contact.email }}</a></p>
-          <p v-if="sent" ref="doneEl" class="ct-done" tabindex="-1" role="status">
-            <CheckCircle2 :size="22" aria-hidden="true" />
-            <span>{{ t.done }}</span>
-          </p>
+          <div v-if="sent" class="ct-sent">
+            <p ref="doneEl" class="ct-done" tabindex="-1" role="status">
+              <CheckCircle2 :size="22" aria-hidden="true" />
+              <span>{{ t.done }}</span>
+            </p>
+            <!-- Not a dead end: two places to go while the reply is on its way. -->
+            <p class="ct-next">
+              {{ t.meanwhile }}
+              <NuxtLink :to="`${t.pre}/portfolio/`">{{ t.work }} →</NuxtLink>
+              <NuxtLink :to="`${t.pre}/resume/`">{{ t.cv }} →</NuxtLink>
+            </p>
+          </div>
           <form v-else class="ct-form" novalidate @submit.prevent="send">
             <fieldset class="ct-field">
               <legend class="ct-label">{{ t.topic }}</legend>
@@ -74,7 +82,7 @@
         <section class="ct-side" :aria-label="t.sideLabel">
           <h2 class="ct-side-h">{{ t.direct }}</h2>
           <p class="ct-mail">
-            <a :href="`mailto:${site.contact.email}`">{{ site.contact.email.split('@')[0] }}<wbr />@{{ site.contact.email.split('@')[1] }}</a>
+            <a :href="`mailto:${site.contact.email}`"><span>{{ site.contact.email.split('@')[0] }}</span><wbr /><span>@{{ site.contact.email.split('@')[1] }}</span></a>
           </p>
           <ul class="ct-links">
             <li v-for="l in links" :key="l.label">
@@ -108,7 +116,8 @@ const t = computed(() =>
   locale.value === 'en'
     ? {
         title: 'Get in touch',
-        lede: 'A master’s student, open to part-time work and consulting. Generative-AI and agent architecture, early-stage technical partnerships, talks and workshops are all welcome. Messages here come straight to me.',
+        // The same list, in the same words, as the homepage note.
+        lede: 'A master’s student, open to part-time work and consulting: generative-AI and agent architecture, early-stage technical partnerships, talks and workshops. Messages here come straight to me; email is just as quick.',
         topic: 'What is it about?',
         topics: [
           { v: 'work', label: 'Work or a project' },
@@ -130,6 +139,10 @@ const t = computed(() =>
         send: 'Send',
         sending: 'Sending…',
         done: 'Sent. Thank you, I read every message myself.',
+        meanwhile: 'Meanwhile:',
+        work: 'See the work',
+        cv: 'Read the résumé',
+        pre: '/en',
         slow: 'That was quick. Please wait a minute and try again.',
         failed: (m) => `It did not go through. Please email me instead: ${m}`,
         failedLead: 'It did not go through. Please email me instead: ',
@@ -139,7 +152,7 @@ const t = computed(() =>
       }
     : {
         title: '聯絡我',
-        lede: '碩士在學，接兼職與顧問。生成式 AI 與 agent 架構、早期技術合作、演講與工作坊都歡迎。這裡的留言會直接送到我手上。',
+        lede: `碩士在學，接兼職與顧問：${site.open.join('、')}。這裡的留言會直接送到我手上，寫信也一樣快。`,
         topic: '想聊什麼？',
         topics: [
           { v: 'work', label: '合作或工作' },
@@ -161,6 +174,10 @@ const t = computed(() =>
         send: '送出',
         sending: '送出中…',
         done: '送出了，謝謝你。每一則我都會自己看。',
+        meanwhile: '等回信的時候：',
+        work: '看作品',
+        cv: '看履歷',
+        pre: '',
         slow: '送得有點快，等一分鐘再試一次。',
         failed: (m) => `沒有送出去，請改寄 email：${m}`,
         failedLead: '沒有送出去，請改寄 email：',
@@ -321,6 +338,11 @@ async function send() {
   transition: background-color 160ms cubic-bezier(0.23, 1, 0.32, 1), color 160ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
+.ct-chip:hover input:not(:checked) + span {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
 .ct-chip input:checked + span {
   border-color: var(--ink);
   background: var(--ink);
@@ -421,7 +443,9 @@ async function send() {
   transform: translateY(-1px);
 }
 
-.ct-send:active {
+/* :not(:disabled) like the hover rule, or the hover's lift (higher
+   specificity) won and a press showed nothing. */
+.ct-send:active:not(:disabled) {
   transform: scale(0.97);
 }
 
@@ -506,6 +530,26 @@ async function send() {
   outline: none;
 }
 
+.ct-next {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-5);
+  margin-top: var(--sp-4);
+  color: var(--ink-2);
+}
+
+.ct-next a {
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--pop-ink);
+  text-underline-offset: 0.2em;
+}
+
+.ct-next a:hover {
+  text-decoration-thickness: 2px;
+}
+
 /* The note from the homepage desk, here holding the address. */
 .ct-side {
   position: relative;
@@ -530,6 +574,25 @@ async function send() {
   transform: translateX(-50%) rotate(-2deg);
 }
 
+/* At night the note dims as the homepage's does (it stayed daylight yellow,
+   the brightest thing on the dark page); the ink still reads at 4.5:1. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .ct-side {
+    background: #dcc27f;
+  }
+  :root:not([data-theme='light']) .ct-side::before {
+    background: rgb(255 255 255 / 0.32);
+  }
+}
+
+:root[data-theme='dark'] .ct-side {
+  background: #dcc27f;
+}
+
+:root[data-theme='dark'] .ct-side::before {
+  background: rgb(255 255 255 / 0.32);
+}
+
 .ct-side-h {
   margin: 0;
   font-size: var(--step-0);
@@ -537,23 +600,36 @@ async function send() {
   color: #4b453f;
 }
 
-/* The address stays on one line ("jushenhuang.jason / @gmail.com" read as
-   two things) and shrinks to the note's width instead. */
 .ct-mail {
   margin: var(--sp-2) 0 0;
   font-weight: 700;
   container-type: inline-size;
 }
 
-.ct-mail a {
+/* The address is what this page is for: set like the homepage note's (display
+   face, underlined) and large. On one line the 18rem note held it at 12px, the
+   smallest type there; now it may break before the @, never elsewhere, so
+   each half can be read whole ("jushenhuang.jason" / "@gmail.com"). */
+.ct-mail a span {
   white-space: nowrap;
-  font-size: min(var(--step-0), 5.6cqi);
 }
 
 .ct-mail a {
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 1.25;
+  font-size: min(1.5rem, 9cqi);
   color: #1e1b18;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
   text-decoration-color: #c44a24;
-  text-underline-offset: 4px;
+  text-underline-offset: 0.18em;
+  transition: color var(--dur-1), text-decoration-thickness var(--dur-1);
+}
+
+.ct-mail a:hover {
+  color: #8c2d12;
+  text-decoration-thickness: 3px;
 }
 
 .ct-links {

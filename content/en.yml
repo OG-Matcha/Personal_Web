@@ -52,7 +52,7 @@ sheets:
   work: Shipped
   workLede: Four things written up as case studies, each with the decision taken, the option not taken, and what the choice cost.
   skills: Evidence, by layer
-  skillsLede: The scale is not proficiency, it is the level of evidence. Every item links to something you can open. Anything that cannot be linked is not listed.
+  skillsLede: 'Grouped by the evidence behind each one: every item links to something you can open, and anything without a link is left off.'
   record: The record
   contact: Get in touch
 
@@ -288,7 +288,7 @@ works:
       - title: What must not be said never is
         text: Promises of results, comparative claims and post-treatment symptom advice are on a do-not-answer list – the AI stops and alerts the front desk. Wound and medical photos always go to a human.
     turn:
-      title: More than auto-replies
+      title: From the first reply to the follow-up visit
       text: A front desk can answer messages for about 176 hours a month; for the other 544, messages keep arriving. But auto-replies are not enough – once the question is answered, the person has to be booked into a slot that really works, followed by reminders, changes and recalls. MedaLink connects that whole chain.
     myPart:
       - The AI half of a two-person team, from the conversation engine to cloud deployment

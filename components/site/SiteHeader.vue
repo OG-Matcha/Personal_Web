@@ -76,7 +76,7 @@ const t = computed(() =>
         navLabel: 'Main',
         links: [
           { href: '/en/#work', label: 'Work', section: /^\/en\/(portfolio|work)(\/|$)/ },
-          { href: '/en/#record', label: 'Road', wide: true },
+          { href: '/en/#record', label: 'Story', wide: true },
           { href: '/en/resume/', label: 'Résumé', short: 'CV' },
         ],
         altHref: alt.value,
@@ -225,12 +225,24 @@ const t = computed(() =>
   font-weight: 700;
   text-decoration: none;
   white-space: nowrap;
-  transition: background-color var(--dur-1), color var(--dur-1);
+  transition: background-color var(--dur-1), color var(--dur-1), transform 120ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .hd-mail:hover {
   background: var(--ink);
   color: var(--bg);
+}
+
+.hd-mail:active {
+  transform: scale(0.97);
+}
+
+/* On the contact page itself the pill is where you are: outlined, like the
+   other links' underline, instead of still asking to be pressed. */
+.hd-mail.router-link-active {
+  background: transparent;
+  color: var(--pop-ink);
+  box-shadow: inset 0 0 0 2px var(--pop);
 }
 
 /* Breakpoints in em, not px: they follow the reader's default text size, so at

@@ -239,6 +239,16 @@ const t = computed(() =>
   font-size: var(--step--1);
   font-weight: 700;
   cursor: pointer;
+  transition: box-shadow var(--dur-1), color var(--dur-1), transform 120ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.os-preset:not(.is-on):hover {
+  box-shadow: inset 0 0 0 1px var(--ink);
+  color: var(--ink);
+}
+
+.os-preset:active {
+  transform: scale(0.97);
 }
 
 .os-preset.is-on {

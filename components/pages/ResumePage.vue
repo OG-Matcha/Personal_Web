@@ -3,6 +3,15 @@
     <p class="print-only">{{ t.printNote }} https://www.ogmatcha.com{{ cv.mine }}</p>
     <Station id="record" wide :title="t.title" :lede="t.lede" heading-tag="h1">
       <template #meta>
+        <!-- What a recruiter looks for first: what he is doing now, and where the stack is.
+             Same four roles as the homepage's "Now"; they were only in the FAQ at the foot. -->
+        <div class="now">
+          <h2 class="now-h">{{ t.nowH }}</h2>
+          <ul class="now-list">
+            <li v-for="n in t.now" :key="n">{{ n }}</li>
+          </ul>
+          <a href="#skills" class="now-stack">{{ t.stack }}</a>
+        </div>
         <dl class="counts figures">
           <div>
             <dt>{{ t.awards }}</dt>
@@ -92,6 +101,9 @@ const t = computed(() =>
         printNote: 'The full record, as printed from the web. The two-page CV:',
         cvNote: `PDF · 2 pages · updated ${formatDate(site.contact.cv.updated)}`,
         cvOther: '中文 PDF',
+        nowH: 'Now',
+        now: ['Co-founder & CTO, Finctory', 'Co-founder & forward-deployed engineer, MedaLink', 'AI intern, ITRI ISTI', 'Master’s student, NCU Information Management'],
+        stack: 'Skills and stack →',
         highlights: 'Highlights',
         winKey: 'won a prize',
         skills: en.sheets.skills,
@@ -110,10 +122,13 @@ const t = computed(() =>
         printNote: '這是網頁上的完整年表。兩頁的精簡履歷：',
         cvNote: `PDF · 2 頁 · ${formatDate(site.contact.cv.updated)} 更新`,
         cvOther: 'English PDF',
+        nowH: '現在',
+        now: ['斐闊 Finctory 共同創辦人暨技術長', '醫數行銷 MedaLink 共同創辦人暨前線部署工程師', '工研院產科國際所 AI Intern', '中央大學資訊管理學系碩士班'],
+        stack: '看技術與能力 →',
         highlights: '重點',
         winKey: '得獎',
         skills: '能力斷面',
-        skillsLede: '量尺不是熟練度，是證據層級。每一項都連得到一個可以點開的東西；連不到的，這一頁就不列。',
+        skillsLede: '依證據分層：每一項都連得到一個可以點開的東西，連不到的就不列。',
         faq: '快速問答',
         faqLede: '大家會搜的幾個問題，答案都出自上面的年表。',
       }
@@ -121,6 +136,48 @@ const t = computed(() =>
 </script>
 
 <style scoped>
+.now {
+  display: grid;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-6);
+}
+
+.now-h {
+  font-size: var(--step--1);
+  font-weight: 700;
+  color: var(--pop-ink);
+}
+
+.now-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-1) 0;
+  list-style: none;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.now-list li:not(:last-child)::after {
+  content: '·';
+  margin-inline: 0.6em;
+  color: var(--ink-3);
+}
+
+.now-stack {
+  justify-self: start;
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--ink-2);
+  text-decoration: underline;
+  text-decoration-color: var(--pop-ink);
+  text-underline-offset: 0.2em;
+}
+
+.now-stack:hover {
+  color: var(--ink);
+  text-decoration-thickness: 2px;
+}
+
 .counts {
   display: flex;
   flex-wrap: wrap;
@@ -208,6 +265,9 @@ const t = computed(() =>
 .hl5-item {
   display: grid;
   gap: 2px;
+  /* Top-aligned: in a row made taller by its neighbour, the spare height went
+     into the three lines and the title drifted down off its neighbour's. */
+  align-content: start;
 }
 
 .hl5-when {
@@ -278,6 +338,11 @@ const t = computed(() =>
 .cv-btn:hover {
   transform: translateY(-1px);
   box-shadow: var(--shadow-2);
+}
+
+.cv-btn:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: var(--shadow-1);
 }
 
 .cv-btn:focus-visible,
