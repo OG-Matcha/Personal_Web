@@ -63,6 +63,11 @@ const ordered = computed(() =>
   .ab {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+  /* A lone last card (10 in 3 columns) sits in the middle of its row, not
+     at its left end beside two empty cells. */
+  .ab > :last-child:nth-child(3n + 1) {
+    grid-column: 2;
+  }
 }
 
 .ab-link {

@@ -47,7 +47,8 @@ const router = useRouter()
 // now crossing the middle of the window.
 const spy = ref('')
 const isHome = () => /^\/(en\/)?$/.test(router.currentRoute.value.path)
-const sub = (l) => !!l.section?.test(router.currentRoute.value.path)
+// Not on an error page: a dead /en/work/… address is not the work section.
+const sub = (l) => !error.value && !!l.section?.test(router.currentRoute.value.path)
 const here = (l) => sub(l) || (isHome() && !!spy.value && l.href.endsWith('#' + spy.value))
 const current = (l) => (isHome() && spy.value && l.href.endsWith('#' + spy.value) ? 'location' : undefined)
 let io = null

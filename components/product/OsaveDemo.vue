@@ -15,7 +15,7 @@
     <div class="os-body">
       <!-- Phones: the score rides along at the top while the sliders scroll,
            so each drag shows its effect without scrolling down to the chart. -->
-      <div class="os-peek" aria-hidden="true">
+      <div class="os-peek" :class="{ 'is-gone': resultInView }" aria-hidden="true">
         <span class="os-peek-n figures" :style="{ color: bandColor }">{{ total }}</span>
         <span class="os-band" :style="{ background: bandColor }">{{ bandLabel }}</span>
         <span class="os-peek-low">{{ t.worst }}{{ worst.name }}</span>
@@ -43,7 +43,7 @@
 
       <div class="os-result">
         <p class="sr-only" aria-live="polite" aria-atomic="true">{{ said }}</p>
-        <div class="os-score">
+        <div ref="scoreEl" class="os-score">
           <span class="os-score-n figures" :style="{ color: bandColor }">{{ total }}</span>
           <span class="os-score-of">/ 100</span>
           <span class="os-band" :style="{ background: bandColor }">{{ bandLabel }}</span>
@@ -166,6 +166,18 @@ watch([total, bandLabel], () => {
 })
 onBeforeUnmount(() => clearTimeout(sayT))
 
+// The riding score bows out once the real one (and the radar under it) is on
+// screen: it sat over the radar's top label, showing the score twice.
+const scoreEl = ref(null)
+const resultInView = ref(false)
+let resultIo = null
+onMounted(() => {
+  if (!scoreEl.value || typeof IntersectionObserver === 'undefined') return
+  resultIo = new IntersectionObserver(([e]) => (resultInView.value = e.isIntersecting || e.boundingClientRect.top < 0), { threshold: 0, rootMargin: '0px 0px -25% 0px' })
+  resultIo.observe(scoreEl.value)
+})
+onBeforeUnmount(() => resultIo?.disconnect())
+
 const R = 92
 const pt = (i, r) => {
   const a = -Math.PI / 2 + (i * Math.PI * 2) / 6
@@ -280,6 +292,12 @@ const t = computed(() =>
   padding: var(--sp-2) 0;
   background: var(--surface);
   border-bottom: 1px solid var(--rule);
+}
+
+.os-peek.is-gone {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--dur-1), visibility 0s var(--dur-1);
 }
 
 .os-peek-n {
