@@ -34,6 +34,10 @@ import ThemeToggle from '~/components/site/ThemeToggle.vue'
 import { rememberLangScroll } from '~/utils/langScroll'
 
 const { locale, altPath } = useLocale()
+// On an error page the same path in the other language is just another
+// dead URL: the switch goes to that language's home instead.
+const error = useError()
+const alt = computed(() => (error.value ? (locale.value === 'en' ? '/' : '/en/') : altPath.value))
 // The router's own route, not useRoute(): in this always-mounted header
 // useRoute() hydrated /portfolio/ as some other path and dropped the mark.
 const router = useRouter()
@@ -51,7 +55,7 @@ const t = computed(() =>
           { href: '/en/#record', label: 'Record', wide: true },
           { href: '/en/resume/', label: 'Résumé', short: 'CV' },
         ],
-        altHref: altPath.value,
+        altHref: alt.value,
         altLang: 'zh-Hant-TW',
         altLabel: '中文',
         mail: 'Contact',
@@ -67,7 +71,7 @@ const t = computed(() =>
           { href: '/#record', label: '年表', wide: true },
           { href: '/resume/', label: '履歷' },
         ],
-        altHref: altPath.value,
+        altHref: alt.value,
         altLang: 'en',
         altLabel: 'EN',
         mail: '聯絡',

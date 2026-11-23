@@ -166,9 +166,22 @@
     color-scheme: light;
     --bg: #fff !important;
     --surface: #fff !important;
+    --surface-2: #f5f0e8 !important;
+    --rule: #dcd3c7 !important;
+    --rule-strong: #857c71 !important;
+    --pop: #c44a24 !important;
+    --pop-ink: #b2411d !important;
     --ink: #111 !important;
     --ink-2: #333 !important;
     --ink-3: #555 !important;
+  }
+  /* Paper is a snapshot: a colour still easing from the dark theme to the
+     white one (cards fade their background) printed half-way, dark. */
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
   }
   .print-only {
     display: block;

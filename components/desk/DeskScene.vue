@@ -57,6 +57,10 @@
       <!-- The stops as buttons: jump straight to one, by mouse or keyboard.
            First in the tab order, before the captions, so a keyboard reaches
            the way around before walking every stop's links. -->
+      <!-- The way past the walk comes first for a keyboard: the visible link
+           sits in the first caption, after the eight dots (Tab 17). This one
+           shows only when focused; the visible one is for the mouse. -->
+      <a href="#about" class="dk-skip dk-skip-first">{{ t.skip }}</a>
       <nav class="dk-dots" :class="{ 'is-gone': leaving }" :aria-label="t.stopsLabel">
         <button
           v-for="(s, i) in stops"
@@ -94,7 +98,7 @@
                  the first screen used to hold only a name and a sentence. -->
             <p class="dk-role"><span v-for="r in t.role" :key="r">{{ r }}</span></p>
             <p class="dk-hint">{{ t.hint }}</p>
-            <a href="#about" class="dk-skip">{{ t.skip }}</a>
+            <a href="#about" class="dk-skip" tabindex="-1">{{ t.skip }}</a>
           </template>
           <template v-else>
             <p class="dk-eyebrow figures">{{ String(i).padStart(2, '0') }} · {{ s.thing }}</p>
@@ -230,7 +234,7 @@ const stops = computed(() => {
     phone: { thing: '手機', title: '財伴 oSave', text: '用會計邏輯記帳的 App：問你三個問題，後端翻成 13 項金流方向和六項財務健康指標，回答「我的財務健不健康」。', href: '/work/osave/', cta: '看財伴怎麼做的', open: '拿起來試算' },
     tablet: { thing: '平板', title: '醫數行銷 MedaLink', text: '診所的 AI 營運系統：在 LINE 上回病患、把醫師診間儀器的時段算出來，AI 那一半是我一個人做的。', href: '/work/medalink/', cta: '看診所系統', open: '排一個療程看看' },
     reports: { thing: '一疊報告', title: `${c.researchGrants} 個國科會計畫`, text: '從生成式 AI 社交工程、股市異常追蹤，到財伴的 82 人實證研究；另有一篇 LAK 2025 國際會議發表。', href: '/resume/', cta: '看完整年表', open: '翻開來看' },
-    shelf: { thing: '獎盃架', title: `${c.awards} 個競賽獎項`, text: `其中 ${c.topPrizes} 個全國首獎，包括台積電校園黑客松第一名。架上只擺得下四座，其他的在年表裡，每一座都附上主辦單位和公告。`, href: '/resume/', cta: '看每一座的出處', open: '一座一座看' },
+    shelf: { thing: '獎盃架', title: `${c.awards} 項競賽獎`, text: `其中 ${c.topPrizes} 座全國首獎，包括台積電校園黑客松第一名。架上只擺得下四座，其他的在年表裡，每一座都附上主辦單位和公告。`, href: '/resume/', cta: '看每一座的出處', open: '一座一座看' },
     kuaikuai: { thing: '綠色乖乖', title: '機器乖乖，不當機', text: '台灣工程師的老規矩：伺服器旁邊放一包綠色乖乖。我放的這包是台積電聯名款，到目前為止都很乖。', href: '/#contact', cta: '寫信給我' },
   }
   const enT = {
@@ -267,6 +271,8 @@ const on = ref(0)
 const moving = ref(false)
 const leaving = ref(false)
 const hover = ref(null)
+// Where the page was when the tag was last placed; see readScroll.
+let tagY = -1
 // The stop whose thing is open in the drawer (phone, tablet, shelf, reports).
 const drawer = ref(null)
 
@@ -372,6 +378,14 @@ function readScroll() {
   // 0.08 or above 0.92 while the move (and the hidden caption) ran 0.1-0.9, so
   // between 0.9 and 0.92 the last caption came back over the next thing.
   on.value = e < 0.5 ? i : i + 1
+  // The camera moves under a still pointer: its tag named what was there a
+  // stop ago ("Laptop" while standing at the trophies) and a click walked
+  // the reader back. The tag goes; the next pointer move finds the new thing.
+  if (hover.value && scrollY !== tagY) {
+    hover.value = null
+    if (canvas.value) canvas.value.style.cursor = ''
+  }
+  tagY = scrollY
   onWalk?.()
   // Left between two stops, the room has no words on it. Once the reader
   // stops scrolling, walk on to the stop they were heading for: never back
@@ -455,8 +469,12 @@ function fitVeil() {
   const veil = root.value?.querySelector('.dk-veil')
   const skip = root.value?.querySelector('.dk-cap--hero .dk-skip')
   if (!veil || !skip?.offsetParent) return
-  const y = skip.getBoundingClientRect().bottom - veil.getBoundingClientRect().top
+  const v = veil.getBoundingClientRect()
+  const y = skip.getBoundingClientRect().bottom - v.top
   if (y > 0) veil.style.setProperty('--veil-b', `${Math.round(y + 16)}px`)
+  // And to the caption's right edge, which a zoomed caption moves.
+  const cap = skip.closest('.dk-cap')?.getBoundingClientRect()
+  if (cap && cap.right > v.left) veil.style.setProperty('--veil-r', `${Math.round(cap.right - v.left)}px`)
 }
 
 onMounted(() => {
@@ -1167,6 +1185,9 @@ async function start(small = false) {
       else root.value?.querySelector(`.dk-stop[data-stop="${st.id}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' })
       return
     }
+    // Find what is under the pointer now, not what the tag said: the camera
+    // may have walked on since it was placed.
+    onMove(ev)
     if (hover.value?.here) drawer.value = stops.value[hover.value.i].id
     else if (hover.value) scrollToStop(hover.value.i)
   }
@@ -1529,7 +1550,8 @@ async function start(small = false) {
 .dk-tag,
 .dk-cap:not(.dk-cap--hero),
 .dk-cap--hero .dk-hint,
-.dk-cap--hero .dk-skip {
+.dk-cap--hero .dk-skip,
+.dk-skip-first {
   display: none;
 }
 
@@ -1877,7 +1899,13 @@ async function start(small = false) {
     right: 0;
     bottom: 0;
     z-index: 4;
-    height: calc(var(--out, 0) * 75%);
+    /* Scaled, not resized: growing its height moved its top edge through
+       layout on every scroll frame, and Chrome counted it as layout shift
+       (CLS 0.18 at 1440, 0.23 at 1024). The gradient scales with the box,
+       so it looks the same. */
+    height: 75%;
+    transform: scaleY(var(--out, 0));
+    transform-origin: bottom;
     pointer-events: none;
     background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--bg) 80%, transparent) 60%, var(--bg));
   }
@@ -1970,6 +1998,24 @@ async function start(small = false) {
     display: inline-flex;
   }
 
+  /* Off screen until a keyboard lands on it, then a pill over the stage. */
+  .dk-skip-first {
+    display: inline-flex;
+    position: absolute;
+    z-index: 5;
+    top: calc(var(--header-h) + var(--sp-3));
+    left: clamp(var(--sp-4), 5vw, var(--sp-9));
+    padding: 0 var(--sp-4);
+    border-radius: 999px;
+    background: var(--surface);
+    box-shadow: var(--shadow-2);
+    translate: 0 -200vh;
+  }
+
+  .dk-skip-first:focus {
+    translate: none;
+  }
+
   .dk-cap {
     position: absolute;
     left: clamp(var(--sp-4), 5vw, var(--sp-9));
@@ -2033,6 +2079,21 @@ async function start(small = false) {
     padding: 0;
     background: none;
     box-shadow: none;
+  }
+
+  /* Big screens: the type stopped growing at 76px, a name 5% of a 1440px-
+     tall window, alone in the top-left corner. The whole caption grows
+     instead, so its lines still break where they do at 1440. */
+  @media (min-width: 1680px) and (min-height: 860px) {
+    .dk-cap--hero {
+      zoom: 1.2;
+    }
+  }
+
+  @media (min-width: 2200px) and (min-height: 1100px) {
+    .dk-cap--hero {
+      zoom: 1.5;
+    }
   }
 
   .dk-dots {
@@ -2222,7 +2283,11 @@ async function start(small = false) {
   /* A pill of page colour behind the dots, so they read over the green
      snack bag and the dark desk mat as well as over the wall. */
   border-radius: var(--r-full);
-  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  /* Nearly solid and blurred behind: at 72% the snack bag's pattern read
+     through the column as if the dots were printed on it. */
+  background: color-mix(in srgb, var(--surface) 90%, transparent);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   box-shadow: var(--shadow-1);
 }
 

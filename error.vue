@@ -47,7 +47,7 @@ const c = computed(() =>
           : 'The page did not finish loading. Reloading usually fixes it; if not, come in through one of these.',
         links: [
           { to: '/en/', label: 'Home' },
-          { to: '/en/portfolio/', label: 'Portfolio' },
+          { to: '/en/portfolio/', label: 'Work' },
           { to: '/en/resume/', label: 'Résumé' },
         ],
       }
@@ -64,7 +64,8 @@ const c = computed(() =>
       }
 )
 
-const title = computed(() => `${props.error?.statusCode ?? 500} | 黃鉅燊 Ju-Shen Huang`)
+// The same pattern as the other pages in each language.
+const title = computed(() => `${props.error?.statusCode ?? 500} | ${locale.value === 'en' ? 'Ju-Shen Huang' : '黃鉅燊 Ju-Shen Huang'}`)
 const lang = computed(() => (locale.value === 'en' ? 'en' : 'zh-Hant-TW'))
 useHead({ htmlAttrs: { lang } })
 // An error page has no business in an index.

@@ -146,7 +146,7 @@ const c = computed(() => {
   const n = { a: awards.value.length, g: grants.value.length, top: awards.value.filter((a) => a.top).length }
   const zh = {
     ...DESK_DEMOS.zh,
-    shelf: { thing: '獎盃架', title: `${n.a} 個競賽獎項`, lede: `依年份疊起來，金色的是 ${n.top} 個全國首獎。點一個，看它是哪一場、誰辦的。`, href: '/resume/', cta: '看完整年表' },
+    shelf: { thing: '獎盃架', title: `${n.a} 項競賽獎`, lede: `依年份疊起來，金色的是 ${n.top} 座全國首獎。點一個，看它是哪一場、誰辦的。`, href: '/resume/', cta: '看完整年表' },
     reports: { thing: '一疊報告', title: `${n.g} 個國科會計畫`, lede: '大學部的國科會大專學生研究計畫，每一個都是我主持。', href: '/resume/', cta: '看完整年表' },
   }
   const en_ = {
