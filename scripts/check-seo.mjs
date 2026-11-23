@@ -213,6 +213,12 @@ for (const [route, h] of Object.entries(html)) {
   ok(wrong.length === 0, `${route} opens no internal link in a new tab`)
 }
 
+// A page rendered twice into one file can keep the tail of the longer render
+// (CI once shipped "</html>>" on /portfolio/): every page ends where it should.
+for (const [route, h] of Object.entries(html)) {
+  ok(/<\/html>\s*$/.test(h) && !/<\/html>\s*\S/.test(h), `${route} ends at </html>`)
+}
+
 console.log()
 if (fails.length) {
   console.log(`${fails.length} FAILURES:`)

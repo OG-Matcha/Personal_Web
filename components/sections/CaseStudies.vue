@@ -134,6 +134,19 @@ a.cs-shot:focus-visible {
   rotate: none;
 }
 
+/* On a phone the 16:10 frame let the card fill only two thirds of the column
+   (148px wide at 320, its email at 4px). Taller frame, thinner side margin:
+   the card takes the column's width. */
+@media (max-width: 639px) {
+  .cs-shot--card {
+    aspect-ratio: 5 / 4;
+  }
+
+  .cs-shot--card :deep(.bc-stage) {
+    --pad-x: 0px;
+  }
+}
+
 .cs-title {
   font-size: var(--step-3);
   font-weight: 800;

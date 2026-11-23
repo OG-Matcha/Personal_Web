@@ -11,6 +11,6 @@ usePageSeo({
   type: 'CollectionPage',
   title: 'Work | Ju-Shen Huang 黃鉅燊',
   description:
-    "Ju-Shen Huang's products: oSave, MedaLink, PhishForge, SurPrice, Taobao Exchange and Oshi Board, plus AI, web and security projects with source.",
+    "Ju-Shen Huang's products: Finctory, oSave, MedaLink, PhishForge, SurPrice and Taobao Exchange, plus smaller AI, web and security projects.",
 })
 </script>

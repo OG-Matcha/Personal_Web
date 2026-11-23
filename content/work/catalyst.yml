@@ -18,10 +18,12 @@ org: 第六屆台積電校園黑客松（TSMC IT CareerHack）
 orgUrl: null
 period: { start: 2025-02, end: 2025-02 }
 status: 競賽作品
+seoDescription: Catalyst：第六屆台積電校園黑客松 AI 維運懶人包組第一名。一組 AI agent 把程式改好、在容器裡測完、部署上線；黃鉅燊負責介面設計。
 
 cover: /images/catalyst-deploy.webp
 thumbnail: /images/catalyst-1.png
-hero: /images/catalyst-1.png
+# 頁首放部署完成的畫面：它就是成果，也是我設計的介面。logo 留給縮圖。
+hero: /images/catalyst-deploy.webp
 screenshots: []
 
 # 「AI 小組」之間是不斷行空白，免得「AI」和「小組」被拆到兩行。
@@ -45,11 +47,11 @@ highlights:
   - title: 每一步都看得到
     text: 左邊是五個階段，中間是正在做事的 agent，右邊是它們的對話紀錄。跑到哪一步、為什麼這樣改，畫面上都看得到。
     shot: /images/catalyst-agents.webp
+    alt: Catalyst 執行中的畫面：左邊五個階段停在「編譯環境」，中間列出已完成的 agent，右邊終端機顯示程式修改的理由
   - title: 在容器裡真的跑過
     text: 改好的程式會在 Docker 容器裡編譯、執行，再自動產生測試案例跑一遍，結果交給分析 agent；有錯就退回去改。
   - title: 部署完，直接給網址
     text: 先寫出需求規格和部署計畫，參考文件產生部署設定，沒過檢查就重寫，最多三次。部署成功後，畫面上直接給出網址。
-    shot: /images/catalyst-deploy.webp
 
 turn:
   title: 為什麼是一群小模型

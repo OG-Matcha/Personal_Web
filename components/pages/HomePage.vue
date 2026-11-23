@@ -270,7 +270,7 @@ const c = computed(() =>
         about: [
           '我把 AI 當成槓桿，用它把一次性的解法，變成能一直跑下去的系統。做出一個會動的 demo，通常一個週末就夠；我在意的是三個月後使用者還在用，出錯的時候有人知道錯在哪。',
           '我學東西的方式一直沒變：自己學會，教給別人，再拿去做出東西。學測後我自學 Python，第一個作品是 Discord 機器人，接著開始教同學寫程式；大一加入 ERP 中心的 SAP 學生團隊，隔年變成暑期講師；後來又開了一門給全校學生的 Python 專案課。斐闊和醫數行銷用到的技術，大多也是這樣學來的。',
-          '我待過的團隊都很小。斐闊的工程團隊不到四個人，醫數行銷的 AI 那一半只有我。所以每個技術決策，我先問的是下一個人接不接得住：幾條產品線用同一套技術、把理由寫下來、讓測試替大家記住系統該怎麼動。',
+          '我待過的團隊都很小。斐闊的工程團隊 4 人以下，醫數行銷的 AI 那一半只有我。所以每個技術決策，我先問的是下一個人接不接得住：幾條產品線用同一套技術、把理由寫下來、讓測試替大家記住系統該怎麼動。',
           '我也做錯過。發票醫生做了將近一年，我們才承認它答不出使用者真正想問的問題，於是從頭做了財伴。從那之後，我會先弄清楚使用者想得到什麼答案，再決定那裡需不需要 AI。',
         ],
         pathH: '我走的路',
@@ -1526,15 +1526,18 @@ async function startWalk() {
 /* On the desk top, right of the laptop, where the light falls. */
 .pp-end .pp-note {
   position: absolute;
-  left: 50%;
   top: 56%;
   /* The address is sized to the note (cqi), so the note is its container. */
   container-type: inline-size;
-  width: min(36rem, calc(100% - 2 * var(--page-gut)));
+  --note-w: min(36rem, calc(100% - 2 * var(--page-gut)));
+  width: var(--note-w);
+  /* Just left of centre, where the light falls - but never past either
+     gutter: at 641-1000px a fixed shift ran the note off the right edge. */
+  left: clamp(var(--page-gut), calc(50% - 0.14 * var(--note-w)), calc(100% - var(--note-w) - var(--page-gut)));
   margin: 0;
   /* translate and rotate, not transform: the entrance (.reveal) animates
      transform and would otherwise wipe the placement when it ends. */
-  translate: -14% -50%;
+  translate: 0 -50%;
   rotate: -2.2deg;
 }
 

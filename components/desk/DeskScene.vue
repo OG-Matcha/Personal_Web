@@ -227,7 +227,7 @@ const stops = computed(() => {
   const zh = {
     notebook: { thing: '筆記本', title: '今天的待辦', text: '咖啡打勾了，綠色乖乖也補了，睡覺改到下週。右頁是這週的 bug 計數：十六個，還在數。', href: '/#about', cta: '讀我怎麼想' },
     laptop: { thing: '筆電', title: '現在在做的事', text: '斐闊 Finctory 共同創辦人暨技術長、醫數行銷 MedaLink 共同創辦人暨前線部署工程師、工研院 AI Intern，同時在中央資管讀碩士班。', href: '/#record', cta: '看我走過的路' },
-    phone: { thing: '手機', title: '財伴 oSave', text: '用會計邏輯記帳的 App：問你三個問題，後端轉成 13 種現金流向和 6 個財務健康指標，回答「我的財務健不健康」。', href: '/work/osave/', cta: '看財伴怎麼做的', open: '拿起來試算' },
+    phone: { thing: '手機', title: '財伴 oSave', text: '用會計邏輯記帳的 App：問你三個問題，後端翻成 13 項金流方向和六項財務健康指標，回答「我的財務健不健康」。', href: '/work/osave/', cta: '看財伴怎麼做的', open: '拿起來試算' },
     tablet: { thing: '平板', title: '醫數行銷 MedaLink', text: '診所的 AI 營運系統：在 LINE 上回病患、把醫師診間儀器的時段算出來，AI 那一半是我一個人做的。', href: '/work/medalink/', cta: '看診所系統', open: '排一個療程看看' },
     reports: { thing: '一疊報告', title: `${c.researchGrants} 個國科會計畫`, text: '從生成式 AI 社交工程、股市異常追蹤，到財伴的 82 人實證研究；另有一篇 LAK 2025 國際會議發表。', href: '/resume/', cta: '看完整年表', open: '翻開來看' },
     shelf: { thing: '獎盃架', title: `${c.awards} 個競賽獎項`, text: `其中 ${c.topPrizes} 個全國首獎，包括台積電校園黑客松第一名。架上只擺得下四座，其他的在年表裡，每一座都附上主辦單位和公告。`, href: '/resume/', cta: '看每一座的出處', open: '一座一座看' },
@@ -448,6 +448,17 @@ function moveFocus() {
   next?.focus({ preventScroll: true })
 }
 
+/* The hero's veil reaches just below the skip link, wherever that wraps to
+   (530-680px down, by language, width and height); the CSS value is the
+   fallback until this has run. */
+function fitVeil() {
+  const veil = root.value?.querySelector('.dk-veil')
+  const skip = root.value?.querySelector('.dk-cap--hero .dk-skip')
+  if (!veil || !skip?.offsetParent) return
+  const y = skip.getBoundingClientRect().bottom - veil.getBoundingClientRect().top
+  if (y > 0) veil.style.setProperty('--veil-b', `${Math.round(y + 16)}px`)
+}
+
 onMounted(() => {
   tallMq = matchMedia(TALL)
   tallMq.addEventListener('change', keepFocus)
@@ -458,6 +469,9 @@ onMounted(() => {
   readScroll()
   addEventListener('scroll', readScroll, { passive: true })
   addEventListener('resize', readScroll)
+  fitVeil()
+  document.fonts?.ready.then(fitVeil)
+  addEventListener('resize', fitVeil)
   if (navigator.connection?.saveData) return
   // A machine without a GPU draws WebGL on the CPU (SwiftShader, llvmpipe):
   // the room would freeze the page for seconds, so the still stays.
@@ -519,6 +533,7 @@ onBeforeUnmount(() => {
   document.documentElement.classList.remove('is-over-desk')
   removeEventListener('scroll', readScroll)
   removeEventListener('resize', readScroll)
+  removeEventListener('resize', fitVeil)
   dispose?.()
 })
 
@@ -1902,12 +1917,16 @@ async function start(small = false) {
     display: block;
     position: absolute;
     inset: 0;
-    /* Down to the skip link and wide enough for the English name on a 1024px
-       window: the old ellipse stopped at the lamp, and the links under the
-       name sat on the desk's black legs at 1.6:1. */
-    background:
-      radial-gradient(ellipse 50% 70% at 8% 40%, color-mix(in srgb, var(--bg) 86%, transparent), transparent 78%),
-      linear-gradient(90deg, color-mix(in srgb, var(--bg) 84%, transparent) 0, color-mix(in srgb, var(--bg) 72%, transparent) clamp(18rem, 30vw, 30rem), transparent clamp(28rem, 48vw, 46rem));
+    /* Only behind the words. It used to be a band 46rem wide and the full
+       height of the window: at 1024 it washed out the left half of the desk
+       (the scene kept 45% of its contrast) when the text ends at 25rem. Now
+       it holds to the caption's right edge (its left + max-width below) and
+       to just under the skip link, then fades within a few rem. */
+    --veil-r: calc(clamp(var(--sp-4), 5vw, var(--sp-9)) + min(24rem, 34vw));
+    --veil-b: 37rem;
+    background: linear-gradient(90deg, color-mix(in srgb, var(--bg) 88%, transparent) 0, color-mix(in srgb, var(--bg) 80%, transparent) calc(var(--veil-r) + 1rem), transparent calc(var(--veil-r) + 9rem));
+    -webkit-mask-image: linear-gradient(#000 0, #000 var(--veil-b), transparent calc(var(--veil-b) + 8rem));
+    mask-image: linear-gradient(#000 0, #000 var(--veil-b), transparent calc(var(--veil-b) + 8rem));
     opacity: 0;
     pointer-events: none;
     transition: opacity 600ms var(--ease-entrance);
@@ -1917,13 +1936,9 @@ async function start(small = false) {
     opacity: 1;
   }
 
-  /* Narrower windows put the English lines lower, over the lamp-lit desk. */
-  @media (max-width: 1199px) {
-    .dk-veil {
-      background:
-        radial-gradient(ellipse 56% 80% at 8% 44%, color-mix(in srgb, var(--bg) 90%, transparent), transparent 80%),
-        linear-gradient(90deg, color-mix(in srgb, var(--bg) 88%, transparent) 0, color-mix(in srgb, var(--bg) 78%, transparent) 30rem, transparent 46rem);
-    }
+  /* The English caption runs about 7rem further down. */
+  :root[lang|='en'] .dk-veil {
+    --veil-b: 44rem;
   }
 
   .dk-caps {

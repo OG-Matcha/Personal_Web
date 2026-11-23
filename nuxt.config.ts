@@ -212,7 +212,16 @@ export default defineNuxtConfig({
 
   nitro: {
     publicAssets: [{ dir: 'public', maxAge: 60 * 60 * 24 * 365 }],
-    prerender: { crawlLinks: true },
+    prerender: {
+      crawlLinks: true,
+      // Every page is served at its slashed URL, but the crawler also queues the
+      // slashless form (/portfolio and /portfolio/). Both write
+      // portfolio/index.html at the same time, and when the longer render
+      // finished first the file kept its last byte: CI shipped
+      // "</html>>", a stray ">" at the bottom of /portfolio/. Render each page
+      // once. /news stays: it is the redirect page for the old URL.
+      ignore: [(p: string) => p !== '/news' && /^\/[^?]*[^/]$/.test(p) && !/\.[a-z0-9]+$/i.test(p.split('?')[0].split('/').pop() ?? '')],
+    },
   },
 
   compatibilityDate: '2025-02-22',

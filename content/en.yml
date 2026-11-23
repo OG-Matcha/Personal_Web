@@ -206,7 +206,7 @@ works:
         value: Awarded 2024, completed
   catalyst:
     title: Catalyst
-    seoDescription: "Catalyst, 1st place at TSMC IT CareerHack 2025: a team of AI agents that fixes or converts code, tests it in a container and deploys it. Ju-Shen Huang designed the UI."
+    seoDescription: "Catalyst won 1st place at TSMC IT CareerHack 2025: AI agents fix or convert code, test it in a container and deploy it. Ju-Shen Huang designed the UI."
     role: UI design
     status: Competition entry
     tagline: Hand it code that needs changing – a team of AI agents fixes it, tests it and ships it.
@@ -222,6 +222,7 @@ works:
       - title: Ask first, then build
         text: A task-analysis agent first clarifies the problem and reads the code’s context, turns the request into a step-by-step plan, and only then hands it to the team responsible. Nothing starts on a guess.
       - title: Every step in view
+        alt: Catalyst mid-run – the five stages on the left stopped at Compile Environment, finished agents in the middle, and the terminal on the right explaining the code change
         text: The stages on the left, the agents at work in the middle, their conversation on the right. Where the run is, and why a change was made, is all on screen.
       - title: Actually run in a container
         text: The changed code is compiled and run in a Docker container, test cases are generated and run against it, and an analysis agent reads the result. Anything wrong goes back to be fixed.

@@ -34,9 +34,9 @@
     </div>
 
     <section v-if="outcomes.length" class="shell">
-      <dl class="case-outcomes">
+      <dl class="case-outcomes" :class="{ 'has-phrase': outcomes.some((o) => String(o.value).length > 14) }">
         <div v-for="o in outcomes" :key="o.label">
-          <dd :class="{ 'is-phrase': String(o.value).length > 14 }">{{ o.value }}</dd>
+          <dd :class="{ 'is-phrase': String(o.value).length > 14 }"><span>{{ o.value }}</span></dd>
           <dt>{{ o.label }}</dt>
         </div>
       </dl>
@@ -49,7 +49,7 @@
       <ol class="hl" :class="{ 'hl--phone': phoneShots || storeShots }">
         <li v-for="h in highlights" :key="h.title" class="hl-item" :class="{ 'hl-item--text': !h.shot }">
           <div v-if="h.shot" :class="storeShots ? 'store' : phoneShots ? 'device' : 'screen'">
-            <img :src="asset(h.shot)" :srcset="srcset(h.shot)" sizes="(min-width: 1024px) 60vw, 100vw" :alt="h.title" loading="lazy" />
+            <img :src="asset(h.shot)" :srcset="srcset(h.shot)" sizes="(min-width: 1024px) 60vw, 100vw" :alt="h.alt ?? h.title" loading="lazy" />
           </div>
           <div class="hl-text">
             <h3>
@@ -120,7 +120,7 @@
         </ul>
       </div>
       <div v-if="evidence.length">
-        <h2 class="case-h2">{{ t.awards }}</h2>
+        <h2 class="case-h2">{{ evidence.some((e) => e.kind === 'grant') ? t.awards : t.awardsOnly }}</h2>
         <ul class="awards">
           <li v-for="e in evidence" :key="e.date + e.title">
             <span class="figures">{{ formatDate(e.date) }}</span>
@@ -144,7 +144,7 @@
     <nav class="shell case-block" :aria-label="t.nextLabel">
       <NuxtLink :to="next.href" class="next">
         <span class="next-text">
-          <span class="next-eyebrow mono text-2xs">{{ t.next }}</span>
+          <span class="next-eyebrow mono text-2xs">{{ work.tier === 'case-only' ? t.nextAny : t.next }}</span>
           <span class="next-title">{{ keep(next.title) }}</span>
           <span class="next-tag">{{ keep(next.tagline) }}</span>
         </span>
@@ -175,8 +175,8 @@ const router = useRouter()
 
 const t = computed(() =>
   props.locale === 'en'
-    ? { now: 'now', does: 'What it does', mine: 'What I did', awards: 'Awards and grants', stack: 'Built with', screen: 'screen', next: 'Next product', nextLabel: 'More work', back: 'All work', backPrev: 'Back', home: '/en/portfolio/', demoH: 'Try it: a time that actually works', demoLede: 'A treatment is a chain of steps, and each step needs its own people, room and machine. Pick one: only the times when all of them are free come back.', fxH: 'Try it: Taobao in NT$', fxLede: 'This is what a Taobao results page looks like with the extension on. Flip the switch, or change the rate.', healthH: 'Try it: score a month', healthLede: 'Move the money around and watch the six indicators and the score. The weakest one tells you where to start.', phishH: 'Try it: spot the phish', phishLede: 'Three mails in a purchasing inbox. One of them was written for exactly this department.', unitH: 'Try it: which deal is cheaper?', unitLede: 'Flyers price things in ways that are hard to compare. Here is the same item at three stores, worked out per 100 ml or g.' }
-    : { now: '現在', does: '它能做什麼', mine: '我負責的部分', awards: '得獎與補助', stack: '用到的技術', screen: '畫面', next: '下一個產品', nextLabel: '更多作品', back: '看所有作品', backPrev: '回上一頁', home: '/portfolio/', demoH: '試試看：排得出來的時段', demoLede: '一個療程是好幾個步驟，每一步要的人、診間、儀器都不一樣。選一個療程，只有每一樣都空著的時段才會留下來。', fxH: '試試看：把淘寶換成台幣', fxLede: '裝了淘換算之後，淘寶的搜尋結果大概長這樣。打開開關，或改一下匯率看看。', healthH: '試試看：幫一個月打分數', healthLede: '把這個月的錢挪一挪，看六項指標和總分怎麼動；分數最低的那一項，就是該先改的地方。', phishH: '試試看：哪封是釣魚信', phishLede: '採購部信箱裡的三封信，其中有一封就是照這個部門寫的。', unitH: '試試看：哪一家比較便宜', unitLede: 'DM 上的價格寫法五花八門，很難直接比。同一樣東西、三家店，換算成每 100ml 或每 100g 來看。' }
+    ? { now: 'now', does: 'What it does', mine: 'What I did', awards: 'Awards and grants', awardsOnly: 'Awards', nextAny: 'Next', stack: 'Built with', screen: 'screen', next: 'Next product', nextLabel: 'More work', back: 'All work', backPrev: 'Back', home: '/en/portfolio/', demoH: 'Try it: a time that actually works', demoLede: 'A treatment is a chain of steps, and each step needs its own people, room and machine. Pick one: only the times when all of them are free come back.', fxH: 'Try it: Taobao in NT$', fxLede: 'This is what a Taobao results page looks like with the extension on. Flip the switch, or change the rate.', healthH: 'Try it: score a month', healthLede: 'Move the money around and watch the six indicators and the score. The weakest one tells you where to start.', phishH: 'Try it: spot the phish', phishLede: 'Three mails in a purchasing inbox. One of them was written for exactly this department.', unitH: 'Try it: which deal is cheaper?', unitLede: 'Flyers price things in ways that are hard to compare. Here is the same item at three stores, worked out per 100 ml or g.' }
+    : { now: '現在', does: '它能做什麼', mine: '我負責的部分', awards: '得獎與補助', awardsOnly: '得獎', nextAny: '接著看', stack: '用到的技術', screen: '畫面', next: '下一個產品', nextLabel: '更多作品', back: '看所有作品', backPrev: '回上一頁', home: '/portfolio/', demoH: '試試看：排得出來的時段', demoLede: '一個療程是好幾個步驟，每一步要的人、診間、儀器都不一樣。選一個療程，只有每一樣都空著的時段才會留下來。', fxH: '試試看：把淘寶換成台幣', fxLede: '裝了淘換算之後，淘寶的搜尋結果大概長這樣。打開開關，或改一下匯率看看。', healthH: '試試看：幫一個月打分數', healthLede: '把這個月的錢挪一挪，看六項指標和總分怎麼動；分數最低的那一項，就是該先改的地方。', phishH: '試試看：哪封是釣魚信', phishLede: '採購部信箱裡的三封信，其中有一封就是照這個部門寫的。', unitH: '試試看：哪一家比較便宜', unitLede: 'DM 上的價格寫法五花八門，很難直接比。同一樣東西、三家店，換算成每 100ml 或每 100g 來看。' }
 )
 
 /** The next product in the portfolio's order, wrapping round to the first. */
@@ -407,20 +407,36 @@ function goBack() {
   border-block: 1px solid var(--rule);
 }
 
+
+/* Label above, figure below, and both on shared lines across the row: a
+   label that wraps to three lines no longer pushes its figure below the
+   others ("1st place" sat 23px above "4 teams"). */
 .case-outcomes div {
-  display: flex;
-  flex-direction: column-reverse;
-  justify-content: flex-end; /* labels line up at the top even when a value wraps */
-  gap: var(--sp-1);
+  display: grid;
+  grid-row: span 2;
+  grid-template-rows: subgrid;
+  row-gap: var(--sp-1);
 }
 
-/* Each figure stays on one line and shrinks to its column when it is long
-   ("iOS + Android"), instead of breaking in two. */
-.case-outcomes > div {
-  container-type: inline-size;
+.case-outcomes dt {
+  grid-row: 1;
+  align-self: end;
 }
 
 .case-outcomes dd {
+  grid-row: 2;
+}
+
+/* Each figure stays on one line and shrinks to its column when it is long
+   ("iOS + Android"), instead of breaking in two. The dd is the container,
+   not the row's div: containment on a subgrid item cuts it off from the
+   shared rows, and the figures drifted apart again. */
+.case-outcomes dd {
+  container-type: inline-size;
+}
+
+.case-outcomes dd > span {
+  display: block;
   font-family: var(--font-display);
   font-size: min(var(--step-3), 13cqi);
   white-space: nowrap;
@@ -430,10 +446,16 @@ function goBack() {
 
 /* A phrase ("No passwords kept") is words, not a figure: shrunk to one line
    it would be unreadable, so it wraps between words at the figures' size. */
-.case-outcomes dd.is-phrase {
+.case-outcomes dd.is-phrase > span {
   font-size: var(--step-2);
   white-space: normal;
   text-wrap: balance;
+}
+
+/* One size per row: next to a phrase, the figures step down to its size
+   rather than standing 1.5x taller beside it. */
+.case-outcomes.has-phrase dd > span {
+  font-size: min(var(--step-2), 13cqi);
 }
 
 .case-outcomes dt {

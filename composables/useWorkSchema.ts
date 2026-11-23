@@ -10,7 +10,8 @@ const NODE_TYPE: Record<string, Record<string, unknown>> = {
   osave: { '@type': 'SoftwareApplication', applicationCategory: 'FinanceApplication', operatingSystem: 'iOS, Android' },
   medalink: { '@type': 'SoftwareApplication', applicationCategory: 'BusinessApplication' },
   phishforge: { '@type': 'CreativeWork', sourceOrganization: { '@id': ID.ncu } },
-  catalyst: { '@type': 'CreativeWork' },
+  // A four-person hackathon entry: he is one contributor, not its creator.
+  catalyst: { '@type': 'CreativeWork', award: '6th TSMC IT CareerHack, AI Ops track, 1st place (2025)', team: true },
   finctory: { '@type': 'Organization', '@id': 'https://www.finctory.com/#org' },
   surprice: { '@type': 'WebApplication', applicationCategory: 'ShoppingApplication', operatingSystem: 'Web', browserRequirements: 'Requires a modern mobile or desktop browser' },
   taobao: { '@type': 'SoftwareApplication', applicationCategory: 'ShoppingApplication', operatingSystem: 'Chrome' },
@@ -24,7 +25,7 @@ const ok = (v: unknown) => Boolean(v) && !String(v).startsWith('TODO')
  */
 export function workSchema(zh: any, opts: { lang: 'zh' | 'en'; name: string; description: string }) {
   const url = `${SITE}${opts.lang === 'en' ? '/en' : ''}/work/${zh.slug}/`
-  const base = NODE_TYPE[zh.slug] ?? { '@type': 'CreativeWork' }
+  const { team, ...base } = NODE_TYPE[zh.slug] ?? { '@type': 'CreativeWork' }
   // Finctory reuses the Organization @id the Person's worksFor declares, so the
   // two are one entity across the site; everything else gets a page-local id.
   // The product is one thing in two languages: both pages point at the Chinese
@@ -44,7 +45,7 @@ export function workSchema(zh: any, opts: { lang: 'zh' | 'en'; name: string; des
     // finctory.yml has `cover: null`; an unguarded spread would emit "image": null.
     ...(zh.cover ? { image: `${SITE}${zh.cover}` } : {}),
     ...(zh.period?.start ? { datePublished: String(zh.period.start) } : {}),
-    ...(base['@type'] === 'Organization' ? { founder: { '@id': ID.person } } : { creator: { '@id': ID.person } }),
+    ...(base['@type'] === 'Organization' ? { founder: { '@id': ID.person } } : team ? { contributor: { '@id': ID.person } } : { creator: { '@id': ID.person } }),
     ...(install.length && /Application$/.test(base['@type'] as string) ? { installUrl: install } : {}),
     ...(site.length && base['@type'] !== 'Organization' ? { sameAs: site } : {}),
   }

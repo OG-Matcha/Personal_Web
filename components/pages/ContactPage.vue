@@ -531,10 +531,17 @@ async function send() {
   color: #4b453f;
 }
 
+/* The address stays on one line ("jushenhuang.jason / @gmail.com" read as
+   two things) and shrinks to the note's width instead. */
 .ct-mail {
   margin: var(--sp-2) 0 0;
   font-weight: 700;
-  overflow-wrap: anywhere;
+  container-type: inline-size;
+}
+
+.ct-mail a {
+  white-space: nowrap;
+  font-size: min(var(--step-0), 5.6cqi);
 }
 
 .ct-mail a {
