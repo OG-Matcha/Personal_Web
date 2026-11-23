@@ -197,12 +197,12 @@ import DeskScene from '~/components/desk/DeskScene.vue'
 import deskProps from '~/components/pages/desk-props.json'
 
 const NuxtLinkC = resolveComponent('NuxtLink')
-const { site, en, beats, works, alsoBuilt } = useContent()
+const { site, en, beats, cases, alsoBuilt } = useContent()
 const { locale } = useLocale()
 const isEn = computed(() => locale.value === 'en')
 const pre = computed(() => (isEn.value ? '/en' : ''))
 const cvHref = computed(() => (isEn.value ? site.contact.cv.hrefEn : site.contact.cv.href))
-const work = Object.fromEntries(works.map((w) => [w.slug, w]))
+const work = Object.fromEntries(cases.map((w) => [w.slug, w]))
 const repo = (n) => alsoBuilt.find((a) => a.name === n)
 // Desk props for the right margin, sized by studio/desk/ship_props.py.
 // Same scale for all three.
@@ -360,7 +360,6 @@ const workList = computed(() => {
   const E = isEn.value
   const p = pre.value
   const tess = repo('tessera')
-  const kit = repo('orca-companion-kit')
   return [
     {
       title: E ? 'MedaLink clinic operations' : '醫數行銷 MedaLink 診所營運系統',
@@ -446,17 +445,19 @@ const workList = computed(() => {
       internal: false,
     },
     {
-      title: 'orca-companion-kit',
-      when: '2026',
-      status: E ? 'Open source' : '開源',
-      role: E ? 'Author' : '作者',
-      line: E ? en.alsoBuilt['orca-companion-kit'].line : kit.line,
-      tags: kit.stack,
-      img: '/images/orca-companion-kit-1.png',
+      title: 'Catalyst',
+      when: '2025',
+      status: E ? 'Competition entry' : work.catalyst.status,
+      role: E ? 'UI design' : '介面設計',
+      line: E
+        ? 'Hand it code that needs changing: a team of AI agents plans, fixes, tests it in a container and deploys it.'
+        : '交給它一段要改的程式，一組 AI agent 排計畫、改好、在容器裡測完，再部署上線。',
+      tags: E ? ['1st place, TSMC IT CareerHack', 'Multi-agent'] : ['台積電校園黑客松第一名', 'Multi-Agent'],
+      img: '/images/catalyst-deploy.webp',
       w: 1600,
-      h: 947,
-      href: kit.repo,
-      internal: false,
+      h: 785,
+      href: `${p}/work/catalyst/`,
+      internal: true,
     },
   ]
 })

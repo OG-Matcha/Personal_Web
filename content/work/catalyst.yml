@@ -1,0 +1,66 @@
+# -----------------------------------------------------------------------------
+# 競賽作品：Catalyst（第六屆台積電校園黑客松，D 組「AI 維運懶人包」第一名）
+#
+# 內容只取自決賽簡報（D6_v3.pdf）和 Demo 影片；畫面是 Demo 影片的截圖。
+# 我在隊上負責介面設計（簡報團隊頁寫的），這裡照實寫。
+# 隊友的名字和背景不公開。
+# 不是一個在營運的產品，所以不放進作品集的產品列（works），
+# 只有案例頁；作品集「也做過」那張卡片連到這裡。
+# -----------------------------------------------------------------------------
+
+slug: catalyst
+tier: case-only
+
+title: Catalyst
+titleEn: Catalyst
+role: 介面設計
+org: 第六屆台積電校園黑客松（TSMC IT CareerHack）
+orgUrl: null
+period: { start: 2025-02, end: 2025-02 }
+status: 競賽作品
+
+cover: /images/catalyst-deploy.webp
+thumbnail: /images/catalyst-1.png
+hero: /images/catalyst-1.png
+screenshots: []
+
+# 「AI 小組」之間是不斷行空白，免得「AI」和「小組」被拆到兩行。
+tagline: 交給它一段要改的程式，AI 小組改好、測完、部署上線。
+summary: >-
+  這一組的題目是「AI 維運懶人包」：給一段程式，要換版本、換語言、改效能，或修好編譯和執行錯誤，
+  最後接上 CI/CD 部署。Catalyst 讓一組各有分工的 AI agent 接力完成：先釐清需求、排好計畫，
+  再寫程式、在容器裡編譯執行、產生並跑測試，最後部署上線。
+
+outcomes:
+  - value: 第一名
+    label: 台積電校園黑客松 AI 維運懶人包組
+  - value: 4 個小組
+    label: 寫程式、編譯執行、測試、部署，各有一組 agent
+  - value: 最多重寫 3 次
+    label: 部署設定沒過檢查，就退回重寫
+
+highlights:
+  - title: 先問清楚，再動手
+    text: 收到需求後，任務分析 agent 先釐清問題、看懂程式背景，把需求改寫成一份步驟計畫，再交給負責的小組。不是一收到就開始寫。
+  - title: 每一步都看得到
+    text: 左邊是五個階段，中間是正在做事的 agent，右邊是它們的對話紀錄。跑到哪一步、為什麼這樣改，畫面上都看得到。
+    shot: /images/catalyst-agents.webp
+  - title: 在容器裡真的跑過
+    text: 改好的程式會在 Docker 容器裡編譯、執行，再自動產生測試案例跑一遍，結果交給分析 agent；有錯就退回去改。
+  - title: 部署完，直接給網址
+    text: 先寫出需求規格和部署計畫，參考文件產生部署設定，沒過檢查就重寫，最多三次。部署成功後，畫面上直接給出網址。
+    shot: /images/catalyst-deploy.webp
+
+turn:
+  title: 為什麼是一群小模型
+  text: >-
+    一個大模型包辦全部，成本高，也容易一本正經地講錯；換成一群大模型分工，token 用量又更高。
+    我們讓每個 agent 只做一件事，小型語言模型就夠用；每個 agent 的回覆先經過驗證，才交給下一棒。
+
+myPart:
+  - 介面設計：從上傳程式、輸入需求，到看著 agent 一棒接一棒、拿到部署網址，整段流程的畫面
+  - 把階段、正在做事的 agent 和對話紀錄排在同一個畫面，讓人看得出每一步在做什麼
+
+stack:
+  agents: [Python, AutoGen]
+  infra: [Docker]

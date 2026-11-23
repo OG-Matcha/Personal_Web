@@ -10,6 +10,7 @@ const NODE_TYPE: Record<string, Record<string, unknown>> = {
   osave: { '@type': 'SoftwareApplication', applicationCategory: 'FinanceApplication', operatingSystem: 'iOS, Android' },
   medalink: { '@type': 'SoftwareApplication', applicationCategory: 'BusinessApplication' },
   phishforge: { '@type': 'CreativeWork', sourceOrganization: { '@id': ID.ncu } },
+  catalyst: { '@type': 'CreativeWork' },
   finctory: { '@type': 'Organization', '@id': 'https://www.finctory.com/#org' },
   surprice: { '@type': 'WebApplication', applicationCategory: 'ShoppingApplication', operatingSystem: 'Web', browserRequirements: 'Requires a modern mobile or desktop browser' },
   taobao: { '@type': 'SoftwareApplication', applicationCategory: 'ShoppingApplication', operatingSystem: 'Chrome' },

@@ -3,7 +3,19 @@
   <ol class="ab">
     <li v-for="p in ordered" :key="p.name" class="ab-item">
       <!-- A live site wins over the source: it's what the project is for. -->
-      <component :is="p.url || p.repo ? 'a' : 'div'" :href="p.url || p.repo || undefined" v-bind="linkAttrs(p.url || p.repo)" class="ab-link">
+      <!-- A case page of its own wins over both: it says more than the source. -->
+      <NuxtLink v-if="p.case" :to="`${locale === 'en' ? '/en' : ''}/work/${p.case}/`" class="ab-link">
+        <div class="ab-media">
+          <SiteShot v-if="p.thumbnail" :src="p.thumbnail" :fit="p.thumbFit ?? 'cover'" :focus="p.thumbFocus ?? 'center'" sizes="(min-width: 1024px) 24vw, (min-width: 640px) 45vw, 100vw" width="600" height="375" />
+        </div>
+        <div class="ab-head">
+          <span class="ab-year figures">{{ p.year }}</span>
+          <h3 class="ab-name" :class="{ 'is-token': !/\s/.test(p.name) }">{{ p.name }}</h3>
+        </div>
+        <p v-if="p.award" class="ab-award">{{ keep(p.award) }}</p>
+        <p class="ab-line">{{ p.line }} <span class="ab-more">{{ locale === 'en' ? 'Read the case' : '看案例' }}&nbsp;→</span></p>
+      </NuxtLink>
+      <component :is="p.url || p.repo ? 'a' : 'div'" v-else :href="p.url || p.repo || undefined" v-bind="linkAttrs(p.url || p.repo)" class="ab-link">
         <div class="ab-media">
           <SiteShot v-if="p.thumbnail" :src="p.thumbnail" :fit="p.thumbFit ?? 'cover'" :focus="p.thumbFocus ?? 'center'" sizes="(min-width: 1024px) 24vw, (min-width: 640px) 45vw, 100vw" width="600" height="375" />
           <span v-else class="ab-blank">{{ p.stack?.[0] }}</span>
@@ -135,5 +147,11 @@ a.ab-link:hover .ab-name {
   margin-top: var(--sp-1);
   font-size: var(--step-0);
   color: var(--ink-2);
+}
+
+.ab-more {
+  white-space: nowrap;
+  font-weight: 600;
+  color: var(--pop-ink);
 }
 </style>

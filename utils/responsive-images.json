@@ -19,6 +19,26 @@
    "/images/catalyst-2.png"
   ]
  ],
+ "/images/catalyst-agents.webp": [
+  [
+   800,
+   "/images/catalyst-agents-800w.webp"
+  ],
+  [
+   1600,
+   "/images/catalyst-agents.webp"
+  ]
+ ],
+ "/images/catalyst-deploy.webp": [
+  [
+   800,
+   "/images/catalyst-deploy-800w.webp"
+  ],
+  [
+   1600,
+   "/images/catalyst-deploy.webp"
+  ]
+ ],
  "/images/chedai-1.png": [
   [
    800,

@@ -74,9 +74,9 @@ const props = defineProps({
   filter: { type: Boolean, default: false },
 })
 
-const { timeline, works, en } = useContent()
+const { timeline, cases, en } = useContent()
 const { locale } = useLocale()
-const workSlugs = new Set(works.map((w) => w.slug))
+const workSlugs = new Set(cases.map((w) => w.slug))
 const prefix = computed(() => (locale.value === 'en' ? '/en' : ''))
 
 const KIND_EN = {

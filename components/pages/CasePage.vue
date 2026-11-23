@@ -18,7 +18,9 @@
         <p class="case-meta">
           <span v-if="work.role && work.org" class="case-org">{{ work.org }}</span>
           <span class="pill">{{ work.status }}</span>
-          <span class="figures">{{ formatDate(work.period.start) }} – {{ work.period.end ? formatDate(work.period.end) : t.now }}</span>
+          <!-- A one-month event (a hackathon) is one date, not "2025.02 – 2025.02". -->
+          <span v-if="work.period.end && work.period.end === work.period.start" class="figures">{{ formatDate(work.period.start) }}</span>
+          <span v-else class="figures">{{ formatDate(work.period.start) }} – {{ work.period.end ? formatDate(work.period.end) : t.now }}</span>
         </p>
         <p v-if="links.length" class="case-links">
           <a v-for="l in links" :key="l.href" class="btn" :href="l.href" v-bind="linkAttrs(l.href)">{{ l.label }} ↗</a>
@@ -201,7 +203,7 @@ function ok(v) {
 const work = computed(() => props.work)
 // Each product's own colour, sampled from its cover (or its brand, where the
 // cover is a card): used only for the opening's wash and the title's rule.
-const ACCENT = { finctory: '#3a4fa8', medalink: '#2f6fd6', osave: '#3b8fe8', phishforge: '#6b5bd6', surprice: '#22a194', taobao: '#f07a22' }
+const ACCENT = { finctory: '#3a4fa8', medalink: '#2f6fd6', osave: '#3b8fe8', phishforge: '#6b5bd6', surprice: '#22a194', taobao: '#f07a22', catalyst: '#2a9d8f' }
 const accent = computed(() => ACCENT[work.value.slug] ?? 'var(--pop)')
 // Store figures marked `live` are refreshed from the store once the page is up.
 const store = useStoreStats(() => [work.value.liveStore])

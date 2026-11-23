@@ -24,7 +24,7 @@ const seoTitle = `${work.seoTitle ?? work.title} | 黃鉅燊 Ju-Shen Huang`
 const seoDescription = work.seoDescription ?? work.summary
 
 // The products with a share card of their own (public/images/og/, made by scripts/make-og.mjs).
-const OG_WORKS = new Set(['finctory', 'medalink', 'osave', 'phishforge', 'surprice', 'taobao'])
+const OG_WORKS = new Set(['finctory', 'medalink', 'osave', 'phishforge', 'surprice', 'taobao', 'catalyst'])
 
 useSeoMeta({
   title: seoTitle,

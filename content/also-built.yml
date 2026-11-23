@@ -51,6 +51,8 @@
   stack: [Python, AutoGen, LLM Multi-Agent]
   # 沒有公開 repo 或 demo，但第一名本身就是可驗證的成果，而且在年表裡對得上。
   repo: null
+  # 有自己的案例頁（content/work/catalyst.yml），卡片連過去。
+  case: catalyst
   award: 台積電校園黑客松 AI 維運懶人包組 第一名
 
 - name: Ched.AI

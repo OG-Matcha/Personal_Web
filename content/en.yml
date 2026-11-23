@@ -204,6 +204,35 @@ works:
         value: Security track, 1st place
       - metric: NSTC undergraduate research grant
         value: Awarded 2024, completed
+  catalyst:
+    title: Catalyst
+    seoDescription: "Catalyst, 1st place at TSMC IT CareerHack 2025: a team of AI agents that fixes or converts code, tests it in a container and deploys it. Ju-Shen Huang designed the UI."
+    role: UI design
+    status: Competition entry
+    tagline: Hand it code that needs changing – a team of AI agents fixes it, tests it and ships it.
+    summary: "The brief for this track, “AI Ops toolkit”: take a piece of code and move it to a new version or language, speed it up, or fix its compile and runtime errors – then deploy it through CI/CD. Catalyst passes the job along a team of AI agents with one task each: pin down the request and plan, write the code, compile and run it in a container, generate and run tests, then deploy."
+    outcomes:
+      - value: 1st place
+        label: TSMC IT CareerHack, AI Ops track
+      - value: 4 teams
+        label: Code, compile and run, test, deploy – each its own group of agents
+      - value: Up to 3 rewrites
+        label: A deployment config that fails its check goes back to be rewritten
+    highlights:
+      - title: Ask first, then build
+        text: A task-analysis agent first clarifies the problem and reads the code’s context, turns the request into a step-by-step plan, and only then hands it to the team responsible. Nothing starts on a guess.
+      - title: Every step in view
+        text: The stages on the left, the agents at work in the middle, their conversation on the right. Where the run is, and why a change was made, is all on screen.
+      - title: Actually run in a container
+        text: The changed code is compiled and run in a Docker container, test cases are generated and run against it, and an analysis agent reads the result. Anything wrong goes back to be fixed.
+      - title: Deployed, with the address
+        text: It writes a requirements spec and a deployment plan, generates the deployment config from reference docs, and rewrites it up to three times if it fails the check. When the deploy succeeds, the address is right there on screen.
+    turn:
+      title: Why a team of small models
+      text: One large model doing everything is expensive and prone to being confidently wrong; a team of large models uses even more tokens. Each of our agents does one job, so a small language model is enough – and every agent’s reply is checked before it goes to the next.
+    myPart:
+      - "UI design: the whole flow on screen, from uploading code and typing the request, through watching the agents hand off, to getting the deployed address"
+      - Put the stages, the agents at work and their conversation on one screen, so anyone can see what each step is doing
   finctory:
     title: Finctory
     seoDescription: "Finctory is a student-founded fintech company in Taiwan behind oSave, SurPrice and Taobao Exchange. Ju-Shen Huang is a co-founder and the CTO."

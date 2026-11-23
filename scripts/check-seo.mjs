@@ -37,6 +37,7 @@ const ROUTES = {
   '/work/finctory/': 'work/finctory/index.html',
   '/work/surprice/': 'work/surprice/index.html',
   '/work/taobao/': 'work/taobao/index.html',
+  '/work/catalyst/': 'work/catalyst/index.html',
   // English edition: same pages under /en/.
   '/en/': 'en/index.html',
   '/en/portfolio/': 'en/portfolio/index.html',
@@ -48,6 +49,7 @@ const ROUTES = {
   '/en/work/finctory/': 'en/work/finctory/index.html',
   '/en/work/surprice/': 'en/work/surprice/index.html',
   '/en/work/taobao/': 'en/work/taobao/index.html',
+  '/en/work/catalyst/': 'en/work/catalyst/index.html',
 }
 
 const html = Object.fromEntries(
@@ -144,7 +146,7 @@ ok(
 )
 ok(Boolean(person.description), 'Person has a description')
 
-for (const slug of ['osave', 'medalink', 'phishforge', 'finctory', 'surprice', 'taobao']) {
+for (const slug of ['osave', 'medalink', 'phishforge', 'finctory', 'surprice', 'taobao', 'catalyst']) {
   const nodes = graphOf(html[`/work/${slug}/`])
   ok(
     nodes.some((n) => n['@type'] === 'BreadcrumbList'),

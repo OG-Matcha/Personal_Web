@@ -15,6 +15,7 @@ import finctory from '~/content/work/finctory.yml'
 import medalink from '~/content/work/medalink.yml'
 import surprice from '~/content/work/surprice.yml'
 import taobao from '~/content/work/taobao.yml'
+import catalyst from '~/content/work/catalyst.yml'
 
 export type TimelineKind =
   | 'role'
@@ -131,10 +132,14 @@ function stripTodo<T>(value: T): T {
   return value
 }
 
+const withDates = (w: any) => ({ ...w, period: { start: normaliseDate(w.period?.start), end: normaliseDate(w.period?.end) } })
 const works = [osave, phishforge, finctory, medalink, surprice, taobao]
   .map(stripTodo)
-  .map((w) => ({ ...w, period: { start: normaliseDate(w.period?.start), end: normaliseDate(w.period?.end) } }))
+  .map(withDates)
   .sort((a, b) => (a.order ?? 99) - (b.order ?? 99))
+// Every page under /work/: the products, plus competition entries that have a
+// case page but are not products (they stay in "also built" and link here).
+const cases = [...works, ...[catalyst].map(stripTodo).map(withDates)]
 
 // Sort once at module scope: it never changes between renders, and doing it in
 // a computed would redo the work on every component that reads the timeline.
@@ -177,7 +182,7 @@ function fillCounts(v: unknown, slug: string) {
     .replace('{awards}', String(won.length))
     .replace('{topPrizes}', String(won.filter((e) => TOP_PRIZE.test(e.title)).length))
 }
-for (const w of works as any[]) {
+for (const w of cases as any[]) {
   if (w.outcomes) w.outcomes = w.outcomes.map((o: any) => ({ ...o, value: fillCounts(o.value, w.slug) }))
   const e = (en as any).works?.[w.slug]
   if (e?.results) e.results = e.results.map((r: any) => ({ ...r, value: fillCounts(r.value, w.slug) }))
@@ -214,10 +219,11 @@ export function useContent() {
     alsoBuilt,
     en,
     works,
+    cases,
     beats,
   }
 }
 
 export function useWork(slug: string) {
-  return works.find((w) => w.slug === slug) ?? null
+  return cases.find((w) => w.slug === slug) ?? null
 }
