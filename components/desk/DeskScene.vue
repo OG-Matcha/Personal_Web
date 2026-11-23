@@ -240,11 +240,11 @@ const stops = computed(() => {
   const enT = {
     notebook: { thing: 'Notebook', title: 'Today’s list', text: 'Coffee: done. Green Kuai Kuai: restocked. Sleep: moved to next week. The right page is this week’s bug count. Sixteen, still counting.', href: '/en/#about', cta: 'How I think' },
     laptop: { thing: 'Laptop', title: 'What I do now', text: 'Co-founder and CTO of Finctory, co-founder and forward-deployed engineer at MedaLink, AI intern at ITRI, and a master’s student at NCU.', href: '/en/#record', cta: 'See the road so far' },
-    phone: { thing: 'Phone', title: 'oSave', text: 'A budgeting app built on accounting logic: three questions, turned by the backend into 13 cash-flow directions and six financial-health indicators, to answer "am I financially healthy?".', href: '/en/work/osave/', cta: 'How oSave was built', open: 'Pick it up and try it' },
+    phone: { thing: 'Phone', title: 'oSave', text: 'A budgeting app built on accounting logic: three questions, turned by the backend into 13 cash-flow directions and six financial-health indicators, to answer “am I financially healthy?”', href: '/en/work/osave/', cta: 'How oSave was built', open: 'Pick it up and try it' },
     tablet: { thing: 'Tablet', title: 'MedaLink', text: 'An AI operations system for clinics: answers patients on LINE and books the slot where doctor, room and equipment are all free. I built the AI half alone.', href: '/en/work/medalink/', cta: 'See the clinic system', open: 'Book a treatment' },
     reports: { thing: 'A stack of reports', title: `${c.researchGrants} NSTC research grants`, text: 'From generative AI in social engineering and market-anomaly tracking to an 82-person study of oSave; plus a LAK 2025 paper.', href: '/en/resume/', cta: 'See the full record', open: 'Open the stack' },
     shelf: { thing: 'The shelf', title: `${c.awards} competition awards`, text: `${c.topPrizes} of them national first prizes, including first at TSMC IT CareerHack. Only four fit on the shelf; the record has the rest, each with its organiser and announcement.`, href: '/en/resume/', cta: 'Where each one came from', open: 'Every award' },
-    kuaikuai: { thing: 'A green bag of Kuai Kuai', title: 'Keeps the machines good', text: 'A Taiwanese engineering custom: a bag of green Kuai Kuai next to the server keeps it from crashing. Mine is the TSMC edition. So far, so good.', href: '/en/#contact', cta: 'Write to me' },
+    kuaikuai: { thing: 'A green bag of Kuai Kuai', title: 'Keeps the machines behaving', text: 'A Taiwanese engineering custom: a bag of green Kuai Kuai next to the server keeps it from crashing. Mine is the TSMC edition. So far, so good.', href: '/en/#contact', cta: 'Write to me' },
   }
   const T = isEn.value ? enT : zh
   return STOPS.map((s) => ({ ...s, ...(T[s.id] ?? {}) }))
@@ -2370,6 +2370,24 @@ async function start(small = false) {
 @keyframes dk-still-in {
   from {
     opacity: 0;
+  }
+}
+
+/* Windows high contrast: the dots' tint matched the canvas and the column
+   came out empty. Plain dots, the current stop filled with the highlight. */
+@media (forced-colors: active) {
+  .dk-dot {
+    forced-color-adjust: none;
+    background: CanvasText;
+  }
+
+  .dk-dots .is-on .dk-dot {
+    background: Highlight;
+    outline: 2px solid CanvasText;
+  }
+
+  .dk-dots {
+    border: 1px solid CanvasText;
   }
 }
 </style>

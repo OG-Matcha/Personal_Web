@@ -90,7 +90,7 @@ works:
         label: Competition awards
     highlights:
       - title: Every flyer on one page
-        text: No more leafing through flyers one by one. This week’s deals from every chain sit together, sorted by ending soon, nearest, lowest price or biggest discount, and you can search by product or brand. Comparing prices in bed at night, the screen follows your phone into dark mode.
+        text: No more leafing through flyers one by one. This week’s deals from every chain sit together, sorted by ending soon, nearest, lowest price or biggest discount, and you can search by product or brand. Comparing prices in bed at night? The page follows your phone into dark mode.
       - title: The maths done for you
         text: '“Buy one get one” and “two for” prices are the hardest to compare. Every deal is turned into an average price and a unit price (per 100 ml, say), with the days left beside it and a link to the flyer it came from, so you can check.'
       - title: Only the stores you go to
@@ -258,10 +258,10 @@ works:
         text: oSave’s own show about budgeting and money, on air since November 2025 on Apple Podcasts and other platforms.
     turn:
       title: Making the system outlive its authors
-      text: In a team with no investors, where everyone is still a student and anyone can leave, the first question before writing code is “can the next person take this over?”. So all four product lines share one stack, and no one leaving takes a whole product with them.
+      text: In a team with no investors, where everyone is still a student and anyone can leave, the first question before writing code is “can the next person take this over?”. So all four product lines share the same rules for deploying, testing and documenting, while each front end uses whatever suits its platform – and no one leaving takes a whole product with them.
     myPart:
       - CTO since the team formed, leading an engineering team of four or fewer
-      - Unified the technology across four product lines so handovers hold
+      - Set the deployment, testing and documentation rules all four product lines share, so handovers hold
       - Led oSave’s system architecture and backend
     results:
       - metric: Incorporation
@@ -285,7 +285,7 @@ works:
         text: A treatment is split into stages, and a slot only appears when every doctor, assistant, room and machine each stage needs is free. The front desk stops phoning people to fix bad bookings.
       - title: Every patient’s stage at a glance
         text: Bookings create a record automatically and move through a seven-stage pipeline; reminders, rescheduling, waitlist fills, aftercare and six-month recalls can each be switched on or off.
-      - title: What must not be said, is not said
+      - title: What must not be said never is
         text: Promises of results, comparative claims and post-treatment symptom advice are on a do-not-answer list – the AI stops and alerts the front desk. Wound and medical photos always go to a human.
     turn:
       title: More than auto-replies
@@ -465,7 +465,7 @@ timeline:
     org: School of Management, NCU
     detail: Top 5 of the class for the year
   '2024-05 第七屆致青春・創未來全國選拔大賽 科技應用組 - 優等獎':
-    title: 7th national youth innovation competition, Technology track – Excellence Award
+    title: 7th National Youth Innovation Competition, Technology track – Excellence Award
     org: Chihlee University of Technology
   '2024-04 共同創辦 斐闊 Finctory，出任技術長':
     title: Co-founded Finctory as CTO

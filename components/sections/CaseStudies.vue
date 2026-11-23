@@ -29,7 +29,8 @@
           </div>
         </dl>
         <p class="cs-go">
-          <NuxtLink :to="w.href" class="btn">{{ c.read }}</NuxtLink>
+          <!-- Six of these on the page: each says which product it opens. -->
+          <NuxtLink :to="w.href" class="btn" :aria-label="`${c.read}${c.sep}${w.title}`">{{ c.read }}</NuxtLink>
         </p>
       </div>
     </li>
@@ -41,7 +42,7 @@ const { works, en } = useContent()
 const { locale } = useLocale()
 
 const c = computed(() =>
-  locale.value === 'en' ? { now: 'now', read: 'See the product' } : { now: '現在', read: '看產品介紹' }
+  locale.value === 'en' ? { now: 'now', read: 'See the product', sep: ': ' } : { now: '現在', read: '看產品介紹', sep: '：' }
 )
 
 /** Two short outcomes reach the index: what a visitor cares about, not line counts. */

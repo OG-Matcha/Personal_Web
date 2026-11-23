@@ -120,6 +120,7 @@
               :is="w.internal ? NuxtLinkC : 'a'"
               v-bind="w.internal ? { to: w.href } : { href: w.href, ...linkAttrs(w.href) }"
               class="pp-work-link"
+              :aria-labelledby="`work-t-${i}`"
             >
               <span class="pp-print"><SiteShot class="pp-work-shot" fit="cover" sizes="(min-width: 1024px) 46rem, 100vw" :src="w.img" :width="w.w" :height="w.h" /></span>
               <div class="pp-work-body">
@@ -127,13 +128,15 @@
                   <span>{{ w.when }}</span>
                   <span v-if="w.status" class="pp-status">{{ w.status }}</span>
                 </p>
-                <h3 class="pp-work-title" :class="{ 'is-token': !/\s/.test(w.title) }">
+                <h3 :id="`work-t-${i}`" class="pp-work-title" :class="{ 'is-token': !/\s/.test(w.title) }">
                   <span>{{ keep(w.title) }}</span>
                   <!-- One rule across the site: → stays here, ↗ leaves for another site. -->
                   <component :is="w.internal ? ArrowRight : ArrowUpRight" :size="18" :stroke-width="2" class="pp-arrow" aria-hidden="true" />
                 </h3>
                 <p class="pp-work-role">{{ w.role }}</p>
                 <p v-if="i < BIG" class="pp-work-line">{{ w.line }}</p>
+                <!-- Small cards: one line saying what it is, or "Finctory" was only a job title. -->
+                <p v-else-if="w.short" class="pp-work-short">{{ w.short }}</p>
                 <ul v-if="w.tags && i < BIG" class="pp-tags">
                   <li v-for="t in w.tags" :key="t">{{ t }}</li>
                 </ul>
@@ -234,7 +237,7 @@ const c = computed(() =>
         about: [
           'I use AI as leverage: a way to turn a one-off fix into a system that keeps running. A demo that works takes a weekend. What I care about is that three months later people are still using it, and when it breaks, someone knows where.',
           'The way I learn has not changed. I teach myself something, teach it to someone else, then build with it. After my college entrance exam I taught myself Python, built a Discord bot as my first project, and started teaching classmates to code. In my first year at university I joined the SAP student team at the ERP centre and taught its summer course the year after; later I started a project-based Python course for students across campus. Most of what Finctory and MedaLink run on, I learned the same way.',
-          'Every team I have been on was small. Finctory’s engineering team is four people or fewer; at MedaLink, the AI half is me. So the first question I ask of any technical decision is whether the next person can pick it up: one stack across products, the reasons written down, and tests that remember how the system should behave.',
+          'Every team I have been on was small. Finctory’s engineering team is four people or fewer; at MedaLink, the AI half is me. So the first question I ask of any technical decision is whether the next person can pick it up: the same rules for deploying, testing and documenting across products, and tests that remember how the system should behave.',
           'I have also got it wrong. We spent close to a year on Invoice Doctor before admitting it could not answer the question users actually had, and started oSave from scratch. Since then I work out what answer the user wants before deciding whether AI belongs in it at all.',
         ],
         pathH: 'The road so far',
@@ -249,7 +252,7 @@ const c = computed(() =>
         form: 'Or leave a message here',
         formHref: '/en/contact/',
         contactLede:
-          'Generative-AI and agent architecture, early-stage technical partnerships, talks and workshops. Email reaches me fastest.',
+          'A master’s student, open to part-time work and consulting: generative-AI and agent architecture, early-stage technical partnerships, talks and workshops. Email reaches me fastest.',
       }
     : {
         meLabel: '關於我',
@@ -270,7 +273,7 @@ const c = computed(() =>
         about: [
           '我把 AI 當成槓桿，用它把一次性的解法，變成能一直跑下去的系統。做出一個會動的 demo，通常一個週末就夠；我在意的是三個月後使用者還在用，出錯的時候有人知道錯在哪。',
           '我學東西的方式一直沒變：自己學會，教給別人，再拿去做出東西。學測後我自學 Python，第一個作品是 Discord 機器人，接著開始教同學寫程式；大一加入 ERP 中心的 SAP 學生團隊，隔年變成暑期講師；後來又開了一門給全校學生的 Python 專案課。斐闊和醫數行銷用到的技術，大多也是這樣學來的。',
-          '我待過的團隊都很小。斐闊的工程團隊 4 人以下，醫數行銷的 AI 那一半只有我。所以每個技術決策，我先問的是下一個人接不接得住：幾條產品線用同一套技術、把理由寫下來、讓測試替大家記住系統該怎麼動。',
+          '我待過的團隊都很小。斐闊的工程團隊 4 人以下，醫數行銷的 AI 那一半只有我。所以每個技術決策，我先問的是下一個人接不接得住：幾條產品線共用同一套部署、測試和文件的規範、把理由寫下來、讓測試替大家記住系統該怎麼動。',
           '我也做錯過。發票醫生做了將近一年，我們才承認它答不出使用者真正想問的問題，於是從頭做了財伴。從那之後，我會先弄清楚使用者想得到什麼答案，再決定那裡需不需要 AI。',
         ],
         pathH: '我走的路',
@@ -284,7 +287,8 @@ const c = computed(() =>
         contactH: '聯絡',
         form: '或直接在網頁上留言',
         formHref: '/contact/',
-        contactLede: `${site.open.join('、')}。寫信最快。`,
+        // What kind of work, before what about: a recruiter could not tell a CTO, an intern and a student apart.
+        contactLede: `碩士在學，接兼職與顧問：${site.open.join('、')}。寫信最快。`,
       }
 )
 
@@ -347,12 +351,12 @@ const counts = computed(() =>
     ? [
         { n: site.counts.awards, label: 'competition awards' },
         { n: site.counts.topPrizes, label: 'national top prizes' },
-        { n: site.counts.researchGrants, label: 'NSTC research grants' },
+        { n: site.counts.researchGrants, label: 'NSTC undergrad research grants' },
       ]
     : [
         { n: site.counts.awards, label: '競賽獎項' },
         { n: site.counts.topPrizes, label: '全國首獎' },
-        { n: site.counts.researchGrants, label: '國科會研究計畫' },
+        { n: site.counts.researchGrants, label: '國科會大專生計畫' },
       ]
 )
 
@@ -408,6 +412,7 @@ const workList = computed(() => {
       tags: E
         ? ['4 product lines', 'NT$1M+ in prizes and grants']
         : ['4 條產品線', '獎金與補助 NT$100 萬+'],
+      short: E ? 'A fintech startup: oSave, SurPrice and Taobao Exchange.' : '金融科技新創，旗下有財伴、找好康、淘換算。',
       img: '/images/finctory-site.webp',
       w: 1600,
       h: 1000,
@@ -425,6 +430,7 @@ const workList = computed(() => {
       tags: E
         ? ['1st place, security track', 'NSTC project']
         : ['資安應用組第一名', '國科會大專生計畫'],
+      short: E ? 'Phishing drills that AI writes for each department.' : '讓 AI 依部門寫出的釣魚演練信。',
       img: '/images/phishforge-1.png',
       w: 1600,
       h: 894,
@@ -438,6 +444,7 @@ const workList = computed(() => {
       role: E ? 'Author' : '作者',
       line: E ? en.alsoBuilt.tessera.line : tess.line,
       tags: tess.stack,
+      short: E ? 'A Claude Code mod, Windows and CJK first.' : 'Claude Code 的 mod，Windows 和中日韓文字優先。',
       img: '/images/tessera-1.png',
       w: 1280,
       h: 640,
@@ -453,6 +460,7 @@ const workList = computed(() => {
         ? 'Hand it code that needs changing: a team of AI agents plans, fixes, tests it in a container and deploys it.'
         : '交給它一段要改的程式，一組 AI agent 排計畫、改好、在容器裡測完，再部署上線。',
       tags: E ? ['1st place, TSMC IT CareerHack', 'Multi-agent'] : ['台積電校園黑客松第一名', 'Multi-Agent'],
+      short: E ? 'AI agents that fix code, test it and deploy it.' : '一組 AI agent 幫你改程式、測試、部署。',
       img: '/images/catalyst-deploy.webp',
       w: 1600,
       h: 785,
@@ -1464,6 +1472,13 @@ async function startWalk() {
   margin-top: var(--sp-1);
   font-size: var(--step--1);
   font-weight: 600;
+  color: var(--ink-2);
+}
+
+.pp-work-short {
+  margin-top: var(--sp-1);
+  font-size: var(--step--1);
+  line-height: 1.6;
   color: var(--ink-2);
 }
 

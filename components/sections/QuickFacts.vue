@@ -72,7 +72,7 @@ const faqs = computed(() => {
       },
       {
         q: `What awards has ${enName} won?`,
-        a: `${enName} has won ${awards} competition awards, ${topPrizes} of them national top prizes, and has taken part in ${researchGrants} NSTC-funded research projects. The top prizes: ${top.join('; ')}.`,
+        a: `${enName} has won ${awards} competition awards, ${topPrizes} of them national top prizes, and has carried out ${researchGrants} NSTC undergraduate research grants. The top prizes: ${top.join('; ')}.`,
       },
       { q: `How do I contact ${enName}?`, a: `Email ${enName} at ${c.email}, or find ${enName} on LinkedIn (${c.linkedin}) and GitHub (${c.github}).` },
     ]
@@ -89,7 +89,7 @@ const faqs = computed(() => {
     },
     {
       q: `${zhName}得過哪些獎？`,
-      a: `${zhName}得過 ${awards} 項競賽獎項，其中 ${topPrizes} 座是全國首獎，另外參與 ${researchGrants} 個國科會研究計畫。首獎包括：${top.join('、')}。`,
+      a: `${zhName}得過 ${awards} 項競賽獎項，其中 ${topPrizes} 座是全國首獎，另外執行過 ${researchGrants} 項國科會大專學生研究計畫。首獎包括：${top.join('、')}。`,
     },
     { q: `怎麼聯絡${zhName}？`, a: `寫信給${zhName}：${c.email}；也可以在 LinkedIn（${c.linkedin}）和 GitHub（${c.github}）找到${zhName}。` },
   ]

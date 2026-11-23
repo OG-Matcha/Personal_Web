@@ -44,6 +44,8 @@
           </li>
         </ol>
       </section>
+      <!-- The 46 rows are one list under one heading, not 46 headings beside "Highlights". -->
+      <h2 class="sr-only">{{ t.record }}</h2>
       <LedgerSection filter />
     </Station>
 
@@ -84,7 +86,8 @@ const t = computed(() =>
         lede: `The full record: ${timeline.length} entries, newest first. Data as of ${formatDate(site.asOf)}. Every entry is dated; each links to its source where one exists: an announcement, the product site or its code.`,
         awards: 'Awards',
         top: 'Top prizes',
-        grants: 'NSTC grants',
+        grants: 'NSTC undergrad grants',
+        record: 'Full record',
         cv: 'Download CV',
         printNote: 'The full record, as printed from the web. The two-page CV:',
         cvNote: `PDF · 2 pages · updated ${formatDate(site.contact.cv.updated)}`,
@@ -101,7 +104,8 @@ const t = computed(() =>
         lede: `完整年表，${timeline.length} 筆紀錄，逆時序。資料截至 ${formatDate(site.asOf)}。每一筆都有日期，有來源的附上連結：公告、官網或原始碼。`,
         awards: '競賽獎項',
         top: '全國首獎',
-        grants: '國科會計畫',
+        grants: '國科會大專生計畫',
+        record: '完整年表',
         cv: '下載履歷',
         printNote: '這是網頁上的完整年表。兩頁的精簡履歷：',
         cvNote: `PDF · 2 頁 · ${formatDate(site.contact.cv.updated)} 更新`,

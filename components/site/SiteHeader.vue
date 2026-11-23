@@ -209,6 +209,25 @@ const t = computed(() =>
   color: var(--bg);
 }
 
+/* English between phone and desk (600-720px, or a 1280px window zoomed to
+   200%): its three links need 53px more than the bar has, and "Résumé" was
+   cut to "Résun". The contact pill keeps its envelope and its label. */
+@media (min-width: 561px) and (max-width: 760px) {
+  :root[lang|='en'] .hd-mail-text {
+    display: none;
+  }
+}
+
+/* And below 620px "Résumé" takes its phone form, "CV". */
+@media (min-width: 561px) and (max-width: 620px) {
+  :root[lang|='en'] .hd-link-full {
+    display: none;
+  }
+  :root[lang|='en'] .hd-link-short {
+    display: inline;
+  }
+}
+
 @media (max-width: 560px) {
   .hd {
     padding-inline: var(--sp-2);

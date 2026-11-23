@@ -36,7 +36,7 @@
         </div>
 
         <div class="lg-what">
-          <h2 class="lg-title">{{ keep(e.title) }}</h2>
+          <h3 class="lg-title">{{ keep(e.title) }}</h3>
           <p v-if="e.org" class="lg-org">{{ e.org }}</p>
           <template v-if="!compact">
             <p v-if="e.advisor" class="lg-org">{{ c.advisor }}{{ e.advisor }}</p>

@@ -4,6 +4,8 @@
       <div class="ct">
         <!-- The form. Sent, it is replaced by a thank-you that takes the focus. -->
         <div class="ct-main">
+          <!-- The form is sent by script; without it, say so before anyone types a message into it. -->
+          <noscript><p class="ct-noscript">{{ t.noScript }}<a :href="`mailto:${site.contact.email}`">{{ site.contact.email }}</a></p></noscript>
           <p v-if="sent" ref="doneEl" class="ct-done" tabindex="-1" role="status">
             <CheckCircle2 :size="22" aria-hidden="true" />
             <span>{{ t.done }}</span>
@@ -104,7 +106,7 @@ const t = computed(() =>
   locale.value === 'en'
     ? {
         title: 'Get in touch',
-        lede: 'Generative-AI and agent architecture, early-stage technical partnerships, talks and workshops. Messages here come straight to me.',
+        lede: 'A master’s student, open to part-time work and consulting. Generative-AI and agent architecture, early-stage technical partnerships, talks and workshops are all welcome. Messages here come straight to me.',
         topic: 'What is it about?',
         topics: [
           { v: 'work', label: 'Work or a project' },
@@ -119,6 +121,7 @@ const t = computed(() =>
         contactHint: 'An email address, or any way you would like me to reach you.',
         nudge: 'For work, leave an email or another way to reach you, or I cannot write back.',
         mailSubject: 'From ogmatcha.com',
+        noScript: 'This form needs JavaScript, which is off. Please email me instead: ',
         optional: '(optional)',
         forWork: '(needed for work)',
         holdNoContact: 'No way to reply yet. Add an email above, or press Send again to send it as it is.',
@@ -134,7 +137,7 @@ const t = computed(() =>
       }
     : {
         title: '聯絡我',
-        lede: '生成式 AI 與 agent 架構、早期技術合作、演講與工作坊都歡迎。這裡的留言會直接送到我手上。',
+        lede: '碩士在學，接兼職與顧問。生成式 AI 與 agent 架構、早期技術合作、演講與工作坊都歡迎。這裡的留言會直接送到我手上。',
         topic: '想聊什麼？',
         topics: [
           { v: 'work', label: '合作或工作' },
@@ -149,6 +152,7 @@ const t = computed(() =>
         contactHint: 'Email，或任何你希望我聯絡你的方式。',
         nudge: '談合作或工作的話，留個 email 或其他聯絡方式，我才回得了你。',
         mailSubject: '來自 ogmatcha.com 的訊息',
+        noScript: '這個表單需要 JavaScript，你的瀏覽器關掉了。請直接寫信給我：',
         optional: '（可不填）',
         forWork: '（談工作請留）',
         holdNoContact: '還沒留聯絡方式，我回不了你。在上面補個 email，或再按一次送出照樣寄出。',
@@ -582,5 +586,27 @@ async function send() {
   .ct-send {
     transition: none;
   }
+}
+
+/* Windows high contrast flattens every colour: the chosen topic differed only
+   by weight and the send button lost its fill and read as plain text. */
+@media (forced-colors: active) {
+  .ct-chip input:checked + span {
+    background: Highlight;
+    color: HighlightText;
+    forced-color-adjust: none;
+  }
+
+  .ct-send {
+    border: 2px solid ButtonText;
+  }
+}
+
+.ct-noscript {
+  margin-bottom: var(--sp-5);
+  padding: var(--sp-4);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--r-2);
+  font-weight: 600;
 }
 </style>

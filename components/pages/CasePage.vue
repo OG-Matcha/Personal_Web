@@ -137,7 +137,9 @@
     </section>
 
     <section v-if="evidence.length || !work.myPart?.length" class="shell case-block">
-      <p class="stack"><span>{{ t.stack }}</span>{{ flatStack.join(STACK_SEP) }}</p>
+      <!-- A heading, as on the pages where the stack has its own column: a
+           screen reader heard "Built withFlutter" as one word. -->
+      <div class="stack"><h2 class="stack-h">{{ t.stack }}</h2> <p>{{ flatStack.join(STACK_SEP) }}</p></div>
     </section>
 
     <!-- The way on: the next product, large enough to be the obvious next step. -->
@@ -676,8 +678,14 @@ function goBack() {
   line-height: 1.8;
 }
 
-.stack span {
+.stack h2,
+.stack p {
+  display: inline;
+}
+
+.stack-h {
   margin-right: var(--sp-3);
+  font-size: inherit;
   font-weight: 700;
   color: var(--ink);
 }
