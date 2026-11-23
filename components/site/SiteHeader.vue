@@ -52,7 +52,7 @@ const t = computed(() =>
         navLabel: 'Main',
         links: [
           { href: '/en/#work', label: 'Work', section: /^\/en\/(portfolio|work)(\/|$)/ },
-          { href: '/en/#record', label: 'Record', wide: true },
+          { href: '/en/#record', label: 'Road', wide: true },
           { href: '/en/resume/', label: 'Résumé', short: 'CV' },
         ],
         altHref: alt.value,
@@ -68,7 +68,7 @@ const t = computed(() =>
         navLabel: '主要導覽',
         links: [
           { href: '/#work', label: '作品', section: /^\/(portfolio|work)(\/|$)/ },
-          { href: '/#record', label: '年表', wide: true },
+          { href: '/#record', label: '經歷', wide: true },
           { href: '/resume/', label: '履歷' },
         ],
         altHref: alt.value,

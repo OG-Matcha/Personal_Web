@@ -68,7 +68,7 @@ beats:
     lede: In the same November I submitted three competition entries and handed over a platform I had run for fourteen months, four teams and 30 people. Code has a compiler to tell you where it broke. People do not.
   proof:
     title: What does it take to tear down your own product?
-    lede: In May 2025 we admitted Invoice Doctor had reached the point where we could no longer see its problems, and that testing it further was not worth it, so we started oSave from scratch. The same year the company was registered, we won the TSMC hackathon, two NSTC projects closed, and I joined ITRI.
+    lede: In May 2025 we admitted Invoice Doctor could not answer the question users actually had – “am I financially healthy?” – and that more patching was not worth it, so we started oSave from scratch. The same year the company was registered, we won the TSMC hackathon, two NSTC projects closed, and I joined ITRI.
   now:
     title: Graduated. Now what?
     lede: In June 2026 I finished my bachelor’s degree with two credit programs, and in September I moved straight into the master’s program. I still run the technical side of both companies; November added a hackathon honourable mention, and there are two open-source projects.
@@ -422,7 +422,7 @@ timeline:
   '2024-12 臺北市智慧城市青年舉政徵件提案競賽 - 佳作（第四名）':
     title: Taipei Smart City Youth Policy Proposal Competition – Honourable Mention (4th)
     org: Department of Youth Affairs, Taipei City Government
-  '2024-12 2024 新生知訊網 副執行長（卸任）':
+  '2024-12 《2024 新生知訊網》副執行長（卸任）':
     title: NCU Freshman Portal 2024 – Deputy Executive (term ended)
     org: Counseling Center, National Central University
     detail: Led four teams – planning, engineering, design, video – 30 people in all, delivering the freshman information platform with a pixel-art campus map and an AI assistant; served 1,000+ freshmen.
@@ -478,7 +478,7 @@ timeline:
   '2024-01 中央新創擂台賽 - 優選':
     title: NCU Startup Arena – Merit
     org: National Central University
-  '2023-10 2024 新生知訊網 副執行長（就任）':
+  '2023-10 《2024 新生知訊網》副執行長（就任）':
     title: NCU Freshman Portal 2024 – Deputy Executive
     org: Counseling Center, National Central University
   '2023-09 共同創辦 United Developer Club，任副召集人':

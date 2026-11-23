@@ -24,11 +24,13 @@
       -->
       <div class="dk-poster" aria-hidden="true">
         <picture class="dk-poster-auto">
-          <source media="(prefers-color-scheme: dark)" :srcset="srcset('/desk/poster-night.webp')" sizes="100vw" />
-          <img :src="asset('/desk/poster-day.webp')" :srcset="srcset('/desk/poster-day.webp')" sizes="100vw" alt="" width="1600" height="1000" fetchpriority="high" />
+          <!-- A phone shows the still 360-430px wide, mostly under the caption's fade: it gets
+               the 800w file at any pixel ratio (1600w cost a 3x phone ~1s of LCP). -->
+          <source media="(prefers-color-scheme: dark)" :srcset="srcset('/desk/poster-night.webp')" sizes="(max-width: 600px) 50vw, 100vw" />
+          <img :src="asset('/desk/poster-day.webp')" :srcset="srcset('/desk/poster-day.webp')" sizes="(max-width: 600px) 50vw, 100vw" alt="" width="1600" height="1000" fetchpriority="high" />
         </picture>
-        <img class="dk-forced dk-forced-day" :src="asset('/desk/poster-day.webp')" :srcset="srcset('/desk/poster-day.webp')" sizes="100vw" alt="" width="1600" height="1000" loading="lazy" />
-        <img class="dk-forced dk-forced-night" :src="asset('/desk/poster-night.webp')" :srcset="srcset('/desk/poster-night.webp')" sizes="100vw" alt="" width="1600" height="1000" loading="lazy" />
+        <img class="dk-forced dk-forced-day" :src="asset('/desk/poster-day.webp')" :srcset="srcset('/desk/poster-day.webp')" sizes="(max-width: 600px) 50vw, 100vw" alt="" width="1600" height="1000" loading="lazy" />
+        <img class="dk-forced dk-forced-night" :src="asset('/desk/poster-night.webp')" :srcset="srcset('/desk/poster-night.webp')" sizes="(max-width: 600px) 50vw, 100vw" alt="" width="1600" height="1000" loading="lazy" />
       </div>
       <!--
         Until the 3D is ready (several seconds on a cold load), scrolling
@@ -229,7 +231,7 @@ const STOPS = [
 const stops = computed(() => {
   const c = site.counts
   const zh = {
-    notebook: { thing: '筆記本', title: '今天的待辦', text: '咖啡打勾了，綠色乖乖也補了，睡覺改到下週。右頁是這週的 bug 計數：十六個，還在數。', href: '/#about', cta: '讀我怎麼想' },
+    notebook: { thing: '筆記本', title: '今天的待辦', text: '咖啡打勾了，綠色乖乖也補了，睡覺改到下週。右頁是這週的 bug 計數，還在數。', href: '/#about', cta: '讀我怎麼想' },
     laptop: { thing: '筆電', title: '現在在做的事', text: '斐闊 Finctory 共同創辦人暨技術長、醫數行銷 MedaLink 共同創辦人暨前線部署工程師、工研院 AI Intern，同時在中央資管讀碩士班。', href: '/#record', cta: '看我走過的路' },
     phone: { thing: '手機', title: '財伴 oSave', text: '用會計邏輯記帳的 App：問你三個問題，後端翻成 13 項金流方向和六項財務健康指標，回答「我的財務健不健康」。', href: '/work/osave/', cta: '看財伴怎麼做的', open: '拿起來試算' },
     tablet: { thing: '平板', title: '醫數行銷 MedaLink', text: '診所的 AI 營運系統：在 LINE 上回病患、把醫師診間儀器的時段算出來，AI 那一半是我一個人做的。', href: '/work/medalink/', cta: '看診所系統', open: '排一個療程看看' },
@@ -238,7 +240,7 @@ const stops = computed(() => {
     kuaikuai: { thing: '綠色乖乖', title: '機器乖乖，不當機', text: '台灣工程師的老規矩：伺服器旁邊放一包綠色乖乖。我放的這包是台積電聯名款，到目前為止都很乖。', href: '/#contact', cta: '寫信給我' },
   }
   const enT = {
-    notebook: { thing: 'Notebook', title: 'Today’s list', text: 'Coffee: done. Green Kuai Kuai: restocked. Sleep: moved to next week. The right page is this week’s bug count. Sixteen, still counting.', href: '/en/#about', cta: 'How I think' },
+    notebook: { thing: 'Notebook', title: 'Today’s list', text: 'Coffee: done. Green Kuai Kuai: restocked. Sleep: moved to next week. The right page is this week’s bug count, still counting.', href: '/en/#about', cta: 'How I think' },
     laptop: { thing: 'Laptop', title: 'What I do now', text: 'Co-founder and CTO of Finctory, co-founder and forward-deployed engineer at MedaLink, AI intern at ITRI, and a master’s student at NCU.', href: '/en/#record', cta: 'See the road so far' },
     phone: { thing: 'Phone', title: 'oSave', text: 'A budgeting app built on accounting logic: three questions, turned by the backend into 13 cash-flow directions and six financial-health indicators, to answer “am I financially healthy?”', href: '/en/work/osave/', cta: 'How oSave was built', open: 'Pick it up and try it' },
     tablet: { thing: 'Tablet', title: 'MedaLink', text: 'An AI operations system for clinics: answers patients on LINE and books the slot where doctor, room and equipment are all free. I built the AI half alone.', href: '/en/work/medalink/', cta: 'See the clinic system', open: 'Book a treatment' },
@@ -1637,11 +1639,12 @@ async function start(small = false) {
 
 /* How to use it: at the top of the picture, just under the header, on the
    wall above the desk; gone once it has been used. It sat at the foot, where
-   the name comes in, and covered the top of "Ju-Shen". */
+   the name comes in, and covered the top of "Ju-Shen". Left, over the window:
+   on the right it sat on the trophy shelf and the framed award. */
 .dk-touch {
   display: flex;
   align-items: flex-start;
-  justify-content: flex-end;
+  justify-content: flex-start;
   padding: 5rem var(--page-gut) 0;
   opacity: 0;
   pointer-events: none;

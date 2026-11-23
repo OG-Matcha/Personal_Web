@@ -197,7 +197,11 @@ export default defineNuxtConfig({
           // Runs before first paint: applies the reader's stored day/night
           // choice so it never flashes.
           innerHTML:
-            "var d=document.documentElement;" +
+            // data-js: lets a page hide its no-JavaScript note without a <noscript>,
+            // which Vue cannot hydrate. The lang line: there is one 404.html, in
+            // Chinese; an /en/ address that misses gets the right lang at once.
+            "var d=document.documentElement;d.setAttribute('data-js','');" +
+            "if(/^\\/en(\\/|$)/.test(location.pathname))d.lang='en';" +
             "try{var t=localStorage.getItem('theme');" +
             "if(t==='dark'||t==='light')d.dataset.theme=t}catch(e){}",
           tagPosition: 'head',

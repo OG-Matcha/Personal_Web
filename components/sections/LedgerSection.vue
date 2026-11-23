@@ -221,7 +221,7 @@ const oldestYear = computed(() => yearOf(entries.value[entries.value.length - 1]
 
 .lg-chip-n {
   font-weight: 500;
-  opacity: 0.7;
+  opacity: 0.82;
 }
 
 .lg-filter + .lg-list {

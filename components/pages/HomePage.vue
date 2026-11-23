@@ -2,8 +2,8 @@
   <!--
     The homepage is about the person. On a wide screen it is two columns:
     on the left, who I am and what I am doing now, held in place; on the
-    right, what I think, the road that got me here, and the things I built
-    along it, which serve as evidence for the first two.
+    right, what I think, the things I built (evidence for it), and the road
+    that got me here.
     On a phone the left column becomes the opening and the rest follows.
   -->
   <DeskScene />
@@ -55,7 +55,47 @@
         </div>
       </section>
 
-      <!-- The road -->
+      <!-- The things built: right after "how I think", so a recruiter reaches the work
+           before the five-chapter road, in the same order as the nav (作品, 經歷). -->
+      <section id="work" class="pp-sec" aria-labelledby="work-h">
+        <h2 id="work-h" class="pp-h">{{ c.workH }}</h2>
+        <p class="pp-lede">{{ c.workLede }}</p>
+        <ul class="pp-works">
+          <li v-for="(w, i) in workList" :key="w.title" class="pp-work reveal" :class="{ 'pp-work--small': i >= BIG }">
+            <component
+              :is="w.internal ? NuxtLinkC : 'a'"
+              v-bind="w.internal ? { to: w.href } : { href: w.href, ...linkAttrs(w.href) }"
+              class="pp-work-link"
+              :aria-labelledby="`work-t-${i}`"
+            >
+              <span class="pp-print"><SiteShot class="pp-work-shot" fit="cover" sizes="(min-width: 1024px) 46rem, 100vw" :src="w.img" :width="w.w" :height="w.h" /></span>
+              <div class="pp-work-body">
+                <p class="pp-work-meta">
+                  <span>{{ w.when }}</span>
+                  <span v-if="w.status" class="pp-status">{{ w.status }}</span>
+                </p>
+                <h3 :id="`work-t-${i}`" class="pp-work-title" :class="{ 'is-token': !/\s/.test(w.title) }">
+                  <span>{{ keep(w.title) }}</span>
+                  <!-- One rule across the site: → stays here, ↗ leaves for another site. -->
+                  <component :is="w.internal ? ArrowRight : ArrowUpRight" :size="18" :stroke-width="2" class="pp-arrow" aria-hidden="true" />
+                </h3>
+                <p class="pp-work-role">{{ w.role }}</p>
+                <p v-if="i < BIG" class="pp-work-line">{{ w.line }}</p>
+                <!-- Small cards: one line saying what it is, or "Finctory" was only a job title. -->
+                <p v-else-if="w.short" class="pp-work-short">{{ w.short }}</p>
+                <ul v-if="w.tags && i < BIG" class="pp-tags">
+                  <li v-for="t in w.tags" :key="t">{{ t }}</li>
+                </ul>
+              </div>
+            </component>
+          </li>
+        </ul>
+        <p class="pp-act">
+          <NuxtLink :to="`${pre}/portfolio/`" class="btn">{{ c.all }}</NuxtLink>
+        </p>
+      </section>
+
+      <!-- The road the work came out of -->
       <section id="record" class="pp-sec" aria-labelledby="record-h">
         <h2 id="record-h" class="pp-h">{{ c.pathH }}</h2>
         <p class="pp-lede">{{ c.pathLede }}</p>
@@ -107,45 +147,6 @@
         </dl>
         <p class="pp-act">
           <NuxtLink :to="`${pre}/resume/`" class="btn">{{ c.resume }}</NuxtLink>
-        </p>
-      </section>
-
-      <!-- The things built along it -->
-      <section id="work" class="pp-sec" aria-labelledby="work-h">
-        <h2 id="work-h" class="pp-h">{{ c.workH }}</h2>
-        <p class="pp-lede">{{ c.workLede }}</p>
-        <ul class="pp-works">
-          <li v-for="(w, i) in workList" :key="w.title" class="pp-work reveal" :class="{ 'pp-work--small': i >= BIG }">
-            <component
-              :is="w.internal ? NuxtLinkC : 'a'"
-              v-bind="w.internal ? { to: w.href } : { href: w.href, ...linkAttrs(w.href) }"
-              class="pp-work-link"
-              :aria-labelledby="`work-t-${i}`"
-            >
-              <span class="pp-print"><SiteShot class="pp-work-shot" fit="cover" sizes="(min-width: 1024px) 46rem, 100vw" :src="w.img" :width="w.w" :height="w.h" /></span>
-              <div class="pp-work-body">
-                <p class="pp-work-meta">
-                  <span>{{ w.when }}</span>
-                  <span v-if="w.status" class="pp-status">{{ w.status }}</span>
-                </p>
-                <h3 :id="`work-t-${i}`" class="pp-work-title" :class="{ 'is-token': !/\s/.test(w.title) }">
-                  <span>{{ keep(w.title) }}</span>
-                  <!-- One rule across the site: → stays here, ↗ leaves for another site. -->
-                  <component :is="w.internal ? ArrowRight : ArrowUpRight" :size="18" :stroke-width="2" class="pp-arrow" aria-hidden="true" />
-                </h3>
-                <p class="pp-work-role">{{ w.role }}</p>
-                <p v-if="i < BIG" class="pp-work-line">{{ w.line }}</p>
-                <!-- Small cards: one line saying what it is, or "Finctory" was only a job title. -->
-                <p v-else-if="w.short" class="pp-work-short">{{ w.short }}</p>
-                <ul v-if="w.tags && i < BIG" class="pp-tags">
-                  <li v-for="t in w.tags" :key="t">{{ t }}</li>
-                </ul>
-              </div>
-            </component>
-          </li>
-        </ul>
-        <p class="pp-act">
-          <NuxtLink :to="`${pre}/portfolio/`" class="btn">{{ c.all }}</NuxtLink>
         </p>
       </section>
 

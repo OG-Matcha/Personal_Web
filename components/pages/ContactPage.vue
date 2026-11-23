@@ -4,8 +4,10 @@
       <div class="ct">
         <!-- The form. Sent, it is replaced by a thank-you that takes the focus. -->
         <div class="ct-main">
-          <!-- The form is sent by script; without it, say so before anyone types a message into it. -->
-          <noscript><p class="ct-noscript">{{ t.noScript }}<a :href="`mailto:${site.contact.email}`">{{ site.contact.email }}</a></p></noscript>
+          <!-- The form is sent by script; without it, say so before anyone types a message into it.
+               A plain <p> hidden by html[data-js] (set in the head), not a <noscript>: Vue reads a
+               <noscript>'s children as text and reports a hydration mismatch on every load. -->
+          <p class="ct-noscript">{{ t.noScript }}<a :href="`mailto:${site.contact.email}`">{{ site.contact.email }}</a></p>
           <p v-if="sent" ref="doneEl" class="ct-done" tabindex="-1" role="status">
             <CheckCircle2 :size="22" aria-hidden="true" />
             <span>{{ t.done }}</span>
@@ -600,6 +602,10 @@ async function send() {
   .ct-send {
     border: 2px solid ButtonText;
   }
+}
+
+:global(html[data-js] .ct-noscript) {
+  display: none;
 }
 
 .ct-noscript {
