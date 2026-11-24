@@ -110,6 +110,10 @@
               <button v-if="s.open" type="button" class="dk-open" :data-stop="s.id" @click="drawer = s.id">{{ s.open }}</button>
               <NuxtLink v-if="s.href" :to="s.href" class="dk-link" :aria-current="s.href.includes('#') ? false : undefined">{{ s.cta }} →</NuxtLink>
             </p>
+            <!-- The way past the walk on every card, not only the first screen:
+                 the reader who has seen enough mid-walk need not scroll it out.
+                 Keyboard readers have the focus-only link at the start. -->
+            <a v-if="i < stops.length - 1" href="#about" class="dk-skip dk-skip-card" tabindex="-1">{{ t.skipShort }}</a>
           </template>
         </li>
       </ol>
@@ -197,6 +201,7 @@ const t = computed(() =>
         tour: 'Things on my desk',
         stopsLabel: 'Stops on the desk',
         skip: 'Skip the desk ↓',
+        skipShort: 'Skip the desk ↓',
         go: 'walk over',
       }
     : {
@@ -209,6 +214,7 @@ const t = computed(() =>
         tour: '桌上的東西',
         stopsLabel: '書桌上的每一站',
         skip: '跳過書桌，直接看介紹 ↓',
+        skipShort: '跳過書桌 ↓',
         go: '走過去看',
       }
 )
@@ -1894,7 +1900,7 @@ async function start(small = false) {
   }
 
   .dk {
-    height: calc(var(--stops) * 80svh + 100svh);
+    height: calc(var(--stops) * 45svh + 100svh);
     /* Up under the floating header, so the room reaches the top of the
        window instead of starting below a band of page colour. */
     margin-top: calc(-1 * var(--header-h));
@@ -2156,6 +2162,11 @@ async function start(small = false) {
 
 .dk-skip:hover {
   color: var(--ink);
+}
+
+.dk-skip-card {
+  display: inline-flex;
+  margin-top: var(--sp-2);
 }
 
 .dk-role {
