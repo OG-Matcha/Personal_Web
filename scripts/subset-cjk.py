@@ -107,29 +107,42 @@ def main():
         '   in two files: what the English pages show too, and the rest. Each covers weights 400 to 900. Characters\n'
         '   missing from both fall through to PingFang TC / Microsoft JhengHei. */\n'
     ]
-    for i, g in enumerate(groups):
+    def build(g, name):
         font = TTFont(SRC)
         sub = subset.Subsetter(opts)
         sub.populate(unicodes=[ord(c) for c in g])
         sub.subset(font)
         # The site sets 400 for body copy and 600-900 for headings: drop 100-300.
         font = instancer.instantiateVariableFont(font, {'wght': (400, 900)})
-        out = os.path.join(ROOT, f'public/fonts/notosanstc-{i}.woff2')
+        out = os.path.join(ROOT, f'public/fonts/{name}.woff2')
         font.flavor = 'woff2'
         font.save(out)
-        print(f'  {i}: {len(g)} characters, {os.path.getsize(out) // 1024} KB')
+        print(f'  {name}: {len(g)} characters, {os.path.getsize(out) // 1024} KB')
+
+    for i, g in enumerate(groups):
+        build(g, f'notosanstc-{i}')
         css.append(
             "@font-face {\n  font-family: 'Noto Sans TC';\n  font-style: normal;\n  font-weight: 400 900;\n"
             f"  font-display: swap;\n  src: url(/fonts/notosanstc-{i}.woff2) format('woff2');\n"
             f"  unicode-range: {ranges(g)};\n}}\n"
         )
     open(os.path.join(ROOT, 'public/fonts/cjk.css'), 'w', encoding='utf-8').write(''.join(css))
-    # Touch devices get the same faces with font-display: optional (picked by
-    # media query in nuxt.config): swapping the font in after first
-    # paint re-laid every Chinese line, three seconds on a mid-range phone.
-    # There the font is used once it is cached, from the next page load on.
-    open(os.path.join(ROOT, 'public/fonts/cjk-touch.css'), 'w', encoding='utf-8').write(
-        ''.join(css).replace('font-display: swap;', 'font-display: optional;'))
+    # Touch devices get one face holding every character, font-display:
+    # optional (picked by media query in nuxt.config): swapping the font in
+    # after first paint re-laid every Chinese line, three seconds on a
+    # mid-range phone. One file, not the two above: with two, the small
+    # preloaded one made first paint and the large one did not, so a heading
+    # set some characters in Noto and the rest in the system face. With one,
+    # a page is all one or all the other; Noto from the next page load on.
+    build(chars, 'notosanstc-all')
+    touch = (
+        "/* Noto Sans TC for touch devices: every character the site uses in one file\n"
+        "   (scripts/subset-cjk.py), so a page never mixes it with the fallback face. */\n"
+        "@font-face {\n  font-family: 'Noto Sans TC';\n  font-style: normal;\n  font-weight: 400 900;\n"
+        "  font-display: optional;\n  src: url(/fonts/notosanstc-all.woff2) format('woff2');\n"
+        f"  unicode-range: {ranges(chars)};\n}}\n"
+    )
+    open(os.path.join(ROOT, 'public/fonts/cjk-touch.css'), 'w', encoding='utf-8').write(touch)
     with open(os.path.join(ROOT, 'public/fonts/cjk-chars.txt'), 'w', encoding='utf-8') as f:
         f.write(''.join(chars) + '\n' + ''.join(absent) + '\n')
     print(f'{len(chars)} characters in 2 files -> public/fonts/notosanstc-*.woff2')

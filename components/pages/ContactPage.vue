@@ -281,6 +281,14 @@ async function send() {
   }
 }
 
+/* On a wide screen the note grows enough to hold the address on one line at
+   about 18px: split in two at 1440 it read as a slip, with room to spare. */
+@media (min-width: 1280px) {
+  .ct {
+    grid-template-columns: minmax(0, 1fr) 25rem;
+  }
+}
+
 .ct-form {
   display: grid;
   gap: var(--sp-6);
@@ -625,6 +633,13 @@ async function send() {
   text-decoration-color: #c44a24;
   text-underline-offset: 0.18em;
   transition: color var(--dur-1), text-decoration-thickness var(--dur-1);
+}
+
+/* Wide enough for one line (the address is about 19.3em long): size it to fit. */
+@container (min-width: 21rem) {
+  .ct-mail a {
+    font-size: 5.1cqi;
+  }
 }
 
 .ct-mail a:hover {

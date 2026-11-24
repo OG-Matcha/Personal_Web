@@ -191,8 +191,9 @@ export default defineNuxtConfig({
         // held the page's largest paint back by three seconds on a slow phone.
         { rel: 'stylesheet', href: v('/fonts/cjk.css'), media: '(hover: hover) and (pointer: fine)' },
         { rel: 'stylesheet', href: v('/fonts/cjk-touch.css'), media: 'not all and (hover: hover) and (pointer: fine)' },
-        // The small face is needed on every page; fetch it with the HTML.
-        { rel: 'preload', as: 'font', type: 'font/woff2', href: v('/fonts/notosanstc-0.woff2'), crossorigin: '' },
+        // The small face is needed on every page; fetch it with the HTML. Only
+        // with a mouse: touch devices use the one-file face in cjk-touch.css.
+        { rel: 'preload', as: 'font', type: 'font/woff2', href: v('/fonts/notosanstc-0.woff2'), crossorigin: '', media: '(hover: hover) and (pointer: fine)' },
       ],
       script: [
         {

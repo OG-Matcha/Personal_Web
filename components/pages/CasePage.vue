@@ -469,6 +469,8 @@ function goBack() {
 .case-outcomes dt {
   font-size: var(--step--1);
   color: var(--ink-3);
+  /* At 1024 "agent" sat alone on a label's second line. */
+  text-wrap: balance;
 }
 
 /* ---- highlights ---------------------------------------------------------- */
