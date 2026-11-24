@@ -108,7 +108,7 @@
             <p class="dk-text">{{ s.text }}</p>
             <p class="dk-acts">
               <button v-if="s.open" type="button" class="dk-open" :data-stop="s.id" @click="drawer = s.id">{{ s.open }}</button>
-              <NuxtLink v-if="s.href" :to="s.href" class="dk-link" :aria-current="s.href.includes('#') ? false : undefined">{{ s.cta }} →</NuxtLink>
+              <NuxtLink v-if="s.href" :to="s.href" class="dk-link" :aria-current="s.href.includes('#') ? false : undefined" @click="toCase($event, s)">{{ s.cta }} →</NuxtLink>
             </p>
             <!-- The way past the walk on every card, not only the first screen:
                  the reader who has seen enough mid-walk need not scroll it out.
@@ -137,10 +137,13 @@
         <p class="dk-text">{{ s.text }}</p>
         <p class="dk-acts">
           <button v-if="s.open" type="button" class="dk-open" :data-stop="s.id" @click="drawer = s.id">{{ s.open }}</button>
-          <NuxtLink v-if="s.href" :to="s.href" class="dk-link" :aria-current="s.href.includes('#') ? false : undefined">{{ s.cta }} →</NuxtLink>
+          <NuxtLink v-if="s.href" :to="s.href" class="dk-link" :aria-current="s.href.includes('#') ? false : undefined" @click="toCase($event, s)">{{ s.cta }} →</NuxtLink>
         </p>
       </li>
     </ol>
+    <!-- The thing on the desk, cut out of the 3D frame the moment its case is
+         opened: the page change grows it into that page's cover (toCase). -->
+    <canvas ref="ghost" class="dk-ghost" aria-hidden="true" />
     <DeskDrawer :id="screen ? null : drawer" :origin="origin" :delay="origin ? 380 : 0" @close="closeDrawer" />
     <DeskScreen ref="scr" :screen="screen" @close="closeDrawer" />
   </section>
@@ -324,6 +327,34 @@ let onWalk = null
 // null). Returns where that thing sits on screen, for the drawer to grow from.
 let onFocus = null
 const origin = ref(null)
+// Set by the 3D scene: draws one frame and returns where the thing's screen
+// sits in the window, for toCase to copy it out of the canvas.
+let onSnap = null
+const ghost = ref(null)
+// Opening a case from its thing on the desk (the phone is oSave, the tablet
+// MedaLink): the thing itself grows into the case page's cover, through the
+// same view transition the portfolio cards use (cover-<slug>). On the 3D desk
+// the thing is copied out of the canvas into a plain element at its place
+// (the canvas as a whole would fly off as one picture); on the row of cards
+// it is the card's own picture. With no view transitions it is a page change.
+function toCase(ev, s) {
+  const slug = s.href.match(/\/work\/([^/]+)/)?.[1]
+  if (!slug || ev.button || ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.altKey) return
+  if (!document.startViewTransition || matchMedia('(prefers-reduced-motion: reduce)').matches) return
+  const card = ev.currentTarget.closest?.('.dk-stop')
+  if (card) {
+    const pic = card.querySelector('.dk-stop-pic')
+    if (pic) Object.assign(pic.style, { viewTransitionName: `cover-${slug}`, viewTransitionClass: 'from-desk' })
+    return
+  }
+  const snap = onSnap?.(s.id)
+  const g = ghost.value
+  if (!snap || !g) return
+  g.width = snap.w
+  g.height = snap.h
+  g.getContext('2d').drawImage(snap.src, snap.sx, snap.sy, snap.sw, snap.sh, 0, 0, snap.w, snap.h)
+  Object.assign(g.style, { left: `${snap.x}px`, top: `${snap.y}px`, width: `${snap.cw}px`, height: `${snap.ch}px`, display: 'block', viewTransitionName: `cover-${slug}`, viewTransitionClass: 'from-desk' })
+}
 // Set by the 3D scene too: the phone and the tablet are not opened in the
 // drawer but picked up, the camera facing the screen and the demo running on
 // it (DeskScreen). Returns the size the demo lays out at, or null when the 3D
@@ -1131,6 +1162,38 @@ async function start(small = false) {
       dev.style.transform = ''
     }
   }
+  // The window rectangle round a thing's screen, widened to the case cover's
+  // shape (about 3:2) so the move to it is a zoom, not a stretch, and the
+  // canvas pixels under it, read in the same task as the frame is drawn
+  // (the drawing buffer is not kept after it is shown).
+  onSnap = (id) => {
+    const mesh = gltf.scene.getObjectByName(`screen_${id}`)
+    if (!mesh || !visible) return null
+    renderer.render(scene, camera)
+    mesh.updateWorldMatrix(true, false)
+    const g = mesh.geometry
+    if (!g.boundingBox) g.computeBoundingBox()
+    const r = canvas.value.getBoundingClientRect()
+    const hx = g.boundingBox.max.x
+    const hz = g.boundingBox.max.z
+    const pts = [[-hx, -hz], [hx, -hz], [hx, hz], [-hx, hz]].map(([x, z]) => {
+      const v = new Vector3(x, 0, z).applyMatrix4(mesh.matrixWorld).project(camera)
+      return [r.left + ((v.x + 1) / 2) * r.width, r.top + ((1 - v.y) / 2) * r.height]
+    })
+    const xs = pts.map((p) => p[0])
+    const ys = pts.map((p) => p[1])
+    let w = (Math.max(...xs) - Math.min(...xs)) * 1.1
+    let h = (Math.max(...ys) - Math.min(...ys)) * 1.1
+    if (w / h < 1.5) w = h * 1.5
+    else h = w / 1.5
+    if (w > r.width || h > r.height) return null
+    const cx = (Math.max(...xs) + Math.min(...xs)) / 2
+    const cy = (Math.max(...ys) + Math.min(...ys)) / 2
+    const x = Math.max(r.left, Math.min(r.right - w, cx - w / 2))
+    const y = Math.max(r.top, Math.min(r.bottom - h, cy - h / 2))
+    const k = canvas.value.width / r.width
+    return { src: canvas.value, sx: (x - r.left) * k, sy: (y - r.top) * k, sw: w * k, sh: h * k, w: Math.round(w * k), h: Math.round(h * k), x, y, cw: w, ch: h }
+  }
   if (!small) onScreen = (id) => {
     reset()
     if (!id) {
@@ -1450,6 +1513,7 @@ async function start(small = false) {
     onWalk = null
     onFocus = null
     onScreen = null
+    onSnap = null
     io.disconnect()
     mo.disconnect()
     removeEventListener('resize', size)
@@ -1462,9 +1526,25 @@ async function start(small = false) {
 }
 </script>
 
+<style>
+/* The desk's picture is cut 3:2; a cover may be wider. Filling the moving
+   frame, it is cropped to it instead of hanging out below. */
+::view-transition-old(*.from-desk) {
+  height: 100%;
+  object-fit: cover;
+}
+</style>
+
 <style scoped>
 .dk {
   position: relative;
+}
+
+.dk-ghost {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  pointer-events: none;
 }
 
 .dk-stage {
