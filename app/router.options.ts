@@ -1,6 +1,6 @@
 import type { RouterConfig } from '@nuxt/schema'
 import { START_LOCATION } from 'vue-router'
-import { takeLangScroll } from '~/utils/langScroll'
+import { pendingLangScroll, takeLangScroll } from '~/utils/langScroll'
 
 // Nuxt's own scroll behaviour, with one change: arriving from another page at
 // a section (/#work from the résumé), it scrolled one frame after the page
@@ -39,6 +39,14 @@ export default <RouterConfig>{
     }
     if (from === START_LOCATION) return savedPosition || (to.hash ? { el: to.hash, top: marginTop(to.hash) } : { left: 0, top: 0 })
     const hook = nuxtApp._runningTransition ? 'page:transition:finish' : 'page:loading:end'
+    // A new page that opens at its top goes there the moment it is rendered
+    // (page:finish), before the view transition takes its picture of it: a
+    // frame later, the transition showed the new page at the old one's scroll
+    // position, half way down, the cover flying to where it was off screen,
+    // and then the jump to the top.
+    if (!savedPosition && !to.hash && !pendingLangScroll(to.path)) {
+      nuxtApp.hooks.hookOnce('page:finish', () => window.scrollTo({ left: 0, top: 0, behavior: 'instant' }))
+    }
     return new Promise((resolve) => {
       nuxtApp.hooks.hookOnce(hook, async () => {
         // Switched language: the same place on the other language's page.

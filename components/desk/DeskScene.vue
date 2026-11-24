@@ -344,7 +344,8 @@ function toCase(ev, s) {
   const card = ev.currentTarget.closest?.('.dk-stop')
   if (card) {
     const pic = card.querySelector('.dk-stop-pic')
-    if (pic) Object.assign(pic.style, { viewTransitionName: `cover-${slug}`, viewTransitionClass: 'from-desk' })
+    if (pic) pic.style.viewTransitionName = `cover-${slug}`
+    fromDesk()
     return
   }
   const snap = onSnap?.(s.id)
@@ -353,7 +354,20 @@ function toCase(ev, s) {
   g.width = snap.w
   g.height = snap.h
   g.getContext('2d').drawImage(snap.src, snap.sx, snap.sy, snap.sw, snap.sh, 0, 0, snap.w, snap.h)
-  Object.assign(g.style, { left: `${snap.x}px`, top: `${snap.y}px`, width: `${snap.cw}px`, height: `${snap.ch}px`, display: 'block', viewTransitionName: `cover-${slug}`, viewTransitionClass: 'from-desk' })
+  Object.assign(g.style, { left: `${snap.x}px`, top: `${snap.y}px`, width: `${snap.cw}px`, height: `${snap.ch}px`, display: 'block', viewTransitionName: `cover-${slug}` })
+  fromDesk()
+}
+// Marks the page change as one out of the desk, for the transition's styles
+// (ThemeToggle): on the element that stays, <html>; the desk itself has
+// left the document by the time the transition runs. Unmarked once it is over.
+const router = useRouter()
+function fromDesk() {
+  const html = document.documentElement
+  html.classList.add('from-desk')
+  const off = router.afterEach(() => {
+    off()
+    setTimeout(() => html.classList.remove('from-desk'), 1200)
+  })
 }
 // Set by the 3D scene too: the phone and the tablet are not opened in the
 // drawer but picked up, the camera facing the screen and the demo running on
@@ -573,6 +587,12 @@ onDeactivated(() => {
   document.documentElement.classList.remove('is-over-desk')
 })
 onActivated(() => {
+  // The page stayed alive in the background: the copy toCase laid over the
+  // desk would still be there on the way back, and a name left on it would
+  // send it flying again on the next page change. Cleared here, on the way
+  // back, not on the way out.
+  if (ghost.value) ghost.value.style.display = 'none'
+  for (const el of root.value?.querySelectorAll('.dk-ghost, .dk-stop-pic') ?? []) el.style.viewTransitionName = ''
   if (!away) return // also called right after the first mount
   away = false
   if (pocket.value) pocketOff() // the window may have grown into the big layout meanwhile
@@ -1162,10 +1182,10 @@ async function start(small = false) {
       dev.style.transform = ''
     }
   }
-  // The window rectangle round a thing's screen, widened to the case cover's
-  // shape (about 3:2) so the move to it is a zoom, not a stretch, and the
-  // canvas pixels under it, read in the same task as the frame is drawn
-  // (the drawing buffer is not kept after it is shown).
+  // The window rectangle round a thing's screen and the canvas pixels under
+  // it, read in the same task as the frame is drawn (the drawing buffer is
+  // not kept after it is shown). Only the screen: the app on it is what
+  // becomes the case page's cover, not the desk around it.
   onSnap = (id) => {
     const mesh = gltf.scene.getObjectByName(`screen_${id}`)
     if (!mesh || !visible) return null
@@ -1182,10 +1202,8 @@ async function start(small = false) {
     })
     const xs = pts.map((p) => p[0])
     const ys = pts.map((p) => p[1])
-    let w = (Math.max(...xs) - Math.min(...xs)) * 1.1
-    let h = (Math.max(...ys) - Math.min(...ys)) * 1.1
-    if (w / h < 1.5) w = h * 1.5
-    else h = w / 1.5
+    const w = (Math.max(...xs) - Math.min(...xs)) * 1.02
+    const h = (Math.max(...ys) - Math.min(...ys)) * 1.02
     if (w > r.width || h > r.height) return null
     const cx = (Math.max(...xs) + Math.min(...xs)) / 2
     const cy = (Math.max(...ys) + Math.min(...ys)) / 2
@@ -1525,15 +1543,6 @@ async function start(small = false) {
   }
 }
 </script>
-
-<style>
-/* The desk's picture is cut 3:2; a cover may be wider. Filling the moving
-   frame, it is cropped to it instead of hanging out below. */
-::view-transition-old(*.from-desk) {
-  height: 100%;
-  object-fit: cover;
-}
-</style>
 
 <style scoped>
 .dk {

@@ -85,6 +85,16 @@ function flip(e) {
   animation-duration: 520ms;
   animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
 }
+/* A thing's screen on the desk growing into its case cover (DeskScene's
+   toCase) keeps its own shape (a phone's is upright, the cover wide) inside
+   the moving frame while the cover comes in, instead of hanging out below.
+   Here, not with the desk: the transition runs over the case page, where
+   the desk's styles are gone. (The root's own picture is the size of the
+   window both times; contain changes nothing there.) */
+:root.from-desk::view-transition-old(*) {
+  height: 100%;
+  object-fit: contain;
+}
 /* A named picture with no partner on the other page (a portfolio cover when
    the résumé opens) goes or comes with the page, at once, instead of fading
    on its own over the new page for half a second. */

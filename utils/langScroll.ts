@@ -27,6 +27,11 @@ export function rememberLangScroll(toPath: string) {
   }
 }
 
+/** Whether a language switch to this path is waiting for takeLangScroll. */
+export function pendingLangScroll(toPath: string) {
+  return !!spot && spot.path === norm(toPath)
+}
+
 /** Where to scroll on the new page, once it is in the document; null if this navigation is not a language switch. */
 export function takeLangScroll(toPath: string): number | null {
   const s = spot
