@@ -118,6 +118,12 @@
         <ul class="mine">
           <li v-for="m in work.myPart" :key="m">{{ keep(m) }}</li>
         </ul>
+        <!-- Beside a long awards list the stack sits under the role, where the
+             column was bare, rather than in a strip of its own further down. -->
+        <template v-if="evidence.length && flatStack.length">
+          <h2 class="case-h2 stack-h2">{{ t.stack }}</h2>
+          <p class="stack-col">{{ flatStack.join(STACK_SEP) }}</p>
+        </template>
       </div>
       <div v-if="evidence.length">
         <h2 class="case-h2">{{ evidence.some((e) => e.kind === 'grant') ? t.awards : t.awardsOnly }}</h2>
@@ -136,7 +142,7 @@
       </div>
     </section>
 
-    <section v-if="evidence.length || !work.myPart?.length" class="shell case-block">
+    <section v-if="!work.myPart?.length" class="shell case-block">
       <!-- A heading, as on the pages where the stack has its own column: a
            screen reader heard "Built withFlutter" as one word. -->
       <div class="stack"><h2 class="stack-h">{{ t.stack }}</h2> <p>{{ flatStack.join(STACK_SEP) }}</p></div>
@@ -612,6 +618,10 @@ function goBack() {
   .case-facts {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+}
+
+.stack-h2 {
+  margin-top: var(--sp-8);
 }
 
 .stack-col {
