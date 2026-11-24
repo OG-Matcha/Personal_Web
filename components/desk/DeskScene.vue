@@ -242,7 +242,7 @@ const stops = computed(() => {
     phone: { thing: '手機', title: '財伴 oSave', text: '用會計邏輯記帳的 App：問你三個問題，後端翻成 13 項金流方向和六項財務健康指標，回答「我的財務健不健康」。', href: '/work/osave/', cta: '看財伴怎麼做的', open: '拿起來試算' },
     tablet: { thing: '平板', title: '醫數行銷 MedaLink', text: '診所的 AI 營運系統：在 LINE 上回病患、把醫師診間儀器的時段算出來，AI 那一半是我一個人做的。', href: '/work/medalink/', cta: '看診所系統', open: '排一個療程看看' },
     reports: { thing: '一疊報告', title: `${c.researchGrants} 個國科會計畫`, text: '從生成式 AI 社交工程、股市異常追蹤，到財伴的 82 人實證研究；另有一篇 LAK 2025 國際會議發表。', href: '/resume/', cta: '看完整年表', open: '翻開來看' },
-    shelf: { thing: '獎盃架', title: `${c.awards} 項競賽獎`, text: `其中 ${c.topPrizes} 座全國首獎，包括台積電校園黑客松第一名。架上只擺得下四座，其他的在年表裡，每一座都附上主辦單位和公告。`, href: '/resume/', cta: '看每一座的出處', open: '一座一座看' },
+    shelf: { thing: '獎盃架', title: '台積電校園黑客松第一名', text: `${c.awards} 項競賽獎裡有 ${c.topPrizes} 座全國首獎。架上只擺得下四座，其他的在年表裡，每一座都附上主辦單位和公告。`, href: '/resume/', cta: '看每一座的出處', open: '一座一座看' },
     kuaikuai: { thing: '綠色乖乖', title: '機器乖乖，不當機', text: '台灣工程師的老規矩：伺服器旁邊放一包綠色乖乖。我放的這包是台積電聯名款，到目前為止都很乖。', href: '/#contact', cta: '寫信給我' },
   }
   const enT = {
@@ -251,7 +251,7 @@ const stops = computed(() => {
     phone: { thing: 'Phone', title: 'oSave', text: 'A budgeting app built on accounting logic: three questions, turned by the backend into 13 cash-flow directions and six financial-health indicators, to answer “am I financially healthy?”', href: '/en/work/osave/', cta: 'How oSave was built', open: 'Pick it up and try it' },
     tablet: { thing: 'Tablet', title: 'MedaLink', text: 'An AI operations system for clinics: answers patients on LINE and books the slot where doctor, room and equipment are all free. I built the AI half alone.', href: '/en/work/medalink/', cta: 'See the clinic system', open: 'Book a treatment' },
     reports: { thing: 'A stack of reports', title: `${c.researchGrants} NSTC research grants`, text: 'From generative AI in social engineering and market-anomaly tracking to an 82-person study of oSave; plus a LAK 2025 paper.', href: '/en/resume/', cta: 'See the full record', open: 'Open the stack' },
-    shelf: { thing: 'The shelf', title: `${c.awards} competition awards`, text: `${c.topPrizes} of them national first prizes, including first at TSMC IT CareerHack. Only four fit on the shelf; the record has the rest, each with its organiser and announcement.`, href: '/en/resume/', cta: 'Where each one came from', open: 'Every award' },
+    shelf: { thing: 'The shelf', title: 'First at TSMC IT CareerHack', text: `One of ${c.topPrizes} national first prizes among ${c.awards} competition awards. Only four fit on the shelf; the record has the rest, each with its organiser and announcement.`, href: '/en/resume/', cta: 'Where each one came from', open: 'Every award' },
     kuaikuai: { thing: 'A green bag of Kuai Kuai', title: 'Keeps the machines behaving', text: 'A Taiwanese engineering custom: a bag of green Kuai Kuai next to the server keeps it from crashing. Mine is the TSMC edition. So far, so good.', href: '/en/#contact', cta: 'Write to me' },
   }
   const T = isEn.value ? enT : zh
