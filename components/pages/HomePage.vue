@@ -1423,6 +1423,25 @@ async function startWalk() {
   color: var(--ink-3);
 }
 
+/* On the narrowest phones a small card's column is too thin for date and
+   status on one line, and only some wrapped: the titles beside each other
+   then started 50px apart. Each takes its own line in every small card. */
+@media (max-width: 379px) {
+  .pp-work--small .pp-work-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    /* The same height in every small card, so the titles beside each other
+       start together: two lines, three in English ("Competition entry"
+       wraps on its own). */
+    min-height: calc(2lh + 2px);
+  }
+
+  :lang(en) .pp-work--small .pp-work-meta {
+    min-height: calc(3lh + 4px);
+  }
+}
+
 .pp-status {
   display: inline-flex;
   align-items: center;

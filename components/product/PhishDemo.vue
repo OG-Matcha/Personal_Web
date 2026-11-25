@@ -253,6 +253,26 @@ const t = computed(() =>
   min-width: 0;
 }
 
+/* On a phone every mail's head has the same shape: name and time on the
+   first line, address under the name. Left to wrap, one short sender fitted
+   on a line and the other two took three. */
+@media (max-width: 520px) {
+  .ph-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0 var(--sp-3);
+  }
+
+  .ph-from {
+    display: contents;
+  }
+
+  .ph-addr {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}
+
 .ph-addr,
 .ph-url {
   color: var(--ink-3);

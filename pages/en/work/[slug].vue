@@ -25,7 +25,8 @@ const work = {
   ...zh,
   ...e,
   title: e.title ?? zh.title,
-  org: null,
+  // Who it was for, in English; without one the Chinese name would show.
+  org: e.org ?? null,
   links: (zh.links ?? []).map((l) => ({ ...l, label: l.labelEn ?? l.label })),
   outcomes: e.outcomes ?? [],
   // Only site paths move under /en; a link off the site stays as it is.

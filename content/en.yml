@@ -78,6 +78,7 @@ works:
     title: SurPrice
     seoDescription: "SurPrice finds deals across supermarkets, hypermarkets, drugstores and convenience stores in Taiwan, right in the browser. Ju-Shen Huang is lead developer."
     role: CTO · lead developer
+    org: Finctory
     status: Live
     tagline: Supermarket deals across every chain, kept in your own deal book.
     summary: Every supermarket, pharmacy and hypermarket has its own flyer, and comparing them means leafing through each one. SurPrice puts the deals from all of them on one page, works out the unit price, marks how many days are left, and before you head out shows which nearby store honours them.
@@ -112,6 +113,7 @@ works:
     title: Taobao Exchange
     seoDescription: "Taobao Exchange is a Chrome extension that shows New Taiwan dollar prices right next to RMB on Taobao and Tmall. Built solo by Ju-Shen Huang."
     role: Solo developer
+    org: Finctory
     status: On the Chrome Web Store
     tagline: Shop Taobao and see NT$ right next to the price.
     summary: Shopping on Taobao and Tmall means multiplying every RMB price by the exchange rate yourself. With Taobao Exchange installed, prices on product pages, search results and the cart get their New Taiwan dollar figure right beside them, at a rate that updates itself every day.
@@ -139,6 +141,7 @@ works:
     title: oSave
     seoDescription: "oSave is a budgeting app that scores your financial health, on iOS and Android. Built at Finctory; Ju-Shen Huang leads its architecture and backend."
     role: CTO · architecture and backend
+    org: Finctory
     status: Live
     tagline: A budgeting app that answers “am I actually financially healthy?”
     summary: Most budgeting apps only tell you where the money went. oSave keeps your books with accounting logic, works out six financial-health indicators, gives you a score every month, and tells you what pulled it down.
@@ -180,6 +183,7 @@ works:
     title: PhishForge
     seoDescription: "PhishForge has AI write phishing emails tailored to each department, then reports who opened, clicked and submitted. Ju-Shen Huang built backend and AI."
     role: Backend · AI engineering
+    org: Department of Information Management, National Central University (NSTC undergraduate research grant, 2024)
     status: Concluded
     tagline: AI-written phishing you cannot tell from the real thing – so security drills actually teach something.
     summary: Template drills get recognised after a few rounds; staff learn to spot the company’s test mail, not phishing. PhishForge has AI write tailored phishing mail and matching fake login pages for each department and situation, then shows the company how many people opened, clicked and filled in the form.
@@ -208,6 +212,7 @@ works:
     title: Catalyst
     seoDescription: "Catalyst won 1st place at TSMC IT CareerHack 2025: AI agents fix or convert code, test it in a container and deploy it. Ju-Shen Huang designed the UI."
     role: UI design
+    org: TSMC IT CareerHack (6th edition)
     status: Competition entry
     tagline: Hand it code that needs changing – a team of AI agents fixes it, tests it and ships it.
     summary: "The brief for this track, “AI Ops toolkit”: take a piece of code and move it to a new version or language, speed it up, or fix its compile and runtime errors – then deploy it through CI/CD. Catalyst passes the job along a team of AI agents with one task each: pin down the request and plan, write the code, compile and run it in a container, generate and run tests, then deploy."
@@ -238,6 +243,7 @@ works:
     title: Finctory
     seoDescription: "Finctory is a student-founded fintech company in Taiwan behind oSave, SurPrice and Taobao Exchange. Ju-Shen Huang is a co-founder and the CTO."
     role: Co-founder · CTO
+    org: Finctory Co., Ltd.
     status: Operating
     tagline: A fintech startup making every dollar count.
     highlightsTitle: Products
@@ -272,6 +278,7 @@ works:
     title: MedaLink
     seoDescription: "MedaLink is an AI front desk for clinics: four messaging channels in one inbox, replies, scheduling and follow-ups. Co-founded and built by Ju-Shen Huang."
     role: Co-founder · Forward-Deployed Engineer
+    org: MedaLink Marketing Technology Co., Ltd.
     status: Live
     tagline: An AI front desk for clinics – replies, scheduling and recalls in one system.
     summary: Messages from LINE, Facebook, Instagram and the website land in one inbox. The AI answers by each clinic’s own rules, books people into slots where the doctor, room and equipment are all free, then takes over reminders, rescheduling, aftercare and six-month recalls.

@@ -38,6 +38,7 @@
                 v-model="message"
                 rows="7"
                 maxlength="3000"
+                aria-required="true"
                 :aria-invalid="err === 'empty' ? 'true' : undefined"
                 aria-describedby="ct-message-hint ct-message-err"
                 @input="err === 'empty' && (err = '')"
@@ -117,7 +118,7 @@ const t = computed(() =>
     ? {
         title: 'Get in touch',
         // The same list, in the same words, as the homepage note.
-        lede: 'A master’s student, open to part-time work and consulting: generative-AI and agent architecture, early-stage technical partnerships, talks and workshops. Messages here come straight to me; email is just as quick.',
+        lede: 'A master’s student, open to part-time work and consulting: generative‑AI and agent architecture, early-stage technical partnerships, talks and workshops. Messages here come straight to me; email is just as quick.',
         topic: 'What is it about?',
         topics: [
           { v: 'work', label: 'Work or a project' },
@@ -402,6 +403,9 @@ async function send() {
   margin: 0;
   font-size: var(--step--1);
   color: var(--ink-3);
+  /* No one-word last line (「方式。」 alone at 1024 and 1440); pretty did
+     not move it, two even lines do. */
+  text-wrap: balance;
 }
 
 .ct-err {
