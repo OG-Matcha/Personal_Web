@@ -84,7 +84,7 @@ works:
     summary: Every supermarket, pharmacy and hypermarket has its own flyer, and comparing them means leafing through each one. SurPrice puts the deals from all of them on one page, works out the unit price, marks how many days are left, and before you head out shows which nearby store honours them.
     outcomes:
       - value: Every chain
-        label: Supermarkets, hypermarkets, pharmacies and convenience stores together
+        label: Supermarkets, drugstores and convenience stores
       - value: No install
         label: Opens in a phone browser
       - value: '{awards}'

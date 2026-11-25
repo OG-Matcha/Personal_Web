@@ -7,7 +7,7 @@
   <div class="fx-card">
     <div class="fx-bar">
       <label class="fx-switch">
-        <input v-model="on" type="checkbox" />
+        <input v-model="on" type="checkbox" role="switch" />
         <span class="fx-track" aria-hidden="true"><span class="fx-knob" /></span>
         <span class="fx-switch-label">{{ t.toggle }}</span>
       </label>

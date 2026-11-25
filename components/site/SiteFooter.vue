@@ -74,6 +74,17 @@ const links = [
   margin-left: auto;
 }
 
+/* English on a phone: five links in one wrapping row left "LinkedIn" alone
+   on the second line; three and two read as a set. */
+@media (max-width: 479px) {
+  :lang(en) .ft-links {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    justify-content: start;
+    margin-left: 0;
+  }
+}
+
 .ft-links a {
   color: var(--ink-2);
   text-decoration: none;

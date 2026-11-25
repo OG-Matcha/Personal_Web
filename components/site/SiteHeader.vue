@@ -354,6 +354,42 @@ const t = computed(() =>
   }
 }
 
+/* When the links run past the edge (narrow phones, large text), the cut end
+   fades out instead of stopping on half a word (「履」 of 履歷 at 200% text):
+   it reads as more to scroll to. The fade is driven by the nav's own scroll,
+   so it is gone at the end, and without overflow there is none. */
+@property --hd-fade {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@keyframes hd-fade {
+  from {
+    --hd-fade: 32px;
+  }
+
+  to {
+    --hd-fade: 0px;
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  .hd-nav {
+    mask-image: linear-gradient(to right, #000 calc(100% - var(--hd-fade)), transparent);
+    animation: hd-fade linear both;
+    animation-timeline: scroll(self inline);
+  }
+
+  /* The global reduced-motion rule shortens every animation; this one
+     follows the scroll, not the clock. */
+  @media (prefers-reduced-motion: reduce) {
+    .hd-nav {
+      animation-duration: auto !important;
+    }
+  }
+}
+
 /* Touch: each 40px control answers taps 2px further out on every side, 44px
    in all, without moving anything. The nav's 4px gaps are split between
    neighbours, so no two areas overlap. */
