@@ -163,6 +163,17 @@ const t = computed(() =>
   color: var(--ink-3);
 }
 
+/* On a phone each role takes its own line; the dots would hang at the ends. */
+@media (max-width: 600px) {
+  .now-list {
+    flex-direction: column;
+  }
+
+  .now-list li:not(:last-child)::after {
+    content: none;
+  }
+}
+
 .now-stack {
   justify-self: start;
   font-size: var(--step--1);
@@ -197,6 +208,8 @@ const t = computed(() =>
 .counts div {
   display: flex;
   flex-direction: column-reverse;
+  /* Number on top in every cell, even when one label wraps to more lines. */
+  justify-content: flex-end;
   gap: 2px;
 }
 

@@ -953,6 +953,12 @@ async function startWalk() {
   transform: translateY(10px);
 }
 
+/* The date is rust on paper: dimmed it fell to 3.8:1, so it stays at full
+   strength and only slides with the rest. */
+.pp-road-wrap.is-live .pp-stop:not(.is-lit) > .pp-when {
+  opacity: 1;
+}
+
 .pp-road-wrap.is-live .pp-events li {
   transition:
     opacity 450ms var(--ease-entrance),
