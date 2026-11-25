@@ -12,6 +12,19 @@
           <NuxtLink :to="l.to" class="link">{{ l.label }}</NuxtLink>
         </li>
       </ul>
+
+      <!-- The page is gone, the desk is not: three of the prints from the
+           homepage's work, so a dead link still lands somewhere worth it. -->
+      <h2 class="er-h">{{ c.prints }}</h2>
+      <ul class="er-prints">
+        <li v-for="w in prints" :key="w.to">
+          <NuxtLink :to="w.to" class="er-link">
+            <span class="er-print"><SiteShot :src="w.img" :width="w.w" :height="w.h" fit="cover" sizes="(min-width: 1024px) 22rem, 90vw" /></span>
+            <span class="er-title">{{ keep(w.title) }}</span>
+            <span class="er-line">{{ keep(w.line) }}</span>
+          </NuxtLink>
+        </li>
+      </ul>
     </div>
   </NuxtLayout>
 </template>
@@ -37,11 +50,33 @@ const props = defineProps({ error: { type: Object, default: null } })
 const notFound = computed(() => props.error?.statusCode === 404)
 
 const { locale } = useLocale()
+const { en } = useContent()
+
+const PRINTS = [
+  { slug: 'medalink', w: 1600, h: 900 },
+  { slug: 'osave', w: 1800, h: 1200 },
+  { slug: 'phishforge', w: 1600, h: 894 },
+]
+const prints = computed(() =>
+  PRINTS.map(({ slug, w, h }) => {
+    const zh = useWork(slug)
+    const e = locale.value === 'en' ? en.works?.[slug] ?? {} : {}
+    return {
+      to: `${locale.value === 'en' ? '/en' : ''}/work/${slug}/`,
+      img: zh.cover,
+      w,
+      h,
+      title: e.title ?? zh.title,
+      line: e.tagline ?? zh.tagline,
+    }
+  })
+)
 
 const c = computed(() =>
   locale.value === 'en'
     ? {
         headline: notFound.value ? 'Nothing lives at this address' : 'Something went wrong here',
+        prints: 'Or start with one of these',
         lede: notFound.value
           ? 'The link may be mistyped, or the page has moved. These three always have something on them.'
           : 'The page did not finish loading. Reloading usually fixes it; if not, come in through one of these.',
@@ -53,6 +88,7 @@ const c = computed(() =>
       }
     : {
         headline: notFound.value ? '這個網址沒有東西' : '這裡出了點問題',
+        prints: '或從這幾件作品看起',
         lede: notFound.value
           ? '可能是連結打錯了，或這一頁已經不在了。下面三個地方一定有東西。'
           : '頁面沒能載入完成。重新整理通常就好了；如果沒有，從下面任一個入口進來。',
@@ -135,5 +171,78 @@ h1 {
 
 .link:hover {
   color: var(--ink);
+}
+
+.er-h {
+  margin-top: var(--sp-9);
+  font-size: var(--step--1);
+  font-weight: 700;
+  color: var(--pop-ink);
+}
+
+.er-prints {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: var(--sp-6) var(--sp-5);
+  width: 100%;
+  margin-top: var(--sp-4);
+  list-style: none;
+}
+
+.er-link {
+  display: grid;
+  gap: var(--sp-2);
+  color: inherit;
+  text-decoration: none;
+}
+
+/* The homepage's prints: white border, a slight alternating tilt, picked
+   up (straightened, lifted) on hover. */
+.er-print {
+  display: block;
+  margin-bottom: var(--sp-2);
+  padding: 8px 8px 10px;
+  border-radius: 3px;
+  background: var(--print);
+  box-shadow:
+    0 1px 1px rgb(var(--shadow-rgb) / 0.12),
+    0 18px 28px -16px rgb(var(--shadow-rgb) / 0.45);
+  rotate: -0.8deg;
+  transition:
+    rotate 260ms var(--ease-entrance),
+    transform 260ms var(--ease-entrance);
+}
+
+.er-prints li:nth-child(even) .er-print {
+  rotate: 0.9deg;
+}
+
+.er-link:hover .er-print,
+.er-link:focus-visible .er-print {
+  rotate: 0deg;
+  transform: translateY(-4px);
+}
+
+.er-print :deep(.shot) {
+  aspect-ratio: 16 / 10;
+}
+
+.er-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--step-1);
+  line-height: 1.3;
+}
+
+.er-link:hover .er-title {
+  text-decoration: underline;
+  text-decoration-color: var(--pop-ink);
+  text-underline-offset: 0.2em;
+}
+
+.er-line {
+  font-size: var(--step--1);
+  color: var(--ink-2);
+  text-wrap: pretty;
 }
 </style>
