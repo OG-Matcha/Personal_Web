@@ -28,7 +28,10 @@ jobs:
       - run: corepack enable
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
+      # The same npm as the machine the lock file is written on (npm 10 reads
+      # it differently and `npm ci` refuses it); budoux also needs Node 22.
+      - run: npm install -g npm@11.6.2
       # 移除此處的 .nojekyll 創建（將在構建後創建）
       # Exactly the locked versions; `npm install` could pull a newer one (vue is "latest").
       - run: npm ci
