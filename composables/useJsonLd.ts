@@ -27,6 +27,10 @@ export const ID = {
   ncu: `${SITE}/#ncu`,
 } as const
 
+/** His lab, as the lab's own site names it (same @id there, so the two graphs join). */
+const LAB = 'https://ifalab-ncu.com'
+const LAB_MEMBER = `${LAB}/zh-tw/members/ju-shen-huang/`
+
 /** Companies he co-founded, keyed by the English name in `about.posts`. */
 const FOUNDED: Record<string, { foundingDate?: string }> = {
   Finctory: { foundingDate: '2025-06-05' },
@@ -47,7 +51,7 @@ function orgId(url?: string | null) {
 export function useSiteGraph() {
   const { site, about, timeline } = useContent()
 
-  const sameAs = [site.contact.github, site.contact.linkedin, site.contact.instagram].filter(
+  const sameAs = [site.contact.github, site.contact.linkedin, site.contact.instagram, LAB_MEMBER].filter(
     Boolean
   )
 
@@ -112,6 +116,14 @@ export function useSiteGraph() {
           // `schema:department` expects an Organization. A bare string is a
           // range violation, and the department is the most specific fact here.
           department: { '@type': 'CollegeOrUniversity', name: '資訊管理學系' },
+        },
+        // The master's lab: the lab's site gives the same @id for it.
+        memberOf: {
+          '@type': 'ResearchOrganization',
+          '@id': `${LAB}/#org`,
+          name: 'IFA Lab',
+          url: `${LAB}/`,
+          parentOrganization: { '@id': ID.ncu },
         },
         hasCredential: {
           '@type': 'EducationalOccupationalCredential',

@@ -98,7 +98,7 @@ const c = computed(() =>
         advisor: 'Advisor: ',
         case: 'The product',
         sep: ': ',
-        proof: { site: 'Website', source: 'Source', store: 'Store listing', cert: 'Certificate', live: 'The site', notice: 'Announcement' },
+        proof: { site: 'Website', source: 'Source', store: 'Store listing', cert: 'Certificate', live: 'The site', notice: 'Announcement', lab: 'Lab page', paper: 'Paper' },
         shortlisted: 'Shortlist',
         fold: (n) => `Fold ${n} entries`,
         unfold: (n, a, b) => `Show ${n} more (${a}–${b})`,
@@ -113,7 +113,7 @@ const c = computed(() =>
         advisor: '指導教授：',
         case: '產品介紹',
         sep: '：',
-        proof: { site: '官網', source: '原始碼', store: '商店頁', cert: '獎狀', live: '網站', notice: '公告' },
+        proof: { site: '官網', source: '原始碼', store: '商店頁', cert: '獎狀', live: '網站', notice: '公告', lab: '實驗室頁', paper: '論文' },
         shortlisted: '入圍',
         fold: (n) => `收合 ${n} 筆`,
         unfold: (n, a, b) => `展開其餘 ${n} 筆（${a} – ${b}）`,
@@ -152,6 +152,8 @@ function proofLabel(url) {
   if (u.hostname === 'chromewebstore.google.com') return c.value.proof.store
   // A site the entry's team built, still online.
   if (u.hostname === 'ncufresh.ncu.edu.tw') return c.value.proof.live
+  if (u.hostname === 'ifalab-ncu.com') return c.value.proof.lab
+  if (u.hostname === 'arxiv.org') return c.value.proof.paper
   return c.value.proof.notice
 }
 

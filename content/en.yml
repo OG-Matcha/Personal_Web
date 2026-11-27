@@ -344,7 +344,8 @@ timeline:
     note: Team “得獎的是!?” (“Did We Win!?”); 85 teams applied, 40 reached the final
   '2026-09 國立中央大學 資訊管理學系 碩士班 入學':
     title: Master’s program, Information Management, National Central University
-    detail: Full-time, enrolled since September 2026, expected to finish June 2028
+    detail: Full-time, enrolled since September 2026, expected to finish June 2028; member of IFA Lab
+    evidence: https://ifalab-ncu.com/en/members/ju-shen-huang/
   '2026-07 共同創辦 醫數行銷 MedaLink，任前線部署工程師（FDE）':
     title: Co-founded MedaLink as Forward-Deployed Engineer
     org: MedaLink Marketing Technology Co., Ltd.
@@ -446,7 +447,7 @@ timeline:
   '2024-11 運用知識圖譜與大型語言模型分析學習軌跡':
     title: Analysing learning trajectories with knowledge graphs and LLMs
     org: Center for General Education, National Central University
-    publication: LAK 2025, International Learning Analytics & Knowledge Conference · Practitioner track
+    publication: LAK 2025, International Learning Analytics & Knowledge Conference · Practitioner Track
     detail: An LLM turns course material into structured data to build a personal knowledge graph, then compares it against test results to find gaps in coverage; trialled in NCU’s Python programming course.
   '2024-10 GenAI Stars 生成式 AI 百工百業應用選拔 創意創客組 - 優選':
     title: GenAI Stars, Creative Maker track – Merit

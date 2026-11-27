@@ -30,8 +30,9 @@
   kind: education
   lane: academic
   title: 國立中央大學 資訊管理學系 碩士班 入學
-  detail: 日間，2026-09 起在學，預計 2028-06 畢業
-  evidence: null
+  detail: 日間，2026-09 起在學，預計 2028-06 畢業；IFA Lab 成員
+  # 實驗室網站上的成員頁（ifalab-ncu.com），兩個站互相連結
+  evidence: https://ifalab-ncu.com/zh-tw/members/ju-shen-huang/
 
 - date: 2026-07
   kind: role
@@ -310,12 +311,13 @@
   org: 國立中央大學通識教育中心
   advisor: 張家凱 教授
   period: 2024-08 - 2024-10
-  publication: LAK 2025 國際學習分析與知識會議 · Practitioner Chairs
+  publication: LAK 2025 國際學習分析與知識會議 · Practitioner Track
   project: null
   detail: >-
     以 LLM 將教材轉為結構化資料建個人知識圖譜，對照測驗結果找出考試範圍的知識覆蓋漏洞；
     已於中央大學 Python 程式設計課程實測。
-  evidence: null
+  # 論文全文（第二作者）
+  evidence: https://arxiv.org/abs/2504.11481
 
 - date: 2024-10
   kind: award
