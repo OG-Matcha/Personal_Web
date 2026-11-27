@@ -157,10 +157,11 @@ export default defineNuxtConfig({
         // allows jQuery, cdnjs and Google Fonts hosts this site never loads;
         // this one allows only the site itself, and stops a <base> or a form
         // from pointing anywhere else. Inline stays: Nuxt writes its start-up
-        // data inline.
+        // data inline. Cloudflare adds its Web Analytics beacon at the edge
+        // (browsers only, so it is not in the built files): keep its host.
         {
           'http-equiv': 'Content-Security-Policy',
-          content: "script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'",
+          content: "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'",
         },
         // Proof and film: the browser chrome follows whichever the system is on.
         { name: 'theme-color', media: '(prefers-color-scheme: light)', content: '#efe9e0' },
