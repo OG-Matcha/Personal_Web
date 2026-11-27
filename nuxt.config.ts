@@ -152,6 +152,16 @@ export default defineNuxtConfig({
         { name: 'description', content: DESCRIPTION },
         { name: 'author', content: '黃鉅燊 (Ju-Shen Huang)' },
         { name: 'robots', content: 'index, follow' },
+        // A second, stricter policy on top of the one the host sends (both are
+        // enforced). The host's is shared with other sites on the domain and
+        // allows jQuery, cdnjs and Google Fonts hosts this site never loads;
+        // this one allows only the site itself, and stops a <base> or a form
+        // from pointing anywhere else. Inline stays: Nuxt writes its start-up
+        // data inline.
+        {
+          'http-equiv': 'Content-Security-Policy',
+          content: "script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'",
+        },
         // Proof and film: the browser chrome follows whichever the system is on.
         { name: 'theme-color', media: '(prefers-color-scheme: light)', content: '#efe9e0' },
         { name: 'theme-color', media: '(prefers-color-scheme: dark)', content: '#12141c' },
