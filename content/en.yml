@@ -246,6 +246,39 @@ works:
     myPart:
       - "UI design: the whole flow on screen, from uploading code and typing the request, through watching the agents hand off, to getting the deployed address"
       - Put the stages, the agents at work and their conversation on one screen, so anyone can see what each step is doing
+  ifalab:
+    title: IFA Lab website
+    seoDescription: "The IFA Lab website: 66 pages in Chinese and English for the Intelligent Financial Analytics Lab at NCU, with clay-style 3D and an assistant that cites its sources. Ju-Shen Huang, a founding member, led the redo."
+    role: Founding member · led the redo
+    org: Intelligent Financial Analytics Lab, Dept. of Information Management, National Central University
+    status: Live
+    tagline: A lab’s website – clay 3D on the front page, and a cat that answers questions with its sources.
+    summary: "The bilingual website of the Intelligent Financial Analytics Lab (IFA Lab, led by Prof. Hsin-Yu Chiu) in NCU’s Department of Information Management: 66 pages, launched in November 2026. I am a founding member of the lab and led this redo. The candlesticks on the front page, the figurine bookshelf on the members page and the history page’s staircase, one step a year, are all clay-style 3D. Questions about papers, courses or admissions can go straight to K-meow, whose answers all link their sources."
+    outcomes:
+      - value: 66 pages
+        label: One set in Chinese, one in English
+      - value: '100'
+        label: Lighthouse SEO and Best Practices (measured 2026-11-28)
+      - value: 42 checks
+        label: Run over the whole site after every deploy; one failure turns it red
+    highlights:
+      - title: Ask K-meow, get sources
+        text: A Worker runs BM25 search over the whole site in both languages, matching queries against a Chinese finance glossary, then hands the passages to a model on the lab’s DGX Spark – or Workers AI when the Spark is off. Every answer carries numbered source links, and names that aren’t in the data are filtered out.
+        alt: The K-meow chat panel – asked whether the topic has to be finance, it answers with one numbered source linking to the Join us page
+      - title: Members on a bookshelf
+        text: The members page turns everyone into a clay figurine, shelved by cohort on a 3D bookcase.
+        alt: Members page – clay figurines arranged by cohort on a 3D bookshelf
+      - title: History, one step a year
+        text: Scroll the history page and a 3D staircase grows one step per year, each step holding that year’s members.
+        alt: History page – the 3D staircase scrolled to the 2026 step
+      - title: Who wrote with whom
+        text: The collaboration page has a co-author graph – Prof. Chiu in the middle, 18 outside co-authors around him, one block for each paper written together, coloured by field.
+        alt: Co-author graph – Prof. Chiu at the centre, 18 collaborators around, coloured blocks for the papers they wrote together
+    turn:
+      title: Everyone can edit; nobody can break it
+      text: Members keep their own data file (JSON) and custom blocks. CI lets you change only your own files, caps JS and page size, and allows no outside resources; after each deploy, 42 checks run over all 66 pages – headers, structured data, links, icons – and any failure turns it red.
+    myPart:
+      - Founding member of the lab; led this redo of its website
   finctory:
     title: Finctory
     seoDescription: "Finctory is a student-founded fintech company in Taiwan behind oSave, SurPrice and Taobao Exchange. Ju-Shen Huang is a co-founder and the CTO."
@@ -326,6 +359,9 @@ alsoBuilt:
     line: A Claude Code mod, Windows and CJK first – pasted images and text previewed in any terminal, CJK-correct tables, long diffs folded, and guards for multi-agent runs and Traditional Chinese writing.
   orca-companion-kit:
     line: A kit for having an AI agent build your own Orca theme, cursor and desktop pet – one that reacts to your agents, has moods, and survives Orca updates without touching the install.
+  IFA Lab:
+    name: IFA Lab website
+    line: The bilingual site of NCU’s Intelligent Financial Analytics Lab – clay-style 3D, and K-meow, an assistant that answers from the site with numbered sources. I am a founding member and led the redo.
   Catalyst:
     award: TSMC IT CareerHack, AI Ops track, 1st place
     line: Multi-agent software delivery platform, from requirements analysis to code generation to test and deployment.

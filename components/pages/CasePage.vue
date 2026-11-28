@@ -211,7 +211,7 @@ function ok(v) {
 const work = computed(() => props.work)
 // Each product's own colour, sampled from its cover (or its brand, where the
 // cover is a card): used only for the opening's wash and the title's rule.
-const ACCENT = { finctory: '#3a4fa8', medalink: '#2f6fd6', osave: '#3b8fe8', phishforge: '#6b5bd6', surprice: '#22a194', taobao: '#f07a22', catalyst: '#2a9d8f' }
+const ACCENT = { finctory: '#3a4fa8', medalink: '#2f6fd6', osave: '#3b8fe8', phishforge: '#6b5bd6', surprice: '#22a194', taobao: '#f07a22', catalyst: '#2a9d8f', ifalab: '#2f5fb3' }
 const accent = computed(() => ACCENT[work.value.slug] ?? 'var(--pop)')
 // Store figures marked `live` are refreshed from the store once the page is up.
 const store = useStoreStats(() => [work.value.liveStore])

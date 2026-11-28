@@ -12,6 +12,7 @@ const NODE_TYPE: Record<string, Record<string, unknown>> = {
   phishforge: { '@type': 'CreativeWork', sourceOrganization: { '@id': ID.ncu } },
   // A four-person hackathon entry: he is one contributor, not its creator.
   catalyst: { '@type': 'CreativeWork', award: '6th TSMC IT CareerHack, AI Ops track, 1st place (2025)', team: true },
+  ifalab: { '@type': 'WebSite', url: 'https://ifalab-ncu.com/zh-tw/', inLanguage: ['zh-TW', 'en'] },
   finctory: { '@type': 'Organization', '@id': 'https://www.finctory.com/#org' },
   surprice: { '@type': 'WebApplication', applicationCategory: 'ShoppingApplication', operatingSystem: 'Web', browserRequirements: 'Requires a modern mobile or desktop browser' },
   taobao: { '@type': 'SoftwareApplication', applicationCategory: 'ShoppingApplication', operatingSystem: 'Chrome' },

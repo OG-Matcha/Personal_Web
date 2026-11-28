@@ -153,6 +153,90 @@
    "/images/finctory-site.webp"
   ]
  ],
+ "/images/ifalab-1.webp": [
+  [
+   800,
+   "/images/ifalab-1-800w.webp"
+  ],
+  [
+   1200,
+   "/images/ifalab-1-1200w.webp"
+  ],
+  [
+   1600,
+   "/images/ifalab-1.webp"
+  ]
+ ],
+ "/images/ifalab-collab.webp": [
+  [
+   800,
+   "/images/ifalab-collab-800w.webp"
+  ],
+  [
+   1200,
+   "/images/ifalab-collab-1200w.webp"
+  ],
+  [
+   2400,
+   "/images/ifalab-collab.webp"
+  ]
+ ],
+ "/images/ifalab-history.webp": [
+  [
+   800,
+   "/images/ifalab-history-800w.webp"
+  ],
+  [
+   1200,
+   "/images/ifalab-history-1200w.webp"
+  ],
+  [
+   2400,
+   "/images/ifalab-history.webp"
+  ]
+ ],
+ "/images/ifalab-home.webp": [
+  [
+   800,
+   "/images/ifalab-home-800w.webp"
+  ],
+  [
+   1200,
+   "/images/ifalab-home-1200w.webp"
+  ],
+  [
+   2400,
+   "/images/ifalab-home.webp"
+  ]
+ ],
+ "/images/ifalab-kmiao.webp": [
+  [
+   800,
+   "/images/ifalab-kmiao-800w.webp"
+  ],
+  [
+   1200,
+   "/images/ifalab-kmiao-1200w.webp"
+  ],
+  [
+   2400,
+   "/images/ifalab-kmiao.webp"
+  ]
+ ],
+ "/images/ifalab-members.webp": [
+  [
+   800,
+   "/images/ifalab-members-800w.webp"
+  ],
+  [
+   1200,
+   "/images/ifalab-members-1200w.webp"
+  ],
+  [
+   2400,
+   "/images/ifalab-members.webp"
+  ]
+ ],
  "/images/invoicedoctor-1.jpg": [
   [
    800,
@@ -329,6 +413,16 @@
   [
    1600,
    "/images/phishforge-1.png"
+  ]
+ ],
+ "/images/portrait.jpg": [
+  [
+   800,
+   "/images/portrait-800w.webp"
+  ],
+  [
+   1200,
+   "/images/portrait.jpg"
   ]
  ],
  "/images/surprice-cover.webp": [

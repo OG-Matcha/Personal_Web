@@ -27,6 +27,17 @@
   repo: null
   award: null
 
+- name: IFA Lab
+  thumbnail: /images/ifalab-1.webp
+  year: 2026
+  line: 中央大學資管系智能金融分析實驗室的中英雙語網站：黏土質感的 3D，和一隻會在全站內容裡找答案、附編號出處回答的 K 喵。我是創始成員，主導這次改版。
+  stack: [Astro, React Three Fiber, Cloudflare Workers]
+  url: https://ifalab-ncu.com/zh-tw/
+  repo: null
+  # 有自己的案例頁（content/work/ifalab.yml），卡片連過去。
+  case: ifalab
+  award: null
+
 - name: tessera
   thumbnail: /images/tessera-1.png
   thumbFit: contain # 2:1, too wide to crop

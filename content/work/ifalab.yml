@@ -1,0 +1,75 @@
+# -----------------------------------------------------------------------------
+# 案例：IFA Lab 實驗室網站（中央大學資管系 智能金融分析實驗室）
+#
+# 內容只取自實驗室網站本身和負責那個 repo 的 session 給的事實（2026-11-28）；
+# 品質數字是那天量的。畫面是正式站的截圖（.audit/ifa/）。
+# 不是產品，所以和 Catalyst 一樣：只有案例頁，作品集「也做過」那張卡片連過來。
+# -----------------------------------------------------------------------------
+
+slug: ifalab
+tier: case-only
+
+title: IFA Lab 實驗室網站
+titleEn: IFA Lab website
+role: 創始成員 · 主導網站改版
+org: 中央大學資訊管理學系 智能金融分析實驗室
+orgUrl: https://ifalab-ncu.com/zh-tw/
+period: { start: 2026-11, end: null } # null = 進行中
+status: 已上線
+seoDescription: IFA Lab 實驗室網站：中央大學資管系智能金融分析實驗室的中英雙語網站，66 頁，黏土質感的 3D 和會附出處回答的「問 K 喵」。黃鉅燊是創始成員，主導這次改版。
+
+links:
+  - label: 實驗室網站 ifalab-ncu.com
+    labelEn: ifalab-ncu.com
+    href: https://ifalab-ncu.com/zh-tw/
+
+cover: /images/ifalab-home.webp
+thumbnail: /images/ifalab-1.webp
+hero: /images/ifalab-home.webp
+screenshots: []
+
+tagline: 一個實驗室的網站：黏土 3D 的首頁，加上一隻會附出處回答問題的 K 喵。
+summary: >-
+  中央大學資管系智能金融分析實驗室（IFA Lab，邱信瑜老師指導）的中英雙語網站，共 66 頁，2026 年 11 月上線。
+  我是實驗室的創始成員，主導這次改版。首頁的 K 線、成員頁的公仔書櫃、沿革頁一年一階的樓梯，都是黏土質感的 3D；
+  想知道論文、課程或招生的事，可以直接問 K 喵，它的回答都附出處連結。
+
+outcomes:
+  - value: 66 頁
+    label: 中文、英文各一份
+  - value: '100'
+    label: Lighthouse SEO 與最佳做法（2026-11-28 量）
+  - value: 42 項
+    label: 每次部署後自動檢查全站，一項沒過就亮紅燈
+
+highlights:
+  - title: 問 K 喵，答案附出處
+    text: Worker 先用 BM25 在全站中英文內容裡找相關段落，查詢時會對照一份中文金融術語表；再交給實驗室 DGX Spark 上的模型回答，Spark 關機時改用 Workers AI。每個回答都有編號的出處連結，資料裡沒有的人名會被濾掉。
+    shot: /images/ifalab-kmiao.webp
+    alt: 問 K 喵的對話框：問「一定要做金融題目嗎？」，回答下面附一條連到加入我們頁的出處
+  - title: 成員排上書櫃
+    text: 成員頁把每個人做成黏土公仔，依屆別排在 3D 書櫃上。
+    shot: /images/ifalab-members.webp
+    alt: 成員頁：黏土公仔依屆別排在一座 3D 書櫃上
+  - title: 一年一階的沿革
+    text: 沿革頁往下捲，3D 樓梯一年長一階，每一階站著那一年的成員。
+    shot: /images/ifalab-history.webp
+    alt: 沿革頁：捲到 2026 年那一階的 3D 樓梯
+  - title: 一起寫過論文的人
+    text: 合作頁有一張共同作者關係圖：中間是邱老師，外圈是 18 位校外合作者，每篇合寫的論文是一個方塊，顏色代表研究領域。
+    shot: /images/ifalab-collab.webp
+    alt: 共同作者關係圖：中間是邱信瑜老師，外圈 18 位合作者，中間的彩色方塊是合寫的論文
+
+turn:
+  title: 每個人都能改，網站也不會被改壞
+  text: >-
+    成員自己維護自己的資料檔（JSON）和自訂區塊。CI 只讓你改自己的檔案，限制 JS 和頁面大小，也不准載入外部資源；
+    部署之後再對 66 頁跑 42 項檢查，從標頭、結構化資料、連結到圖示，一項沒過就亮紅燈。
+
+myPart:
+  - 實驗室創始成員，主導這次網站改版
+
+stack:
+  client: [Astro 7, React 19, three.js, React Three Fiber]
+  ai: [BM25, Workers AI, NVIDIA DGX Spark]
+  infra: [Cloudflare Workers, Static Assets]

@@ -24,6 +24,7 @@ The site is in Traditional Chinese at https://www.ogmatcha.com/ with an English 
 
 - [PhishForge](https://www.ogmatcha.com/en/work/phishforge/): AI-written phishing drills tailored to each department (NSTC undergraduate research project, concluded). Role: backend and AI engineering
 - [Catalyst](https://www.ogmatcha.com/en/work/catalyst/): a team of AI agents that fixes or converts a piece of code, tests it in a container and deploys it (TSMC IT CareerHack 2025, AI Ops track, 1st place). Role: UI design
+- [IFA Lab website](https://www.ogmatcha.com/en/work/ifalab/): the bilingual 66-page site of the Intelligent Financial Analytics Lab at National Central University – clay-style 3D (Astro, React Three Fiber) and K-meow, a site-search assistant whose answers cite numbered sources (BM25 on Cloudflare Workers, a model on the lab’s DGX Spark, Workers AI as fallback). Role: founding member, led the redo
 - Open-source work: https://github.com/OG-Matcha
 
 ## Profiles
