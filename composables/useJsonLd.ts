@@ -151,6 +151,11 @@ export function useSiteGraph() {
   }
 }
 
+function lastmod(d?: string) {
+  if (d && /^\d{4}-\d{2}-\d{2}/.test(d)) return d
+  return useRuntimeConfig().public.lastmod || undefined
+}
+
 /** A page node that reference the shared graph rather than repeating it. */
 export function pageNode(opts: {
   type: 'ProfilePage' | 'WebPage' | 'CollectionPage'
@@ -168,7 +173,9 @@ export function pageNode(opts: {
     name: opts.name,
     isPartOf: { '@id': ID.website },
     inLanguage: opts.lang ?? (opts.url.includes('/en/') ? 'en' : 'zh-Hant-TW'),
-    ...(opts.dateModified ? { dateModified: opts.dateModified } : {}),
+    // A full ISO date: a bare month (`asOf`, 2026-11) is not a valid
+    // `dateModified` for Google, so a month falls back to the build's commit date.
+    ...(lastmod(opts.dateModified) ? { dateModified: lastmod(opts.dateModified) } : {}),
     ...(opts.primary
       ? { mainEntity: { '@id': ID.person } }
       : { about: { '@id': ID.person } }),

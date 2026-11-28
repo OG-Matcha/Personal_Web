@@ -28,6 +28,9 @@ const DESCRIPTION =
   '黃鉅燊（Ju-Shen Huang / OG_Matcha），斐闊 Finctory 共同創辦人暨技術長、醫數行銷 MedaLink 共同創辦人暨前線部署工程師，中央大學資訊管理學系碩士班。把 LLM 放進會出貨的系統裡：財伴 oSave、PhishForge、診所營運系統，16 項競賽獎項含 5 座全國首獎，3 個國科會研究計畫。'
 
 export default defineNuxtConfig({
+  // The same date the sitemap gives, for the pages' `dateModified`: Google
+  // wants a full date, and `asOf` (2026-11) is a month.
+  runtimeConfig: { public: { lastmod: LASTMOD ?? '' } },
   devtools: { enabled: false },
   ssr: true,
   // Page changes run as view transitions: a product's cover carries over

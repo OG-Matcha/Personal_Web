@@ -40,6 +40,8 @@ useHead({
         url: 'https://www.ogmatcha.com/en/',
         name: TITLE,
         dateModified: site.asOf,
+        // The profile page names whose profile it is, like the Chinese one.
+        primary: true,
       })
     ),
   ],
