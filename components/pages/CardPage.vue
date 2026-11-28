@@ -74,6 +74,28 @@
         </li>
       </ul>
 
+      <section class="cd-about" aria-labelledby="cd-about-h">
+        <h2 id="cd-about-h" class="cd-kicker">{{ t.aboutH }}</h2>
+        <p class="cd-thesis">{{ thesis }}</p>
+        <p class="cd-thesis-sub">{{ thesisSub }}</p>
+        <ul class="cd-stats">
+          <li v-for="c in stats" :key="c.label"><b>{{ c.n }}</b><span>{{ c.label }}</span></li>
+        </ul>
+        <h3 class="cd-sub">{{ t.nowH }}</h3>
+        <ul class="cd-now">
+          <li v-for="r in now" :key="r.org">
+            <span class="cd-now-org">{{ r.org }}</span>
+            <span class="cd-now-role">{{ r.role }}</span>
+            <span class="cd-now-scope">{{ r.scope }}</span>
+          </li>
+        </ul>
+        <h3 class="cd-sub">{{ t.openH }}</h3>
+        <ul class="cd-open">
+          <li v-for="o in open" :key="o">{{ o }}</li>
+        </ul>
+        <p class="cd-where"><MapPin :size="16" :stroke-width="2" aria-hidden="true" />{{ t.where }}</p>
+      </section>
+
       <section class="cd-swap" aria-labelledby="cd-swap-h">
         <h2 id="cd-swap-h" class="cd-swap-h">{{ t.swapH }}</h2>
         <div v-if="sent" ref="doneEl" class="cd-done" tabindex="-1" role="status">
@@ -134,7 +156,7 @@
 </template>
 
 <script setup>
-import { CheckCircle2, FileText, Github, Globe, Instagram, Linkedin, Mail, QrCode, Send, Share2, UserPlus, X } from 'lucide-vue-next'
+import { CheckCircle2, FileText, Github, Globe, Instagram, Linkedin, Mail, MapPin, QrCode, Send, Share2, UserPlus, X } from 'lucide-vue-next'
 
 const { site, about, en } = useContent()
 const { locale, altPath } = useLocale()
@@ -162,6 +184,10 @@ const t = computed(() =>
         linksLabel: 'Other ways to reach me',
         site: 'Website',
         cv: 'Résumé',
+        aboutH: 'About me',
+        nowH: 'Right now',
+        openH: 'Talk to me about',
+        where: 'Taoyuan, Taiwan',
         swapH: 'Your turn',
         swapLede: 'Leave a way to reach you and I’ll get in touch. Only I see it.',
         noScript: 'This needs JavaScript, which is off. Email me instead: ',
@@ -198,6 +224,10 @@ const t = computed(() =>
         linksLabel: '其他聯絡方式',
         site: '網站',
         cv: '履歷',
+        aboutH: '關於我',
+        nowH: '現在在做',
+        openH: '可以找我聊',
+        where: '桃園，台灣',
         swapH: '換你留一張',
         swapLede: '留下聯絡方式，我會主動找你。只有我看得到。',
         noScript: '這需要 JavaScript，但目前關著。請直接寫信：',
@@ -224,6 +254,29 @@ const roles = computed(() =>
     ? en.posts.slice(0, 2).map((p, i) => ({ org: about.posts[i].orgEn, role: p.role }))
     : about.posts.slice(0, 2).map((p) => ({ org: p.org, role: p.role.replace(/（.*?）/, '') }))
 )
+// The rest of the card, from the same content the homepage prints.
+const thesis = computed(() => (locale.value === 'en' ? en.thesisLines.join(' ') : about.thesis))
+const thesisSub = computed(() => (locale.value === 'en' ? en.thesisSub : about.thesisSub))
+const stats = computed(() => {
+  const c = site.counts
+  return locale.value === 'en'
+    ? [{ n: c.awards, label: 'competition awards' }, { n: c.topPrizes, label: 'national top prizes' }, { n: c.researchGrants, label: 'NSTC research grants' }]
+    : [{ n: c.awards, label: '競賽獎項' }, { n: c.topPrizes, label: '全國首獎' }, { n: c.researchGrants, label: '國科會大專生計畫' }]
+})
+// The GPA as site.yml states it, not a second copy here.
+const gpa = (site.now.find((n) => /GPA/.test(n.detail ?? ''))?.detail.match(/GPA [\d.]+ \/ [\d.]+/) ?? [''])[0].replace(/ \//g, String.fromCharCode(160) + '/').replace(/\/ /g, '/' + String.fromCharCode(160))
+const now = computed(() =>
+  locale.value === 'en'
+    ? [
+        ...en.posts.map((p, i) => ({ org: about.posts[i].orgEn, role: p.role, scope: p.scope })),
+        { org: 'National Central University', role: 'Master’s student, Information Management', scope: `From September 2026; BS 2026, ${gpa}` },
+      ]
+    : [
+        ...about.posts.map((p) => ({ org: p.org, role: p.role, scope: p.scope })),
+        { org: '中央大學 資訊管理學系', role: '碩士班', scope: `2026.09 起；學士 ${gpa}` },
+      ]
+)
+const open = computed(() => (locale.value === 'en' ? en.open : site.open))
 const vcf = computed(() => (locale.value === 'en' ? '/card/ju-shen-huang-en.vcf' : '/card/ju-shen-huang.vcf'))
 const qr = computed(() => (locale.value === 'en' ? '/card/qr-en.svg' : '/card/qr.svg'))
 const links = computed(() => [
@@ -763,6 +816,132 @@ onBeforeUnmount(() => {
 .cd-links a:focus-visible {
   outline: 3px solid var(--pop-ink);
   outline-offset: 2px;
+}
+
+/* ---- about ---- */
+.cd-about {
+  display: grid;
+  gap: var(--sp-3);
+  margin-top: var(--sp-3);
+}
+
+.cd-kicker {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pop-ink);
+}
+
+.cd-thesis {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  font-weight: 800;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+.cd-thesis-sub {
+  margin: 0;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+
+.cd-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-2);
+  margin: var(--sp-2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cd-stats li {
+  display: grid;
+  align-content: start;
+  gap: 0.15em;
+  padding: var(--sp-3) var(--sp-2);
+  border-radius: var(--r-2);
+  background: var(--surface);
+  text-align: center;
+}
+
+.cd-stats b {
+  font-family: var(--font-display);
+  font-size: var(--step-3);
+  font-weight: 800;
+  line-height: 1;
+  color: var(--pop-ink);
+}
+
+.cd-stats span {
+  font-size: var(--step--1);
+  line-height: 1.3;
+  color: var(--ink-2);
+  text-wrap: balance;
+}
+
+.cd-sub {
+  margin-top: var(--sp-3);
+  font-size: var(--step-0);
+  font-weight: 800;
+}
+
+.cd-now {
+  display: grid;
+  gap: var(--sp-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cd-now li {
+  display: grid;
+  gap: 0.1em;
+  padding-left: var(--sp-3);
+  border-left: 3px solid var(--pop);
+}
+
+.cd-now-org {
+  font-weight: 800;
+}
+
+.cd-now-role {
+  font-weight: 700;
+  color: var(--ink-2);
+}
+
+.cd-now-scope {
+  font-size: var(--step--1);
+  color: var(--ink-3);
+  text-wrap: pretty;
+}
+
+.cd-open {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cd-open li {
+  padding: 0.35em 0.9em;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--r-full);
+  font-size: var(--step--1);
+  font-weight: 700;
+}
+
+.cd-where {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  margin: var(--sp-2) 0 0;
+  color: var(--ink-2);
 }
 
 /* ---- swap ---- */

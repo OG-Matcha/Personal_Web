@@ -51,8 +51,25 @@ function vcard({ n, fn, nick, org, title, note, lang }) {
   return lines.join('\r\n') + '\r\n'
 }
 
-const [p0, p1] = about.posts
-const [e0, e1] = en.posts
+const [p0] = about.posts
+const [e0] = en.posts
+// The note carries the rest of the card page: every current post, the
+// degree, what to talk about and the city. The GPA as site.yml states it.
+const gpa = site.now.find((n) => /GPA/.test(n.detail ?? ''))?.detail.match(/GPA [\d.]+ \/ [\d.]+/)?.[0] ?? ''
+const noteZh = [
+  ...about.posts.map((p) => `${p.org} ${p.role}`),
+  `中央大學資訊管理學系碩士班（2026.09 起；學士 ${gpa}）`,
+  `可以找我聊：${site.open.join('、')}`,
+  `${person.location}`,
+  `${SITE}/`,
+].join('\n')
+const noteEn = [
+  ...en.posts.map((p, i) => `${p.role}, ${about.posts[i].orgEn}`),
+  `Master’s student, Information Management, National Central University (from Sept 2026; BS ${gpa})`,
+  `Talk to me about: ${en.open.join('; ')}`,
+  'Taoyuan, Taiwan',
+  `${SITE}/en/`,
+].join('\n')
 writeFileSync(
   'public/card/ju-shen-huang.vcf',
   vcard({
@@ -61,7 +78,7 @@ writeFileSync(
     nick: [person.nameEn, person.handle],
     org: p0.org,
     title: p0.role,
-    note: `${p0.org} ${p0.role}；${p1.org} ${p1.role}。${SITE}/`,
+    note: noteZh,
     lang: 'zh',
   })
 )
@@ -73,7 +90,7 @@ writeFileSync(
     nick: [person.nameZh, person.handle],
     org: e0.org,
     title: e0.role,
-    note: `${e0.role}, ${e0.org}. ${e1.role}, ${e1.org}. ${SITE}/en/`,
+    note: noteEn,
     lang: 'en',
   })
 )
