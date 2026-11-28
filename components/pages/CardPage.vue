@@ -59,6 +59,9 @@
         <button type="button" class="cd-btn" @click="openQr">
           <QrCode :size="20" :stroke-width="2.2" aria-hidden="true" />{{ t.show }}
         </button>
+        <button type="button" class="cd-btn" @click="saveImage">
+          <ImageDown :size="20" :stroke-width="2.2" aria-hidden="true" />{{ t.image }}
+        </button>
         <button type="button" class="cd-btn" @click="share">
           <Share2 :size="20" :stroke-width="2.2" aria-hidden="true" />{{ shared ? t.copied : t.share }}
         </button>
@@ -156,7 +159,7 @@
 </template>
 
 <script setup>
-import { CheckCircle2, FileText, Github, Globe, Instagram, Linkedin, Mail, MapPin, QrCode, Send, Share2, UserPlus, X } from 'lucide-vue-next'
+import { CheckCircle2, FileText, Github, Globe, ImageDown, Instagram, Linkedin, Mail, MapPin, QrCode, Send, Share2, UserPlus, X } from 'lucide-vue-next'
 
 const { site, about, en } = useContent()
 const { locale, altPath } = useLocale()
@@ -179,6 +182,7 @@ const t = computed(() =>
         scanHint: 'Scan to keep this card',
         save: 'Save contact',
         show: 'Show QR',
+        image: 'Save image',
         share: 'Share',
         copied: 'Link copied',
         linksLabel: 'Other ways to reach me',
@@ -219,6 +223,7 @@ const t = computed(() =>
         scanHint: '掃描存下這張名片',
         save: '存到通訊錄',
         show: '給對方掃',
+        image: '存成圖片',
         share: '分享',
         copied: '已複製連結',
         linksLabel: '其他聯絡方式',
@@ -345,6 +350,33 @@ function onDlgClick(e) {
   if (e.target === qrDlg.value) qrDlg.value.close()
 }
 
+// The card as a picture (scripts/make-card.mjs), for the photo roll or a
+// chat. On a phone the share sheet has "Save Image"; elsewhere it downloads.
+// Fetched ahead of the tap: the share sheet must open within the tap's grace
+// period, and a fetch inside it could outlast that on a slow line.
+const imageUrl = computed(() => (locale.value === 'en' ? '/card/card-en.jpg' : '/card/card.jpg'))
+const imageName = computed(() => (locale.value === 'en' ? 'Ju-Shen-Huang-card.jpg' : '黃鉅燊-名片.jpg'))
+let imageFile = null
+async function loadImage() {
+  try {
+    const blob = await (await fetch(imageUrl.value)).blob()
+    imageFile = new File([blob], imageName.value, { type: 'image/jpeg' })
+  } catch {}
+}
+async function saveImage() {
+  try {
+    if (imageFile && navigator.canShare?.({ files: [imageFile] })) return await navigator.share({ files: [imageFile] })
+  } catch (e) {
+    if (e?.name === 'AbortError') return
+  }
+  const a = document.createElement('a')
+  a.href = imageUrl.value
+  a.download = imageName.value
+  document.body.append(a)
+  a.click()
+  a.remove()
+}
+
 const shared = ref(false)
 async function share() {
   const url = `${SITE}${t.value.path}`
@@ -421,6 +453,9 @@ async function send() {
 
 onMounted(() => {
   loadedAt = Date.now()
+  // Only on a touch screen: there the share sheet saves to photos. A desktop
+  // (Chrome on Windows has a share sheet too) just downloads.
+  if (navigator.canShare && matchMedia('(pointer: coarse)').matches) setTimeout(loadImage, 1200)
   // iOS and recent Chrome ask before they share orientation; there the card
   // just flips (no prompt for a tilt).
   if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission !== 'function') {
@@ -731,7 +766,7 @@ onBeforeUnmount(() => {
 /* ---- actions ---- */
 .cd-acts {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--sp-2);
 }
 
@@ -765,6 +800,19 @@ onBeforeUnmount(() => {
 .cd-btn:focus-visible {
   outline: 3px solid var(--pop-ink);
   outline-offset: 2px;
+}
+
+/* The three under the main button: icon over word, so each fits a third of
+   a 320px screen. */
+.cd-acts .cd-btn:not(.cd-btn--main) {
+  flex-direction: column;
+  gap: 0.25em;
+  min-height: 64px;
+  padding: var(--sp-2) var(--sp-1);
+  border-radius: var(--r-2);
+  font-size: var(--step--1);
+  line-height: 1.2;
+  text-align: center;
 }
 
 .cd-btn--main {

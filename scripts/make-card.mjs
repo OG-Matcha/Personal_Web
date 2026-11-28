@@ -8,6 +8,7 @@
  *   public/card/ju-shen-huang.vcf      Chinese contact (黃鉅燊, 斐闊 Finctory)
  *   public/card/ju-shen-huang-en.vcf   English contact (Ju-Shen Huang, Finctory)
  *   public/card/qr.svg, qr-en.svg      QR codes for /card/ and /en/card/
+ *   public/card/card.jpg, card-en.jpg  the card as a picture (scripts/og/card.html)
  *
  * The card is public, so it carries only what the site already shows: no
  * phone number, no address. The photo is public/card/photo.jpg (320 px).
@@ -15,6 +16,8 @@
 import { readFileSync, writeFileSync } from 'node:fs'
 import YAML from 'yaml'
 import QRCode from 'qrcode'
+import { chromium } from 'playwright'
+import { pathToFileURL } from 'node:url'
 
 const read = (f) => YAML.parse(readFileSync(f, 'utf8'))
 const site = read('content/site.yml')
@@ -100,4 +103,33 @@ for (const [file, url] of [['qr.svg', `${SITE}/card/?src=qr`], ['qr-en.svg', `${
   const svg = await QRCode.toString(url, { type: 'svg', errorCorrectionLevel: 'M', margin: 0, color: { dark: '#14161dff', light: '#0000' } })
   writeFileSync(`public/card/${file}`, svg)
 }
-console.log('card: 2 vCards, 2 QR codes')
+// The card as a picture, to keep in a phone's photos or send in a chat. Its
+// code carries ?src=img, so a swap that came from a forwarded picture says so.
+const b = await chromium.launch({ channel: 'chrome' })
+for (const lang of ['zh', 'en']) {
+  const E = lang === 'en'
+  const qr = await QRCode.toString(`${SITE}${E ? '/en' : ''}/card/?src=img`, { type: 'svg', errorCorrectionLevel: 'M', margin: 0, color: { dark: '#14161dff', light: '#0000' } })
+  const CARD = {
+    lang,
+    handle: person.handle,
+    name: E ? person.nameEn : person.nameZh,
+    alt: E ? person.nameZh : person.nameEn,
+    roles: E
+      ? [...en.posts.map((p, i) => ({ org: about.posts[i].orgEn, role: p.role })), { org: 'National Central University', role: 'Master’s student, Information Management' }]
+      : [...about.posts.map((p) => ({ org: p.org, role: p.role.replace(/（.*?）/, '') })), { org: '中央大學 資訊管理學系', role: '碩士班' }],
+    email: contact.email,
+    site: `ogmatcha.com${E ? '/en/card/' : '/card/'}`,
+    scan: E ? 'Scan to keep this card' : '掃描存下這張名片',
+    scanNote: E ? 'Email' : 'Email',
+    photo: `data:image/jpeg;base64,${photo}`,
+    qr: `data:image/svg+xml;base64,${Buffer.from(qr).toString('base64')}`,
+  }
+  const page = await b.newPage({ viewport: { width: 1080, height: 1350 } })
+  await page.addInitScript((c) => (window.CARD = c), CARD)
+  await page.goto(pathToFileURL('scripts/og/card.html').href)
+  await page.evaluate(() => document.fonts.ready)
+  await page.screenshot({ path: `public/card/card${E ? '-en' : ''}.jpg`, type: 'jpeg', quality: 88 })
+  await page.close()
+}
+await b.close()
+console.log('card: 2 vCards, 2 QR codes, 2 pictures')

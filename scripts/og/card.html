@@ -1,0 +1,78 @@
+<!doctype html>
+<!--
+  The card as a picture, for keeping in a phone's photos or dropping into a
+  chat: public/card/card.jpg and card-en.jpg, 1080x1350. Rendered by
+  scripts/make-card.mjs, which hands the words, photo and QR code in as
+  window.CARD (from content/*.yml), so nothing here is a second copy.
+  The same dark-green card and paper as the /card/ page.
+-->
+<html lang="zh-Hant">
+<meta charset="utf-8" />
+<style>
+  @font-face { font-family: 'Archivo'; src: url(../../public/fonts/archivo-var-000.woff2) format('woff2'); font-weight: 100 900; font-stretch: 62% 125%; }
+  @font-face { font-family: 'Noto Sans TC'; src: url(../../public/fonts/notosanstc-0.woff2) format('woff2'); font-weight: 400 900; }
+  @font-face { font-family: 'Noto Sans TC'; src: url(../../public/fonts/notosanstc-1.woff2) format('woff2'); font-weight: 400 900; }
+  * { margin: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1350px; overflow: hidden; }
+  body {
+    position: relative;
+    padding: 88px 84px 76px;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Archivo', 'Noto Sans TC', sans-serif;
+    color: #f3efe7;
+    background:
+      radial-gradient(110% 60% at 100% 0%, #2c5a44 0%, transparent 60%),
+      radial-gradient(90% 55% at 0% 100%, #1d2f3d 0%, transparent 65%),
+      #16201b;
+  }
+  /* The foil band, still: one stripe of colour across the corner. */
+  body::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(115deg, transparent 52%, rgb(255 120 200 / 0.1) 57%, rgb(120 220 255 / 0.14) 61%, rgb(170 255 170 / 0.1) 65%, transparent 71%);
+    pointer-events: none;
+  }
+  .brand { display: flex; align-items: center; gap: 14px; font-size: 30px; letter-spacing: 0.08em; color: rgb(243 239 231 / 0.75); }
+  .dot { width: 16px; height: 16px; border-radius: 50%; background: #8fd3a8; box-shadow: 0 0 18px #8fd3a8; }
+  .top { display: flex; align-items: center; gap: 56px; margin-top: 72px; }
+  .photo { width: 300px; height: 300px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 10px rgb(255 255 255 / 0.08), 0 16px 40px rgb(0 0 0 / 0.45); }
+  .name { font-family: 'Noto Sans TC'; font-weight: 900; font-size: 118px; line-height: 1.02; letter-spacing: 0.03em; }
+  .alt { margin-top: 16px; font-size: 38px; letter-spacing: 0.04em; color: rgb(243 239 231 / 0.72); }
+  :lang(en) .name { font-family: 'Archivo'; font-size: 96px; letter-spacing: -0.01em; }
+  :lang(en) .alt { font-family: 'Noto Sans TC'; }
+  .roles { display: grid; gap: 18px; margin-top: 56px; padding-top: 40px; border-top: 2px solid rgb(143 211 168 / 0.3); font-family: 'Noto Sans TC', sans-serif; font-size: 31px; line-height: 1.3; }
+  :lang(en) .roles { font-family: 'Archivo'; }
+  .roles b { display: block; font-weight: 800; color: #a6e0bb; }
+  .foot { display: flex; align-items: flex-end; justify-content: space-between; gap: 48px; margin-top: auto; }
+  .contact { display: grid; gap: 12px; font-size: 32px; color: rgb(243 239 231 / 0.88); }
+  .contact span:first-child { font-size: 26px; letter-spacing: 0.06em; color: rgb(243 239 231 / 0.6); }
+  .qr { display: grid; justify-items: center; gap: 14px; padding: 26px 26px 20px; border-radius: 28px; background: #f6f1e8; color: #14161d; }
+  .qr img { width: 250px; height: 250px; }
+  .qr p { font-family: 'Noto Sans TC', 'Archivo', sans-serif; font-size: 24px; font-weight: 700; }
+</style>
+<p class="brand"><span class="dot"></span><span id="handle"></span></p>
+<div class="top">
+  <img class="photo" id="photo" alt="" />
+  <div>
+    <p class="name" id="name"></p>
+    <p class="alt" id="alt"></p>
+  </div>
+</div>
+<div class="roles" id="roles"></div>
+<div class="foot">
+  <div class="contact"><span id="scanNote"></span><span id="email"></span><span id="site"></span></div>
+  <div class="qr"><img id="qr" alt="" /><p id="scan"></p></div>
+</div>
+<script>
+  const c = window.CARD
+  document.documentElement.lang = c.lang === 'en' ? 'en' : 'zh-Hant'
+  for (const k of ['handle', 'name', 'alt', 'email', 'site', 'scan', 'scanNote']) document.getElementById(k).textContent = c[k]
+  document.getElementById('photo').src = c.photo
+  document.getElementById('qr').src = c.qr
+  document.getElementById('roles').append(...c.roles.map((r) => {
+    const p = document.createElement('p'); const b = document.createElement('b')
+    b.textContent = r.org; p.append(b, r.role); return p
+  }))
+</script>
