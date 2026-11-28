@@ -84,6 +84,13 @@
         <ul class="cd-stats">
           <li v-for="c in stats" :key="c.label"><b>{{ c.n }}</b><span>{{ c.label }}</span></li>
         </ul>
+        <h3 class="cd-sub">{{ t.openH }}</h3>
+        <ol class="cd-svc">
+          <li v-for="o in open" :key="o.title">
+            <span class="cd-svc-t">{{ o.title }}</span>
+            <span v-if="o.detail" class="cd-svc-d">{{ o.detail }}</span>
+          </li>
+        </ol>
         <h3 class="cd-sub">{{ t.nowH }}</h3>
         <ul class="cd-now">
           <li v-for="r in now" :key="r.org">
@@ -91,10 +98,6 @@
             <span class="cd-now-role">{{ r.role }}</span>
             <span class="cd-now-scope">{{ r.scope }}</span>
           </li>
-        </ul>
-        <h3 class="cd-sub">{{ t.openH }}</h3>
-        <ul class="cd-open">
-          <li v-for="o in open" :key="o">{{ o }}</li>
         </ul>
         <p class="cd-where"><MapPin :size="16" :stroke-width="2" aria-hidden="true" />{{ t.where }}</p>
       </section>
@@ -190,7 +193,7 @@ const t = computed(() =>
         cv: 'Résumé',
         aboutH: 'About me',
         nowH: 'Right now',
-        openH: 'Talk to me about',
+        openH: 'What I take on',
         where: 'Taoyuan, Taiwan',
         swapH: 'Your turn',
         swapLede: 'Leave a way to reach you and I’ll get in touch. Only I see it.',
@@ -231,7 +234,7 @@ const t = computed(() =>
         cv: '履歷',
         aboutH: '關於我',
         nowH: '現在在做',
-        openH: '可以找我聊',
+        openH: '業務範圍',
         where: '桃園，台灣',
         swapH: '換你留一張',
         swapLede: '留下聯絡方式，我會主動找你。只有我看得到。',
@@ -281,7 +284,10 @@ const now = computed(() =>
         { org: '中央大學 資訊管理學系', role: '碩士班', scope: `2026.09 起；學士 ${gpa}` },
       ]
 )
-const open = computed(() => (locale.value === 'en' ? en.open : site.open))
+const open = computed(() => {
+  const c = locale.value === 'en' ? en : site
+  return c.open.map((title) => ({ title, detail: c.openDetail?.[title] ?? '' }))
+})
 const vcf = computed(() => (locale.value === 'en' ? '/card/ju-shen-huang-en.vcf' : '/card/ju-shen-huang.vcf'))
 const qr = computed(() => (locale.value === 'en' ? '/card/qr-en.svg' : '/card/qr.svg'))
 const links = computed(() => [
@@ -967,21 +973,42 @@ onBeforeUnmount(() => {
   text-wrap: pretty;
 }
 
-.cd-open {
-  display: flex;
-  flex-wrap: wrap;
+.cd-svc {
+  display: grid;
   gap: var(--sp-2);
   margin: 0;
   padding: 0;
   list-style: none;
+  counter-reset: svc;
 }
 
-.cd-open li {
-  padding: 0.35em 0.9em;
-  border: 1px solid var(--rule-strong);
-  border-radius: var(--r-full);
-  font-size: var(--step--1);
+.cd-svc li {
+  display: grid;
+  grid-template-columns: 2.2rem 1fr;
+  column-gap: var(--sp-2);
+  padding: var(--sp-3);
+  border-radius: var(--r-2);
+  background: var(--surface);
+  counter-increment: svc;
+}
+
+.cd-svc li::before {
+  content: counter(svc, decimal-leading-zero);
+  grid-row: span 2;
+  font-family: var(--font-mono);
   font-weight: 700;
+  color: var(--pop-ink);
+}
+
+.cd-svc-t {
+  font-weight: 800;
+}
+
+.cd-svc-d {
+  margin-top: 0.15em;
+  font-size: var(--step--1);
+  color: var(--ink-2);
+  text-wrap: pretty;
 }
 
 .cd-where {

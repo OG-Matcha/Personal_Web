@@ -45,7 +45,14 @@ degreeDetail: GPA 4.19 / 4.3; credit programs in Business Intelligence & Analyti
 open:
   - Generative-AI / agent architecture consulting
   - Early-stage technical partnerships
+  - Contract software development
   - Talks and workshops
+# One line on each of the above, for the card (/en/card/). Keys match exactly.
+openDetail:
+  Generative-AI / agent architecture consulting: Architecture and technology choices for LLM and agent systems, through to running them in production.
+  Early-stage technical partnerships: 'From MVP to launch: system design, cloud deployment, the engineering process for a small team.'
+  Contract software development: Websites, apps, back-office systems and AI features, from requirements to delivery and upkeep.
+  Talks and workshops: Hands-on generative-AI workshops that help non-engineers turn their own needs into AI tools.
 
 sheets:
   now: Three places, three kinds of role

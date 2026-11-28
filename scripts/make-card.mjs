@@ -62,14 +62,14 @@ const gpa = site.now.find((n) => /GPA/.test(n.detail ?? ''))?.detail.match(/GPA 
 const noteZh = [
   ...about.posts.map((p) => `${p.org} ${p.role}`),
   `中央大學資訊管理學系碩士班（2026.09 起；學士 ${gpa}）`,
-  `可以找我聊：${site.open.join('、')}`,
+  `業務範圍：${site.open.join('、')}`,
   `${person.location}`,
   `${SITE}/`,
 ].join('\n')
 const noteEn = [
   ...en.posts.map((p, i) => `${p.role}, ${about.posts[i].orgEn}`),
   `Master’s student, Information Management, National Central University (from Sept 2026; BS ${gpa})`,
-  `Talk to me about: ${en.open.join('; ')}`,
+  `What I take on: ${en.open.join('; ')}`,
   'Taoyuan, Taiwan',
   `${SITE}/en/`,
 ].join('\n')
@@ -115,8 +115,10 @@ for (const lang of ['zh', 'en']) {
     name: E ? person.nameEn : person.nameZh,
     alt: E ? person.nameZh : person.nameEn,
     roles: E
-      ? [...en.posts.map((p, i) => ({ org: about.posts[i].orgEn, role: p.role })), { org: 'National Central University', role: 'Master’s student, Information Management' }]
+      ? [...en.posts.map((p, i) => ({ org: about.posts[i].orgEn, role: p.role })), { org: 'National Central University', role: 'MS student' }]
       : [...about.posts.map((p) => ({ org: p.org, role: p.role.replace(/（.*?）/, '') })), { org: '中央大學 資訊管理學系', role: '碩士班' }],
+    servicesLabel: E ? 'What I take on' : '業務範圍',
+    services: E ? en.open : site.open,
     email: contact.email,
     site: `ogmatcha.com${E ? '/en/card/' : '/card/'}`,
     scan: E ? 'Scan to keep this card' : '掃描存下這張名片',

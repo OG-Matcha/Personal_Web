@@ -36,15 +36,23 @@
   }
   .brand { display: flex; align-items: center; gap: 14px; font-size: 30px; letter-spacing: 0.08em; color: rgb(243 239 231 / 0.75); }
   .dot { width: 16px; height: 16px; border-radius: 50%; background: #8fd3a8; box-shadow: 0 0 18px #8fd3a8; }
-  .top { display: flex; align-items: center; gap: 56px; margin-top: 72px; }
-  .photo { width: 300px; height: 300px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 10px rgb(255 255 255 / 0.08), 0 16px 40px rgb(0 0 0 / 0.45); }
+  .top { display: flex; align-items: center; gap: 52px; margin-top: 60px; }
+  .photo { width: 260px; height: 260px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 10px rgb(255 255 255 / 0.08), 0 16px 40px rgb(0 0 0 / 0.45); }
   .name { font-family: 'Noto Sans TC'; font-weight: 900; font-size: 118px; line-height: 1.02; letter-spacing: 0.03em; }
   .alt { margin-top: 16px; font-size: 38px; letter-spacing: 0.04em; color: rgb(243 239 231 / 0.72); }
-  :lang(en) .name { font-family: 'Archivo'; font-size: 96px; letter-spacing: -0.01em; }
+  :lang(en) .name { font-family: 'Archivo'; font-size: 74px; letter-spacing: -0.01em; white-space: nowrap; }
   :lang(en) .alt { font-family: 'Noto Sans TC'; }
-  .roles { display: grid; gap: 18px; margin-top: 56px; padding-top: 40px; border-top: 2px solid rgb(143 211 168 / 0.3); font-family: 'Noto Sans TC', sans-serif; font-size: 31px; line-height: 1.3; }
+  .roles { display: grid; gap: 14px; margin-top: 48px; padding-top: 36px; border-top: 2px solid rgb(143 211 168 / 0.3); font-family: 'Noto Sans TC', sans-serif; font-size: 30px; line-height: 1.3; }
   :lang(en) .roles { font-family: 'Archivo'; }
-  .roles b { display: block; font-weight: 800; color: #a6e0bb; }
+  .roles b { font-weight: 800; color: #a6e0bb; margin-right: 0.45em; }
+  .svc-h { margin-top: 44px; font-size: 24px; letter-spacing: 0.08em; color: rgb(243 239 231 / 0.6); font-family: 'Noto Sans TC', 'Archivo', sans-serif; }
+  .svc { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; padding: 0; list-style: none; font-family: 'Noto Sans TC', sans-serif; }
+  :lang(en) .svc { font-family: 'Archivo'; }
+  .svc li { padding: 10px 22px; border: 2px solid rgb(166 224 187 / 0.45); border-radius: 999px; font-size: 27px; font-weight: 700; }
+  :lang(en) .photo { width: 230px; height: 230px; }
+  :lang(en) .roles { font-size: 29px; gap: 10px; margin-top: 40px; padding-top: 32px; }
+  :lang(en) .svc-h { margin-top: 34px; }
+  :lang(en) .svc li { font-size: 24px; padding: 9px 20px; }
   .foot { display: flex; align-items: flex-end; justify-content: space-between; gap: 48px; margin-top: auto; }
   .contact { display: grid; gap: 12px; font-size: 32px; color: rgb(243 239 231 / 0.88); }
   .contact span:first-child { font-size: 26px; letter-spacing: 0.06em; color: rgb(243 239 231 / 0.6); }
@@ -61,6 +69,8 @@
   </div>
 </div>
 <div class="roles" id="roles"></div>
+<p class="svc-h" id="servicesLabel"></p>
+<ul class="svc" id="svc"></ul>
 <div class="foot">
   <div class="contact"><span id="scanNote"></span><span id="email"></span><span id="site"></span></div>
   <div class="qr"><img id="qr" alt="" /><p id="scan"></p></div>
@@ -68,9 +78,10 @@
 <script>
   const c = window.CARD
   document.documentElement.lang = c.lang === 'en' ? 'en' : 'zh-Hant'
-  for (const k of ['handle', 'name', 'alt', 'email', 'site', 'scan', 'scanNote']) document.getElementById(k).textContent = c[k]
+  for (const k of ['handle', 'name', 'alt', 'email', 'site', 'scan', 'scanNote', 'servicesLabel']) document.getElementById(k).textContent = c[k]
   document.getElementById('photo').src = c.photo
   document.getElementById('qr').src = c.qr
+  document.getElementById('svc').append(...c.services.map((t) => Object.assign(document.createElement('li'), { textContent: t })))
   document.getElementById('roles').append(...c.roles.map((r) => {
     const p = document.createElement('p'); const b = document.createElement('b')
     b.textContent = r.org; p.append(b, r.role); return p
