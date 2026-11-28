@@ -43,3 +43,7 @@ logs
 # Search Console service-account keys never belong in the repo
 *service-account*.json
 gsc-key*.json
+
+# Wrangler local dev: secrets for `wrangler dev` and its state
+.dev.vars
+.wrangler/

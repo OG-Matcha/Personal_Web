@@ -10,8 +10,8 @@ const ORIGINS = new Set([
   'http://localhost:3140', 'http://127.0.0.1:3140', 'http://127.0.0.1:3150', 'http://localhost:3150',
 ])
 const SITES = { ogmatcha: { name: '個人網站', color: 0x2f6b4f }, oshi: { name: '推し看板', color: 0xd42c66 } }
-const TOPICS = new Set(['work', 'hello', 'missing', 'wrong', 'idea', 'other'])
-const TOPIC_ZH = { work: '合作／工作', hello: '打招呼', missing: '漏了活動', wrong: '資料有錯', idea: '建議', other: '其他' }
+const TOPICS = new Set(['work', 'hello', 'missing', 'wrong', 'idea', 'other', 'card'])
+const TOPIC_ZH = { work: '合作／工作', hello: '打招呼', missing: '漏了活動', wrong: '資料有錯', idea: '建議', other: '其他', card: '交換名片' }
 
 const cors = (origin) => ({
   'access-control-allow-origin': origin,
@@ -46,10 +46,12 @@ export default {
 
     const site = SITES[b.site] ? b.site : 'ogmatcha'
     const topic = TOPICS.has(b.topic) ? b.topic : 'other'
-    const message = clip(b.message, 3000)
-    if (message.length < 2) return reply({ error: 'empty' }, 400)
     const name = clip(b.name, 80)
     const contact = clip(b.contact, 160)
+    // A card swap (/card/) is someone handing over their own details: the way
+    // to reach them is what matters, a note is optional.
+    const message = clip(b.message, 3000) || (topic === 'card' ? '（從名片頁交換聯絡方式）' : '')
+    if (topic === 'card' ? contact.length < 3 : message.length < 2) return reply({ error: 'empty' }, 400)
     const about = clip(b.about, 200)
     const page = clip(b.page, 300)
 

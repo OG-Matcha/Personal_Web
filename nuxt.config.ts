@@ -115,6 +115,8 @@ export default defineNuxtConfig({
 
   sitemap: {
     defaults: LASTMOD ? { lastmod: LASTMOD } : {},
+    // The card is for the phone in someone's hand (noindex): not a page to find.
+    exclude: ['/card/**', '/en/card/**'],
   },
 
   tailwindcss: {
@@ -188,7 +190,7 @@ export default defineNuxtConfig({
         { rel: 'icon', type: 'image/png', sizes: '48x48', href: '/images/favicon-48.png' },
         { rel: 'apple-touch-icon', sizes: '180x180', href: '/images/apple-touch-icon.png' },
         // Add to home screen (Android): the site's name and icon, not the URL and a letter.
-        { rel: 'manifest', href: '/site.webmanifest' },
+        { rel: 'manifest', href: '/site.webmanifest', key: 'manifest' },
         { rel: 'canonical', href: SITE_URL },
 
         // Latin faces are 0.8 kB gzipped — cheap enough to block on.
@@ -235,6 +237,8 @@ export default defineNuxtConfig({
     publicAssets: [{ dir: 'public', maxAge: 60 * 60 * 24 * 365 }],
     prerender: {
       crawlLinks: true,
+      // Linked from nowhere on the site (a QR or NFC tag opens them): name them.
+      routes: ['/card/', '/en/card/'],
       // Every page is served at its slashed URL, but the crawler also queues the
       // slashless form (/portfolio and /portfolio/). Both write
       // portfolio/index.html at the same time, and when the longer render
